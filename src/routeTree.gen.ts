@@ -10,11 +10,44 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ABetterLifeRouteImport } from './routes/a-better-life'
+import { Route as BackToUsRouteImport } from './routes/back-to-us'
+import { Route as BetterDaysRouteImport } from './routes/better-days'
+import { Route as BetterlifeEpisodesRouteImport } from './routes/betterlife-episodes'
+import { Route as NairobbyRouteImport } from './routes/nairobby'
 import { Route as ThisIsLifeRouteImport } from './routes/this-is-life'
+import { Route as ThisIsLifeEpisodesRouteImport } from './routes/this-is-life-episodes'
+import { Route as WatchThemAllRouteImport } from './routes/watch-them-all'
+import { Route as WriteLikeAMasterRouteImport } from './routes/write-like-a-master'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ABetterLifeRoute = ABetterLifeRouteImport.update({
+  id: '/a-better-life',
+  path: '/a-better-life',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BackToUsRoute = BackToUsRouteImport.update({
+  id: '/back-to-us',
+  path: '/back-to-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BetterDaysRoute = BetterDaysRouteImport.update({
+  id: '/better-days',
+  path: '/better-days',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BetterlifeEpisodesRoute = BetterlifeEpisodesRouteImport.update({
+  id: '/betterlife-episodes',
+  path: '/betterlife-episodes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NairobbyRoute = NairobbyRouteImport.update({
+  id: '/nairobby',
+  path: '/nairobby',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThisIsLifeRoute = ThisIsLifeRouteImport.update({
@@ -22,31 +55,109 @@ const ThisIsLifeRoute = ThisIsLifeRouteImport.update({
   path: '/this-is-life',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ThisIsLifeEpisodesRoute = ThisIsLifeEpisodesRouteImport.update({
+  id: '/this-is-life-episodes',
+  path: '/this-is-life-episodes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WatchThemAllRoute = WatchThemAllRouteImport.update({
+  id: '/watch-them-all',
+  path: '/watch-them-all',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WriteLikeAMasterRoute = WriteLikeAMasterRouteImport.update({
+  id: '/write-like-a-master',
+  path: '/write-like-a-master',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a-better-life': typeof ABetterLifeRoute
+  '/back-to-us': typeof BackToUsRoute
+  '/better-days': typeof BetterDaysRoute
+  '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/nairobby': typeof NairobbyRoute
   '/this-is-life': typeof ThisIsLifeRoute
+  '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
+  '/watch-them-all': typeof WatchThemAllRoute
+  '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a-better-life': typeof ABetterLifeRoute
+  '/back-to-us': typeof BackToUsRoute
+  '/better-days': typeof BetterDaysRoute
+  '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/nairobby': typeof NairobbyRoute
   '/this-is-life': typeof ThisIsLifeRoute
+  '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
+  '/watch-them-all': typeof WatchThemAllRoute
+  '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/a-better-life': typeof ABetterLifeRoute
+  '/back-to-us': typeof BackToUsRoute
+  '/better-days': typeof BetterDaysRoute
+  '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/nairobby': typeof NairobbyRoute
   '/this-is-life': typeof ThisIsLifeRoute
+  '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
+  '/watch-them-all': typeof WatchThemAllRoute
+  '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/this-is-life'
+  fullPaths:
+    | '/'
+    | '/a-better-life'
+    | '/back-to-us'
+    | '/better-days'
+    | '/betterlife-episodes'
+    | '/nairobby'
+    | '/this-is-life'
+    | '/this-is-life-episodes'
+    | '/watch-them-all'
+    | '/write-like-a-master'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/this-is-life'
-  id: '__root__' | '/' | '/this-is-life'
+  to:
+    | '/'
+    | '/a-better-life'
+    | '/back-to-us'
+    | '/better-days'
+    | '/betterlife-episodes'
+    | '/nairobby'
+    | '/this-is-life'
+    | '/this-is-life-episodes'
+    | '/watch-them-all'
+    | '/write-like-a-master'
+  id:
+    | '__root__'
+    | '/'
+    | '/a-better-life'
+    | '/back-to-us'
+    | '/better-days'
+    | '/betterlife-episodes'
+    | '/nairobby'
+    | '/this-is-life'
+    | '/this-is-life-episodes'
+    | '/watch-them-all'
+    | '/write-like-a-master'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ABetterLifeRoute: typeof ABetterLifeRoute
+  BackToUsRoute: typeof BackToUsRoute
+  BetterDaysRoute: typeof BetterDaysRoute
+  BetterlifeEpisodesRoute: typeof BetterlifeEpisodesRoute
+  NairobbyRoute: typeof NairobbyRoute
   ThisIsLifeRoute: typeof ThisIsLifeRoute
+  ThisIsLifeEpisodesRoute: typeof ThisIsLifeEpisodesRoute
+  WatchThemAllRoute: typeof WatchThemAllRoute
+  WriteLikeAMasterRoute: typeof WriteLikeAMasterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +169,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/a-better-life': {
+      id: '/a-better-life'
+      path: '/a-better-life'
+      fullPath: '/a-better-life'
+      preLoaderRoute: typeof ABetterLifeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/back-to-us': {
+      id: '/back-to-us'
+      path: '/back-to-us'
+      fullPath: '/back-to-us'
+      preLoaderRoute: typeof BackToUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/better-days': {
+      id: '/better-days'
+      path: '/better-days'
+      fullPath: '/better-days'
+      preLoaderRoute: typeof BetterDaysRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/betterlife-episodes': {
+      id: '/betterlife-episodes'
+      path: '/betterlife-episodes'
+      fullPath: '/betterlife-episodes'
+      preLoaderRoute: typeof BetterlifeEpisodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nairobby': {
+      id: '/nairobby'
+      path: '/nairobby'
+      fullPath: '/nairobby'
+      preLoaderRoute: typeof NairobbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/this-is-life': {
       id: '/this-is-life'
       path: '/this-is-life'
@@ -65,12 +211,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ThisIsLifeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/this-is-life-episodes': {
+      id: '/this-is-life-episodes'
+      path: '/this-is-life-episodes'
+      fullPath: '/this-is-life-episodes'
+      preLoaderRoute: typeof ThisIsLifeEpisodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/watch-them-all': {
+      id: '/watch-them-all'
+      path: '/watch-them-all'
+      fullPath: '/watch-them-all'
+      preLoaderRoute: typeof WatchThemAllRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/write-like-a-master': {
+      id: '/write-like-a-master'
+      path: '/write-like-a-master'
+      fullPath: '/write-like-a-master'
+      preLoaderRoute: typeof WriteLikeAMasterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ABetterLifeRoute: ABetterLifeRoute,
+  BackToUsRoute: BackToUsRoute,
+  BetterDaysRoute: BetterDaysRoute,
+  BetterlifeEpisodesRoute: BetterlifeEpisodesRoute,
+  NairobbyRoute: NairobbyRoute,
   ThisIsLifeRoute: ThisIsLifeRoute,
+  ThisIsLifeEpisodesRoute: ThisIsLifeEpisodesRoute,
+  WatchThemAllRoute: WatchThemAllRoute,
+  WriteLikeAMasterRoute: WriteLikeAMasterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
