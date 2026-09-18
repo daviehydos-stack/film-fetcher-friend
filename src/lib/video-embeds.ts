@@ -32,6 +32,10 @@ export function heroTrailerUrl(embedUrl: string, muted: boolean) {
       url.searchParams.set("controls", "0");
       url.searchParams.set("playsinline", "1");
       url.searchParams.set("rel", "0");
+      url.searchParams.set("enablejsapi", "1");
+      url.searchParams.set("loop", "1");
+      const id=url.pathname.split("/").filter(Boolean).pop();
+      if(id)url.searchParams.set("playlist",id);
     } else if (vimeo) {
       url.searchParams.set("muted", muted ? "1" : "0");
       url.searchParams.set("background", "1");
