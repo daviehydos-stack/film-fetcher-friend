@@ -10,14 +10,28 @@ export const socials = {
 
 export const navLinks = [
   { label: "Home", to: "/" },
-  { label: "Nairobby", to: "/nairobby" },
-  { label: "Back to Us", to: "/back-to-us" },
-  { label: "A Better Life", to: "/a-better-life" },
-  { label: "This is Life", to: "/this-is-life" },
-  { label: "Watch Them All", to: "/watch-them-all" },
-  { label: "Better Days", to: "/better-days" },
-  { label: "Masterclass", to: "/write-like-a-master" },
+  { label: "TV Shows", to: "/tv-shows" },
+  { label: "Movies", to: "/movies" },
+  { label: "My List", to: "/my-list" },
 ] as const;
+
+export type ContentType = "movie" | "series";
+export type CatalogueTitle = {
+  id: string;
+  slug: string;
+  title: string;
+  type: ContentType;
+  year?: string;
+  genres: string[];
+  synopsis: string;
+  shortDescription: string;
+  artwork: string;
+  backdrop: string;
+  legacyPath: string;
+  featured?: boolean;
+  available?: boolean;
+  episodes?: Episode[];
+};
 
 export type Trailer = {
   title: string;
@@ -319,3 +333,53 @@ export const mpesaSteps = [
 
 export const MPESA_PDF =
   "https://554e22f9-65a2-443f-b51e-c5330dbc5d5d.filesusr.com/ugd/57086b_f90d0496b9c2496b84cbffa7961ce148.pdf";
+
+export const catalogue: CatalogueTitle[] = [
+  {
+    id: "back-to-us", slug: "back-to-us", title: "Back to Us", type: "movie",
+    genres: ["Romance", "Drama"], featured: true, available: false,
+    shortDescription: "Two people. One coast. Everything they never said.",
+    synopsis: "Shot in Watamu, Back to Us is a Kenyan love story about the distance between who we were and who we became.",
+    artwork: "https://static.wixstatic.com/media/57086b_c12a5a80a97149a4a067d9857681e3e3~mv2.jpg/v1/fill/w_980,h_531,enc_auto/file.jpeg",
+    backdrop: "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg",
+    legacyPath: "/back-to-us",
+  },
+  {
+    id: "nairobby", slug: "nairobby", title: "Nairobby", type: "movie",
+    genres: ["Crime", "Drama"], available: false,
+    shortDescription: "The city that takes, and the ones who take back.",
+    synopsis: "Nairobi gives, and Nairobi takes. Nairobby follows the people who decide to take something back — and the night it all goes wrong.",
+    artwork: "https://static.wixstatic.com/media/57086b_66db2eaf1d4c44dd9a63ca85a2d0f058~mv2.jpg/v1/fill/w_1344,h_756,enc_auto/file.jpeg",
+    backdrop: "https://static.wixstatic.com/media/57086b_66db2eaf1d4c44dd9a63ca85a2d0f058~mv2.jpg/v1/fill/w_1920,h_1080,enc_auto/file.jpeg",
+    legacyPath: "/nairobby",
+  },
+  {
+    id: "a-better-life", slug: "a-better-life", title: "A Better Life", type: "series",
+    genres: ["Drama", "Romance"], available: true,
+    shortDescription: "A governor's son. A girl from the slum. A city between them.",
+    synopsis: "A governor's son and a girl from the slum meet in a city that never lets anyone forget where they come from.",
+    artwork: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_930,h_523,enc_auto/file.png",
+    backdrop: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
+    legacyPath: "/a-better-life", episodes: [...betterLifeFree, ...betterLifePaid],
+  },
+  {
+    id: "this-is-life", slug: "this-is-life", title: "This is Life", type: "series",
+    genres: ["Drama", "Romance"], available: true,
+    shortDescription: "Love, work and everything that happens in between.",
+    synopsis: "An intimate series about love, work, difficult choices and the lives built in between.",
+    artwork: "https://static.wixstatic.com/media/57086b_899d3183eb3c450e96b8ae328886165b~mv2.png/v1/fill/w_900,h_506,enc_auto/file.png",
+    backdrop: "https://static.wixstatic.com/media/57086b_46bd84f76e9e40a0bfad5e2852bf6b09~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
+    legacyPath: "/this-is-life", episodes: [...thisIsLifeFree, ...thisIsLifePaid],
+  },
+  {
+    id: "better-days", slug: "better-days", title: "Better Days", type: "series",
+    genres: ["Drama"], available: true,
+    shortDescription: "Where the Avant story began, on KTN.",
+    synopsis: "Better Days aired on KTN and set everything that followed in motion — honest Kenyan stories, small rooms and big feelings.",
+    artwork: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_900,h_506,enc_auto/file.jpeg",
+    backdrop: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_1400,h_788,enc_auto/file.jpeg",
+    legacyPath: "/better-days",
+  },
+];
+
+export const getTitle = (slug: string) => catalogue.find((item) => item.slug === slug);
