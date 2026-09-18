@@ -2,10 +2,10 @@ export const WHATSAPP = "+254720814693";
 export const WHATSAPP_TEL = "tel:+254720814693";
 
 export const socials = {
-  facebook: "https://www.facebook.com/AvantFilms/",
-  youtube: "https://www.youtube.com/channel/UCq7Uyw6knbdJi6WuGF2lYdw",
-  instagram: "https://www.instagram.com/jgatero/?hl=en",
-  twitter: "http://www.twitter.com/wix",
+  facebook: "https://www.facebook.com/avantfilmskenya/",
+  youtube: "https://www.youtube.com/@avantmoviesforusbyus",
+  instagram: "https://www.instagram.com/avantmovieske?igsh=dGJmZjZzeTJhN3Zh",
+  tiktok: "https://www.tiktok.com/avantmovies",
 };
 
 export const navLinks = [
