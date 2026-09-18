@@ -344,12 +344,12 @@ export const MPESA_PDF =
 export const catalogue: CatalogueTitle[] = [
   {
     id: "back-to-us", slug: "back-to-us", title: "Back to Us", type: "movie",
-    genres: ["Romance", "Drama"], featured: true, available: false,
+    genres: ["Romance", "Drama"], featured: true, available: true,
     shortDescription: "Two people. One coast. Everything they never said.",
     synopsis: "Shot in Watamu, Back to Us is a Kenyan love story about the distance between who we were and who we became.",
     artwork: "https://static.wixstatic.com/media/57086b_c12a5a80a97149a4a067d9857681e3e3~mv2.jpg/v1/fill/w_980,h_531,enc_auto/file.jpeg",
     backdrop: "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg",
-    legacyPath: "/back-to-us",
+    legacyPath: "/back-to-us", previewYoutubeId: "9E3t88BExvQ", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/9E3t88BExvQ?rel=0",
   },
   {
     id: "nairobby", slug: "nairobby", title: "Nairobby", type: "movie",
