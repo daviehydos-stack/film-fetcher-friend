@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { catalogue, type CatalogueTitle, type Episode } from "@/lib/site-data";
 import { clearProgress, formatWatchTime, readProgress, type WatchProgress } from "@/lib/watch-progress";
 import { getWatchProgress } from "@/lib/avant-backend";
-import { customerToken } from "@/lib/firebase-customer-auth";
+import { customerToken } from "@/lib/google-auth";
 
 type ProgressRow = { item: CatalogueTitle; episode: Episode; index: number; progress: WatchProgress };
 

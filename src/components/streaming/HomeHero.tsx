@@ -6,7 +6,7 @@ import type { CatalogueTitle } from "@/lib/site-data";
 import { heroTrailerUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
-import { customerToken, requireCustomerToken } from "@/lib/firebase-customer-auth";
+import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [muted, setMuted] = useState(false);

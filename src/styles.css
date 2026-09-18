@@ -218,3 +218,11 @@ html{background:var(--color-background);scroll-behavior:auto}
 }
 @keyframes avantMobilePreviewOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,14px,0) scale(.99)}}
 @media(prefers-reduced-motion:reduce){.avant-preview-backdrop.is-closing,.avant-preview-dialog.is-closing{animation:none!important}}
+
+/* Mobile QA: horizontal rails follow the finger on X while the page remains vertically scrollable. */
+@media(max-width:767px),(hover:none),(pointer:coarse){
+ .avant-horizontal-rail{touch-action:pan-x pan-y;overscroll-behavior-x:contain;overscroll-behavior-y:auto;scroll-behavior:smooth}
+ .avant-preview-backdrop{padding-top:env(safe-area-inset-top);overscroll-behavior-y:contain}
+ .avant-preview-dialog{min-height:calc(100svh - env(safe-area-inset-top));transform-origin:center bottom}
+ .avant-preview-dialog select,.avant-preview-dialog button,.avant-preview-dialog a{touch-action:manipulation}
+}
