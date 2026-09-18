@@ -7,6 +7,7 @@ import { thisIsLifePaid } from "@/lib/site-data";
 export const Route = createFileRoute("/this-is-life")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "This is Life — Kenyan series | Avant Cinema" },
       {
         name: "description",
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/this-is-life")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  links: [{ rel: "canonical", href: `/title/this-is-life` }],
   component: ThisIsLife,
 });
 
