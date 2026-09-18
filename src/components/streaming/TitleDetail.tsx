@@ -9,10 +9,13 @@ import { customerToken } from "@/lib/google-auth";
 import { heroTrailerUrl, youtubeEmbedUrl } from "@/lib/video-embeds";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 import { buildAutoTrailerPlan, durationToSeconds } from "@/lib/auto-trailer";
+import { readReturnContext } from "@/lib/navigation-memory";
 import { ContentRail } from "./ContentRail";
 import { StreamingShell } from "./StreamingShell";
 
 export function TitleDetail({ item }: { item: CatalogueTitle }) {
+  const origin = readReturnContext();
+  const checkoutSearch = { returnTo: `/title/${item.slug}`, origin: origin?.path || "/movies", originScroll: String(origin?.scrollY || 0) };
   const [saved, setSaved] = useState(false);
   const [trailerOpen, setTrailerOpen] = useState(false);
   const [detailExpanded, setDetailExpanded] = useState(false);
@@ -69,7 +72,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
             <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold"><span>{item.year ?? "Avant"}</span><span className="text-white/45">•</span><span>{item.quality ?? "HD"}</span>{item.maturityRating ? <><span className="text-white/45">•</span><span className="rounded border border-white/35 px-1.5 py-0.5 text-xs">{item.maturityRating}</span></> : null}<span className="text-white/45">•</span><span>{item.genres.join(" · ")}</span>{item.episodes ? <><span className="text-white/45">•</span><span>{seasons.length > 1 ? `${seasons.length} seasons` : "Season 1"} · {item.episodes.length} episodes</span></> : null}</div>
             <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.shortDescription||item.synopsis}</p>{item.cast?.length?<p className="mt-3 max-w-xl text-sm text-white/60"><span className="text-white/35">Starring:</span> {item.cast.slice(0,4).join(", ")}{item.cast.length>4?"…":""}</p>:null}
             <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-              {(item.episodes?.[0]?.youtubeId && item.episodes?.[0]?.locked===false)||hasAccess ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: item.episodes?.[0]?.legacyKey??`${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : item.available ? <Button asChild size="lg"><Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }}><Lock className="size-4" />Get Access</Link></Button> : <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 bg-black/30 px-4 text-sm font-semibold text-white/75 backdrop-blur-sm"><Lock className="size-4" />Coming to Avant</span>}
+              {(item.episodes?.[0]?.youtubeId && item.episodes?.[0]?.locked===false)||hasAccess ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: item.episodes?.[0]?.legacyKey??`${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : item.available ? <Button asChild size="lg"><Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }} search={checkoutSearch}><Lock className="size-4" />Get Access</Link></Button> : <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 bg-black/30 px-4 text-sm font-semibold text-white/75 backdrop-blur-sm"><Lock className="size-4" />Coming to Avant</span>}
               {item.trailerEmbedUrl ? <Button type="button" size="lg" variant="outline" onClick={() => { setHeroPreview(false); setHeroPreviewLoaded(false); setTrailerOpen(true); }}><Play />Trailer</Button> : previewId ? <Button type="button" size="lg" variant="outline" onClick={() => { setHeroPreview(false); setHeroPreviewLoaded(false); setTrailerOpen(true); }}><Play />Preview</Button> : null}
               <Button size="lg" variant="secondary" className="col-span-2 sm:col-auto" onClick={toggleSaved}>{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
             </div>
