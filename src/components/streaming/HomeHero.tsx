@@ -39,7 +39,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
   return (
     <section className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-14 lg:mt-20 lg:min-h-0 lg:aspect-[16/7] lg:rounded-[1.75rem] lg:border lg:border-white/10 lg:shadow-[0_30px_90px_rgba(0,0,0,.55)]">
-      <img src={item.backdrop} alt="" fetchPriority="high" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
+      <img src={item.backdrop} alt={`${item.title} featured artwork`} fetchPriority="high" decoding="async" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
 
       {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen ? (
         <iframe
