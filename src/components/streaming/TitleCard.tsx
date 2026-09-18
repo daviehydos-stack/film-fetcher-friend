@@ -57,7 +57,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
       onMouseLeave={endPreview}
       className={layout === "grid" ? "group relative z-0 w-full min-w-0 md:hover:z-30" : "group relative z-0 w-[72vw] max-w-[18rem] shrink-0 min-[420px]:w-[64vw] sm:w-[18rem] md:hover:z-30 lg:w-[21rem] lg:max-w-none"}
     >
-      <div className="relative overflow-hidden rounded-md bg-surface shadow-none transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:origin-center md:group-hover:scale-[1.035] md:group-hover:shadow-[0_18px_45px_rgba(0,0,0,.75)]">
+      <div className="relative overflow-hidden rounded-lg border border-white/[.055] bg-surface shadow-[0_10px_28px_rgba(0,0,0,.22)] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:origin-center md:group-hover:scale-[1.045] md:group-hover:border-white/[.12] md:group-hover:shadow-[0_24px_60px_rgba(0,0,0,.78)]">
         <button type="button" onClick={()=>setDetailsOpen(true)} className="relative block aspect-video w-full overflow-hidden text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
           <img src={item.artwork} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`} loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100"}`} />
           {previewing && item.previewYoutubeId ? (
@@ -72,7 +72,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
               className={`pointer-events-none absolute inset-0 size-full border-0 transition-opacity duration-300 ${previewLoaded ? "opacity-100" : "opacity-0"}`}
             />
           ) : null}
-          <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100" />
+          <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,.18)_58%,rgba(0,0,0,.88)_100%)] opacity-90 md:opacity-0 md:group-hover:opacity-100" />
           <span className="absolute inset-x-0 bottom-0 p-3 text-white md:hidden"><span className="block text-sm font-bold leading-tight">{item.title}</span><span className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-white/70">{playableContentId ? <Play className="size-3 fill-current" /> : <Lock className="size-3" />}{accessLabel}</span></span>
         </button>
         <div className="hidden h-0 overflow-hidden bg-[#181818] opacity-0 transition-[height,opacity] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:block md:group-hover:h-[5.2rem] md:group-hover:opacity-100">
