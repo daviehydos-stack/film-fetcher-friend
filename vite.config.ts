@@ -37,7 +37,8 @@ export default defineConfig({
               !path.startsWith("/payment/") &&
               !path.startsWith("/watch/") &&
               path !== "/search" &&
-              path !== "/my-list",
+              path !== "/my-list" &&
+              path !== "/account",
           },
         }
       : {}),
