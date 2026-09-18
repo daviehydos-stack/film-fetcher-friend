@@ -7,29 +7,12 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
 import { publicCatalogue } from "@/lib/avant-backend";
 import { readMyList } from "@/lib/my-list";
+import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title: "Avant Movies — It's time to feel again" },
-      {
-        name: "description",
-        content:
-          "Stream independent Kenyan films and series from Avant Movies. Discover Back to Us, Nairobby, A Better Life, This is Life and more.",
-      },
-      { property: "og:title", content: "Avant Movies — It's time to feel again" },
-      {
-        property: "og:description",
-        content: "Independent Kenyan stories, made to be felt.",
-      },
-      { property: "og:type", content: "website" },
-      {
-        property: "og:image",
-        content:
-          "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg",
-      },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+    meta: publicPageMeta("/", "Avant Movies — It's time to feel again", "Stream independent Kenyan films and series from Avant Movies. Discover Back to Us, Nairobby, A Better Life, This is Life and more.", "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg"),
+    links: publicPageLinks("/"),
   }),
   component: Index,
 });
