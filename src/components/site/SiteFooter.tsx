@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 export function SiteFooter() {
   const [cmsNav,setCmsNav]=useState<any[]>([]),[appearance,setAppearance]=useState<any>({});useEffect(()=>{void publicPages().then(x=>setCmsNav(x?.pages||[])).catch(()=>{});void publicCatalogue().then(x=>setAppearance(x?.appearance||{})).catch(()=>{})},[]);const links=[...navLinks,...cmsNav.filter((p:any)=>!navLinks.some(n=>n.to==="/"+p.slug)).map((p:any)=>({to:"/"+p.slug,label:p.navigation_label||p.title}))];
   return (
-    <footer className="bg-ink text-ink-foreground">
-      <div className="mx-auto grid max-w-7xl gap-9 px-5 py-12 sm:px-10 sm:py-14 md:grid-cols-3">
+    <footer className="border-t border-white/[.06] bg-[linear-gradient(180deg,var(--background)_0%,#08090b_22%,#050608_100%)] text-ink-foreground">
+      <div className="mx-auto grid max-w-[1500px] gap-10 px-5 py-14 sm:px-10 sm:py-16 lg:px-14 md:grid-cols-3">
         <div>
           <p className="headline text-3xl text-flame">{appearance.siteName||"Avant Movies"}</p>
           <p className="mt-1 text-sm tracking-[0.18em] text-ink-foreground/70 uppercase">
