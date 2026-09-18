@@ -203,3 +203,18 @@
 }
 @keyframes avantMobilePageArrive{from{opacity:.72;filter:brightness(.84)}to{opacity:1;filter:brightness(1)}}
 @keyframes avantMobilePreviewIn{from{opacity:0;transform:translate3d(0,14px,0) scale(.985)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+
+/* QA pass: deterministic touch scrolling and a graceful detail close animation. */
+html{background:var(--color-background);scroll-behavior:auto}
+.avant-horizontal-rail{scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-stop:normal}
+.avant-preview-backdrop.is-closing{animation:avantPreviewBackdropOut 220ms ease-in both}
+.avant-preview-dialog.is-closing{animation:avantPreviewDialogOut 220ms cubic-bezier(.4,0,1,1) both}
+@keyframes avantPreviewBackdropOut{from{opacity:1}to{opacity:0}}
+@keyframes avantPreviewDialogOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,8px,0) scale(.985)}}
+@media(max-width:767px),(hover:none),(pointer:coarse){
+ .avant-horizontal-rail{scroll-snap-type:x proximity!important}
+ .avant-preview-dialog{width:100%;max-width:100%;margin-top:max(.5rem,env(safe-area-inset-top));margin-bottom:0;border-radius:1rem 1rem 0 0}
+ .avant-preview-dialog.is-closing{animation:avantMobilePreviewOut 220ms cubic-bezier(.4,0,1,1) both}
+}
+@keyframes avantMobilePreviewOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,14px,0) scale(.99)}}
+@media(prefers-reduced-motion:reduce){.avant-preview-backdrop.is-closing,.avant-preview-dialog.is-closing{animation:none!important}}
