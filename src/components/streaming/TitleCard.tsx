@@ -23,9 +23,13 @@ export function TitleCard({ item }: { item: CatalogueTitle }) {
         <h3 className="mt-3 text-base font-bold">{item.title}</h3>
         <p className="mt-1 text-xs text-muted-foreground">{item.type === "movie" ? "Movie" : "TV Series"} · {item.genres.join(" · ")}</p>
       </div>
-      <Link to="/title/$slug" params={{ slug: item.slug }} className="block p-3 md:hidden">
-        <h3 className="text-sm font-bold">{item.title}</h3><p className="mt-1 text-xs text-muted-foreground">{item.type === "movie" ? "Movie" : "TV Series"}</p>
-      </Link>
+      <div className="flex items-center gap-2 p-3 md:hidden">
+        <Link to="/title/$slug" params={{ slug: item.slug }} className="min-w-0 flex-1">
+          <h3 className="truncate text-sm font-bold">{item.title}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">{item.type === "movie" ? "Movie" : "TV Series"} · {item.genres.slice(0, 2).join(" · ")}</p>
+        </Link>
+        <Button size="icon" variant="ghost" className="shrink-0" aria-label={saved ? `Remove ${item.title} from My List` : `Add ${item.title} to My List`} onClick={() => setSaved(toggleMyList(item.id))}>{saved ? <Check /> : <Plus />}</Button>
+      </div>
     </article>
   );
 }
