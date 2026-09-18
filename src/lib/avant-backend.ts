@@ -15,7 +15,8 @@ export const saveWatchProgress=(token:string,input:{contentId:string;episodeId?:
 export const adminSession=(token:string)=>request<AdminSession>("admin-session",token,{method:"POST"});
 export const adminDashboard=(token:string)=>request<any>("admin-api",token,{method:"GET"});
 export const adminApiPost=(token:string,payload:Record<string,unknown>)=>request<any>("admin-api",token,{method:"POST",body:JSON.stringify(payload)});
-export const adminView=(token:string,view:"content"|"customers"|"payments"|"products"|"entitlements"|"audit")=>request<any>(`admin-api?view=${view}`,token,{method:"GET"});
+export type AdminView="content"|"customers"|"payments"|"products"|"entitlements"|"audit"|"pages"|"seo"|"appearance"|"media"|"system_settings"|"gemini_settings"|"cloudinary_settings"|"settings_bundle"|"integration_settings";
+export const adminView=(token:string,view:AdminView)=>request<any>(`admin-api?view=${view}`,token,{method:"GET"});
 export const adminContent=(token:string,payload:Record<string,unknown>)=>request<any>("admin-content",token,{method:"POST",body:JSON.stringify(payload)});
 export const adminCustomers=(token:string,payload:Record<string,unknown>)=>request<any>("admin-customers",token,{method:"POST",body:JSON.stringify(payload)});
 export async function hasAdminSession(){const token=getAdminToken();if(!token)return false;try{return (await adminSession(token)).admin===true}catch{return false}}
