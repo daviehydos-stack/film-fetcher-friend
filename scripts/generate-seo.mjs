@@ -2,6 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const origin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
+const productionOrigin = origin || "https://www.avantcinema.com";
 const supabaseUrl = "https://bnuyhrsezkepsaebwlmu.supabase.co";
 const staticPaths = ["/", "/movies", "/tv-shows", "/about", "/contact", "/betterlife-episodes", "/this-is-life-episodes"];
 
@@ -24,16 +25,14 @@ const robots = [
   "Disallow: /watch/",
   "Disallow: /my-list",
   "Disallow: /search",
-  ...(origin ? ["", `Sitemap: ${origin}/sitemap.xml`] : []),
+  "", `Sitemap: ${productionOrigin}/sitemap.xml`,
   "",
 ].join("\n");
 writeFileSync("public/robots.txt", robots);
 
-if (origin) {
+{
   const escapeXml = (value) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
   const today = new Date().toISOString().slice(0,10);
-  const urls = paths.map((path) => `  <url><loc>${escapeXml(origin + path)}</loc><lastmod>${today}</lastmod></url>`).join("\n");
+  const urls = paths.map((path) => `  <url><loc>${escapeXml(productionOrigin + path)}</loc><lastmod>${today}</lastmod></url>`).join("\n");
   writeFileSync("public/sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
-} else {
-  writeFileSync("public/sitemap.xml", "");
-}
+
