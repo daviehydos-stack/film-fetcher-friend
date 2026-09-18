@@ -16,7 +16,12 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const requestClose=()=>{if(closing)return;setClosing(true);window.setTimeout(onClose,220)};
  const toggleSaved=async()=>{const token=await customerToken(false);if(!token){try{await requireCustomerToken()}catch{return}}setSaved(toggleMyList(item.id).includes(item.id))};
  const start=0,end=Math.min(180,Math.max(30,item.previewDuration??120));
- useEffect(()=>{if(!video){setElapsed(0);return}const total=Math.max(1,end-start);const t=window.setInterval(()=>setElapsed(v=>v>=total?0:v+.25),250);return()=>window.clearInterval(t)},[video,end,start]); const video=!closing&&previewInView&&item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true,jsApi:true}):null;
+ useEffect(()=>{if(!video){setElapsed(0);return}
+ const receive=(event:MessageEvent)=>{try{const data=typeof event.data==="string"?JSON.parse(event.data):event.data;if(data?.event==="infoDelivery"&&typeof data?.info?.currentTime==="number"){const total=Math.max(1,end-start);const t=Math.max(0,data.info.currentTime-start);setElapsed(t>=total?0:t)}}catch{}};
+ window.addEventListener("message",receive);
+ const poll=window.setInterval(()=>frameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"listening",id:"avant-preview"}),"*"),500);
+ return()=>{window.removeEventListener("message",receive);window.clearInterval(poll)}
+ },[video,end,start]); const video=!closing&&previewInView&&item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true,jsApi:true}):null;
  useEffect(()=>{const node=heroRef.current;if(!node)return;const ob=new IntersectionObserver(([e])=>{const visible=e.isIntersecting&&e.intersectionRatio>=.25;setPreviewInView(visible);if(!visible)frameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*")},{threshold:[0,.25,.5]});ob.observe(node);return()=>ob.disconnect()},[item.id]);
  const content=<div className={`avant-preview-backdrop ${closing?"is-closing":""} fixed inset-0 z-[100] overflow-y-auto bg-black/82 backdrop-blur-[10px]`} onMouseDown={e=>{if(e.target===e.currentTarget)requestClose()}}>
   <div className={`avant-preview-dialog ${closing?"is-closing":""} relative mx-auto my-3 w-[min(96vw,1180px)] overflow-hidden rounded-2xl border border-white/[.07] bg-[#171717] shadow-[0_45px_130px_rgba(0,0,0,.88)] sm:my-8`}>
