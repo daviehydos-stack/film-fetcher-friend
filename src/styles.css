@@ -192,3 +192,14 @@
 @keyframes avantPreviewBackdropIn{from{opacity:0}to{opacity:1}}
 @keyframes avantPreviewDialogIn{from{opacity:0;transform:translateY(10px) scale(.965)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.avant-preview-backdrop,.avant-preview-dialog{animation:none!important}}
+
+/* Mobile motion polish: keep touch navigation and detail opening fluid without desktop hover mechanics. */
+@media (max-width: 767px), (hover: none), (pointer: coarse) {
+  .avant-page-transition{transition:opacity 320ms cubic-bezier(.22,1,.36,1),filter 320ms cubic-bezier(.22,1,.36,1);transform:translateZ(0);backface-visibility:hidden}
+  .avant-page-transition.is-leaving{opacity:.72;filter:brightness(.84)}
+  .avant-page-transition:not(.is-leaving){animation:avantMobilePageArrive 420ms cubic-bezier(.22,1,.36,1) both}
+  .avant-preview-backdrop{animation-duration:300ms;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .avant-preview-dialog{transform-origin:center 18%;animation:avantMobilePreviewIn 460ms cubic-bezier(.22,1,.36,1) both;will-change:transform,opacity;backface-visibility:hidden}
+}
+@keyframes avantMobilePageArrive{from{opacity:.72;filter:brightness(.84)}to{opacity:1;filter:brightness(1)}}
+@keyframes avantMobilePreviewIn{from{opacity:0;transform:translate3d(0,14px,0) scale(.985)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
