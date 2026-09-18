@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { LockedCard } from "@/components/site/VideoCard";
 import { PricingSection, PaymentHelp } from "@/components/site/Pricing";
+import { publicPageLinks } from "@/lib/seo";
 
 const POSTER =
   "https://static.wixstatic.com/media/57086b_66db2eaf1d4c44dd9a63ca85a2d0f058~mv2.jpg/v1/fill/w_1344,h_756,enc_auto/file.jpeg";
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/nairobby")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  links: [{ rel: "canonical", href: `/title/nairobby` }],
+  links: publicPageLinks("/title/nairobby"),
   component: Nairobby,
 });
 
