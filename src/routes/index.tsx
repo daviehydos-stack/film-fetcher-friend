@@ -40,6 +40,7 @@ function Index() {
   const series = catalogue.filter((item) => item.type === "series");
   const movies = catalogue.filter((item) => item.type === "movie");
   const available = catalogue.filter((item) => item.available);
+  const comingSoon = catalogue.filter((item) => !item.available);
   const myList = useMemo(() => myListIds.map((id) => catalogue.find((item) => item.id === id)).filter((item): item is (typeof catalogue)[number] => Boolean(item)), [myListIds]);
 
   return (
@@ -50,15 +51,13 @@ function Index() {
         <div className="relative z-20 -mt-16 pb-12 sm:-mt-20">
           <ContinueWatching />
           {myList.length > 0 ? <ContentRail title="My List" items={myList} /> : null}
-          <ContentRail title="Featured on Avant" items={catalogue} />
-          {available.length > 0 ? (
-            <ContentRail title="Watch Now" items={available} />
-          ) : null}
-          {series.length > 0 ? <ContentRail title="TV Shows" items={series} /> : null}
-          {movies.length > 0 ? <ContentRail title="Movies" items={movies} /> : null}
+          {available.length > 0 ? <ContentRail title="Keep Watching" items={available} /> : null}
+          {series.length > 0 ? <ContentRail title="Series & Originals" items={series} /> : null}
+          {movies.length > 0 ? <ContentRail title="Films" items={movies} /> : null}
+          {comingSoon.length > 0 ? <ContentRail title="Coming Soon" items={comingSoon} /> : null}
         </div>
 
-        <section className="mx-auto max-w-[1500px] px-5 pb-20 pt-6 sm:px-10 lg:px-14">
+        <section className="mx-auto max-w-[1500px] px-5 pb-20 pt-10 sm:px-10 lg:px-14">
           <div className="border-t border-white/10 pt-14">
             <p className="eyebrow">Avant Movies</p>
             <h2 className="mt-3 max-w-3xl text-3xl font-bold sm:text-5xl">
