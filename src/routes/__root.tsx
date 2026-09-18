@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -137,6 +137,8 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const [routeLeaving,setRouteLeaving]=useState(false);
+  useEffect(()=>{let release:number|undefined;const unsub=router.subscribe("onBeforeNavigate",()=>{setRouteLeaving(true);window.clearTimeout(release);release=window.setTimeout(()=>setRouteLeaving(false),260)});return()=>{window.clearTimeout(release);unsub()}},[router]);
   useEffect(() => {
     const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
     if (!buildSha || typeof window === "undefined") return;
@@ -164,7 +166,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="avant-page-enter"><Outlet /></div>
+      <div className={`avant-page-transition ${routeLeaving?"is-leaving":""}`}><Outlet /></div>
     </QueryClientProvider>
   );
 }
