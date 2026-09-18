@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { PaymentHelp } from "@/components/site/Pricing";
 import { socials } from "@/lib/site-data";
+import { publicPageLinks } from "@/lib/seo";
 
 const POSTER =
   "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_588,h_416,al_c,q_85,enc_auto/file.jpeg";
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/better-days")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  links: [{ rel: "canonical", href: `/title/better-days` }],
+  links: publicPageLinks("/title/better-days"),
   component: BetterDays,
 });
 
