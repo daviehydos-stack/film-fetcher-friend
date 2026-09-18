@@ -22,15 +22,17 @@ export const Route = createFileRoute("/my-list")({
 function MyList() {
   const [ids, setIds] = useState<string[]>([]);
   const [live, setLive] = useState<CatalogueTitle[]>(catalogue);
-  const [customer,setCustomer]=useState<any>(undefined);
+  const [customer,setCustomer]=useState<any>(()=>{if(typeof window==="undefined")return undefined;try{const t=localStorage.getItem("avant_google_id_token");if(!t)return null;const p=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return p?.exp*1000>Date.now()?{email:p.email,name:p.name,photoURL:p.picture}:null}catch{return null}});
   const [authBusy,setAuthBusy]=useState(false);
 
-  useEffect(() => { void customerSession().then(setCustomer); }, []);
+  useEffect(() => { if(customer===undefined) void customerSession().then(setCustomer); }, []);
 
   useEffect(() => {
     if (!customer) { setIds([]); return; }
     const sync = () => setIds(readMyList());
-    sync(); void syncMyList().then(setIds); void publicCatalogue().then((h:any)=>{const m=(h?.titles||[]).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return {...f,id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,available:true} as CatalogueTitle});if(m.length)setLive(m)}).catch(()=>{});
+    sync(); void syncMyList().then(setIds);
+    const cached=typeof window!=="undefined"?sessionStorage.getItem("avant_public_catalogue"):null;if(cached){try{const h=JSON.parse(cached);const m=(h?.titles||[]).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return {...f,id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,available:true} as CatalogueTitle});if(m.length)setLive(m)}catch{}}
+    void publicCatalogue().then((h:any)=>{const m=(h?.titles||[]).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return {...f,id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,available:true} as CatalogueTitle});if(m.length)setLive(m);try{sessionStorage.setItem("avant_public_catalogue",JSON.stringify(h))}catch{}}).catch(()=>{});
     window.addEventListener("avant-my-list", sync);
     return () => window.removeEventListener("avant-my-list", sync);
   }, [customer]);
