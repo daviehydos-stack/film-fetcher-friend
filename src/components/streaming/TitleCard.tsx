@@ -7,6 +7,7 @@ import type { CatalogueTitle } from "@/lib/site-data";
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
   const [saved, setSaved] = useState(false);
   const [previewing, setPreviewing] = useState(false);\n  const [previewFailed, setPreviewFailed] = useState(false);
+  const [previewLoaded, setPreviewLoaded] = useState(false);
   const previewTimer = useRef<number | null>(null);
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
@@ -23,6 +24,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
     if (previewTimer.current) window.clearTimeout(previewTimer.current);
     previewTimer.current = null;
     setPreviewing(false);
+    setPreviewLoaded(false);
   };
 
   return (
@@ -33,7 +35,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
     >
       <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-2 md:group-hover:scale-[1.06]">
         <Link to="/title/$slug" params={{ slug: item.slug }} className="relative block aspect-video overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
-          <img src={item.artwork} alt={item.title} loading="lazy" className={`size-full object-cover transition duration-500 ${previewing ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
+          <img src={item.artwork} alt={item.title} loading="lazy" className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
           {previewing && item.previewYoutubeId ? (
             <iframe
               src={`https://www.youtube-nocookie.com/embed/${item.previewYoutubeId}?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1`}
@@ -41,7 +43,8 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
               allow="autoplay; encrypted-media; picture-in-picture"
               tabIndex={-1}
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 size-full border-0"
+              onLoad={() => setPreviewLoaded(true)}
+              className={`pointer-events-none absolute inset-0 size-full border-0 transition-opacity duration-300 ${previewLoaded ? "opacity-100" : "opacity-0"}`}
             />
           ) : null}
           <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100" />
