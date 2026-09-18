@@ -33,7 +33,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const generatedClip = autoPlan.clips[0] ?? { start: 0, end: 35, duration: 35, zone: 0 };
   const previewStart = 0;
   const previewEnd = item.previewDuration ?? generatedClip.end ?? 120;
-  const previewUrl = item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, heroMuted) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: previewStart, end: previewEnd, loop: true }) : null;
+  const previewUrl = item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, heroMuted) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: previewStart, end: previewEnd, loop: true, jsApi:true }) : null;
   const previewFrameRef=useRef<HTMLIFrameElement|null>(null);
   const pausePreview=()=>{previewFrameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*");};
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
@@ -48,7 +48,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     return () => window.clearTimeout(timer);
   }, [item.id, previewUrl, item.heroAutoplay, heroInView, trailerOpen]);
   useEffect(() => { const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{const visible=entry.isIntersecting&&entry.intersectionRatio>=0.35;setHeroInView(visible);if(!visible){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}},{threshold:[0,.15,.35,.6]});observer.observe(node);return()=>observer.disconnect(); }, [item.id]);
-  useEffect(()=>()=>pausePreview(),[item.id]);
+  useEffect(()=>{const hide=()=>{if(document.hidden){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}};document.addEventListener("visibilitychange",hide);return()=>{document.removeEventListener("visibilitychange",hide);pausePreview()}},[item.id]);
   useEffect(() => { if (!trailerOpen) return; const close = (event: KeyboardEvent) => { if (event.key === "Escape") setTrailerOpen(false); }; window.addEventListener("keydown", close); const previous = document.body.style.overflow; document.body.style.overflow = "hidden"; return () => { window.removeEventListener("keydown", close); document.body.style.overflow = previous; }; }, [trailerOpen]);
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
   const expandDetails = () => { setDetailExpanded(true); window.setTimeout(() => episodesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); };
@@ -77,7 +77,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
             <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.shortDescription||item.synopsis}</p>{item.cast?.length?<p className="mt-3 max-w-xl text-sm text-white/60"><span className="text-white/35">Starring:</span> {item.cast.slice(0,4).join(", ")}{item.cast.length>4?"…":""}</p>:null}
             <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
               {(item.episodes?.[0]?.youtubeId && item.episodes?.[0]?.locked===false)||hasAccess ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: item.episodes?.[0]?.legacyKey??`${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : item.available ? <Button asChild size="lg"><Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }} search={checkoutSearch}><Lock className="size-4" />Get Access</Link></Button> : <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 bg-black/30 px-4 text-sm font-semibold text-white/75 backdrop-blur-sm"><Lock className="size-4" />Coming to Avant</span>}
-              {item.trailerEmbedUrl ? <Button type="button" size="lg" variant="outline" onClick={() => { setHeroPreview(false); setHeroPreviewLoaded(false); setTrailerOpen(true); }}><Play />Trailer</Button> : previewId ? <Button type="button" size="lg" variant="outline" onClick={() => { setHeroPreview(false); setHeroPreviewLoaded(false); setTrailerOpen(true); }}><Play />Preview</Button> : null}
+              {item.trailerEmbedUrl ? <Button type="button" size="lg" variant="outline" onClick={() => { pausePreview(); setHeroPreview(false); setHeroPreviewLoaded(false); setTrailerOpen(true); }}><Play />Trailer</Button> : previewId ? <Button type="button" size="lg" variant="outline" onClick={() => { pausePreview(); setHeroPreview(false); setHeroPreviewLoaded(false); setTrailerOpen(true); }}><Play />Preview</Button> : null}
               <Button size="lg" variant="secondary" className="col-span-2 sm:col-auto" onClick={toggleSaved}>{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
             </div>
           </div>
