@@ -38,6 +38,7 @@ jobs:
       - name: Build static TanStack preview
         env:
           VITE_BUILD_SHA: ${{ github.sha }}
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
         run: bun run build
 
       - name: Prepare Pages artifact
