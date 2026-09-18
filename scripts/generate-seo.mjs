@@ -19,7 +19,7 @@ try {
     liveEpisodes=episodeLists.flat();
   }
 } catch (error) {
-  console.warn("SEO: live catalogue unavailable; using repository catalogue fallback.", error?.message || error);
+  console.warn("SEO: live catalogue unavailable; dynamic catalogue URLs will be omitted.", error?.message || error);
 }
 try {
   const response = await fetch(`${supabaseUrl}/functions/v1/public-pages`);
