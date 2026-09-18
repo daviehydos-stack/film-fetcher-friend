@@ -7,6 +7,7 @@ import { betterLifePaid } from "@/lib/site-data";
 export const Route = createFileRoute("/a-better-life")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "A Better Life — Season one | Avant Cinema" },
       {
         name: "description",
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/a-better-life")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  links: [{ rel: "canonical", href: `/title/a-better-life` }],
   component: ABetterLife,
 });
 
