@@ -22,7 +22,7 @@ function CheckoutRoute(){
     <Link to="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-white/70 transition hover:text-white"><ArrowLeft className="size-4"/>Avant Movies</Link>
     <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[.14em] text-emerald-300"><LockKeyhole className="size-4"/>Secure checkout</div>
    </header>
-   <div className={`${embedded?"mx-auto max-w-xl py-3":"grid gap-7 py-7 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-10 lg:py-12"}`}>
+   <div className={embedded?"mx-auto max-w-xl py-3":"grid gap-7 py-7 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-10 lg:py-12"}>
     <section>
      <p className="text-center text-[10px] font-bold uppercase tracking-[.2em] text-orange-400 sm:text-left sm:text-xs">Complete your access</p>
      <h1 className="mx-auto mt-2 max-w-2xl text-center text-3xl font-black tracking-[-.03em] sm:mx-0 sm:text-left sm:text-5xl lg:text-6xl">Unlock. Pay. <span className="text-orange-400">Start watching.</span></h1>
@@ -44,7 +44,7 @@ function CheckoutRoute(){
       {['Sign in','Pay with M-PESA','Start watching'].map((label,i)=><div key={label} className="flex min-w-0 flex-col items-center gap-1.5 rounded-xl border border-white/10 px-2 py-2.5 text-center text-[10px] font-semibold text-white/65 sm:flex-row sm:gap-3 sm:px-4 sm:py-3 sm:text-left sm:text-xs"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-white/10 text-[11px] text-white">{i+1}</span>{label}</div>)}
      </div>
     </section>
-    {!embedded?<aside className={`${embedded?"mt-4":"mt-0"} h-fit overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-[#0d0f13] shadow-2xl lg:sticky lg:top-8"><div className="h-1 bg-gradient-to-r from-orange-500 via-orange-300 to-transparent"/><div className="p-4 sm:p-6">
+    {!embedded?<aside className="h-fit overflow-hidden rounded-2xl border border-white/10 bg-[#0d0f13] shadow-2xl sm:rounded-3xl lg:sticky lg:top-8"><div className="h-1 bg-gradient-to-r from-orange-500 via-orange-300 to-transparent"/><div className="p-4 sm:p-6">
      <p className="text-xs font-bold uppercase tracking-[.18em] text-white/40">Order summary</p>
      {loading?<div className="mt-5 h-24 animate-pulse rounded-xl bg-white/5"/>:product?<><h2 className="mt-5 text-xl font-bold">{product.name}</h2><p className="mt-2 text-sm leading-6 text-white/50">{product.description||'Avant Movies streaming access'}</p><div className="my-6 border-t border-white/10"/><div className="flex items-end justify-between gap-4"><span className="text-sm text-white/55">Total</span><div className="text-right">{regularAmount?<p className="text-xs text-white/35 line-through">{regularAmount}</p>:null}<strong className="text-2xl">{amount}</strong></div></div><p className="mt-2 text-right text-xs text-white/40">{product.duration_days} days access</p></>:<p className="mt-5 text-sm text-white/55">Access option will be confirmed securely before payment.</p>}
      <div className="mt-7 space-y-3 border-t border-white/10 pt-5 text-xs text-white/50">
