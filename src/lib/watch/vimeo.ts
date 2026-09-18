@@ -16,8 +16,8 @@ export function vimeoEmbedUrl(playback: VimeoPlayback) {
     portrait: '0',
     dnt: '1',
   })
-  if ((playback.resumeAtSeconds ?? 0) > 0) {
-    params.set('#t', String(Math.floor(playback.resumeAtSeconds!)))
-  }
-  return `https://player.vimeo.com/video/${id}?${params.toString()}`
+
+  const resume = Math.max(0, Math.floor(playback.resumeAtSeconds ?? 0))
+  const fragment = resume > 0 ? `#t=${resume}s` : ''
+  return `https://player.vimeo.com/video/${id}?${params.toString()}${fragment}`
 }
