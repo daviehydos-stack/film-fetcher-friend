@@ -30,7 +30,7 @@ export function PageShell({
         ) : null}
         {hero ? (
           <div className="panel mt-8 overflow-hidden rounded-2xl">
-            <img src={hero} alt={title} className="w-full object-cover" />
+            <img src={hero} alt={`${title} featured artwork`} decoding="async" className="w-full object-cover" />
           </div>
         ) : null}
       </section>
