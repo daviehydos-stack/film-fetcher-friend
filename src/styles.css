@@ -160,7 +160,7 @@
 }
 
 @media (max-width: 639px) {
-  @utility hero-shade {
+  .hero-shade {
     background: linear-gradient(90deg, oklch(0.08 0.006 255 / 0.82) 0%, oklch(0.08 0.006 255 / 0.34) 70%, transparent 100%), linear-gradient(0deg, var(--background) 0%, transparent 52%);
   }
 }
