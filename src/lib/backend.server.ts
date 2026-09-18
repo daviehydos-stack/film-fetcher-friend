@@ -2,6 +2,24 @@ import { createServerOnlyFn } from '@tanstack/react-start'
 
 type BackendError = { error: string; code?: string }
 
+export type BackendPaymentResponse = {
+  payment: { reference: string }
+  customerId?: string
+  redirectUrl?: string
+  checkoutToken?: string
+  clientMessage?: string
+}
+
+export type BackendVerifyResponse = {
+  payment: { reference: string; status: string }
+  entitlement?: { id: string }
+}
+
+export type BackendAccessResponse = {
+  authorized: boolean
+  reason: 'granted' | 'no_customer' | 'no_entitlement'
+}
+
 function backendBaseUrl() {
   const value = process.env.FILM_BACKEND_URL?.trim()
   if (!value) throw new Error('FILM_BACKEND_URL is not configured')
@@ -38,7 +56,7 @@ export const backendCreatePayment = createServerOnlyFn(
     customer: { name?: string; email?: string; mobile?: string }
     provider: 'mpesa' | 'card'
   }) =>
-    callBackend('/api/payments/create', {
+    callBackend<BackendPaymentResponse>('/api/payments/create', {
       method: 'POST',
       body: JSON.stringify({
         product_id: input.productId,
@@ -49,7 +67,7 @@ export const backendCreatePayment = createServerOnlyFn(
 )
 
 export const backendVerifyPayment = createServerOnlyFn(async (reference: string) =>
-  callBackend('/api/payments/verify', {
+  callBackend<BackendVerifyResponse>('/api/payments/verify', {
     method: 'POST',
     body: JSON.stringify({ reference }),
   }),
@@ -57,7 +75,7 @@ export const backendVerifyPayment = createServerOnlyFn(async (reference: string)
 
 export const backendAuthorizeContent = createServerOnlyFn(
   async (input: { customerId: string; contentId: string; seasonId?: string }) =>
-    callBackend('/api/access/authorize', {
+    callBackend<BackendAccessResponse>('/api/access/authorize', {
       method: 'POST',
       body: JSON.stringify({
         customer_id: input.customerId,
