@@ -9,22 +9,10 @@ export type AutoTrailerPlan={sourceDuration:number;targetDuration:number;clips:T
 export function buildAutoTrailerPlan(sourceDuration:number):AutoTrailerPlan{
  const d=Math.max(0,Math.floor(sourceDuration));
  if(d<=0)return{sourceDuration:0,targetDuration:0,clips:[]};
- if(d<=60){const target=Math.min(18,Math.max(8,Math.floor(d*.45))),start=Math.max(0,Math.floor((d-target)*.32));return{sourceDuration:d,targetDuration:target,clips:[{start,end:Math.min(d,start+target),duration:Math.min(target,d-start),zone:1}]}}
- const target=d>=1500?50:d>=900?45:d>=480?36:Math.min(28,Math.floor(d*.22));
- const count=d>=900?5:d>=480?4:3;
- const opening=Math.max(12,Math.floor(d*.08));
- const ending=Math.min(d-4,Math.floor(d*.84));
- const usable=Math.max(1,ending-opening);
- const each=Math.max(6,Math.floor(target/count));
- const clips:Array<TrailerClip>=[];
- for(let i=0;i<count;i++){
-   const zoneStart=opening+(usable/count)*i;
-   const zoneEnd=opening+(usable/count)*(i+1);
-   const center=zoneStart+(zoneEnd-zoneStart)*(.42+(i%2)*.12);
-   const start=Math.max(opening,Math.floor(center-each/2));
-   const end=Math.min(ending,start+each);
-   clips.push({start,end,duration:end-start,zone:i+1});
- }
- return{sourceDuration:d,targetDuration:clips.reduce((n,c)=>n+c.duration,0),clips};
+ // A missing trailer must feel like the beginning of the story, never a random montage.
+ // Use one continuous opening preview so dialogue/action is not interrupted by jumps.
+ const target=d>=180?180:d>=120?120:Math.max(15,Math.floor(d*.75));
+ const end=Math.min(d,target);
+ return{sourceDuration:d,targetDuration:end,clips:[{start:0,end,duration:end,zone:1}]};
 }
 export function durationToSeconds(raw?:string){if(!raw)return 0;const p=raw.split(":").map(Number);return p.length===3?p[0]*3600+p[1]*60+p[2]:p.length===2?p[0]*60+p[1]:Number(raw)||0;}
