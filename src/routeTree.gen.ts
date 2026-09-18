@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CheckoutProductIdRouteImport } from './routes/checkout.$productId'
 import { Route as PaymentFailedRouteImport } from './routes/payment.failed'
 import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
@@ -37,6 +38,11 @@ const PaymentFailedRoute = PaymentFailedRouteImport.update({ id: '/payment/faile
 const PaymentSuccessRoute = PaymentSuccessRouteImport.update({ id: '/payment/success', path: '/payment/success', getParentRoute: () => rootRouteImport } as any)
 const WatchContentIdRoute = WatchContentIdRouteImport.update({ id: '/watch/$contentId', path: '/watch/$contentId', getParentRoute: () => rootRouteImport } as any)
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -129,6 +135,7 @@ const WriteLikeAMasterRoute = WriteLikeAMasterRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/admin': typeof AdminRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRoutesByTo {
+  '/admin': typeof AdminRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
@@ -177,6 +185,7 @@ export interface FileRoutesByTo {
   '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRoutesById {
+  '/admin': typeof AdminRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
@@ -204,6 +213,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/admin'
     | '/checkout/$productId'
     | '/payment/failed'
     | '/payment/success'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AdminRoute: typeof AdminRoute
   CheckoutProductIdRoute: typeof CheckoutProductIdRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
@@ -437,6 +448,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  AdminRoute: AdminRoute,
   CheckoutProductIdRoute: CheckoutProductIdRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
