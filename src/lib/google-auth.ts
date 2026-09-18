@@ -1,4 +1,4 @@
-const INTERNAL_INTERNAL_GOOGLE_CLIENT_ID="12797178987-c8vk15t4gplabjhap4d0ebbv8s2fhk9a.apps.googleusercontent.com";
+const INTERNAL_GOOGLE_CLIENT_ID="12797178987-c8vk15t4gplabjhap4d0ebbv8s2fhk9a.apps.googleusercontent.com";
 const GIS_URL="https://accounts.google.com/gsi/client";
 const TOKEN_KEY="avant_google_id_token";
 const GOOGLE_ORIGIN="https://daviehydos-stack.github.io";
