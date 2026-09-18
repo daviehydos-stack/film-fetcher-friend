@@ -56,6 +56,10 @@ export function AvantTransitionEngine() {
 
   useEffect(() => {
     reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const desktopMark = new Image();
+    desktopMark.src = `${import.meta.env.BASE_URL}avant-transition-a.webp`;
+    const mobileMark = new Image();
+    mobileMark.src = `${import.meta.env.BASE_URL}avant-transition-a-mobile.webp`;
 
     const onClick = (event: MouseEvent) => {
       const element = event.target instanceof Element ? event.target.closest("a[href]") : null;
@@ -120,7 +124,10 @@ export function AvantTransitionEngine() {
     <div className={"avant-transition-engine avant-transition-" + phase + " avant-transition-mode-" + mode} aria-hidden="true">
       <div className="avant-transition-vignette" />
       <div className="avant-transition-mark">
-        <span className="avant-transition-letter">A</span>
+        <picture className="avant-transition-picture">
+          <source media="(max-width: 639px)" srcSet={`${import.meta.env.BASE_URL}avant-transition-a-mobile.webp`} />
+          <img className="avant-transition-image" src={`${import.meta.env.BASE_URL}avant-transition-a.webp`} alt="" decoding="async" draggable={false} />
+        </picture>
         <span className="avant-transition-light" />
       </div>
     </div>
