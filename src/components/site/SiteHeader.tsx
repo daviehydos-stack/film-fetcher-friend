@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Search, UserRound, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
@@ -40,7 +40,6 @@ export function SiteHeader() {
 
         <div className="ml-auto hidden items-center gap-4 lg:flex">
           <Link to="/search" aria-label="Search" className="text-white/80 transition hover:text-white"><Search className="size-5" /></Link>
-          <button type="button" aria-label="Account" className="grid size-8 place-items-center rounded bg-white/10 text-white/80"><UserRound className="size-5" /></button>
         </div>
 
         <button type="button" aria-label="Menu" onClick={() => setOpen((value) => !value)} className="ml-auto rounded p-2 lg:hidden">
