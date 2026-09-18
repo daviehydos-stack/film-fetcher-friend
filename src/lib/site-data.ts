@@ -35,6 +35,13 @@ export type CatalogueTitle = {
   previewStart?: number;
   previewDuration?: number;
   heroAutoplay?: boolean;
+  cast?: string[];
+  creators?: string[];
+  directors?: string[];
+  maturityRating?: string;
+  maturityReasons?: string[];
+  quality?: string;
+  languages?: string[];
   episodes?: Episode[];
 };
 
@@ -141,6 +148,10 @@ export type Episode = {
   youtubeId?: string;
   poster?: string;
   locked?: boolean;
+  description?: string;
+  legacyKey?: string;
+  previewStart?: number;
+  previewDuration?: number;
 };
 
 export const thisIsLifeFree: Episode[] = [
