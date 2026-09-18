@@ -39,8 +39,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  const [routeFading,setRouteFading]=useState(false);
-  useEffect(()=>{let timer:number|undefined;const unsubscribe=router.subscribe("onBeforeNavigate",()=>{setRouteFading(true);window.clearTimeout(timer);timer=window.setTimeout(()=>setRouteFading(false),180)});return()=>{window.clearTimeout(timer);unsubscribe()}},[router]);
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
@@ -140,9 +138,6 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
-  const [routeLeaving,setRouteLeaving]=useState(false);
-  useEffect(()=>{let release:number|undefined;const unsub=router.subscribe("onBeforeNavigate",()=>{setRouteLeaving(true);window.clearTimeout(release);release=window.setTimeout(()=>setRouteLeaving(false),260)});return()=>{window.clearTimeout(release);unsub()}},[router]);
   useEffect(() => {
     const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
     if (!buildSha || typeof window === "undefined") return;
@@ -170,7 +165,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className={`avant-page-transition ${routeLeaving?"is-leaving":""}`}><Outlet /></div>
+      <div className="avant-page-transition"><Outlet /></div>
     </QueryClientProvider>
   );
 }
