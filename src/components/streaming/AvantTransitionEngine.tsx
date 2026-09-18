@@ -2,8 +2,7 @@ import { useLocation } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type TransitionPhase = "idle" | "entering" | "navigating" | "revealing" | "complete";
-const ENTER_MS = 300;
-const REVEAL_MS = 360;
+const REVEAL_MS = 420;
 const SAFETY_MS = 2200;
 
 function stopPlayback() {
@@ -123,12 +122,14 @@ export function AvantTransitionEngine() {
   return (
     <div className={"avant-transition-engine avant-transition-" + phase + " avant-transition-mode-" + mode} aria-hidden="true">
       <div className="avant-transition-vignette" />
+      <div className="avant-transition-horizon" />
       <div className="avant-transition-mark">
         <picture className="avant-transition-picture">
           <source media="(max-width: 639px)" srcSet={`${import.meta.env.BASE_URL}avant-transition-a-mobile.webp`} />
           <img className="avant-transition-image" src={`${import.meta.env.BASE_URL}avant-transition-a.webp`} alt="" decoding="async" draggable={false} />
         </picture>
         <span className="avant-transition-light" />
+        <span className="avant-transition-flare" />
       </div>
     </div>
   );
