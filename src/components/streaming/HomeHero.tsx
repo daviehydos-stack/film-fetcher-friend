@@ -32,16 +32,16 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (media.matches || !screen.matches || !item.trailerEmbedUrl) return () => screen.removeEventListener?.("change", syncScreen);
+    if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false) return () => screen.removeEventListener?.("change", syncScreen);
     const timer = window.setTimeout(() => setTrailerReady(true), 1200);
     return () => { window.clearTimeout(timer); screen.removeEventListener?.("change", syncScreen); };
-  }, [item.id, item.trailerEmbedUrl]);
+  }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
 
   return (
     <section className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-14 lg:mt-20 lg:min-h-0 lg:aspect-[16/7] lg:rounded-[1.75rem] lg:border lg:border-white/10 lg:shadow-[0_30px_90px_rgba(0,0,0,.55)]">
       <img src={item.backdrop} alt="" fetchPriority="high" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
 
-      {item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen ? (
+      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen ? (
         <iframe
           src={heroTrailerUrl(item.trailerEmbedUrl, muted)}
           title={`${item.title} trailer`}
@@ -69,7 +69,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         </div>
       </div>
 
-      {item.trailerEmbedUrl && trailerReady && trailerLoaded && trailerVisible && !trailerFailed && !reducedMotion && largeScreen ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
+      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && trailerLoaded && trailerVisible && !trailerFailed && !reducedMotion && largeScreen ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
     </section>
   );
 }

@@ -32,6 +32,7 @@ export type CatalogueTitle = {
   available?: boolean;
   trailerEmbedUrl?: string;
   previewYoutubeId?: string;
+  heroAutoplay?: boolean;
   episodes?: Episode[];
 };
 
@@ -349,7 +350,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Shot in Watamu, Back to Us is a Kenyan love story about the distance between who we were and who we became.",
     artwork: "https://static.wixstatic.com/media/57086b_c12a5a80a97149a4a067d9857681e3e3~mv2.jpg/v1/fill/w_980,h_531,enc_auto/file.jpeg",
     backdrop: "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg",
-    legacyPath: "/back-to-us", previewYoutubeId: "9E3t88BExvQ", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/9E3t88BExvQ?rel=0",
+    legacyPath: "/back-to-us", heroAutoplay: false, previewYoutubeId: "9E3t88BExvQ", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/9E3t88BExvQ?rel=0",
   },
   {
     id: "nairobby", slug: "nairobby", title: "Nairobby", type: "movie",

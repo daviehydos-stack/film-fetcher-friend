@@ -48,7 +48,7 @@ function Index() {
       <main className="overflow-hidden">
         <HomeHero item={featured} />
 
-        <div className="relative z-20 -mt-16 pb-12 sm:-mt-20">
+        <div className="relative z-20 pb-12 pt-5 sm:pt-7 lg:pt-8">
           <ContinueWatching />
           {catalogue.length > 0 ? <RankedRail title="Top picks on Avant" items={catalogue} /> : null}
           {myList.length > 0 ? <ContentRail title="My List" items={myList} /> : null}
