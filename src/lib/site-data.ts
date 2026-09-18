@@ -5,7 +5,6 @@ export const socials = {
   facebook: "https://www.facebook.com/AvantFilms/",
   youtube: "https://www.youtube.com/@avantcinemas",
   instagram: "https://www.instagram.com/jgatero/?hl=en",
-  twitter: "http://www.twitter.com/wix",
 };
 
 export const navLinks = [
