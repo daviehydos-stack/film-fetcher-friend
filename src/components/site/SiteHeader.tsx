@@ -30,11 +30,11 @@ export function SiteHeader() {
           {navLinks.map((l) => <Link key={l.to} to={l.to} className="text-sm font-medium text-foreground/80 transition hover:text-foreground" activeProps={{ className: "text-foreground font-semibold" }} activeOptions={{ exact: l.to === "/" }}>{l.label}</Link>)}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Link to="/search" className="rounded-full p-2 transition hover:bg-white/10" aria-label="Search"><Search className="size-5" /></Link>
-          <button className="rounded-full p-2 md:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen((v) => !v)}>{open ? <X /> : <Menu />}</button>
+          <Link to="/search" className="grid size-11 place-items-center rounded-full transition hover:bg-white/10" aria-label="Search"><Search className="size-5" /></Link>
+          <button className="grid size-11 place-items-center rounded-full md:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen((v) => !v)}>{open ? <X /> : <Menu />}</button>
         </div>
       </div>
-      {open && <nav id="mobile-navigation" className="max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/10 bg-background px-5 py-4 shadow-2xl md:hidden">{navLinks.map((l) => <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="block py-3 text-base font-medium">{l.label}</Link>)}<Link to="/search" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 border-t border-white/10 py-4 text-base font-medium"><Search className="size-5" />Search</Link></nav>}
+      {open && <nav id="mobile-navigation" className="max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/10 bg-background px-5 py-4 shadow-2xl md:hidden">{navLinks.map((l) => <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="flex min-h-12 items-center rounded-md px-2 text-base font-medium transition hover:bg-white/5">{l.label}</Link>)}<Link to="/search" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 border-t border-white/10 py-4 text-base font-medium"><Search className="size-5" />Search</Link></nav>}
     </header>
   );
 }
