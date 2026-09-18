@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ContentRail } from "@/components/streaming/ContentRail";
+import { ContentRail, RankedRail } from "@/components/streaming/ContentRail";
 import { HomeHero } from "@/components/streaming/HomeHero";
 import { ContinueWatching } from "@/components/streaming/ContinueWatching";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
@@ -50,6 +50,7 @@ function Index() {
 
         <div className="relative z-20 -mt-16 pb-12 sm:-mt-20">
           <ContinueWatching />
+          {catalogue.length > 0 ? <RankedRail title="Top picks on Avant" items={catalogue} /> : null}
           {myList.length > 0 ? <ContentRail title="My List" items={myList} /> : null}
           {available.length > 0 ? <ContentRail title="Keep Watching" items={available} /> : null}
           {series.length > 0 ? <ContentRail title="Series & Originals" items={series} /> : null}
