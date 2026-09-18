@@ -8,10 +8,11 @@ export function ContentRail({ title, items }: { title: string; items: CatalogueT
   const rail = useRef<HTMLDivElement>(null);
   const move = (direction: number) => {
     const viewport = rail.current?.clientWidth ?? 680;
-    rail.current?.scrollBy({ left: direction * Math.max(280, viewport * 0.82), behavior: "smooth" });
+    const card = rail.current?.querySelector<HTMLElement>("[data-title-card]")?.offsetWidth ?? 288;
+    rail.current?.scrollBy({ left: direction * Math.max(card + 16, viewport * 0.78), behavior: "smooth" });
   };
   return (
-    <section className="py-5 sm:py-7" aria-label={title}>
+    <section className="py-5 sm:py-7" aria-label={title} role="region">
       <div className="mb-4 flex items-center justify-between px-5 sm:px-10 lg:px-14">
         <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
         <div className="hidden gap-2 sm:flex">
@@ -20,7 +21,7 @@ export function ContentRail({ title, items }: { title: string; items: CatalogueT
         </div>
       </div>
       <div ref={rail} className="hide-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth scroll-px-5 overscroll-x-contain px-5 pb-5 touch-pan-x sm:gap-4 sm:scroll-px-10 sm:px-10 lg:scroll-px-14 lg:px-14">
-        {items.map((item) => <div key={item.id} className="snap-start"><TitleCard item={item} /></div>)}
+        {items.map((item) => <div key={item.id} data-title-card className="snap-start"><TitleCard item={item} /></div>)}
       </div>
     </section>
   );
