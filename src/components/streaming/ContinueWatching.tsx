@@ -3,23 +3,39 @@ import { Play, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { catalogue, type CatalogueTitle, type Episode } from "@/lib/site-data";
 import { clearProgress, formatWatchTime, readProgress, type WatchProgress } from "@/lib/watch-progress";
+import { getWatchProgress } from "@/lib/avant-backend";
+import { customerToken } from "@/lib/firebase-customer-auth";
 
 type ProgressRow = { item: CatalogueTitle; episode: Episode; index: number; progress: WatchProgress };
 
 export function ContinueWatching() {
   const [progress, setProgress] = useState<WatchProgress[]>([]);
+  const [serverProgress, setServerProgress] = useState<WatchProgress[]>([]);
   useEffect(() => {
     const sync = () => setProgress(readProgress());
     sync();
+    let cancelled = false;
+    customerToken(false).then(async (token) => {
+      if (!token || cancelled) return;
+      try {
+        const result = await getWatchProgress(token);
+        if (cancelled) return;
+        const remote = (result.progress ?? []).filter((row: any) => row.legacy_key).map((row: any) => ({ contentId: row.legacy_key, seconds: Number(row.progress_seconds) || 0, duration: Number(row.duration_seconds) || undefined, updatedAt: Date.parse(row.last_watched_at) || Date.now() }));
+        setServerProgress(remote);
+      } catch { /* local progress remains available */ }
+    });
     window.addEventListener("avant-progress", sync);
-    return () => window.removeEventListener("avant-progress", sync);
+    return () => { cancelled = true; window.removeEventListener("avant-progress", sync); };
   }, []);
 
   const rows = useMemo(() => {
+    const merged = new Map<string, WatchProgress>();
+    [...progress, ...serverProgress].forEach((entry) => { const previous = merged.get(entry.contentId); if (!previous || entry.updatedAt >= previous.updatedAt) merged.set(entry.contentId, entry); });
+    const combined = [...merged.values()];
     const episodes = catalogue.flatMap((item) =>
       (item.episodes ?? []).map((episode, index) => ({ item, episode, index })),
     );
-    return progress.filter((entry) => !entry.duration || entry.seconds < entry.duration * 0.95).sort((a, b) => b.updatedAt - a.updatedAt).flatMap((entry): ProgressRow[] => {
+    return combined.filter((entry) => !entry.duration || entry.seconds < entry.duration * 0.95).sort((a, b) => b.updatedAt - a.updatedAt).flatMap((entry): ProgressRow[] => {
       const match = episodes.find(({ item, index }) => entry.contentId === `${item.slug}-${index + 1}`);
       return match ? [{ ...match, progress: entry }] : [];
     });

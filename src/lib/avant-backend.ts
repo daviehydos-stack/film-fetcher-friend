@@ -10,7 +10,7 @@ export const startPalplussPayment=(token:string,input:{productId:string;phone:st
 export const paymentStatus=(token:string,reference:string)=>request<any>("payment-status",token,{method:"POST",body:JSON.stringify({reference})});
 export const authorizeWatch=(token:string,contentId:string,seasonId?:string)=>request<any>("authorize-watch",token,{method:"POST",body:JSON.stringify({contentId,seasonId})});
 export const resolvePlayback=(token:string,contentId:string)=>request<any>("resolve-playback",token,{method:"POST",body:JSON.stringify({contentId})});
-export const saveWatchProgress=(token:string,input:{contentId:string;episodeId?:string;progressSeconds:number;durationSeconds:number})=>request<any>("save-watch-progress",token,{method:"POST",body:JSON.stringify(input)});
+export const getWatchProgress=(token:string)=>request<any>("get-watch-progress",token,{method:"GET"});\nexport const saveWatchProgress=(token:string,input:{contentId:string;episodeId?:string;progressSeconds:number;durationSeconds:number})=>request<any>("save-watch-progress",token,{method:"POST",body:JSON.stringify(input)});
 export const adminSession=(token:string)=>request<AdminSession>("admin-session",token,{method:"POST"});
 export const adminDashboard=(token:string)=>request<any>("admin-api",token,{method:"GET"});
 export const adminView=(token:string,view:"customers"|"payments"|"products"|"entitlements"|"audit")=>request<any>(`admin-api?view=${view}`,token,{method:"GET"});
