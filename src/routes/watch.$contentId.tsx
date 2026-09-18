@@ -95,7 +95,7 @@ function WatchRoute() {
             />
           </div>
         ) : showAccessRequired ? (
-          <div className="grid aspect-video min-h-[18rem] place-items-center rounded-md border border-white/10 bg-neutral-950 px-6">
+          <div className="mx-4 grid aspect-video min-h-[16rem] place-items-center rounded-md border sm:mx-0 sm:min-h-[18rem] border-white/10 bg-neutral-950 px-6">
             <div className="max-w-md text-center">
               <LockKeyhole className="mx-auto size-9 text-white/60" />
               <h1 className="mt-5 text-2xl font-bold">{authorized === null ? 'Checking access…' : 'This episode requires access'}</h1>
@@ -108,7 +108,7 @@ function WatchRoute() {
             </div>
           </div>
         ) : (
-          <div className="grid aspect-video min-h-[18rem] place-items-center rounded-md border border-white/10 bg-neutral-950 px-6">
+          <div className="mx-4 grid aspect-video min-h-[16rem] place-items-center rounded-md border sm:mx-0 sm:min-h-[18rem] border-white/10 bg-neutral-950 px-6">
             <div className="max-w-md text-center">
               <p className="text-sm text-white/60">Protected playback authorization succeeded.</p>
               <p className="mt-2 text-xs text-white/35">The secure Vimeo playback URL still needs to be supplied by the backend for this episode.</p>
@@ -122,9 +122,9 @@ function WatchRoute() {
             <h1 className="mt-2 text-xl font-bold sm:text-2xl">{episode.title}</h1>
             <p className="mt-2 text-sm text-white/55">{episode.duration}</p>
           </div>
-          <nav className="flex gap-2" aria-label="Episode navigation">
-            {index > 0 ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${index}` }} className="inline-flex items-center gap-2 rounded border border-white/15 px-4 py-2 text-sm hover:bg-white/10"><ChevronLeft className="size-4" />Previous</Link> : null}
-            {index < total - 1 ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${index + 2}` }} className="inline-flex items-center gap-2 rounded border border-white/15 px-4 py-2 text-sm hover:bg-white/10">Next<ChevronRight className="size-4" /></Link> : null}
+          <nav className="flex w-full gap-2 sm:w-auto" aria-label="Episode navigation">
+            {index > 0 ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${index}` }} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded border border-white/15 px-3 py-2 text-sm hover:bg-white/10 sm:flex-none sm:px-4"><ChevronLeft className="size-4" />Previous</Link> : null}
+            {index < total - 1 ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${index + 2}` }} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded border border-white/15 px-3 py-2 text-sm hover:bg-white/10 sm:flex-none sm:px-4">Next<ChevronRight className="size-4" /></Link> : null}
           </nav>
         </div>
 
