@@ -27,7 +27,7 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
-          </ul><div className="mt-5 flex gap-4 text-xs text-ink-foreground/55"><Link to="/about" className="hover:text-flame">About Avant</Link><span>Privacy</span><span>Terms</span></div>
+          </ul><div className="mt-5 flex gap-4 text-xs text-ink-foreground/55"><Link to="/about" className="hover:text-flame">About Avant</Link><Link to="/privacy" className="hover:text-flame">Privacy</Link><Link to="/terms" className="hover:text-flame">Terms</Link></div>
         </div>
 
         <div>
