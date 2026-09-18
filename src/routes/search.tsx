@@ -5,7 +5,7 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { TitleCard } from "@/components/streaming/TitleCard";
 import { Input } from "@/components/ui/input";
 import { catalogue } from "@/lib/site-data";
-export const Route = createFileRoute("/search")({ component: SearchPage });
+export const Route = createFileRoute("/search")({ head: () => ({ meta: [{ title: "Search — Avant Movies" }] }), component: SearchPage });
 function SearchPage() {
   const [query, setQuery] = useState("");
   const results = useMemo(() => {
