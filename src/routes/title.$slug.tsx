@@ -9,7 +9,8 @@ export const Route = createFileRoute("/title/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const path = `/title/${loaderData.slug}`;
-    const title = (loaderData as any).seoTitle || `${loaderData.title} — Avant Movies`;\n    const description = (loaderData as any).metaDescription || loaderData.shortDescription;
+    const title = (loaderData as any).seoTitle || `${loaderData.title} — Avant Movies`;
+    const description = (loaderData as any).metaDescription || loaderData.shortDescription;
     return {
       meta: publicPageMeta(path, title, description, loaderData.backdrop, loaderData.type === "movie" ? "video.movie" : "video.tv_show"),
       links: publicPageLinks(path),
