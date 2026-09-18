@@ -9,6 +9,14 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = previous; window.removeEventListener("keydown", onKey); };
+  }, [open]);
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -23,10 +31,10 @@ export function SiteHeader() {
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <Link to="/search" className="rounded-full p-2 transition hover:bg-white/10" aria-label="Search"><Search className="size-5" /></Link>
-          <button className="rounded-full p-2 md:hidden" aria-label="Menu" onClick={() => setOpen((v) => !v)}>{open ? <X /> : <Menu />}</button>
+          <button className="rounded-full p-2 md:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen((v) => !v)}>{open ? <X /> : <Menu />}</button>
         </div>
       </div>
-      {open && <nav className="border-t border-white/10 bg-background px-5 py-4 md:hidden">{navLinks.map((l) => <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="block py-3 text-base font-medium">{l.label}</Link>)}</nav>}
+      {open && <nav id="mobile-navigation" className="max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/10 bg-background px-5 py-4 shadow-2xl md:hidden">{navLinks.map((l) => <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="block py-3 text-base font-medium">{l.label}</Link>)}<Link to="/search" onClick={() => setOpen(false)} className="mt-2 flex items-center gap-3 border-t border-white/10 py-4 text-base font-medium"><Search className="size-5" />Search</Link></nav>}
     </header>
   );
 }
