@@ -1,0 +1,54 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { ArrowLeft, LockKeyhole } from 'lucide-react'
+
+export const Route = createFileRoute('/watch/$contentId')({
+  component: WatchRoute,
+})
+
+function WatchRoute() {
+  const { contentId } = Route.useParams()
+
+  // Integration seam: replace with server validate-entitlement result once
+  // Supabase customer/session + content records land. Never authorize here.
+  const authorized = false
+
+  if (!authorized) {
+    return (
+      <main className="min-h-screen bg-black text-white grid place-items-center px-6">
+        <section className="max-w-md text-center space-y-5">
+          <LockKeyhole className="mx-auto size-10 text-white/70" aria-hidden />
+          <h1 className="text-2xl font-semibold">Access required</h1>
+          <p className="text-white/60">
+            This title is protected. Complete checkout or sign in with the customer identity
+            that owns access.
+          </p>
+          <div className="flex justify-center gap-3">
+            <Link to="/" className="rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black">
+              Browse Avant
+            </Link>
+            <Link
+              to="/checkout/$productId"
+              params={{ productId: contentId }}
+              className="rounded-md bg-white/10 px-5 py-2.5 text-sm font-medium"
+            >
+              Get Access
+            </Link>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
+  return (
+    <main className="min-h-screen bg-black text-white">
+      <header className="absolute left-4 top-4 z-20">
+        <button type="button" onClick={() => history.back()} aria-label="Go back">
+          <ArrowLeft className="size-7" />
+        </button>
+      </header>
+      <section className="grid min-h-screen place-items-center">
+        <p className="text-white/50">Protected Vimeo player for {contentId}</p>
+      </section>
+    </main>
+  )
+}
