@@ -54,7 +54,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           src={heroTrailerUrl(item.trailerEmbedUrl, muted)}
           title={`${item.title} trailer`}
           allow="autoplay; fullscreen; picture-in-picture"
-          onLoad={() => { setTrailerLoaded(true); window.setTimeout(() => setTrailerVisible(true), 900); }}
+          onLoad={(event) => { window.dispatchEvent(new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } })); setTrailerLoaded(true); window.setTimeout(() => setTrailerVisible(true), 900); }}
           onError={() => setTrailerFailed(true)}
           className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
         />
