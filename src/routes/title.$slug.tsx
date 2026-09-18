@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { TitleDetail } from "@/components/streaming/TitleDetail";
 import { getTitle } from "@/lib/site-data";
+import { publicPageLinks, publicPageMeta, titleSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/title/$slug")({
   loader: ({ params }) => {
@@ -8,21 +9,16 @@ export const Route = createFileRoute("/title/$slug")({
     if (!item) throw notFound();
     return item;
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData ? [
-      { title: `${loaderData.title} — Avant Movies` },
-      { name: "description", content: loaderData.shortDescription },
-      { property: "og:title", content: `${loaderData.title} — Avant Movies` },
-      { property: "og:description", content: loaderData.shortDescription },
-      { property: "og:image", content: loaderData.backdrop },
-      { property: "og:type", content: loaderData.type === "movie" ? "video.movie" : "video.tv_show" },
-      { property: "og:site_name", content: "Avant Cinema" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: `${loaderData.title} — Avant Movies` },
-      { name: "twitter:description", content: loaderData.shortDescription },
-      { name: "twitter:image", content: loaderData.backdrop },
-    ] : [],
-  }),
+  head: ({ loaderData }) => {
+    if (!loaderData) return {};
+    const path = `/title/${loaderData.slug}`;
+    const title = `${loaderData.title} — Avant Movies`;
+    return {
+      meta: publicPageMeta(path, title, loaderData.shortDescription, loaderData.backdrop, loaderData.type === "movie" ? "video.movie" : "video.tv_show"),
+      links: publicPageLinks(path),
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(titleSchema(loaderData)) }],
+    };
+  },
   component: TitleRoute,
 });
 
