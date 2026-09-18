@@ -1,0 +1,11 @@
+import { ADMIN_EMAIL,setAdminToken,adminSession } from "./avant-backend";
+const PROJECT="avant-movies-b6b94";
+const API_KEY=(import.meta.env.VITE_FIREBASE_API_KEY as string|undefined)?.trim();
+const APP_URL="https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+const AUTH_URL="https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+let authMod:any,auth:any,resolver:any;
+async function modules(){if(!API_KEY)throw new Error("Firebase web API key is not configured for this GitHub Pages build.");const appMod:any=await import(/* @vite-ignore */ APP_URL);authMod=await import(/* @vite-ignore */ AUTH_URL);const app=appMod.getApps().length?appMod.getApp():appMod.initializeApp({apiKey:API_KEY,authDomain:`${PROJECT}.firebaseapp.com`,projectId:PROJECT});auth=authMod.getAuth(app);return authMod}
+export async function signInAdmin(){const m=await modules();try{const result=await m.signInWithPopup(auth,new m.GoogleAuthProvider());return finish(result.user)}catch(e:any){if(e?.code!=="auth/multi-factor-auth-required")throw e;resolver=m.getMultiFactorResolver(auth,e);const hint=resolver.hints.find((h:any)=>h.factorId==="totp");if(!hint)throw new Error("Authenticator-app MFA is required but no TOTP factor is enrolled.");return {mfaRequired:true,email:ADMIN_EMAIL}}}
+export async function finishAdminMfa(code:string){if(!resolver||!authMod)throw new Error("Start admin sign-in first.");const hint=resolver.hints.find((h:any)=>h.factorId==="totp");const assertion=authMod.TotpMultiFactorGenerator.assertionForSignIn(hint.uid,code.trim());const result=await resolver.resolveSignIn(assertion);resolver=null;return finish(result.user)}
+async function finish(user:any){if(String(user.email||"").toLowerCase()!==ADMIN_EMAIL){await authMod.signOut(auth);throw new Error("This Google account is not an Avant administrator.");}const token=await user.getIdToken(true);const session=await adminSession(token);if(!session.admin)throw new Error("Admin authorization denied.");setAdminToken(token);return {mfaRequired:false,session}}
+export async function signOutAdmin(){setAdminToken(null);if(auth&&authMod)await authMod.signOut(auth)}
