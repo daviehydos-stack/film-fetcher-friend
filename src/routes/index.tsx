@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { ContentRail } from "@/components/streaming/ContentRail";
 import { HomeHero } from "@/components/streaming/HomeHero";
 import { ContinueWatching } from "@/components/streaming/ContinueWatching";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { catalogue } from "@/lib/site-data";
+import { readMyList } from "@/lib/my-list";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,10 +34,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const [myListIds, setMyListIds] = useState<string[]>([]);
+  useEffect(() => { const sync = () => setMyListIds(readMyList()); sync(); window.addEventListener("avant-my-list", sync); return () => window.removeEventListener("avant-my-list", sync); }, []);
   const featured = catalogue.find((item) => item.featured) ?? catalogue[0];
   const series = catalogue.filter((item) => item.type === "series");
   const movies = catalogue.filter((item) => item.type === "movie");
   const available = catalogue.filter((item) => item.available);
+  const myList = useMemo(() => myListIds.map((id) => catalogue.find((item) => item.id === id)).filter((item): item is (typeof catalogue)[number] => Boolean(item)), [myListIds]);
 
   return (
     <StreamingShell>
@@ -44,6 +49,7 @@ function Index() {
 
         <div className="relative z-20 -mt-16 pb-12 sm:-mt-20">
           <ContinueWatching />
+          {myList.length > 0 ? <ContentRail title="My List" items={myList} /> : null}
           <ContentRail title="Featured on Avant" items={catalogue} />
           {available.length > 0 ? (
             <ContentRail title="Watch Now" items={available} />
