@@ -5,7 +5,7 @@ import { navLinks, socials, WHATSAPP, WHATSAPP_TEL } from "@/lib/site-data";
 export function SiteFooter() {
   return (
     <footer className="bg-ink text-ink-foreground">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3">
+      <div className="mx-auto grid max-w-7xl gap-9 px-5 py-12 sm:px-10 sm:py-14 md:grid-cols-3">
         <div>
           <p className="headline text-3xl text-flame">Avant Movies</p>
           <p className="mt-1 text-sm tracking-[0.18em] text-ink-foreground/70 uppercase">
@@ -19,15 +19,15 @@ export function SiteFooter() {
 
         <div>
           <p className="eyebrow">Explore</p>
-          <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+          <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
             {navLinks.map((l) => (
               <li key={l.to}>
-                <Link to={l.to} className="text-ink-foreground/80 hover:text-flame">
+                <Link to={l.to} className="flex min-h-11 items-center text-ink-foreground/80 hover:text-flame">
                   {l.label}
                 </Link>
               </li>
             ))}
-          </ul><div className="mt-5 flex gap-4 text-xs text-ink-foreground/55"><Link to="/about" className="hover:text-flame">About Avant</Link><Link to="/privacy" className="hover:text-flame">Privacy</Link><Link to="/terms" className="hover:text-flame">Terms</Link></div>
+          </ul><div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-ink-foreground/55"><Link to="/about" className="hover:text-flame">About Avant</Link><Link to="/privacy" className="hover:text-flame">Privacy</Link><Link to="/terms" className="hover:text-flame">Terms</Link></div>
         </div>
 
         <div>
@@ -41,17 +41,17 @@ export function SiteFooter() {
           <p className="mt-2 text-sm text-ink-foreground/70">
             Issues with payment? Talk to us directly.
           </p>
-          <div className="mt-6 flex gap-4">
-            <a href={socials.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:text-flame">
+          <div className="mt-6 flex gap-2">
+            <a href={socials.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="grid size-11 place-items-center rounded-full hover:bg-white/5 hover:text-flame">
               <Facebook className="size-5" />
             </a>
-            <a href={socials.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className="hover:text-flame">
+            <a href={socials.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className="grid size-11 place-items-center rounded-full hover:bg-white/5 hover:text-flame">
               <Youtube className="size-5" />
             </a>
-            <a href={socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-flame">
+            <a href={socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="grid size-11 place-items-center rounded-full hover:bg-white/5 hover:text-flame">
               <Instagram className="size-5" />
             </a>
-            <a href={socials.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="hover:text-flame">
+            <a href={socials.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="grid size-11 place-items-center rounded-full hover:bg-white/5 hover:text-flame">
               <Music2 className="size-5" />
             </a>
           </div>
