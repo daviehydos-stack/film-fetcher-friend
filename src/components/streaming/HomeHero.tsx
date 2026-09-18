@@ -13,6 +13,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [largeScreen, setLargeScreen] = useState(false);
   const [trailerLoaded, setTrailerLoaded] = useState(false);
+  const [trailerVisible, setTrailerVisible] = useState(false);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
   const playableContentId = item.type === "series" && item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
@@ -22,6 +23,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   useEffect(() => {
     setTrailerReady(false);
     setTrailerLoaded(false);
+    setTrailerVisible(false);
     setTrailerFailed(false);
     const screen = window.matchMedia("(min-width: 640px)");
     const syncScreen = () => setLargeScreen(screen.matches);
@@ -44,9 +46,9 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           src={heroTrailerUrl(item.trailerEmbedUrl, muted)}
           title={`${item.title} trailer`}
           allow="autoplay; fullscreen; picture-in-picture"
-          onLoad={() => setTrailerLoaded(true)}
+          onLoad={() => { setTrailerLoaded(true); window.setTimeout(() => setTrailerVisible(true), 900); }}
           onError={() => setTrailerFailed(true)}
-          className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${trailerLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
         />
       ) : null}
 
@@ -67,7 +69,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         </div>
       </div>
 
-      {item.trailerEmbedUrl && trailerReady && trailerLoaded && !trailerFailed && !reducedMotion && largeScreen ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
+      {item.trailerEmbedUrl && trailerReady && trailerLoaded && trailerVisible && !trailerFailed && !reducedMotion && largeScreen ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
     </section>
   );
 }
