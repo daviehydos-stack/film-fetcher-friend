@@ -8,7 +8,7 @@ import { readMyList, toggleMyList } from "@/lib/my-list";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [trailerReady, setTrailerReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [largeScreen, setLargeScreen] = useState(false);
