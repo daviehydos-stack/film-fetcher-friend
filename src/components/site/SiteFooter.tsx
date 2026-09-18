@@ -7,7 +7,7 @@ export function SiteFooter() {
     <footer className="bg-ink text-ink-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3">
         <div>
-          <p className="headline text-3xl text-flame">Avant Cinema</p>
+          <p className="headline text-3xl text-flame">Avant Movies</p>
           <p className="mt-1 text-sm tracking-[0.18em] text-ink-foreground/70 uppercase">
             It&apos;s time to feel again
           </p>
@@ -27,7 +27,7 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
-          </ul>
+          </ul><div className="mt-5 flex gap-4 text-xs text-ink-foreground/55"><Link to="/about" className="hover:text-flame">About Avant</Link><span>Privacy</span><span>Terms</span></div>
         </div>
 
         <div>
@@ -58,7 +58,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-border/50 py-5 text-center text-xs text-ink-foreground/55">
-        © {new Date().getFullYear()} Avant Cinema. All rights reserved.
+        © {new Date().getFullYear()} Avant Movies. All rights reserved.
       </div>
     </footer>
   );
