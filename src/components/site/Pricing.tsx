@@ -1,5 +1,6 @@
 import { Check, Star } from "lucide-react";
-import { plans, mpesaSteps, MPESA_PDF, WHATSAPP_TEL, type Plan } from "@/lib/site-data";
+import { Link } from "@tanstack/react-router";
+import { plans, WHATSAPP_TEL, type Plan } from "@/lib/site-data";
 
 export function PlanCard({ plan }: { plan: Plan }) {
   return (
@@ -32,12 +33,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
         <p className="mt-4 text-xs tracking-wider text-muted-foreground uppercase">
           {plan.validity}
         </p>
-        <a
-          href={WHATSAPP_TEL}
-          className="mt-6 inline-flex items-center justify-center rounded-md bg-flame px-5 py-3 text-sm font-bold tracking-wide text-flame-foreground uppercase transition hover:brightness-110"
-        >
-          Select
-        </a>
+        <Link to="/checkout/$productId" params={{ productId: plan.productId }} className="mt-6 inline-flex items-center justify-center rounded-md bg-flame px-5 py-3 text-sm font-bold tracking-wide text-flame-foreground uppercase transition hover:brightness-110">Select</Link>
       </div>
     </div>
   );
@@ -72,45 +68,4 @@ export function PricingSection({
   );
 }
 
-export function PaymentHelp() {
-  return (
-    <section className="mx-auto max-w-5xl px-6 pb-20">
-      <div className="panel rounded-2xl p-8">
-        <p className="eyebrow">Payments</p>
-        <h3 className="headline mt-2 text-3xl text-ink-foreground">
-          How to pay with MPESA
-        </h3>
-        <p className="mt-2 text-sm text-ink-foreground/75">
-          To pay with Visa, Mastercard and all major international cards, select
-          PAYPAL. To pay with MPESA, select DPO at checkout.
-        </p>
-        <ol className="mt-6 space-y-3">
-          {mpesaSteps.map((s, i) => (
-            <li key={s} className="flex gap-3 text-sm text-ink-foreground/85">
-              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-flame text-xs font-bold text-flame-foreground">
-                {i + 1}
-              </span>
-              {s}
-            </li>
-          ))}
-        </ol>
-        <div className="mt-7 flex flex-wrap gap-3">
-          <a
-            href={MPESA_PDF}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-md border border-flame px-5 py-3 text-sm font-bold tracking-wide text-flame uppercase hover:bg-flame hover:text-flame-foreground"
-          >
-            MPESA instructions (PDF)
-          </a>
-          <a
-            href={WHATSAPP_TEL}
-            className="rounded-md bg-flame px-5 py-3 text-sm font-bold tracking-wide text-flame-foreground uppercase hover:brightness-110"
-          >
-            Issues with payment? WhatsApp us
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
+export function PaymentHelp(){return <section className="mx-auto max-w-5xl px-6 pb-20"><div className="panel rounded-2xl p-8"><p className="eyebrow">Secure checkout</p><h3 className="headline mt-2 text-3xl text-ink-foreground">Pay with M-PESA</h3><p className="mt-3 text-sm leading-6 text-ink-foreground/75">Select an access plan above. Avant will ask you to sign in with Google, then enter your M-PESA number. Approve the STK prompt on your phone; access is activated only after the backend verifies the payment.</p><a href={WHATSAPP_TEL} className="mt-6 inline-flex rounded-md border border-flame px-5 py-3 text-sm font-bold tracking-wide text-flame uppercase hover:bg-flame hover:text-flame-foreground">Payment support</a></div></section>}

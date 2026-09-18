@@ -288,11 +288,13 @@ export type Plan = {
   perks: string[];
   best?: boolean;
   image?: string;
+  productId: string;
 };
 
 export const plans: Plan[] = [
   {
     name: "Watch This is Life",
+    productId: "29613405-b7da-4bfc-a824-3027a6702657",
     price: "Ksh 280",
     blurb:
       "Watch the whole season. Have access for a duration of three months!",
@@ -303,6 +305,7 @@ export const plans: Plan[] = [
   },
   {
     name: "Watch A Better Life",
+    productId: "c85d4c6a-6744-4123-9111-a9982bb5534c",
     price: "Ksh 350",
     blurb:
       "Episodes 5 to 13 of A Better Life, season one, streaming whenever you want.",
@@ -313,6 +316,7 @@ export const plans: Plan[] = [
   },
   {
     name: "Watch it all!",
+    productId: "0d8fe76f-f014-4b82-b3c8-de0487d97bcd",
     price: "Ksh 890",
     blurb:
       "Ready to binge? Watch Back to Us, This is Life, A Better Life and Nairobby.",
