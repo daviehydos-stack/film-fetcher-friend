@@ -16,8 +16,10 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [heroPreviewLoaded, setHeroPreviewLoaded] = useState(false);
   const [heroMuted, setHeroMuted] = useState(true);
   const previewId = item.previewYoutubeId;
-  const previewStart = item.previewStart ?? 0;
-  const previewEnd = previewStart + (item.previewDuration ?? 35);
+  const fullSeconds = (() => { const raw=item.episodes?.[0]?.duration; if(!raw)return 0; const parts=raw.split(":").map(Number); return parts.length===3?parts[0]*3600+parts[1]*60+parts[2]:parts[0]*60+parts[1]; })();
+  const generated = fullSeconds ? { start: Math.max(12, Math.min(Math.floor(fullSeconds * 0.18), Math.max(12, fullSeconds - 45))), duration: fullSeconds > 1200 ? 35 : fullSeconds > 480 ? 30 : 22 } : { start: 0, duration: 35 };
+  const previewStart = item.previewStart ?? generated.start;
+  const previewEnd = previewStart + (item.previewDuration ?? generated.duration);
   const previewUrl = item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, heroMuted) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: previewStart, end: previewEnd, loop: true }) : null;
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
   const [season, setSeason] = useState(seasons[0] ?? 1);
