@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -39,6 +39,8 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const [routeFading,setRouteFading]=useState(false);
+  useEffect(()=>{let timer:number|undefined;const unsubscribe=router.subscribe("onBeforeNavigate",()=>{setRouteFading(true);window.clearTimeout(timer);timer=window.setTimeout(()=>setRouteFading(false),180)});return()=>{window.clearTimeout(timer);unsubscribe()}},[router]);
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
@@ -162,8 +164,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Route changes stay immediate; individual components own their local animations. */}
-      <Outlet />
+      <div className={`avant-page-fade ${routeFading ? "is-changing" : ""}`}><Outlet /></div>
     </QueryClientProvider>
   );
 }

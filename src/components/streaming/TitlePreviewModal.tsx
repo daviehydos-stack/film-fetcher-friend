@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Check, ChevronDown, Play, Plus, Volume2, VolumeX, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { youtubeEmbedUrl } from "@/lib/video-embeds";
@@ -10,7 +11,7 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const episodes=item.episodes?.filter(e=>(e.season??1)===season)??[]; const seasons=[...new Set(item.episodes?.map(e=>e.season??1)??[])];
  useEffect(()=>{const old=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&onClose();addEventListener("keydown",key);return()=>{document.body.style.overflow=old;removeEventListener("keydown",key)}},[onClose]);
  const start=item.previewStart??0,end=start+(item.previewDuration??35); const video=item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true}):null;
- return <div className="fixed inset-0 z-[100] overflow-y-auto bg-black/75 backdrop-blur-[2px]" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
+ const content=<div className="fixed inset-0 z-[100] overflow-y-auto bg-black/75 backdrop-blur-[2px]" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
   <div className="relative mx-auto my-5 w-[min(94vw,1120px)] overflow-hidden rounded-xl bg-[#181818] shadow-2xl sm:my-10">
    <button onClick={onClose} aria-label="Close" className="absolute right-4 top-4 z-30 grid size-10 place-items-center rounded-full bg-[#181818] text-white"><X/></button>
    <section className="relative aspect-[16/8.7] min-h-[360px] overflow-hidden bg-black">
@@ -23,5 +24,5 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
    <section className="grid gap-8 px-7 pb-8 pt-4 sm:grid-cols-[1.8fr_1fr] sm:px-16"><div><div className="flex flex-wrap gap-3 font-semibold"><span>{item.year??"Avant"}</span>{item.episodes?<span>{seasons.length>1?seasons.length+" seasons":"1 season"}</span>:null}<span className="rounded border border-white/40 px-1.5">{item.quality??"HD"}</span></div><p className="mt-5 text-base leading-7 text-white/85">{item.synopsis}</p></div><div className="space-y-3 text-sm leading-6">{item.cast?.length?<p><span className="text-white/45">Cast:</span> {item.cast.slice(0,4).join(", ")}</p>:null}<p><span className="text-white/45">Genres:</span> {item.genres.join(", ")}</p>{item.maturityRating?<p><span className="text-white/45">Maturity:</span> {item.maturityRating}</p>:null}</div></section>
    {item.episodes?<section className="px-7 pb-8 sm:px-16"><div className="flex items-center justify-between"><h3 className="text-3xl font-bold">Episodes</h3>{seasons.length?<div className="relative"><select value={season} onChange={e=>setSeason(+e.target.value)} className="appearance-none rounded border border-white/30 bg-[#242424] py-3 pl-5 pr-11 font-bold">{seasons.map(s=><option key={s} value={s}>Season {s}</option>)}</select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2"/></div>:null}</div><div className="mt-5 divide-y divide-white/15">{episodes.map((e,i)=><Link key={e.legacyKey??i} to="/watch/$contentId" params={{contentId:e.legacyKey??item.slug+"-"+(i+1)}} onClick={onClose} className="grid grid-cols-[2rem_8rem_1fr_auto] items-center gap-4 py-5 transition hover:bg-white/5 sm:grid-cols-[3rem_11rem_1fr_auto]"><span className="text-center text-2xl text-white/65">{i+1}</span><div className="relative aspect-video overflow-hidden rounded"><img src={e.poster??(e.youtubeId?`https://i.ytimg.com/vi/${e.youtubeId}/hqdefault.jpg`:item.artwork)} className="size-full object-cover"/><span className="absolute inset-0 grid place-items-center"><span className="grid size-10 place-items-center rounded-full border border-white/70 bg-black/40"><Play className="size-5 fill-white"/></span></span></div><div><h4 className="font-bold">{e.title}</h4><p className="mt-1 line-clamp-2 text-sm text-white/55">{e.description}</p></div><span className="hidden text-sm sm:block">{e.duration}</span></Link>)}</div></section>:null}
   </div>
- </div>
+ </div>; return typeof document!=="undefined"?createPortal(content,document.body):null;
 }
