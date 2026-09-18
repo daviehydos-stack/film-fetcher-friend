@@ -8,20 +8,26 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [muted, setMuted] = useState(true);
   const [trailerReady, setTrailerReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [largeScreen, setLargeScreen] = useState(false);
 
   useEffect(() => {
+    const screen = window.matchMedia("(min-width: 768px)");
+    const syncScreen = () => setLargeScreen(screen.matches);
+    syncScreen();
+    screen.addEventListener?.("change", syncScreen);
+
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (media.matches) return;
+    if (media.matches || !screen.matches) return () => screen.removeEventListener?.("change", syncScreen);
     const timer = window.setTimeout(() => setTrailerReady(true), 2200);
-    return () => window.clearTimeout(timer);
+    return () => { window.clearTimeout(timer); screen.removeEventListener?.("change", syncScreen); };
   }, [item.id]);
 
   return (
     <section className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[84svh]">
       <img src={item.backdrop} alt="" fetchPriority="high" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
 
-      {item.trailerEmbedUrl && trailerReady && !reducedMotion ? (
+      {item.trailerEmbedUrl && trailerReady && !reducedMotion && largeScreen ? (
         <iframe
           src={`${item.trailerEmbedUrl}${item.trailerEmbedUrl.includes("?") ? "&" : "?"}autoplay=1&muted=${muted ? 1 : 0}&background=1`}
           title={`${item.title} trailer`}
@@ -46,7 +52,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         </div>
       </div>
 
-      {item.trailerEmbedUrl && trailerReady && !reducedMotion ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-16 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
+      {item.trailerEmbedUrl && trailerReady && !reducedMotion && largeScreen ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-16 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
     </section>
   );
 }
