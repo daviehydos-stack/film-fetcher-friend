@@ -1,12 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { Check, Lock, Play, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { StreamingShell } from "./StreamingShell";
 
 export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [saved, setSaved] = useState(false);
+  useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
+  const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
   return (
     <StreamingShell>
       <main>
@@ -20,7 +23,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
             <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.synopsis}</p>
             <div className="mt-7 flex flex-wrap gap-3">
               {item.type === "series" && item.episodes?.[0]?.youtubeId ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: `${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : <Button size="lg" disabled><Lock />Get access</Button>}
-              <Button size="lg" variant="secondary" onClick={() => setSaved((value) => !value)}>{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
+              <Button size="lg" variant="secondary" onClick={toggleSaved}>{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
             </div>
           </div>
         </section>
