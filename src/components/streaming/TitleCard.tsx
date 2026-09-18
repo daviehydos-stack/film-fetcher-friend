@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Check, ChevronDown, Play, Plus } from "lucide-react";
+import { Check, ChevronDown, Lock, Play, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import type { CatalogueTitle } from "@/lib/site-data";
@@ -13,6 +13,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [hoverCapable, setHoverCapable] = useState(false);
   const previewTimer = useRef<number | null>(null);
   const playableContentId = item.type === "series" && item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
+  const accessLabel = playableContentId ? "Watch now" : item.available ? "Access required" : "Coming soon";
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
   useEffect(() => {
@@ -60,19 +61,19 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
             />
           ) : null}
           <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100" />
-          <span className="absolute inset-x-0 bottom-0 p-3 text-sm font-bold leading-tight text-white md:hidden">{item.title}</span>
+          <span className="absolute inset-x-0 bottom-0 p-3 text-white md:hidden"><span className="block text-sm font-bold leading-tight">{item.title}</span><span className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-white/70">{playableContentId ? <Play className="size-3 fill-current" /> : <Lock className="size-3" />}{accessLabel}</span></span>
         </Link>
 
         <div className="hidden border-t border-white/5 bg-surface-raised p-4 md:block md:max-h-0 md:overflow-hidden md:p-0 md:opacity-0 md:transition-all md:duration-300 md:group-hover:max-h-40 md:group-hover:p-4 md:group-hover:opacity-100">
           <div className="flex items-center gap-2">
-            {playableContentId ? <Link to="/watch/$contentId" params={{ contentId: playableContentId }} aria-label={`Play ${item.title}`} className="grid size-9 place-items-center rounded-full bg-white text-black transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><Play className="size-4 fill-current" /></Link> : <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`Open ${item.title}`} className="grid size-9 place-items-center rounded-full bg-white text-black transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><Play className="size-4 fill-current" /></Link>}
-            <button type="button" aria-label={saved ? "Remove from My List" : "Add to My List"} onClick={toggleSaved} className="grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+            {playableContentId ? <Link to="/watch/$contentId" params={{ contentId: playableContentId }} aria-label={`Play ${item.title}`} className="grid size-10 place-items-center rounded-full bg-white text-black transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><Play className="size-4 fill-current" /></Link> : <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`Open ${item.title}`} className="grid size-9 place-items-center rounded-full bg-white text-black transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><Play className="size-4 fill-current" /></Link>}
+            <button type="button" aria-label={saved ? "Remove from My List" : "Add to My List"} onClick={toggleSaved} className="grid size-10 place-items-center rounded-full border border-white/40 text-white transition hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
               {saved ? <Check className="size-4" /> : <Plus className="size-4" />}
             </button>
-            <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`More information about ${item.title}`} className="ml-auto grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><ChevronDown className="size-4" /></Link>
+            <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`More information about ${item.title}`} className="ml-auto grid size-10 place-items-center rounded-full border border-white/40 text-white transition hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><ChevronDown className="size-4" /></Link>
           </div>
           <h3 className="mt-3 text-sm font-bold text-white">{item.title}</h3>
-          <p className="mt-1 text-xs text-muted-foreground">{item.type === "movie" ? "Movie" : "TV Series"} · {item.genres.join(" · ")}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold"><span className={playableContentId ? "text-emerald-400" : "text-white/55"}>{accessLabel}</span><span className="text-white/25">•</span><span className="text-white/65">{item.type === "movie" ? "Movie" : "Series"}</span>{item.episodes ? <><span className="text-white/25">•</span><span className="text-white/65">{item.episodes.length} eps</span></> : null}</div><p className="mt-2 line-clamp-1 text-xs text-muted-foreground">{item.genres.join(" · ")}</p>
         </div>
       </div>
     </article>
