@@ -49,3 +49,48 @@ export function titleSchema(item: CatalogueTitle) {
     publisher: { "@type": "Organization", name: SEO_SITE_NAME },
   };
 }
+
+
+function isoDuration(value?: string) {
+  if (!value) return undefined;
+  const parts = value.split(":").map(Number);
+  if (parts.some(Number.isNaN)) return undefined;
+  const seconds = parts.pop() || 0;
+  const minutes = parts.pop() || 0;
+  const hours = parts.pop() || 0;
+  return `PT${hours ? `${hours}H` : ""}${minutes ? `${minutes}M` : ""}${seconds ? `${seconds}S` : ""}`;
+}
+
+export function youtubeThumbnail(id: string) {
+  return `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+}
+
+export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string; pagePath: string; episodeNumber?: number; seriesName?: string }) {
+  const pageUrl = absoluteUrl(input.pagePath);
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${input.youtubeId}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: input.name,
+    description: input.description,
+    thumbnailUrl: [youtubeThumbnail(input.youtubeId)],
+    embedUrl,
+    ...(pageUrl ? { url: pageUrl } : {}),
+    ...(isoDuration(input.duration) ? { duration: isoDuration(input.duration) } : {}),
+    ...(input.episodeNumber ? { episodeNumber: input.episodeNumber } : {}),
+    ...(input.seriesName ? { partOfSeries: { "@type": "TVSeries", name: input.seriesName } } : {}),
+    publisher: { "@type": "Organization", name: SEO_SITE_NAME },
+  };
+}
+
+export function episodeCollectionSchema(seriesName: string, description: string, pagePath: string, episodes: Array<{ title: string; youtubeId?: string; duration?: string }>) {
+  return episodes.flatMap((episode, index) => episode.youtubeId ? [videoObjectSchema({
+    name: episode.title,
+    description,
+    youtubeId: episode.youtubeId,
+    duration: episode.duration,
+    pagePath,
+    episodeNumber: index + 1,
+    seriesName,
+  })] : []);
+}
