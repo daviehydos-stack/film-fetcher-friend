@@ -398,7 +398,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Better Days aired on KTN and set everything that followed in motion — honest Kenyan stories, small rooms and big feelings.",
     artwork: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_900,h_506,enc_auto/file.jpeg",
     backdrop: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_1400,h_788,enc_auto/file.jpeg",
-    legacyPath: "/better-days", previewYoutubeId: "jvJlWj2JgEk", previewStart: 83, previewDuration: 35,
+    legacyPath: "/better-days", previewYoutubeId: "jvJlWj2JgEk", previewDuration: 120,
   },
   {
     id: "another-way", slug: "another-way", title: "Another Way", type: "movie",
@@ -407,7 +407,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Another Way is an Avant Cinema short film from the studio archive.",
     artwork: "https://i.ytimg.com/vi/7krnA3G5qrI/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/7krnA3G5qrI/hqdefault.jpg",
-    legacyPath: "/another-way", previewYoutubeId: "7krnA3G5qrI", previewStart: 37, previewDuration: 22,
+    legacyPath: "/another-way", previewYoutubeId: "7krnA3G5qrI", previewDuration: 120,
     episodes: [{ title: "Another Way", duration: "05:11", youtubeId: "7krnA3G5qrI" }],
   },
   {
@@ -417,7 +417,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "ADUI is an Avant Cinema short film available from the studio video archive.",
     artwork: "https://i.ytimg.com/vi/bUx3YibMvGI/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/bUx3YibMvGI/hqdefault.jpg",
-    legacyPath: "/adui", previewYoutubeId: "bUx3YibMvGI", previewStart: 53, previewDuration: 22,
+    legacyPath: "/adui", previewYoutubeId: "bUx3YibMvGI", previewDuration: 120,
     episodes: [{ title: "ADUI", duration: "07:27", youtubeId: "bUx3YibMvGI" }],
   },
   {
@@ -427,7 +427,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Relationship Goals is a short film from the Avant Cinema video archive.",
     artwork: "https://i.ytimg.com/vi/ciUCZ3yIKv0/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/ciUCZ3yIKv0/hqdefault.jpg",
-    legacyPath: "/relationship-goals", previewYoutubeId: "ciUCZ3yIKv0", previewStart: 45, previewDuration: 22,
+    legacyPath: "/relationship-goals", previewYoutubeId: "ciUCZ3yIKv0", previewDuration: 120,
     episodes: [{ title: "Relationship Goals", duration: "06:22", youtubeId: "ciUCZ3yIKv0" }],
   },
   {
@@ -437,7 +437,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Granted is an Avant Cinema short film from the studio video archive.",
     artwork: "https://i.ytimg.com/vi/xdR3xLwcWdQ/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/xdR3xLwcWdQ/hqdefault.jpg",
-    legacyPath: "/granted", previewYoutubeId: "xdR3xLwcWdQ", previewStart: 64, previewDuration: 30,
+    legacyPath: "/granted", previewYoutubeId: "xdR3xLwcWdQ", previewDuration: 120,
     episodes: [{ title: "Granted", duration: "08:53", youtubeId: "xdR3xLwcWdQ" }],
   },
   {
@@ -458,7 +458,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Isabella is a classic episodic title preserved in the Avant Cinema video archive.",
     artwork: "https://i.ytimg.com/vi/3fdhXgENfJk/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/3fdhXgENfJk/hqdefault.jpg",
-    legacyPath: "/isabella", previewYoutubeId: "3fdhXgENfJk", previewStart: 156, previewDuration: 35,
+    legacyPath: "/isabella", previewYoutubeId: "3fdhXgENfJk", previewDuration: 120,
     episodes: [{ title: "Isabella Series K24 classic", duration: "21:43", youtubeId: "3fdhXgENfJk" }],
   },
 ];
