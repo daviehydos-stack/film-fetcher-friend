@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -116,6 +116,16 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  const [transitioning, setTransitioning] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = router.subscribe("onBeforeNavigate", () => {
+      setTransitioning(true);
+      window.setTimeout(() => setTransitioning(false), 520);
+    });
+    return unsubscribe;
+  }, [router]);
 
   useEffect(() => {
     const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
@@ -144,8 +154,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className={`avant-route-stage ${transitioning ? "is-transitioning" : ""}`}>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </div>
+      <div aria-hidden="true" className={`avant-cinema-wipe ${transitioning ? "is-active" : ""}`} />
     </QueryClientProvider>
   );
 }
