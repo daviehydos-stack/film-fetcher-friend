@@ -133,6 +133,7 @@ export const films: Film[] = [
 
 export type Episode = {
   title: string;
+  season?: number;
   duration: string;
   youtubeId?: string;
   poster?: string;
