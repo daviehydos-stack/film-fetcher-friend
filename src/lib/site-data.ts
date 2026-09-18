@@ -32,6 +32,8 @@ export type CatalogueTitle = {
   available?: boolean;
   trailerEmbedUrl?: string;
   previewYoutubeId?: string;
+  previewStart?: number;
+  previewDuration?: number;
   heroAutoplay?: boolean;
   episodes?: Episode[];
 };
@@ -350,7 +352,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Shot in Watamu, Back to Us is a Kenyan love story about the distance between who we were and who we became.",
     artwork: "https://static.wixstatic.com/media/57086b_c12a5a80a97149a4a067d9857681e3e3~mv2.jpg/v1/fill/w_980,h_531,enc_auto/file.jpeg",
     backdrop: "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg",
-    legacyPath: "/back-to-us", heroAutoplay: false, previewYoutubeId: "9E3t88BExvQ", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/9E3t88BExvQ?rel=0",
+    legacyPath: "/back-to-us", heroAutoplay: false,
   },
   {
     id: "nairobby", slug: "nairobby", title: "Nairobby", type: "movie",
@@ -368,7 +370,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "A governor's son and a girl from the slum meet in a city that never lets anyone forget where they come from.",
     artwork: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_930,h_523,enc_auto/file.png",
     backdrop: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
-    legacyPath: "/a-better-life", previewYoutubeId: "p_PpjXPlaG8", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/p_PpjXPlaG8?rel=0", episodes: [...betterLifeFree, ...betterLifePaid],
+    legacyPath: "/a-better-life", previewYoutubeId: "p_PpjXPlaG8", previewDuration: 26, trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/p_PpjXPlaG8?rel=0", episodes: [...betterLifeFree, ...betterLifePaid],
   },
   {
     id: "this-is-life", slug: "this-is-life", title: "This is Life", type: "series",
@@ -377,7 +379,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "An intimate series about love, work, difficult choices and the lives built in between.",
     artwork: "https://static.wixstatic.com/media/57086b_899d3183eb3c450e96b8ae328886165b~mv2.png/v1/fill/w_900,h_506,enc_auto/file.png",
     backdrop: "https://static.wixstatic.com/media/57086b_46bd84f76e9e40a0bfad5e2852bf6b09~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
-    legacyPath: "/this-is-life", previewYoutubeId: "xnYieNZ3kHQ", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/xnYieNZ3kHQ?rel=0", episodes: [...thisIsLifeFree, ...thisIsLifePaid],
+    legacyPath: "/this-is-life", previewYoutubeId: "xnYieNZ3kHQ", previewDuration: 65, trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/xnYieNZ3kHQ?rel=0", episodes: [...thisIsLifeFree, ...thisIsLifePaid],
   },
   {
     id: "better-days", slug: "better-days", title: "Better Days", type: "series",
@@ -386,7 +388,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Better Days aired on KTN and set everything that followed in motion — honest Kenyan stories, small rooms and big feelings.",
     artwork: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_900,h_506,enc_auto/file.jpeg",
     backdrop: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_1400,h_788,enc_auto/file.jpeg",
-    legacyPath: "/better-days",
+    legacyPath: "/better-days", previewYoutubeId: "jvJlWj2JgEk", previewStart: 83, previewDuration: 35,
   },
 ];
 

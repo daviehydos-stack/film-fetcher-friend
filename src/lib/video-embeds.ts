@@ -1,6 +1,6 @@
 export function youtubeEmbedUrl(
   id: string,
-  options: { autoplay?: boolean; muted?: boolean; controls?: boolean; loop?: boolean; start?: number; jsApi?: boolean } = {},
+  options: { autoplay?: boolean; muted?: boolean; controls?: boolean; loop?: boolean; start?: number; end?: number; jsApi?: boolean } = {},
 ) {
   const params = new URLSearchParams({
     rel: "0",
@@ -10,6 +10,7 @@ export function youtubeEmbedUrl(
   });
   if (options.autoplay) params.set("autoplay", "1");
   if (options.start && options.start > 0) params.set("start", String(Math.floor(options.start)));
+  if (options.end && options.end > 0) params.set("end", String(Math.floor(options.end)));
   if (options.jsApi) params.set("enablejsapi", "1");
   if (options.muted) params.set("mute", "1");
   if (options.loop) {
