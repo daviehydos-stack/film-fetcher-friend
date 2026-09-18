@@ -1,10 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { Check, ChevronDown, Play, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { readMyList, toggleMyList } from "@/lib/my-list";
 import type { CatalogueTitle } from "@/lib/site-data";
 
 export function TitleCard({ item }: { item: CatalogueTitle }) {
   const [saved, setSaved] = useState(false);
+  useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
+  const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
 
   return (
     <article className="group relative w-[72vw] shrink-0 sm:w-[18rem] lg:w-[21rem]">
@@ -18,7 +21,7 @@ export function TitleCard({ item }: { item: CatalogueTitle }) {
         <div className="hidden border-t border-white/5 bg-surface-raised p-4 md:block md:max-h-0 md:overflow-hidden md:p-0 md:opacity-0 md:transition-all md:duration-300 md:group-hover:max-h-40 md:group-hover:p-4 md:group-hover:opacity-100">
           <div className="flex items-center gap-2">
             <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`Play ${item.title}`} className="grid size-9 place-items-center rounded-full bg-white text-black transition hover:bg-white/80"><Play className="size-4 fill-current" /></Link>
-            <button type="button" aria-label={saved ? "Remove from My List" : "Add to My List"} onClick={() => setSaved((value) => !value)} className="grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white">
+            <button type="button" aria-label={saved ? "Remove from My List" : "Add to My List"} onClick={toggleSaved} className="grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white">
               {saved ? <Check className="size-4" /> : <Plus className="size-4" />}
             </button>
             <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`More information about ${item.title}`} className="ml-auto grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white"><ChevronDown className="size-4" /></Link>
