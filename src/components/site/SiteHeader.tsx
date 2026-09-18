@@ -22,7 +22,7 @@ export function SiteHeader() {
           {navLinks.map((l) => <Link key={l.to} to={l.to} className="text-sm font-medium text-foreground/80 transition hover:text-foreground" activeProps={{ className: "text-foreground font-semibold" }} activeOptions={{ exact: l.to === "/" }}>{l.label}</Link>)}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <button className="rounded-full p-2 transition hover:bg-white/10" aria-label="Search"><Search className="size-5" /></button>
+          <Link to="/search" className="rounded-full p-2 transition hover:bg-white/10" aria-label="Search"><Search className="size-5" /></Link>
           <button className="rounded-full p-2 md:hidden" aria-label="Menu" onClick={() => setOpen((v) => !v)}>{open ? <X /> : <Menu />}</button>
         </div>
       </div>
