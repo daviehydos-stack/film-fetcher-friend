@@ -22,7 +22,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
             <p className="mt-4 text-sm font-semibold text-primary">{item.genres.join(" · ")} {item.episodes ? `· ${item.episodes.length} episodes` : ""}</p>
             <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.synopsis}</p>
             <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-              {item.type === "series" && item.episodes?.[0]?.youtubeId ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: `${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : item.available ? <Button size="lg" disabled><Play />Watch</Button> : <Button size="lg" disabled><Lock />Get access</Button>}
+              {item.type === "series" && item.episodes?.[0]?.youtubeId ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: `${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 bg-black/30 px-4 text-sm font-semibold text-white/75 backdrop-blur-sm"><Lock className="size-4" />{item.available ? "Streaming access required" : "Coming to Avant"}</span>}
               {item.trailerEmbedUrl ? <Button asChild size="lg" variant="outline"><a href="#trailer"><Play />Trailer</a></Button> : null}
               <Button size="lg" variant="secondary" className="col-span-2 sm:col-span-1" onClick={toggleSaved}>{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
             </div>
