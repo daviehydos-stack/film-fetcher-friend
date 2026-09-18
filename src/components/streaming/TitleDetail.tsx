@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
-import { publicCatalogue } from "@/lib/avant-backend";
+import { publicCatalogue, myLibrary } from "@/lib/avant-backend";
+import { customerToken } from "@/lib/google-auth";
 import { heroTrailerUrl, youtubeEmbedUrl } from "@/lib/video-embeds";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 import { buildAutoTrailerPlan, durationToSeconds } from "@/lib/auto-trailer";
@@ -18,7 +19,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [heroPreview, setHeroPreview] = useState(false);
   const [heroPreviewLoaded, setHeroPreviewLoaded] = useState(false);
   const [heroMuted, setHeroMuted] = useState(false);
-  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]);
+  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [hasAccess,setHasAccess]=useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const [heroInView, setHeroInView] = useState(true);
   const episodesRef = useRef<HTMLElement | null>(null);
@@ -32,7 +33,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
   const [season, setSeason] = useState(seasons[0] ?? 1);
   const seasonEpisodes = item.episodes?.map((episode, absoluteIndex) => ({ episode, absoluteIndex })).filter(({ episode }) => (episode.season ?? 1) === season) ?? [];
-  useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); }, [item.id]);
+  useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); customerToken(false).then(async token=>{if(!token){setHasAccess(false);return}try{const lib=await myLibrary(token);const ok=(lib.entitlements||[]).some((e:any)=>e.title?.slug===item.slug||e.title?.id===item.id||(e.season_id&&item.episodes?.some((ep:any)=>ep.season===season)));setHasAccess(ok)}catch{setHasAccess(false)}})}, [item.id,item.slug]);
   useEffect(() => {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
@@ -68,7 +69,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
             <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold"><span>{item.year ?? "Avant"}</span><span className="text-white/45">•</span><span>{item.quality ?? "HD"}</span>{item.maturityRating ? <><span className="text-white/45">•</span><span className="rounded border border-white/35 px-1.5 py-0.5 text-xs">{item.maturityRating}</span></> : null}<span className="text-white/45">•</span><span>{item.genres.join(" · ")}</span>{item.episodes ? <><span className="text-white/45">•</span><span>{seasons.length > 1 ? `${seasons.length} seasons` : "Season 1"} · {item.episodes.length} episodes</span></> : null}</div>
             <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.synopsis}</p><p className="mt-3 max-w-xl text-xs leading-5 text-white/55 sm:text-sm">Independent Kenyan storytelling · Stream inside Avant Movies.</p>
             <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-              {item.episodes?.[0]?.youtubeId && item.episodes?.[0]?.locked===false ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: item.episodes?.[0]?.legacyKey??`${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : item.available ? <Button asChild size="lg"><Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }}><Lock className="size-4" />Get Access</Link></Button> : <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 bg-black/30 px-4 text-sm font-semibold text-white/75 backdrop-blur-sm"><Lock className="size-4" />Coming to Avant</span>}
+              {(item.episodes?.[0]?.youtubeId && item.episodes?.[0]?.locked===false)||hasAccess ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: item.episodes?.[0]?.legacyKey??`${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : item.available ? <Button asChild size="lg"><Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }}><Lock className="size-4" />Get Access</Link></Button> : <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 bg-black/30 px-4 text-sm font-semibold text-white/75 backdrop-blur-sm"><Lock className="size-4" />Coming to Avant</span>}
               {item.trailerEmbedUrl ? <Button type="button" size="lg" variant="outline" onClick={() => setTrailerOpen(true)}><Play />Trailer</Button> : previewId ? <Button type="button" size="lg" variant="outline" onClick={() => setTrailerOpen(true)}><Play />Preview</Button> : null}
               <Button size="lg" variant="secondary" className="col-span-2 sm:col-auto" onClick={toggleSaved}>{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
             </div>
