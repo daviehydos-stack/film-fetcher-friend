@@ -261,13 +261,33 @@ main>section,main>div{isolation:isolate}
 
 
 /* Phase 3 — flagship Play/Watch handoff. The mark becomes the wipe while the player route mounts underneath. */
-.avant-transition-play.avant-transition-entering .avant-transition-vignette{animation-duration:520ms;background:radial-gradient(circle at 50% 50%,oklch(.19 .08 225/.3) 0,oklch(.025 .008 255/.97) 62%,#000 100%)}
-.avant-transition-play.avant-transition-entering .avant-transition-mark{animation:avantPlayMarkLaunch 520ms cubic-bezier(.2,.72,.18,1) both}
-.avant-transition-play.avant-transition-entering .avant-transition-light{animation:avantPlayLightSweep 520ms cubic-bezier(.2,.72,.18,1) both}
-.avant-transition-play.avant-transition-navigating .avant-transition-mark{opacity:1;transform:scale(9);filter:blur(2px) drop-shadow(0 0 3rem oklch(.72 .19 215/.45))}
-.avant-transition-play.avant-transition-revealing{animation:avantPlayReveal 440ms cubic-bezier(.16,1,.3,1) both}
-.avant-transition-play.avant-transition-revealing .avant-transition-mark{transform:scale(10);opacity:1}
+.avant-transition-mode-play.avant-transition-entering .avant-transition-vignette{animation-duration:520ms;background:radial-gradient(circle at 50% 50%,oklch(.19 .08 225/.3) 0,oklch(.025 .008 255/.97) 62%,#000 100%)}
+.avant-transition-mode-play.avant-transition-entering .avant-transition-mark{animation:avantPlayMarkLaunch 520ms cubic-bezier(.2,.72,.18,1) both}
+.avant-transition-mode-play.avant-transition-entering .avant-transition-light{animation:avantPlayLightSweep 520ms cubic-bezier(.2,.72,.18,1) both}
+.avant-transition-mode-play.avant-transition-navigating .avant-transition-mark{opacity:1;transform:scale(9);filter:blur(2px) drop-shadow(0 0 3rem oklch(.72 .19 215/.45))}
+.avant-transition-mode-play.avant-transition-revealing{animation:avantPlayReveal 440ms cubic-bezier(.16,1,.3,1) both}
+.avant-transition-mode-play.avant-transition-revealing .avant-transition-mark{transform:scale(10);opacity:1}
 @keyframes avantPlayMarkLaunch{0%{opacity:0;transform:scale(.68)}22%{opacity:1;transform:scale(.9)}58%{opacity:1;transform:scale(1.15)}100%{opacity:1;transform:scale(8.5);filter:blur(1.5px) drop-shadow(0 0 3rem oklch(.72 .19 215/.5))}}
 @keyframes avantPlayLightSweep{0%,12%{opacity:0;transform:rotate(13deg) translateX(-260%)}38%{opacity:1}72%{opacity:.9}100%{opacity:0;transform:rotate(13deg) translateX(480%)}}
 @keyframes avantPlayReveal{0%{opacity:1;background:#000}34%{opacity:1;background:#000}100%{opacity:0;background:#000}}
-@media(max-width:639px){.avant-transition-play.avant-transition-entering .avant-transition-mark{animation-duration:480ms}.avant-transition-play.avant-transition-entering .avant-transition-vignette{animation-duration:480ms}}
+@media(max-width:639px){.avant-transition-mode-play.avant-transition-entering .avant-transition-mark{animation-duration:480ms}.avant-transition-mode-play.avant-transition-entering .avant-transition-vignette{animation-duration:480ms}}
+
+
+/* Phase 4 — lightweight route language. Only Play gets the full signature A. */
+.avant-transition-mode-quick .avant-transition-mark,.avant-transition-mode-detail .avant-transition-mark,.avant-transition-mode-checkout .avant-transition-mark,.avant-transition-mode-back .avant-transition-mark{display:none}
+.avant-transition-mode-quick.avant-transition-entering .avant-transition-vignette{animation:avantQuickIn 120ms ease-out both;background:#000}
+.avant-transition-mode-quick.avant-transition-revealing{pointer-events:none;animation:avantQuickOut 180ms ease-out both}
+.avant-transition-mode-detail.avant-transition-entering .avant-transition-vignette{animation:avantDetailIn 240ms cubic-bezier(.22,1,.36,1) both;background:radial-gradient(circle at 50% 40%,oklch(.18 .025 250/.3),#050608 78%)}
+.avant-transition-mode-detail.avant-transition-revealing{pointer-events:none;animation:avantDetailOut 300ms cubic-bezier(.16,1,.3,1) both}
+.avant-transition-mode-checkout.avant-transition-entering .avant-transition-vignette{animation:avantCheckoutIn 220ms ease-out both;background:linear-gradient(105deg,#020305 0%,oklch(.18 .075 235/.86) 52%,#020305 100%);background-size:220% 100%}
+.avant-transition-mode-checkout.avant-transition-revealing{pointer-events:none;animation:avantCheckoutOut 260ms ease-out both}
+.avant-transition-mode-back.avant-transition-entering .avant-transition-vignette{animation:avantBackIn 180ms ease-out both;background:#030405}
+.avant-transition-mode-back.avant-transition-revealing{pointer-events:none;animation:avantBackOut 220ms ease-out both}
+@keyframes avantQuickIn{from{opacity:0}to{opacity:.72}}
+@keyframes avantQuickOut{from{opacity:.72;background:#000}to{opacity:0;background:#000}}
+@keyframes avantDetailIn{from{opacity:0;transform:scale(1.025)}to{opacity:1;transform:scale(1)}}
+@keyframes avantDetailOut{from{opacity:1}to{opacity:0}}
+@keyframes avantCheckoutIn{0%{opacity:0;background-position:100% 0}100%{opacity:1;background-position:0 0}}
+@keyframes avantCheckoutOut{from{opacity:1}to{opacity:0}}
+@keyframes avantBackIn{from{opacity:0}to{opacity:.82}}
+@keyframes avantBackOut{from{opacity:.82}to{opacity:0}}
