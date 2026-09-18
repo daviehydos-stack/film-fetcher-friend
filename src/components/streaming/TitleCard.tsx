@@ -8,16 +8,24 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [saved, setSaved] = useState(false);
   const [previewing, setPreviewing] = useState(false);\n  const [previewFailed, setPreviewFailed] = useState(false);
   const [previewLoaded, setPreviewLoaded] = useState(false);
+  const [hoverCapable, setHoverCapable] = useState(false);
   const previewTimer = useRef<number | null>(null);
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setHoverCapable(media.matches);
+    sync();
+    media.addEventListener?.("change", sync);
+    return () => media.removeEventListener?.("change", sync);
+  }, []);
   useEffect(() => () => {
     if (previewTimer.current) window.clearTimeout(previewTimer.current);
   }, []);
 
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
   const beginPreview = () => {
-    if (!item.previewYoutubeId || previewFailed || window.matchMedia("(hover: none)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!hoverCapable || !item.previewYoutubeId || previewFailed || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     previewTimer.current = window.setTimeout(() => setPreviewing(true), 650);
   };
   const endPreview = () => {
