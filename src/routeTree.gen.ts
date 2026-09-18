@@ -8,15 +8,22 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ABetterLifeRouteImport } from './routes/a-better-life'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as BackToUsRouteImport } from './routes/back-to-us'
 import { Route as BetterDaysRouteImport } from './routes/better-days'
 import { Route as BetterlifeEpisodesRouteImport } from './routes/betterlife-episodes'
+import { Route as MoviesRouteImport } from './routes/movies'
+import { Route as MyListRouteImport } from './routes/my-list'
 import { Route as NairobbyRouteImport } from './routes/nairobby'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ThisIsLifeRouteImport } from './routes/this-is-life'
 import { Route as ThisIsLifeEpisodesRouteImport } from './routes/this-is-life-episodes'
+import { Route as TitleSlugRouteImport } from './routes/title.$slug'
+import { Route as TvShowsRouteImport } from './routes/tv-shows'
 import { Route as WatchThemAllRouteImport } from './routes/watch-them-all'
 import { Route as WriteLikeAMasterRouteImport } from './routes/write-like-a-master'
 
@@ -28,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const ABetterLifeRoute = ABetterLifeRouteImport.update({
   id: '/a-better-life',
   path: '/a-better-life',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BackToUsRoute = BackToUsRouteImport.update({
@@ -45,9 +57,34 @@ const BetterlifeEpisodesRoute = BetterlifeEpisodesRouteImport.update({
   path: '/betterlife-episodes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MoviesRoute = MoviesRouteImport.update({
+  id: '/movies',
+  path: '/movies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyListRoute = MyListRouteImport.update({
+  id: '/my-list',
+  path: '/my-list',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NairobbyRoute = NairobbyRouteImport.update({
   id: '/nairobby',
   path: '/nairobby',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThisIsLifeRoute = ThisIsLifeRouteImport.update({
@@ -58,6 +95,16 @@ const ThisIsLifeRoute = ThisIsLifeRouteImport.update({
 const ThisIsLifeEpisodesRoute = ThisIsLifeEpisodesRouteImport.update({
   id: '/this-is-life-episodes',
   path: '/this-is-life-episodes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TitleSlugRoute = TitleSlugRouteImport.update({
+  id: '/title/$slug',
+  path: '/title/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TvShowsRoute = TvShowsRouteImport.update({
+  id: '/tv-shows',
+  path: '/tv-shows',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WatchThemAllRoute = WatchThemAllRouteImport.update({
@@ -74,24 +121,40 @@ const WriteLikeAMasterRoute = WriteLikeAMasterRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-better-life': typeof ABetterLifeRoute
+  '/about': typeof AboutRoute
   '/back-to-us': typeof BackToUsRoute
   '/better-days': typeof BetterDaysRoute
   '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/movies': typeof MoviesRoute
+  '/my-list': typeof MyListRoute
   '/nairobby': typeof NairobbyRoute
+  '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
+  '/title/$slug': typeof TitleSlugRoute
+  '/tv-shows': typeof TvShowsRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-better-life': typeof ABetterLifeRoute
+  '/about': typeof AboutRoute
   '/back-to-us': typeof BackToUsRoute
   '/better-days': typeof BetterDaysRoute
   '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/movies': typeof MoviesRoute
+  '/my-list': typeof MyListRoute
   '/nairobby': typeof NairobbyRoute
+  '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
+  '/title/$slug': typeof TitleSlugRoute
+  '/tv-shows': typeof TvShowsRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
@@ -99,12 +162,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/a-better-life': typeof ABetterLifeRoute
+  '/about': typeof AboutRoute
   '/back-to-us': typeof BackToUsRoute
   '/better-days': typeof BetterDaysRoute
   '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/movies': typeof MoviesRoute
+  '/my-list': typeof MyListRoute
   '/nairobby': typeof NairobbyRoute
+  '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
+  '/title/$slug': typeof TitleSlugRoute
+  '/tv-shows': typeof TvShowsRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
@@ -113,36 +184,60 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/a-better-life'
+    | '/about'
     | '/back-to-us'
     | '/better-days'
     | '/betterlife-episodes'
+    | '/movies'
+    | '/my-list'
     | '/nairobby'
+    | '/privacy'
+    | '/search'
+    | '/terms'
     | '/this-is-life'
     | '/this-is-life-episodes'
+    | '/title/$slug'
+    | '/tv-shows'
     | '/watch-them-all'
     | '/write-like-a-master'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/a-better-life'
+    | '/about'
     | '/back-to-us'
     | '/better-days'
     | '/betterlife-episodes'
+    | '/movies'
+    | '/my-list'
     | '/nairobby'
+    | '/privacy'
+    | '/search'
+    | '/terms'
     | '/this-is-life'
     | '/this-is-life-episodes'
+    | '/title/$slug'
+    | '/tv-shows'
     | '/watch-them-all'
     | '/write-like-a-master'
   id:
     | '__root__'
     | '/'
     | '/a-better-life'
+    | '/about'
     | '/back-to-us'
     | '/better-days'
     | '/betterlife-episodes'
+    | '/movies'
+    | '/my-list'
     | '/nairobby'
+    | '/privacy'
+    | '/search'
+    | '/terms'
     | '/this-is-life'
     | '/this-is-life-episodes'
+    | '/title/$slug'
+    | '/tv-shows'
     | '/watch-them-all'
     | '/write-like-a-master'
   fileRoutesById: FileRoutesById
@@ -150,12 +245,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ABetterLifeRoute: typeof ABetterLifeRoute
+  AboutRoute: typeof AboutRoute
   BackToUsRoute: typeof BackToUsRoute
   BetterDaysRoute: typeof BetterDaysRoute
   BetterlifeEpisodesRoute: typeof BetterlifeEpisodesRoute
+  MoviesRoute: typeof MoviesRoute
+  MyListRoute: typeof MyListRoute
   NairobbyRoute: typeof NairobbyRoute
+  PrivacyRoute: typeof PrivacyRoute
+  SearchRoute: typeof SearchRoute
+  TermsRoute: typeof TermsRoute
   ThisIsLifeRoute: typeof ThisIsLifeRoute
   ThisIsLifeEpisodesRoute: typeof ThisIsLifeEpisodesRoute
+  TitleSlugRoute: typeof TitleSlugRoute
+  TvShowsRoute: typeof TvShowsRoute
   WatchThemAllRoute: typeof WatchThemAllRoute
   WriteLikeAMasterRoute: typeof WriteLikeAMasterRoute
 }
@@ -174,6 +277,13 @@ declare module '@tanstack/react-router' {
       path: '/a-better-life'
       fullPath: '/a-better-life'
       preLoaderRoute: typeof ABetterLifeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/back-to-us': {
@@ -197,11 +307,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BetterlifeEpisodesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/movies': {
+      id: '/movies'
+      path: '/movies'
+      fullPath: '/movies'
+      preLoaderRoute: typeof MoviesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-list': {
+      id: '/my-list'
+      path: '/my-list'
+      fullPath: '/my-list'
+      preLoaderRoute: typeof MyListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/nairobby': {
       id: '/nairobby'
       path: '/nairobby'
       fullPath: '/nairobby'
       preLoaderRoute: typeof NairobbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/this-is-life': {
@@ -216,6 +361,20 @@ declare module '@tanstack/react-router' {
       path: '/this-is-life-episodes'
       fullPath: '/this-is-life-episodes'
       preLoaderRoute: typeof ThisIsLifeEpisodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/title/$slug': {
+      id: '/title/$slug'
+      path: '/title/$slug'
+      fullPath: '/title/$slug'
+      preLoaderRoute: typeof TitleSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tv-shows': {
+      id: '/tv-shows'
+      path: '/tv-shows'
+      fullPath: '/tv-shows'
+      preLoaderRoute: typeof TvShowsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/watch-them-all': {
@@ -238,12 +397,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ABetterLifeRoute: ABetterLifeRoute,
+  AboutRoute: AboutRoute,
   BackToUsRoute: BackToUsRoute,
   BetterDaysRoute: BetterDaysRoute,
   BetterlifeEpisodesRoute: BetterlifeEpisodesRoute,
+  MoviesRoute: MoviesRoute,
+  MyListRoute: MyListRoute,
   NairobbyRoute: NairobbyRoute,
+  PrivacyRoute: PrivacyRoute,
+  SearchRoute: SearchRoute,
+  TermsRoute: TermsRoute,
   ThisIsLifeRoute: ThisIsLifeRoute,
   ThisIsLifeEpisodesRoute: ThisIsLifeEpisodesRoute,
+  TitleSlugRoute: TitleSlugRoute,
+  TvShowsRoute: TvShowsRoute,
   WatchThemAllRoute: WatchThemAllRoute,
   WriteLikeAMasterRoute: WriteLikeAMasterRoute,
 }
