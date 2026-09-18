@@ -42,12 +42,12 @@ export function SiteHeader() {
           <Link to="/search" aria-label="Search" className="text-white/80 transition hover:text-white"><Search className="size-5" /></Link>
         </div>
 
-        <button type="button" aria-label="Menu" onClick={() => setOpen((value) => !value)} className="ml-auto rounded p-2 lg:hidden">
+        <button type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen((value) => !value)} className="ml-auto rounded p-2 lg:hidden">
           {open ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
 
-      <div className={cn("overflow-hidden border-t border-white/10 transition-[max-height] duration-300 lg:hidden", open ? "max-h-96" : "max-h-0")}>
+      <div id="mobile-navigation" className={cn("overflow-hidden border-t border-white/10 transition-[max-height] duration-300 lg:hidden", open ? "max-h-96" : "max-h-0")}>
         <nav className="flex flex-col px-5 py-4 sm:px-10">
           {navLinks.map((link) => (
             <Link key={link.to} to={link.to} onClick={() => setOpen(false)} className="border-b border-white/5 py-3 text-base font-medium text-white/85">
