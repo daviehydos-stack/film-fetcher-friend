@@ -33,6 +33,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const previewStart = 0;
   const previewEnd = item.previewDuration ?? generatedClip.end ?? 120;
   const previewUrl = item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, heroMuted) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: previewStart, end: previewEnd, loop: true }) : null;
+  const previewFrameRef=useRef<HTMLIFrameElement|null>(null);
+  const pausePreview=()=>{previewFrameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*");};
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
   const [season, setSeason] = useState(seasons[0] ?? 1);
   const seasonEpisodes = item.episodes?.map((episode, absoluteIndex) => ({ episode, absoluteIndex })).filter(({ episode }) => (episode.season ?? 1) === season) ?? [];
@@ -44,7 +46,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     const timer = window.setTimeout(() => setHeroPreview(true), 900);
     return () => window.clearTimeout(timer);
   }, [item.id, previewUrl, item.heroAutoplay, heroInView, trailerOpen]);
-  useEffect(() => { const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=0.35),{threshold:[0,.35,.6]});observer.observe(node);return()=>observer.disconnect(); }, [item.id]);
+  useEffect(() => { const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{const visible=entry.isIntersecting&&entry.intersectionRatio>=0.35;setHeroInView(visible);if(!visible){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}},{threshold:[0,.15,.35,.6]});observer.observe(node);return()=>observer.disconnect(); }, [item.id]);
+  useEffect(()=>()=>pausePreview(),[item.id]);
   useEffect(() => { if (!trailerOpen) return; const close = (event: KeyboardEvent) => { if (event.key === "Escape") setTrailerOpen(false); }; window.addEventListener("keydown", close); const previous = document.body.style.overflow; document.body.style.overflow = "hidden"; return () => { window.removeEventListener("keydown", close); document.body.style.overflow = previous; }; }, [trailerOpen]);
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
   const expandDetails = () => { setDetailExpanded(true); window.setTimeout(() => episodesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); };
@@ -63,7 +66,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
       <main>
         <section ref={heroRef} className="relative min-h-[68svh] overflow-hidden bg-background sm:min-h-[76vh] lg:mx-auto lg:mt-0 lg:max-w-[1280px] lg:min-h-[82vh]">
           <img src={item.backdrop} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} backdrop`} fetchPriority="high" decoding="async" className={`absolute inset-0 size-full object-cover object-[62%_center] transition-opacity duration-700 sm:object-center ${heroPreview && heroPreviewLoaded ? "opacity-0" : "opacity-100"}`} />
-          {previewUrl && heroPreview && heroInView ? <iframe src={previewUrl} title={`${item.title} background trailer`} allow="autoplay; fullscreen; picture-in-picture" tabIndex={-1} aria-hidden="true" onLoad={() => setHeroPreviewLoaded(true)} className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${heroPreviewLoaded ? "opacity-100" : "opacity-0"}`} /> : null}
+          {previewUrl && heroPreview && heroInView ? <iframe ref={previewFrameRef} src={previewUrl} title={`${item.title} background trailer`} allow="autoplay; fullscreen; picture-in-picture" tabIndex={-1} aria-hidden="true" onLoad={() => setHeroPreviewLoaded(true)} className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${heroPreviewLoaded ? "opacity-100" : "opacity-0"}`} /> : null}
           <div className="hero-shade absolute inset-0" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_36%,transparent_0%,rgba(0,0,0,.06)_34%,rgba(0,0,0,.68)_100%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.38)_0%,transparent_24%,transparent_55%,rgba(24,24,24,.68)_78%,#181818_100%)]" />
           <div className="relative z-10 flex min-h-[72svh] max-w-3xl flex-col justify-end px-5 pb-10 pt-28 sm:min-h-[72vh] sm:px-10 sm:pb-16 lg:min-h-[82vh] lg:px-14 lg:pb-20">
