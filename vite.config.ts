@@ -26,6 +26,19 @@ export default defineConfig({
               retryCount: 0,
             },
           },
+          prerender: {
+            enabled: true,
+            crawlLinks: true,
+            retryCount: 1,
+            autoSubfolderIndex: true,
+            filter: ({ path }) =>
+              !path.startsWith("/admin") &&
+              !path.startsWith("/checkout/") &&
+              !path.startsWith("/payment/") &&
+              !path.startsWith("/watch/") &&
+              path !== "/search" &&
+              path !== "/my-list",
+          },
         }
       : {}),
   },
