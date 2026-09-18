@@ -24,6 +24,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
   useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=0.22),{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
 
+  async function toggleSaved(){ const token=await customerToken(false); if(!token){ try{await requireCustomerToken()}catch{return} } setSaved(toggleMyList(item.id).includes(item.id)); }
+
   useEffect(() => {
     setTrailerReady(false);
     setTrailerLoaded(false);
@@ -38,8 +40,6 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     setReducedMotion(media.matches);
     if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false) return () => screen.removeEventListener?.("change", syncScreen);
     const timer = window.setTimeout(() => setTrailerReady(true), 1200);
-    async function toggleSaved(){ const token=await customerToken(false); if(!token){ try{await requireCustomerToken()}catch{return} } setSaved(toggleMyList(item.id).includes(item.id)); }
-
   return () => { window.clearTimeout(timer); screen.removeEventListener?.("change", syncScreen); };
   }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
 

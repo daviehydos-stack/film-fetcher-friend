@@ -8,7 +8,8 @@ export type AutoTrailerPlan={sourceDuration:number;targetDuration:number;clips:T
  */
 export function buildAutoTrailerPlan(sourceDuration:number):AutoTrailerPlan{
  const d=Math.max(0,Math.floor(sourceDuration));
- if(d<=60)return{sourceDuration:d,targetDuration:d,clips:[{start:0,end:d,duration:d,zone:0}]};
+ if(d<=0)return{sourceDuration:0,targetDuration:0,clips:[]};
+ if(d<=60){const target=Math.min(18,Math.max(8,Math.floor(d*.45))),start=Math.max(0,Math.floor((d-target)*.32));return{sourceDuration:d,targetDuration:target,clips:[{start,end:Math.min(d,start+target),duration:Math.min(target,d-start),zone:1}]}}
  const target=d>=1500?50:d>=900?45:d>=480?36:Math.min(28,Math.floor(d*.22));
  const count=d>=900?5:d>=480?4:3;
  const opening=Math.max(12,Math.floor(d*.08));
