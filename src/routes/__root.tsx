@@ -117,6 +117,31 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
+    if (!buildSha || typeof window === "undefined") return;
+
+    let cancelled = false;
+
+    fetch(import.meta.env.BASE_URL + "version.json", {
+      cache: "no-store",
+      headers: { "cache-control": "no-cache" },
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { sha?: string } | null) => {
+        if (!cancelled && payload?.sha && payload.sha !== buildSha) {
+          window.location.reload();
+        }
+      })
+      .catch(() => {
+        // A version check must never break the application.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
