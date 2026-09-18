@@ -15,7 +15,7 @@ export const Route = createFileRoute("/title/$slug")({
       { property: "og:title", content: `${loaderData.title} — Avant Movies` },
       { property: "og:description", content: loaderData.shortDescription },
       { property: "og:image", content: loaderData.backdrop },
-      { property: "og:type", content: "video.movie" },
+      { property: "og:type", content: loaderData.type === "movie" ? "video.movie" : "video.tv_show" },
     ] : [],
   }),
   component: TitleRoute,
