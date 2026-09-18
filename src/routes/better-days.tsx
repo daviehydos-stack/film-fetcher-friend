@@ -9,6 +9,7 @@ const POSTER =
 export const Route = createFileRoute("/better-days")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Better Days — Where it all started | Avant Cinema" },
       {
         name: "description",
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/better-days")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  links: [{ rel: "canonical", href: `/title/better-days` }],
   component: BetterDays,
 });
 
