@@ -14,10 +14,6 @@ const paths = [...new Set([...staticPaths, ...titleSlugs.map((slug) => `/title/$
 const robots = [
   "User-agent: *",
   "Allow: /",
-  "Disallow: /admin",
-  "Disallow: /checkout/",
-  "Disallow: /payment/",
-  "Disallow: /watch/",
   ...(origin ? ["", `Sitemap: ${origin}/sitemap.xml`] : []),
   "",
 ].join("\n");
