@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Check, ChevronDown, Play, Plus, Volume2, VolumeX, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { readMyList, toggleMyList } from "@/lib/my-list";
@@ -9,19 +9,20 @@ import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { rememberReturnContext } from "@/lib/navigation-memory";
 
 export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()=>void}){
- const [saved,setSaved]=useState(()=>readMyList().includes(item.id)); const [muted,setMuted]=useState(false); const [season,setSeason]=useState(item.episodes?.[0]?.season??1); const [closing,setClosing]=useState(false);
+ const frameRef=useRef<HTMLIFrameElement|null>(null); const [previewInView,setPreviewInView]=useState(true); const heroRef=useRef<HTMLElement|null>(null); const [saved,setSaved]=useState(()=>readMyList().includes(item.id)); const [muted,setMuted]=useState(false); const [season,setSeason]=useState(item.episodes?.[0]?.season??1); const [closing,setClosing]=useState(false);
  const episodes=item.episodes?.filter(e=>(e.season??1)===season)??[]; const seasons=[...new Set(item.episodes?.map(e=>e.season??1)??[])];
  useEffect(()=>{const old=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&requestClose();addEventListener("keydown",key);return()=>{document.body.style.overflow=old;removeEventListener("keydown",key)}},[onClose]);
  const openTitle=()=>{rememberReturnContext("catalogue",item.slug);requestClose()};
  const requestClose=()=>{if(closing)return;setClosing(true);window.setTimeout(onClose,220)};
  const toggleSaved=async()=>{const token=await customerToken(false);if(!token){try{await requireCustomerToken()}catch{return}}setSaved(toggleMyList(item.id).includes(item.id))};
- const start=0,end=Math.min(120,Math.max(30,item.previewDuration??120)); const video=!closing&&item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true}):null;
+ const start=0,end=Math.min(180,Math.max(30,item.previewDuration??120)); const video=!closing&&previewInView&&item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true,jsApi:true}):null;
+ useEffect(()=>{const node=heroRef.current;if(!node)return;const ob=new IntersectionObserver(([e])=>{const visible=e.isIntersecting&&e.intersectionRatio>=.25;setPreviewInView(visible);if(!visible)frameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*")},{threshold:[0,.25,.5]});ob.observe(node);return()=>ob.disconnect()},[item.id]);
  const content=<div className={`avant-preview-backdrop ${closing?"is-closing":""} fixed inset-0 z-[100] overflow-y-auto bg-black/82 backdrop-blur-[10px]`} onMouseDown={e=>{if(e.target===e.currentTarget)requestClose()}}>
   <div className={`avant-preview-dialog ${closing?"is-closing":""} relative mx-auto my-3 w-[min(96vw,1180px)] overflow-hidden rounded-2xl border border-white/[.07] bg-[#171717] shadow-[0_45px_130px_rgba(0,0,0,.88)] sm:my-8`}>
    <button onClick={requestClose} aria-label="Close" className="absolute right-4 top-4 z-30 grid size-10 place-items-center rounded-full border border-white/10 bg-black/70 text-white shadow-lg backdrop-blur-md transition hover:bg-white/15"><X/></button>
-   <section className="relative aspect-[16/8.5] min-h-[310px] overflow-hidden bg-black sm:min-h-[430px]">
+   <section ref={heroRef} className="relative aspect-[16/8.5] min-h-[310px] overflow-hidden bg-black sm:min-h-[430px]">
     <img src={item.backdrop||item.artwork} alt="" className="absolute inset-0 size-full scale-[1.01] object-cover"/>
-    {video?<iframe key={String(muted)} src={video} title={item.title+" preview"} allow="autoplay; encrypted-media; picture-in-picture" className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"/>:null}
+    {video?<iframe ref={frameRef} key={String(muted)} src={video} title={item.title+" preview"} allow="autoplay; encrypted-media; picture-in-picture" className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"/>:null}
     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.28)_0%,transparent_28%,transparent_48%,rgba(23,23,23,.72)_76%,#171717_100%)]"/><div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.72)_0%,rgba(0,0,0,.30)_42%,transparent_76%)]"/><div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_35%,transparent_0%,rgba(0,0,0,.06)_35%,rgba(0,0,0,.42)_100%)]"/>
     <div className="absolute bottom-7 left-5 right-5 z-10 sm:bottom-12 sm:left-14 sm:right-14"><h2 className="max-w-3xl text-[clamp(2.25rem,8vw,4.5rem)] font-black uppercase leading-[.92] drop-shadow-[0_4px_18px_rgba(0,0,0,.75)]">{item.title}</h2><div className="mt-5 flex items-center gap-3">{(()=>{const e=item.episodes?.[0];const free=e?.youtubeId&&e.locked===false;return free?<Link to="/watch/$contentId" params={{contentId:e.legacyKey??item.slug+"-1"}} onClick={requestClose} className="inline-flex min-h-12 items-center gap-2 rounded bg-white px-6 font-bold text-black"><Play className="fill-current"/>Play</Link>:<Link to="/title/$slug" params={{slug:item.slug}} onClick={openTitle} className="inline-flex min-h-12 items-center gap-2 rounded bg-white px-6 font-bold text-black"><Play className="fill-current"/>More Info</Link>})()}<button onClick={()=>void toggleSaved()} className="grid size-12 place-items-center rounded-full border-2 border-white/55">{saved?<Check/>:<Plus/>}</button></div></div>
     {video?<button onClick={()=>setMuted(v=>!v)} className="absolute bottom-6 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/50 bg-black/30 sm:right-16">{muted?<VolumeX/>:<Volume2/>}</button>:null}
