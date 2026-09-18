@@ -1,9 +1,10 @@
 import { useLocation } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type TransitionPhase = "idle" | "entering" | "navigating" | "revealing" | "complete";
-const REVEAL_MS = 360;
-const SAFETY_MS = 2200;
+type TransitionPhase = "idle" | "entering" | "navigating" | "revealing";
+type TransitionMode = "quick" | "detail" | "checkout" | "back" | "play";
+const REVEAL_MS = 260;
+const SAFETY_MS = 1600;
 
 function stopPlayback() {
   window.dispatchEvent(new CustomEvent("avant:transition-start"));
@@ -14,7 +15,7 @@ function stopPlayback() {
     try {
       frame.contentWindow?.postMessage({ method: "pause" }, "*");
       frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "pauseVideo", args: [] }), "*");
-    } catch { /* cross-origin player; unmount is final fallback */ }
+    } catch { /* cross-origin player */ }
   });
 }
 
@@ -31,7 +32,7 @@ function shouldTransition(event: MouseEvent, anchor: HTMLAnchorElement) {
 export function AvantTransitionEngine() {
   const location = useLocation();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
-  const [mode, setMode] = useState<"quick" | "detail" | "checkout" | "back" | "play">("quick");
+  const [mode, setMode] = useState<TransitionMode>("quick");
   const phaseRef = useRef<TransitionPhase>("idle");
   const pendingAnchor = useRef<HTMLAnchorElement | null>(null);
   const timers = useRef<number[]>([]);
@@ -49,40 +50,42 @@ export function AvantTransitionEngine() {
 
   const finish = useCallback(() => {
     clearTimers();
-    setTransitionPhase("complete");
-    timers.current.push(window.setTimeout(() => setTransitionPhase("idle"), 40));
+    pendingAnchor.current = null;
+    setTransitionPhase("idle");
   }, [clearTimers, setTransitionPhase]);
 
   useEffect(() => {
     reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const desktopMark = new Image();
-    desktopMark.src = `${import.meta.env.BASE_URL}avant-transition-a.webp`;
-    const mobileMark = new Image();
-    mobileMark.src = `${import.meta.env.BASE_URL}avant-transition-a-mobile.webp`;
+    [`${import.meta.env.BASE_URL}avant-transition-a.webp`, `${import.meta.env.BASE_URL}avant-transition-a-mobile.webp`]
+      .forEach((src) => { const image = new Image(); image.src = src; });
 
     const onClick = (event: MouseEvent) => {
       const element = event.target instanceof Element ? event.target.closest("a[href]") : null;
       if (!(element instanceof HTMLAnchorElement) || !shouldTransition(event, element)) return;
-
       if (element.dataset.avantTransitionBypass === "true") {
         delete element.dataset.avantTransitionBypass;
         return;
       }
-
       if (phaseRef.current !== "idle") {
         event.preventDefault();
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
-      pendingAnchor.current = element;
       const nextUrl = new URL(element.href, window.location.href);
       const isPlay = nextUrl.pathname.includes("/watch/");
       const isDetail = nextUrl.pathname.includes("/title/");
       const isCheckout = nextUrl.pathname.includes("/checkout/");
       const isBack = element.dataset.avantTransition === "back";
-      setMode(isPlay ? "play" : isCheckout ? "checkout" : isBack ? "back" : isDetail ? "detail" : "quick");
+      const nextMode: TransitionMode = isPlay ? "play" : isCheckout ? "checkout" : isBack ? "back" : isDetail ? "detail" : "quick";
+
+      /* Ordinary navigation should stay native-fast. Only cinematic destinations
+         need an interception overlay. This removes the black flash between tabs/pages. */
+      if (nextMode === "quick") return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      pendingAnchor.current = element;
+      setMode(nextMode);
       stopPlayback();
 
       if (reducedMotion.current) {
@@ -92,8 +95,8 @@ export function AvantTransitionEngine() {
       }
 
       setTransitionPhase("entering");
-      const isCompactViewport = window.matchMedia("(max-width: 639px)").matches;
-      const enterDelay = isPlay ? (isCompactViewport ? 430 : 480) : isCheckout ? 200 : isBack ? 170 : isDetail ? 220 : 110;
+      const compact = window.matchMedia("(max-width: 639px)").matches;
+      const enterDelay = isPlay ? (compact ? 390 : 430) : isCheckout ? 150 : isBack ? 120 : 160;
       timers.current.push(window.setTimeout(() => {
         setTransitionPhase("navigating");
         const anchor = pendingAnchor.current;
