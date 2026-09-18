@@ -1,4 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
-export const Route = createFileRoute("/about")({ component: About });
-function About(){return <StreamingShell><main className="mx-auto max-w-5xl px-5 pb-24 pt-32 sm:px-10"><p className="eyebrow">Our story</p><h1 className="mt-4 text-5xl font-black uppercase sm:text-7xl">Stories that feel human.</h1><div className="mt-10 max-w-3xl space-y-6 text-lg leading-8 text-foreground/80"><p>We’re not here to follow the rules; we’re here to rewrite them as underdogs driven by passion, purpose and the relentless pursuit of stories authentic to the true human experience.</p><p>Avant Movies is built around Kenyan stories rich in culture and meaning — work designed to entertain, connect and spark change.</p></div></main></StreamingShell>}
+
+export const Route = createFileRoute("/about")({
+  head: () => ({ meta: [{ title: "About — Avant Movies" }, { name: "description", content: "Meet Avant Movies, an independent Kenyan storytelling company creating purposeful stories rooted in culture and the human experience." }] }),
+  component: Page,
+});
+
+function Page() {
+  return <StreamingShell><main className="mx-auto max-w-5xl px-5 pb-24 pt-32 sm:px-10"><p className="eyebrow">Our story</p><h1 className="mt-4 text-5xl font-black sm:text-7xl">Stories with something to say.</h1><p className="mt-8 max-w-3xl text-lg leading-8 text-muted-foreground">Avant is an independent Kenyan storytelling company committed to authentic stories driven by purpose, culture and the human experience.</p><div className="mt-16 grid gap-6 border-t border-white/10 pt-10 sm:grid-cols-3"><div><p className="text-3xl font-black">Kenyan</p><p className="mt-2 text-sm text-muted-foreground">Stories rooted here.</p></div><div><p className="text-3xl font-black">Independent</p><p className="mt-2 text-sm text-muted-foreground">A distinct creative voice.</p></div><div><p className="text-3xl font-black">Human</p><p className="mt-2 text-sm text-muted-foreground">Made to be felt.</p></div></div></main></StreamingShell>;
+}
