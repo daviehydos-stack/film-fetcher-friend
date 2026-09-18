@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
-import { ADMIN_EMAIL, hasAdminSession } from "@/lib/avant-backend";
+import { ADMIN_EMAIL } from "@/lib/avant-backend";
 import { customerSession, signInCustomer, signOutCustomer } from "@/lib/google-auth";
 
 export function SiteHeader(){
- const[open,setOpen]=useState(false),[scrolled,setScrolled]=useState(false),[admin,setAdmin]=useState(false),[customer,setCustomer]=useState<any>(null),[authBusy,setAuthBusy]=useState(false);
- useEffect(()=>{void customerSession().then(user=>{setCustomer(user);setAdmin(String(user?.email||"").toLowerCase()===ADMIN_EMAIL);if(user)void hasAdminSession().then(ok=>{if(ok)setAdmin(true)})})},[]);
+ const[open,setOpen]=useState(false),[scrolled,setScrolled]=useState(false),[admin,setAdmin]=useState(()=>{if(typeof window==="undefined")return false;try{const t=localStorage.getItem("avant_google_id_token");if(!t)return false;const p=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return String(p?.email||"").toLowerCase()===ADMIN_EMAIL&&Number(p?.exp||0)*1000>Date.now()}catch{return false}}),[customer,setCustomer]=useState<any>(()=>{if(typeof window==="undefined")return null;try{const t=localStorage.getItem("avant_google_id_token");if(!t)return null;const p=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return Number(p?.exp||0)*1000>Date.now()?{email:p.email,name:p.name,photoURL:p.picture}:null}catch{return null}}),[authBusy,setAuthBusy]=useState(false);
+ useEffect(()=>{void customerSession().then(user=>{setCustomer(user);setAdmin(String(user?.email||"").toLowerCase()===ADMIN_EMAIL)})},[]);
  useEffect(()=>{if(!open)return;const p=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&setOpen(false);window.addEventListener("keydown",key);return()=>{document.body.style.overflow=p;window.removeEventListener("keydown",key)}},[open]);
  useEffect(()=>{const scroll=()=>setScrolled(window.scrollY>16);scroll();window.addEventListener("scroll",scroll,{passive:true});return()=>window.removeEventListener("scroll",scroll)},[]);
  async function login(){setAuthBusy(true);try{const user=await signInCustomer();setCustomer(user);setAdmin(String(user?.email||"").toLowerCase()===ADMIN_EMAIL)}finally{setAuthBusy(false)}} async function logout(){setAuthBusy(true);try{await signOutCustomer();setCustomer(null);setAdmin(false)}finally{setAuthBusy(false)}}
