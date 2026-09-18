@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Lock, Play } from "lucide-react";
+import { Lock, Play, Share2 } from "lucide-react";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { getTitle } from "@/lib/site-data";
 import { publicPageLinks, publicPageMeta, videoObjectSchema } from "@/lib/seo";
@@ -18,7 +18,8 @@ export const Route = createFileRoute("/episode/$slug/$episodeNumber")({
     const path = `/episode/${item.slug}/${episodeNumber}`;
     const title = `${episode.title} — ${item.title} | Avant Movies`;
     const description = episode.description || `Watch ${episode.title} from ${item.title} on Avant Movies.`;
-    const image = episode.poster || (episode.youtubeId ? `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg` : item.backdrop || item.artwork);
+    const shareEpisode = async () => { const path=`/episode/${item.slug}/${episodeNumber}`;const url=new URL(path.replace(/^\\//,""),document.baseURI).href;try{if(navigator.share)await navigator.share({title:`${episode.title} — ${item.title}`,text:episode.description||`Watch ${episode.title} from ${item.title} on Avant Movies.`,url});else{await navigator.clipboard.writeText(url);window.alert("Episode link copied.");}}catch(error:any){if(error?.name!=="AbortError")window.alert("Unable to share this episode.");}};
+  const image = episode.poster || (episode.youtubeId ? `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg` : item.backdrop || item.artwork);
     return {
       meta: publicPageMeta(path, title, description, image, "video.episode"),
       links: publicPageLinks(path),
@@ -37,7 +38,7 @@ function EpisodeSharePage() {
       <div className="aspect-video bg-black"><img src={image} alt={`${episode.title} thumbnail`} fetchPriority="high" decoding="async" className="size-full object-cover"/></div>
       <div className="p-5 sm:p-8"><p className="eyebrow">{item.title} · Episode {episodeNumber}</p><h1 className="mt-3 text-3xl font-black sm:text-5xl">{episode.title}</h1>
       <p className="mt-4 max-w-2xl text-sm leading-7 text-white/60">{episode.description || `Watch this episode of ${item.title} on Avant Movies.`}</p>
-      <div className="mt-6 flex flex-wrap gap-3">{episode.youtubeId ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${episodeNumber}` }} className="inline-flex min-h-12 items-center gap-2 rounded-md bg-white px-5 font-bold text-black"><Play className="size-4 fill-current"/>Watch episode</Link> : <Link to="/title/$slug" params={{ slug: item.slug }} className="inline-flex min-h-12 items-center gap-2 rounded-md bg-white px-5 font-bold text-black"><Lock className="size-4"/>View access</Link>}</div></div>
+      <div className="mt-6 flex flex-wrap gap-3">{episode.youtubeId ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${episodeNumber}` }} className="inline-flex min-h-12 items-center gap-2 rounded-md bg-white px-5 font-bold text-black"><Play className="size-4 fill-current"/>Watch episode</Link> : <Link to="/title/$slug" params={{ slug: item.slug }} className="inline-flex min-h-12 items-center gap-2 rounded-md bg-white px-5 font-bold text-black"><Lock className="size-4"/>View access</Link>}<button type="button" onClick={()=>void shareEpisode()} className="inline-flex min-h-12 items-center gap-2 rounded-md border border-white/20 px-5 font-bold text-white hover:bg-white/10"><Share2 className="size-4"/>Share</button></div></div>
     </section>
   </main></StreamingShell>;
 }
