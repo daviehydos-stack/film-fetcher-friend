@@ -1,0 +1,39 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { Smartphone, CreditCard } from 'lucide-react'
+
+export const Route = createFileRoute('/checkout/$productId')({
+  component: CheckoutRoute,
+})
+
+function CheckoutRoute() {
+  const { productId } = Route.useParams()
+
+  return (
+    <main className="min-h-screen bg-[#07090D] px-5 py-12 text-white">
+      <section className="mx-auto max-w-lg">
+        <Link to="/" className="text-sm text-white/60 hover:text-white">← Back to Avant</Link>
+        <div className="mt-10">
+          <p className="text-xs uppercase tracking-[0.22em] text-white/45">Secure access</p>
+          <h1 className="mt-2 text-3xl font-semibold">Get access</h1>
+          <p className="mt-3 text-sm leading-6 text-white/60">
+            Pricing and access duration are resolved from the selected product on the server.
+            They are not trusted from browser input.
+          </p>
+        </div>
+
+        <div className="mt-8 space-y-3">
+          <button className="flex w-full items-center gap-4 rounded-lg bg-white px-5 py-4 text-left text-black" type="button">
+            <Smartphone className="size-5" />
+            <span><strong className="block">M-PESA</strong><span className="text-sm opacity-65">Pay with your mobile number</span></span>
+          </button>
+          <button className="flex w-full items-center gap-4 rounded-lg bg-white/8 px-5 py-4 text-left" type="button">
+            <CreditCard className="size-5" />
+            <span><strong className="block">Card</strong><span className="text-sm text-white/55">Secure provider-hosted checkout</span></span>
+          </button>
+        </div>
+
+        <p className="mt-8 text-xs text-white/35">Product reference: {productId}</p>
+      </section>
+    </main>
+  )
+}
