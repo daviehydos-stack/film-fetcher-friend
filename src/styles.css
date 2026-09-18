@@ -91,6 +91,19 @@
     overflow-x: hidden;
   }
 
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+
+  img, video {
+    max-width: 100%;
+  }
+
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   h1,
   h2,
   h3,
