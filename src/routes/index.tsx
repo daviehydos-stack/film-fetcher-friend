@@ -32,7 +32,7 @@ function Index() {
 
         <div className="relative z-20 pb-12 pt-5 sm:pt-7 lg:pt-8">
           <ContinueWatching />
-          {adminRails.length ? adminRails.map((rail:any,index:number)=>index===0?<RankedRail key={rail.name} title={rail.name} items={rail.items}/>:<ContentRail key={rail.name} title={rail.name} items={rail.items}/>) : <>{liveCatalogue.length>0?<RankedRail title="Top picks on Avant" items={liveCatalogue}/>:null}{available.length>0?<ContentRail title="Keep Watching" items={available}/>:null}{series.length>0?<ContentRail title="Series & Originals" items={series}/>:null}{movies.length>0?<ContentRail title="Films" items={movies}/>:null}{comingSoon.length>0?<ContentRail title="Coming Soon" items={comingSoon}/>:null}</>}
+          {adminRails.length ? adminRails.map((rail:any,index:number)=>index===0?<RankedRail key={rail.name} title={rail.name} items={rail.items}/>:<ContentRail key={rail.name} title={rail.name} items={rail.items}/>) : <>{liveCatalogue.length>0?<RankedRail title="Featured on Avant" items={liveCatalogue}/>:null}{available.length>0?<ContentRail title="Available now" items={available}/>:null}{series.length>0?<ContentRail title="Series" items={series}/>:null}{movies.length>0?<ContentRail title="Films" items={movies}/>:null}{comingSoon.length>0?<ContentRail title="Coming Soon" items={comingSoon}/>:null}</>}
           {myList.length>0?<ContentRail title="My List" items={myList}/>:null}
         </div>
 
