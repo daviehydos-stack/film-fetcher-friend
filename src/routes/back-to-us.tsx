@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { LockedCard } from "@/components/site/VideoCard";
 import { PricingSection, PaymentHelp } from "@/components/site/Pricing";
+import { publicPageLinks } from "@/lib/seo";
 
 const POSTER =
   "https://static.wixstatic.com/media/57086b_c12a5a80a97149a4a067d9857681e3e3~mv2.jpg/v1/fill/w_980,h_531,enc_auto/file.jpeg";
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/back-to-us")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  links: [{ rel: "canonical", href: `/title/back-to-us` }],
+  links: publicPageLinks("/title/back-to-us"),
   component: BackToUs,
 });
 
