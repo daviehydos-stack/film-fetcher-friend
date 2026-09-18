@@ -1,5 +1,5 @@
 import {createFileRoute,Link} from "@tanstack/react-router";import{useEffect,useState}from"react";import{adminContent,adminDashboard,adminView,getAdminToken,setAdminToken}from"@/lib/avant-backend";import{finishAdminMfa,restoreAdminSession,signInAdmin,signOutAdmin}from"@/lib/firebase-admin-auth";import{Activity,CheckCircle2,CircleDollarSign,Clock3,Film,LogOut,Package,Plus,Save,ShieldCheck,Users,WalletCards,XCircle}from"lucide-react";
-export const Route=createFileRoute("/admin")({component:AdminPage});
+export const Route=createFileRoute("/admin")({head:()=>({meta:[{name:"robots",content:"noindex, nofollow"}]}),component:AdminPage});
 function AdminPage(){const[data,setData]=useState<any>(null),[view,setView]=useState("dashboard"),[error,setError]=useState(""),[busy,setBusy]=useState(false),[mfa,setMfa]=useState(false),[code,setCode]=useState("");
 async function load(v=view){const t=getAdminToken();if(!t)return;setBusy(true);setError("");try{setData(v==="dashboard"?await adminDashboard(t):await adminView(t,v as any));setView(v)}catch(e:any){setAdminToken(null);setError(e.message||"Admin session failed")}finally{setBusy(false)}}
 useEffect(()=>{let dead=false;(async()=>{if(!getAdminToken())await restoreAdminSession();if(!dead)await load("dashboard")})().catch(()=>{});return()=>{dead=true}},[]);
