@@ -4,11 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Avant Cinema design system.
- * Cinematic Kenyan indie-film palette: burnt orange canvas, deep black
- * theatre panels, warm flame accents.
- */
+/* Avant Movies — intimate independent cinema, built as a dark-first product. */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -41,49 +37,44 @@
   --color-flame: var(--flame);
   --color-flame-foreground: var(--flame-foreground);
   --color-sand: var(--sand);
-  --font-display: "Bebas Neue", "Barlow Condensed", system-ui, sans-serif;
-  --font-sans: "Barlow", system-ui, sans-serif;
-  --shadow-reel: 0 18px 50px -18px oklch(0 0 0 / 0.65);
-  --shadow-glow: 0 0 0 1px var(--flame), 0 12px 40px -12px oklch(0.68 0.2 45 / 0.6);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --font-display: "Arial Narrow", "Helvetica Neue", sans-serif;
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
+  --shadow-reel: 0 22px 70px -26px oklch(0 0 0 / 0.92);
+  --shadow-glow: 0 0 0 1px oklch(0.72 0.14 58 / 0.45), 0 14px 44px -20px oklch(0.72 0.14 58 / 0.55);
 }
 
 :root {
-  --radius: 0.5rem;
-
-  /* burnt orange canvas, exactly the feel of the original site */
-  --background: oklch(0.62 0.17 45);
-  --foreground: oklch(0.18 0.02 60);
-
-  --card: oklch(0.16 0.012 60);
-  --card-foreground: oklch(0.97 0.006 80);
-
-  --popover: oklch(0.16 0.012 60);
-  --popover-foreground: oklch(0.97 0.006 80);
-
-  --primary: oklch(0.16 0.012 60);
-  --primary-foreground: oklch(0.97 0.006 80);
-
-  --secondary: oklch(0.97 0.02 70);
-  --secondary-foreground: oklch(0.2 0.02 60);
-
-  --muted: oklch(0.3 0.02 60);
-  --muted-foreground: oklch(0.78 0.03 70);
-
-  --accent: oklch(0.7 0.19 48);
-  --accent-foreground: oklch(0.15 0.01 60);
+  --radius: 0.375rem;
+  --background: oklch(0.125 0.009 255);
+  --foreground: oklch(0.97 0.004 90);
+  --card: oklch(0.17 0.012 255);
+  --card-foreground: oklch(0.97 0.004 90);
+  --popover: oklch(0.16 0.012 255);
+  --popover-foreground: oklch(0.97 0.004 90);
+  --primary: oklch(0.72 0.14 58);
+  --primary-foreground: oklch(0.12 0.008 255);
+  --secondary: oklch(0.25 0.015 255);
+  --secondary-foreground: oklch(0.97 0.004 90);
+  --muted: oklch(0.22 0.012 255);
+  --muted-foreground: oklch(0.72 0.01 255);
+  --accent: oklch(0.72 0.14 58);
+  --accent-foreground: oklch(0.12 0.008 255);
 
   --destructive: oklch(0.55 0.22 27);
   --destructive-foreground: oklch(0.98 0.005 80);
 
-  --border: oklch(0.3 0.03 60);
-  --input: oklch(0.3 0.03 60);
-  --ring: oklch(0.7 0.19 48);
-
-  --ink: oklch(0.13 0.01 60);
-  --ink-foreground: oklch(0.97 0.006 80);
-  --flame: oklch(0.7 0.2 46);
-  --flame-foreground: oklch(0.13 0.01 60);
-  --sand: oklch(0.93 0.03 75);
+  --border: oklch(0.34 0.012 255 / 0.55);
+  --input: oklch(0.3 0.012 255);
+  --ring: oklch(0.72 0.14 58);
+  --ink: oklch(0.09 0.007 255);
+  --ink-foreground: oklch(0.97 0.004 90);
+  --flame: oklch(0.72 0.14 58);
+  --flame-foreground: oklch(0.12 0.008 255);
+  --sand: oklch(0.9 0.025 78);
+  --surface: oklch(0.155 0.01 255);
+  --surface-raised: oklch(0.2 0.014 255);
 }
 
 @layer base {
@@ -96,6 +87,8 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    min-width: 320px;
+    overflow-x: hidden;
   }
 
   h1,
@@ -103,12 +96,12 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
   }
 }
 
 @utility panel {
-  background-color: var(--ink);
+  background-color: var(--surface);
   color: var(--ink-foreground);
   box-shadow: var(--shadow-reel);
 }
@@ -116,15 +109,38 @@
 @utility headline {
   font-family: var(--font-display);
   line-height: 0.95;
-  letter-spacing: 0.03em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
 @utility eyebrow {
   font-family: var(--font-sans);
   text-transform: uppercase;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.18em;
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--flame);
+}
+
+@utility hero-shade {
+  background: linear-gradient(90deg, oklch(0.08 0.006 255 / 0.98) 0%, oklch(0.08 0.006 255 / 0.74) 38%, transparent 72%), linear-gradient(0deg, var(--background) 0%, transparent 38%);
+}
+
+@utility glass {
+  background-color: oklch(0.14 0.009 255 / 0.78);
+  backdrop-filter: blur(18px);
+}
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
