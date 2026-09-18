@@ -39,7 +39,9 @@ jobs:
         run: |
           set -e
           test -f .output/public/index.html
-          cp .output/public/index.html .output/public/404.html
+          cat > .output/public/404.html <<'EOF'
+          <!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><script>(function(){var base="/film-fetcher-friend";var p=location.pathname.startsWith(base)?location.pathname.slice(base.length):location.pathname;location.replace(base+"/?__spa="+encodeURIComponent(p+location.search+location.hash))})();</script></head><body></body></html>
+          EOF
           touch .output/public/.nojekyll
       - name: Configure Pages
         uses: actions/configure-pages@v5
