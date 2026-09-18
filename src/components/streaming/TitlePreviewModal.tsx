@@ -12,7 +12,7 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const [saved,setSaved]=useState(()=>readMyList().includes(item.id)); const [muted,setMuted]=useState(false); const [season,setSeason]=useState(item.episodes?.[0]?.season??1); const [closing,setClosing]=useState(false);
  const episodes=item.episodes?.filter(e=>(e.season??1)===season)??[]; const seasons=[...new Set(item.episodes?.map(e=>e.season??1)??[])];
  useEffect(()=>{const old=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&requestClose();addEventListener("keydown",key);return()=>{document.body.style.overflow=old;removeEventListener("keydown",key)}},[onClose]);
- const openTitle=()=>{rememberReturnContext("catalogue");requestClose()};
+ const openTitle=()=>{rememberReturnContext("catalogue",item.slug);requestClose()};
  const requestClose=()=>{if(closing)return;setClosing(true);window.setTimeout(onClose,220)};
  const toggleSaved=async()=>{const token=await customerToken(false);if(!token){try{await requireCustomerToken()}catch{return}}setSaved(toggleMyList(item.id).includes(item.id))};
  const start=0,end=Math.min(120,Math.max(30,item.previewDuration??120)); const video=!closing&&item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true}):null;
