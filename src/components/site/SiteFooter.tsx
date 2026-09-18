@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Youtube, Instagram, Music2 } from "lucide-react";
 import { navLinks, socials, WHATSAPP, WHATSAPP_TEL } from "@/lib/site-data";
+import { publicPages } from "@/lib/avant-backend";
+import { useEffect, useState } from "react";
 
 export function SiteFooter() {
+  const [cmsNav,setCmsNav]=useState<any[]>([]);useEffect(()=>{void publicPages().then(x=>setCmsNav(x?.pages||[])).catch(()=>{})},[]);const links=[...navLinks,...cmsNav.filter((p:any)=>!navLinks.some(n=>n.to==="/"+p.slug)).map((p:any)=>({to:"/"+p.slug,label:p.navigation_label||p.title}))];
   return (
     <footer className="bg-ink text-ink-foreground">
       <div className="mx-auto grid max-w-7xl gap-9 px-5 py-12 sm:px-10 sm:py-14 md:grid-cols-3">
@@ -20,7 +23,7 @@ export function SiteFooter() {
         <div>
           <p className="eyebrow">Explore</p>
           <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-            {navLinks.map((l) => (
+            {links.map((l) => (
               <li key={l.to}>
                 <Link to={l.to} className="flex min-h-11 items-center text-ink-foreground/80 hover:text-flame">
                   {l.label}
