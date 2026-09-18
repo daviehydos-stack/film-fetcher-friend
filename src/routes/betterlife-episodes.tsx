@@ -3,24 +3,13 @@ import { PageShell } from "@/components/site/PageShell";
 import { YoutubeCard } from "@/components/site/VideoCard";
 import { PricingSection, PaymentHelp } from "@/components/site/Pricing";
 import { betterLifeFree } from "@/lib/site-data";
+import { episodeCollectionSchema, publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/betterlife-episodes")({
   head: () => ({
-    meta: [
-      { title: "A Better Life — Free episodes 1 to 4 | Avant Cinema" },
-      {
-        name: "description",
-        content:
-          "Watch the first four episodes of A Better Life free — a governor's son, a girl from the slum, and the city between them.",
-      },
-      { property: "og:title", content: "A Better Life — Free episodes" },
-      {
-        property: "og:description",
-        content: "Episodes 1 to 4 of A Better Life, free to stream.",
-      },
-      { property: "og:type", content: "video.tv_show" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+    meta: publicPageMeta("/betterlife-episodes", "A Better Life — Free Episodes | Avant Cinema", "Watch free episodes of the Kenyan series A Better Life from Avant Cinema.", betterLifeFree.find((episode) => episode.youtubeId)?.youtubeId ? `https://i.ytimg.com/vi/${betterLifeFree.find((episode) => episode.youtubeId)!.youtubeId}/maxresdefault.jpg` : undefined, "video.tv_show"),
+    links: publicPageLinks("/betterlife-episodes"),
+    scripts: episodeCollectionSchema("A Better Life", "Watch free episodes of the Kenyan series A Better Life from Avant Cinema.", "/betterlife-episodes", betterLifeFree).map((schema) => ({ type: "application/ld+json", children: JSON.stringify(schema) })),
   }),
   component: BetterLifeEpisodes,
 });
