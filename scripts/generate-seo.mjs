@@ -14,6 +14,7 @@ const catalogueBlock =
 const titleSlugs = [...catalogueBlock.matchAll(/\bslug:\s*"([^"]+)"/g)].map((match) => match[1]);
 
 let liveSlugs = [];
+let livePages = [];
 try {
   const response = await fetch(`${supabaseUrl}/functions/v1/catalogue-public`);
   if (response.ok) {
@@ -25,12 +26,22 @@ try {
 } catch (error) {
   console.warn("SEO: live catalogue unavailable; using repository catalogue fallback.", error?.message || error);
 }
+try {
+  const response = await fetch(`${supabaseUrl}/functions/v1/public-pages`);
+  if (response.ok) {
+    const body = await response.json();
+    livePages = (body?.pages || []).filter((p) => p?.status === "published" && p?.indexable !== false && p?.slug).map((p) => `/${p.slug}`);
+  }
+} catch (error) {
+  console.warn("SEO: CMS pages unavailable; continuing without dynamic page URLs.", error?.message || error);
+}
 
 const paths = [
   ...new Set([
     ...staticPaths,
     ...titleSlugs.map((slug) => `/title/${slug}`),
     ...liveSlugs.map((slug) => `/title/${slug}`),
+    ...livePages,
   ]),
 ];
 
