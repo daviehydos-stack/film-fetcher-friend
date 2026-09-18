@@ -32,3 +32,5 @@ export const adminVimeoVideos=(token:string,query="")=>request<any>(`admin-vimeo
 
 export const adminUsersGet=(token:string)=>request<any>("admin-users",token,{method:"GET"});
 export const adminUserSave=(token:string,payload:{email:string;role:string;active:boolean;requireMfa:boolean})=>request<any>("admin-users",token,{method:"POST",body:JSON.stringify(payload)});
+
+export const adminAssistant=(token:string,payload:Record<string,unknown>)=>request<any>("admin-assistant",token,{method:"POST",body:JSON.stringify(payload)});
