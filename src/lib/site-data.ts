@@ -352,7 +352,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Nairobi gives, and Nairobi takes. Nairobby follows the people who decide to take something back — and the night it all goes wrong.",
     artwork: "https://static.wixstatic.com/media/57086b_66db2eaf1d4c44dd9a63ca85a2d0f058~mv2.jpg/v1/fill/w_1344,h_756,enc_auto/file.jpeg",
     backdrop: "https://static.wixstatic.com/media/57086b_66db2eaf1d4c44dd9a63ca85a2d0f058~mv2.jpg/v1/fill/w_1920,h_1080,enc_auto/file.jpeg",
-    legacyPath: "/nairobby",
+    legacyPath: "/nairobby", previewYoutubeId: "Xt-Zz-TNi9U", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/Xt-Zz-TNi9U?rel=0",
   },
   {
     id: "a-better-life", slug: "a-better-life", title: "A Better Life", type: "series",
