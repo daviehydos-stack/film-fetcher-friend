@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -137,16 +137,6 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
-  const [routeFading, setRouteFading] = useState(false);
-  useEffect(() => {
-    let timer: number | undefined;
-    const unsubscribe = router.subscribe("onBeforeNavigate", () => {
-      setRouteFading(true);
-      window.clearTimeout(timer);
-      timer = window.setTimeout(() => setRouteFading(false), 180);
-    });
-    return () => { window.clearTimeout(timer); unsubscribe(); };
-  }, [router]);
   useEffect(() => {
     const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
     if (!buildSha || typeof window === "undefined") return;
@@ -174,7 +164,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className={`avant-page-fade ${routeFading ? "is-changing" : ""}`}><Outlet /></div>
+      <div className="avant-page-enter"><Outlet /></div>
     </QueryClientProvider>
   );
 }
