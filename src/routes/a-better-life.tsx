@@ -3,6 +3,7 @@ import { PageShell } from "@/components/site/PageShell";
 import { LockedCard } from "@/components/site/VideoCard";
 import { PricingSection, PaymentHelp } from "@/components/site/Pricing";
 import { betterLifePaid } from "@/lib/site-data";
+import { publicPageLinks } from "@/lib/seo";
 
 export const Route = createFileRoute("/a-better-life")({
   head: () => ({
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/a-better-life")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  links: [{ rel: "canonical", href: `/title/a-better-life` }],
+  links: publicPageLinks("/title/a-better-life"),
   component: ABetterLife,
 });
 
