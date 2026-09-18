@@ -26,7 +26,8 @@ function CheckoutRoute() {
           provider,
         },
       })
-      if (result.customerId) window.localStorage.setItem('film_customer_id', result.customerId)\n      if (result.redirectUrl) {
+      if (result.customerId) window.localStorage.setItem('film_customer_id', result.customerId)
+      if (result.redirectUrl) {
         window.location.assign(result.redirectUrl)
         return
       }
