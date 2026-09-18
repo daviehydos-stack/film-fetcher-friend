@@ -47,7 +47,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
     >
       <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-3 md:group-hover:scale-[1.08]">
         <Link to="/title/$slug" params={{ slug: item.slug }} className="relative block aspect-video overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
-          <img src={item.artwork} alt={item.title} loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
+          <img src={item.artwork} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`} loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
           {previewing && item.previewYoutubeId ? (
             <iframe
               src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted: true, controls: false, start: item.previewStart, end: item.previewDuration ? (item.previewStart ?? 0) + item.previewDuration : undefined, loop: true })}
