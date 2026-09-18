@@ -5,7 +5,7 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { TitleCard } from "@/components/streaming/TitleCard";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
 import { readMyList, syncMyList } from "@/lib/my-list";
-import { customerSession, signInCustomer } from "@/lib/firebase-customer-auth";
+import { customerSession, signInCustomer } from "@/lib/google-auth";
 import { publicCatalogue } from "@/lib/avant-backend";
 
 export const Route = createFileRoute("/my-list")({
