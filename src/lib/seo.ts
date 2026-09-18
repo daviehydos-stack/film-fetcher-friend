@@ -82,7 +82,7 @@ export function youtubeThumbnail(id: string) {
   return `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 }
 
-export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string; pagePath: string; episodeNumber?: number; seriesName?: string; alreadyIsoDuration?: boolean }) {
+export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string; pagePath: string; episodeNumber?: number; seriesName?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string }) {
   const pageUrl = absoluteUrl(input.pagePath);
   const embedUrl = `https://www.youtube-nocookie.com/embed/${input.youtubeId}`;
   return {
@@ -90,7 +90,8 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     "@type": "VideoObject",
     name: input.name,
     description: input.description,
-    thumbnailUrl: [youtubeThumbnail(input.youtubeId)],
+    thumbnailUrl: [input.thumbnailUrl || youtubeThumbnail(input.youtubeId)],
+    ...(input.uploadDate ? { uploadDate: input.uploadDate } : {}),
     embedUrl,
     ...(pageUrl ? { url: pageUrl } : {}),
     ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
