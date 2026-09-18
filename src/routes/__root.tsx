@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { absoluteUrl, SEO_DEFAULT_DESCRIPTION, SEO_DEFAULT_TITLE, SEO_SITE_NAME } from "../lib/seo";
 import { publicCatalogue } from "../lib/avant-backend";
+import { AvantTransitionEngine } from "../components/streaming/AvantTransitionEngine";
 
 function NotFoundComponent() {
   return (
@@ -176,6 +177,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AvantTransitionEngine />
       <div className="avant-page-transition"><Outlet /></div>
     </QueryClientProvider>
   );
