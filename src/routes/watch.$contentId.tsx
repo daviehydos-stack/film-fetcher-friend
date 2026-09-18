@@ -3,7 +3,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, LockKeyhole, Play } from 'lucide-
 import { useEffect, useState } from 'react'
 import { authorizeContent } from '../lib/backend.functions'
 import { catalogue } from '../lib/site-data'
-import { markStarted } from '../lib/watch-progress'
+import { formatWatchTime, getProgress, markStarted } from '../lib/watch-progress'
 import { youtubeEmbedUrl } from '../lib/video-embeds'
 
 export const Route = createFileRoute('/watch/$contentId')({
@@ -19,11 +19,13 @@ function WatchRoute() {
   const [authorized, setAuthorized] = useState<boolean | null>(null)
   const [error, setError] = useState('')
   const [playerReady, setPlayerReady] = useState(false)
+  const [resumeSeconds, setResumeSeconds] = useState(0)
 
   const playableForFree = Boolean(match?.episode.youtubeId)
 
   useEffect(() => {
     setPlayerReady(false)
+    setResumeSeconds(getProgress(contentId)?.seconds ?? 0)
   }, [contentId])
 
   useEffect(() => {
@@ -52,11 +54,11 @@ function WatchRoute() {
 
   if (!match) {
     return (
-      <main className="grid min-h-screen place-items-center bg-black px-6 text-white">
+      <main className="grid min-h-[100svh] place-items-center bg-black px-6 text-white">
         <section className="max-w-md text-center">
           <h1 className="text-3xl font-bold">Content unavailable</h1>
           <p className="mt-3 text-sm text-white/55">This title could not be found in the current Avant catalogue.</p>
-          <Link to="/" className="mt-6 inline-flex rounded border border-white/20 px-4 py-2 text-sm hover:bg-white/10">Return home</Link>
+          <Link to="/" className="mt-6 inline-flex min-h-11 items-center rounded border border-white/20 px-4 py-2 text-sm hover:bg-white/10">Return home</Link>
         </section>
       </main>
     )
@@ -69,7 +71,7 @@ function WatchRoute() {
   const showAccessRequired = !playable && authorized !== true
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-[100svh] bg-black text-white">
       <header className="mx-auto flex min-h-16 max-w-[1600px] items-center gap-3 px-4 py-3 sm:gap-4 sm:px-10 lg:px-14">
         <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`Back to ${item.title}`} className="grid size-11 shrink-0 place-items-center rounded-md transition hover:bg-white/10">
           <ArrowLeft />
@@ -86,7 +88,7 @@ function WatchRoute() {
             <img src={episode.poster ?? `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg`} alt="" className={`absolute inset-0 size-full object-cover transition duration-700 ${playerReady ? 'scale-[1.02] opacity-0' : 'opacity-70'}`} />
             <div className={`pointer-events-none absolute inset-0 z-10 grid place-items-center bg-gradient-to-t from-black/70 via-black/10 to-black/30 transition duration-500 ${playerReady ? 'opacity-0' : 'opacity-100'}`}><span className="grid size-16 place-items-center rounded-full bg-white text-black shadow-2xl"><Play className="ml-1 size-7 fill-current" /></span></div>
             <iframe
-              src={youtubeEmbedUrl(episode.youtubeId!, { autoplay: true, muted: false, controls: true })}
+              src={`${youtubeEmbedUrl(episode.youtubeId!, { autoplay: true, muted: false, controls: true })}${resumeSeconds > 5 ? `&start=${Math.floor(resumeSeconds)}` : ''}`}
               title={episode.title}
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
               allowFullScreen
@@ -102,7 +104,7 @@ function WatchRoute() {
               <p className="mt-2 text-sm leading-6 text-white/55">
                 {error || 'Complete checkout with the customer identity that owns access to unlock protected playback.'}
               </p>
-              <Link to="/checkout/$productId" params={{ productId: contentId }} className="mt-6 inline-flex rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black">
+              <Link to="/checkout/$productId" params={{ productId: contentId }} className="mt-6 inline-flex min-h-11 items-center rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black">
                 Get Access
               </Link>
             </div>
@@ -120,7 +122,7 @@ function WatchRoute() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/45">Episode {index + 1}</p>
             <h1 className="mt-2 text-xl font-bold sm:text-2xl">{episode.title}</h1>
-            <p className="mt-2 text-sm text-white/55">{episode.duration}</p>
+            <p className="mt-2 text-sm text-white/55">{episode.duration}{resumeSeconds > 5 ? ` · Resuming from ${formatWatchTime(resumeSeconds)}` : ''}</p>
           </div>
           <nav className="flex w-full gap-2 sm:w-auto" aria-label="Episode navigation">
             {index > 0 ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${index}` }} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded border border-white/15 px-3 py-2 text-sm hover:bg-white/10 sm:flex-none sm:px-4"><ChevronLeft className="size-4" />Previous</Link> : null}
