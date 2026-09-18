@@ -1,0 +1,4 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { LoaderCircle } from 'lucide-react'
+export const Route=createFileRoute('/payment/success')({component:PaymentSuccess})
+function PaymentSuccess(){return <main className="min-h-screen bg-[#07090D] text-white grid place-items-center px-6"><section className="max-w-md text-center"><LoaderCircle className="mx-auto size-9 animate-spin text-white/70" aria-hidden/><h1 className="mt-5 text-2xl font-semibold">Confirming your payment</h1><p className="mt-3 text-sm leading-6 text-white/55">We are verifying the transaction securely. Access is activated only after the payment provider confirms it on the server.</p><Link to="/" className="mt-7 inline-block text-sm text-white/60 hover:text-white">Return to Avant</Link></section></main>}
