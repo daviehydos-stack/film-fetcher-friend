@@ -3,14 +3,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { catalogue, type ContentType } from "@/lib/site-data";
+import { catalogue, type ContentType, type CatalogueTitle } from "@/lib/site-data";
+import { publicCatalogue } from "@/lib/avant-backend";
 import { heroTrailerUrl } from "@/lib/video-embeds";
 import { StreamingShell } from "./StreamingShell";
 import { ContentRail, RankedRail } from "./ContentRail";
 
 export function CataloguePage({type,title,intro}:{type:ContentType;title:string;intro:string}){
- const[query,setQuery]=useState(""),[genre,setGenre]=useState("All"),[muted,setMuted]=useState(false),[heroInView,setHeroInView]=useState(true); const heroRef=useRef<HTMLElement|null>(null);
- const pool=useMemo(()=>catalogue.filter(i=>i.type===type),[type]); const genres=useMemo(()=>["All",...new Set(pool.flatMap(i=>i.genres))],[pool]);
+ const[query,setQuery]=useState(""),[genre,setGenre]=useState("All"),[muted,setMuted]=useState(false),[heroInView,setHeroInView]=useState(true),[live,setLive]=useState<CatalogueTitle[]>(catalogue); const heroRef=useRef<HTMLElement|null>(null);
+ useEffect(()=>{let cancelled=false;publicCatalogue().then((h:any)=>{if(cancelled)return;const mapped=(h?.titles||[]).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return {...f,id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,year:t.year?String(t.year):f?.year,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||t.synopsis||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,featured:Boolean(t.featured),available:true,trailerEmbedUrl:t.trailer_youtube_id?`https://www.youtube-nocookie.com/embed/${t.trailer_youtube_id}?rel=0`:f?.trailerEmbedUrl,previewYoutubeId:t.trailer_youtube_id||f?.previewYoutubeId,previewStart:t.preview_start_seconds??f?.previewStart,previewDuration:t.preview_duration_seconds??f?.previewDuration,heroAutoplay:t.hero_autoplay!==false,episodes:f?.episodes} as CatalogueTitle});if(mapped.length)setLive(mapped)}).catch(()=>{});return()=>{cancelled=true}},[]);
+ const pool=useMemo(()=>live.filter(i=>i.type===type),[live,type]); const genres=useMemo(()=>["All",...new Set(pool.flatMap(i=>i.genres))],[pool]);
  const visible=useMemo(()=>pool.filter(i=>(genre==="All"||i.genres.includes(genre))&&`${i.title} ${i.synopsis} ${i.genres.join(" ")}`.toLowerCase().includes(query.toLowerCase())),[genre,pool,query]);
  const hero=visible.find(i=>i.trailerEmbedUrl)||visible[0]||pool[0]; const trailer=hero?.trailerEmbedUrl?heroTrailerUrl(hero.trailerEmbedUrl,muted):null;
  useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=.18),{threshold:[0,.18,.5]});observer.observe(node);return()=>observer.disconnect()},[hero?.id]);
