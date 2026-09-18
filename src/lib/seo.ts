@@ -4,7 +4,7 @@ export const SEO_SITE_NAME = "Avant Cinema";
 export const SEO_BRAND = "Avant Movies";
 export const SEO_DEFAULT_TITLE = "Avant Movies — It’s time to feel again";
 export const SEO_DEFAULT_DESCRIPTION = "Stream independent Kenyan films and series from Avant Movies.";
-export const SEO_ORIGIN = (import.meta.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
+export const SEO_ORIGIN = (import.meta.env.VITE_PUBLIC_SITE_URL || "https://www.avantcinema.com").replace(/\/$/, "");
 
 export function absoluteUrl(path: string) {
   if (!SEO_ORIGIN) return undefined;
