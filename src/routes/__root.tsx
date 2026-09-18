@@ -12,6 +12,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { absoluteUrl, SEO_DEFAULT_DESCRIPTION, SEO_DEFAULT_TITLE, SEO_SITE_NAME } from "../lib/seo";
+import { publicCatalogue } from "../lib/avant-backend";
 
 function NotFoundComponent() {
   return (
@@ -138,6 +139,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => { let dead=false; void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{});return()=>{dead=true}; }, []);
   useEffect(() => {
     const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
     if (!buildSha || typeof window === "undefined") return;
