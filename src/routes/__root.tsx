@@ -139,6 +139,15 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const deepLink = params.get("__spa");
+    if (!deepLink) return;
+    const safePath = deepLink.startsWith("/") ? deepLink : "/" + deepLink;
+    window.history.replaceState({}, "", import.meta.env.BASE_URL.replace(/\/$/, "") + safePath);
+    window.location.reload();
+  }, []);
   useEffect(() => { let dead=false; void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{});return()=>{dead=true}; }, []);
   useEffect(() => {
     const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
