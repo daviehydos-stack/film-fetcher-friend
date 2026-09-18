@@ -1,5 +1,4 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { readFile } from "node:fs/promises";
 
 const origin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
 const productionOrigin = origin || "https://www.avantcinema.com";
@@ -8,20 +7,16 @@ const staticPaths = ["/", "/movies", "/tv-shows", "/about", "/contact", "/privac
 
 mkdirSync("public", { recursive: true });
 
-const source = await readFile(new URL("../src/lib/site-data.ts", import.meta.url), "utf8");
-const catalogueBlock =
-  source.split("export const catalogue: CatalogueTitle[] = [")[1]?.split("export const avantVideoLibrary")[0] || "";
-const titleSlugs = [...catalogueBlock.matchAll(/\bslug:\s*"([^"]+)"/g)].map((match) => match[1]);
-
 let liveSlugs = [];
 let livePages = [];
+let liveEpisodes = [];
 try {
   const response = await fetch(`${supabaseUrl}/functions/v1/catalogue-public`);
   if (response.ok) {
     const body = await response.json();
-    liveSlugs = (body?.titles || [])
-      .filter((title) => title?.status === "published" && title?.slug)
-      .map((title) => title.slug);
+    liveSlugs = (body?.titles || []).filter((title) => title?.status === "published" && title?.slug).map((title) => title.slug);
+    const episodeLists = await Promise.all(liveSlugs.map(async (slug) => { try { const r = await fetch(`${supabaseUrl}/functions/v1/catalogue-public?key=${encodeURIComponent(slug)}`); if (!r.ok) return []; const d=await r.json(); return (d?.episodes||[]).filter(e=>e?.status==="published").sort((a,b)=>(a.episode_number||0)-(b.episode_number||0)).map((e,i)=>`/episode/${slug}/${i+1}`); } catch { return []; } }));
+    liveEpisodes=episodeLists.flat();
   }
 } catch (error) {
   console.warn("SEO: live catalogue unavailable; using repository catalogue fallback.", error?.message || error);
@@ -39,8 +34,8 @@ try {
 const paths = [
   ...new Set([
     ...staticPaths,
-    ...titleSlugs.map((slug) => `/title/${slug}`),
     ...liveSlugs.map((slug) => `/title/${slug}`),
+    ...liveEpisodes,
     ...livePages,
   ]),
 ];
