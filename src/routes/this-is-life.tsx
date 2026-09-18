@@ -3,6 +3,7 @@ import { PageShell } from "@/components/site/PageShell";
 import { LockedCard } from "@/components/site/VideoCard";
 import { PricingSection, PaymentHelp } from "@/components/site/Pricing";
 import { thisIsLifePaid } from "@/lib/site-data";
+import { publicPageLinks } from "@/lib/seo";
 
 export const Route = createFileRoute("/this-is-life")({
   head: () => ({
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/this-is-life")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  links: [{ rel: "canonical", href: `/title/this-is-life` }],
+  links: publicPageLinks("/title/this-is-life"),
   component: ThisIsLife,
 });
 
