@@ -10,6 +10,13 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -29,7 +36,7 @@ export function SiteHeader() {
             <Link
               key={link.to}
               to={link.to}
-              className="text-sm font-medium text-white/75 transition hover:text-white"
+              className="rounded-sm text-sm font-medium text-white/75 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               activeProps={{ className: "text-white" }}
               activeOptions={{ exact: link.to === "/" }}
             >
@@ -39,7 +46,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto hidden items-center gap-4 lg:flex">
-          <Link to="/search" aria-label="Search" className="text-white/80 transition hover:text-white"><Search className="size-5" /></Link>
+          <Link to="/search" aria-label="Search" className="grid size-10 place-items-center rounded-md text-white/80 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><Search className="size-5" /></Link>
         </div>
 
         <button type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen((value) => !value)} className="ml-auto grid size-11 place-items-center rounded-md text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white lg:hidden">
@@ -50,7 +57,7 @@ export function SiteHeader() {
       <div id="mobile-navigation" className={cn("overflow-hidden border-t border-white/10 transition-[max-height] duration-300 lg:hidden", open ? "max-h-96" : "max-h-0")}>
         <nav className="flex flex-col px-5 py-4 sm:px-10">
           {navLinks.map((link) => (
-            <Link key={link.to} to={link.to} onClick={() => setOpen(false)} className="flex min-h-12 items-center border-b border-white/5 py-3 text-base font-medium text-white/85 transition hover:text-white focus-visible:outline-none focus-visible:text-white">
+            <Link key={link.to} to={link.to} onClick={() => setOpen(false)} activeProps={{ className: "text-white" }} className="flex min-h-12 items-center border-b border-white/5 py-3 text-base font-medium text-white/85 transition hover:text-white focus-visible:outline-none focus-visible:text-white">
               {link.label}
             </Link>
           ))}
