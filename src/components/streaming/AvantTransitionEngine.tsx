@@ -32,6 +32,7 @@ function shouldTransition(event: MouseEvent, anchor: HTMLAnchorElement) {
 export function AvantTransitionEngine() {
   const location = useLocation();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
+  const [mode, setMode] = useState<"standard" | "play">("standard");
   const phaseRef = useRef<TransitionPhase>("idle");
   const pendingAnchor = useRef<HTMLAnchorElement | null>(null);
   const timers = useRef<number[]>([]);
@@ -73,6 +74,9 @@ export function AvantTransitionEngine() {
       event.preventDefault();
       event.stopPropagation();
       pendingAnchor.current = element;
+      const nextUrl = new URL(element.href, window.location.href);
+      const isPlay = /\\/watch\\//.test(nextUrl.pathname);
+      setMode(isPlay ? "play" : "standard");
       stopPlayback();
 
       if (reducedMotion.current) {
@@ -82,6 +86,7 @@ export function AvantTransitionEngine() {
       }
 
       setTransitionPhase("entering");
+      const enterDelay = /\\/watch\\//.test(new URL(element.href, window.location.href).pathname) ? 520 : ENTER_MS;
       timers.current.push(window.setTimeout(() => {
         setTransitionPhase("navigating");
         const anchor = pendingAnchor.current;
@@ -89,7 +94,7 @@ export function AvantTransitionEngine() {
           anchor.dataset.avantTransitionBypass = "true";
           anchor.click();
         }
-      }, ENTER_MS));
+      }, enterDelay));
       timers.current.push(window.setTimeout(finish, SAFETY_MS));
     };
 
@@ -109,7 +114,7 @@ export function AvantTransitionEngine() {
   if (phase === "idle") return null;
 
   return (
-    <div className={"avant-transition-engine avant-transition-" + phase} aria-hidden="true">
+    <div className={"avant-transition-engine avant-transition-" + phase + (mode === "play" ? " avant-transition-play" : "")} aria-hidden="true">
       <div className="avant-transition-vignette" />
       <div className="avant-transition-mark">
         <span className="avant-transition-letter">A</span>
