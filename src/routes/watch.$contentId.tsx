@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { catalogue } from "@/lib/site-data";
+import { useEffect } from "react";
+import { markStarted } from "@/lib/watch-progress";
 import { youtubeEmbedUrl } from "@/lib/video-embeds";
 
 export const Route = createFileRoute("/watch/$contentId")({
@@ -21,6 +23,10 @@ function Watch() {
   const { item, episode, index } = match;
   const playable = Boolean(episode.youtubeId);
   const total = item.episodes?.length ?? 0;
+
+  useEffect(() => {
+    if (playable) markStarted(contentId);
+  }, [contentId, playable]);
 
   return (
     <main className="min-h-screen bg-black text-white">
