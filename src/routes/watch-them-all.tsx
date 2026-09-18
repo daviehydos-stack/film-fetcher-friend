@@ -9,6 +9,7 @@ const POSTER =
 export const Route = createFileRoute("/watch-them-all")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Watch Them All — Every film, one price | Avant Cinema" },
       {
         name: "description",
