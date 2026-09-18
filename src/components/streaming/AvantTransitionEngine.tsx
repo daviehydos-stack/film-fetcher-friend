@@ -79,9 +79,9 @@ export function AvantTransitionEngine() {
       event.stopPropagation();
       pendingAnchor.current = element;
       const nextUrl = new URL(element.href, window.location.href);
-      const isPlay = /\\/watch\\//.test(nextUrl.pathname);
-      const isDetail = /\\/title\\//.test(nextUrl.pathname);
-      const isCheckout = /\\/checkout\\//.test(nextUrl.pathname);
+      const isPlay = nextUrl.pathname.includes("/watch/");
+      const isDetail = nextUrl.pathname.includes("/title/");
+      const isCheckout = nextUrl.pathname.includes("/checkout/");
       const isBack = element.dataset.avantTransition === "back";
       setMode(isPlay ? "play" : isCheckout ? "checkout" : isBack ? "back" : isDetail ? "detail" : "quick");
       stopPlayback();
