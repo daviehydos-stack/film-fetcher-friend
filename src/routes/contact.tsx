@@ -2,9 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Mail, MessageCircle } from "lucide-react";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { WHATSAPP } from "@/lib/site-data";
+import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({ meta: [{ title: "Contact — Avant Movies" }, { name: "description", content: "Contact Avant Movies about productions, streaming access and support." }] }),
+  head: () => ({ meta: publicPageMeta("/contact", "Contact Avant Cinema", "Contact Avant Cinema about productions, streaming access and support."), links: publicPageLinks("/contact") }),
   component: Page,
 });
 
