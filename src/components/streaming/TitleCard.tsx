@@ -10,12 +10,12 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
 
   return (
-    <article className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[72vw] shrink-0 sm:w-[18rem] lg:w-[21rem]"}>
+    <article className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[78vw] max-w-[19rem] shrink-0 xs:w-[72vw] sm:w-[18rem] lg:w-[21rem] lg:max-w-none"}>
       <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-2 md:group-hover:scale-[1.06]">
         <Link to="/title/$slug" params={{ slug: item.slug }} className="relative block aspect-video overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
           <img src={item.artwork} alt={item.title} loading="lazy" className="size-full object-cover transition duration-500 group-hover:scale-105" />
           <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100" />
-          <span className="absolute bottom-3 left-3 text-sm font-bold text-white md:hidden">{item.title}</span>
+          <span className="absolute inset-x-0 bottom-0 p-3 text-sm font-bold leading-tight text-white md:hidden">{item.title}</span>
         </Link>
 
         <div className="hidden border-t border-white/5 bg-surface-raised p-4 md:block md:max-h-0 md:overflow-hidden md:p-0 md:opacity-0 md:transition-all md:duration-300 md:group-hover:max-h-40 md:group-hover:p-4 md:group-hover:opacity-100">
