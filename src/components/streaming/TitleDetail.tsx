@@ -14,7 +14,8 @@ import { ContentRail } from "./ContentRail";
 import { StreamingShell } from "./StreamingShell";
 
 export function TitleDetail({ item }: { item: CatalogueTitle }) {
-  const origin = readReturnContext();
+  const remembered = readReturnContext();
+  const origin = remembered?.targetSlug===item.slug ? remembered : null;
   const checkoutSearch = { returnTo: `/title/${item.slug}`, origin: origin?.path || "/movies", originScroll: String(origin?.scrollY || 0) };
   const [saved, setSaved] = useState(false);
   const [trailerOpen, setTrailerOpen] = useState(false);
