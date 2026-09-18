@@ -58,12 +58,12 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   return (
     <StreamingShell>
       <main>
-        <section ref={heroRef} className="relative min-h-[68svh] overflow-hidden bg-background sm:min-h-[76vh] lg:mx-auto lg:mt-6 lg:max-w-[1180px] lg:rounded-t-2xl">
+        <section ref={heroRef} className="relative min-h-[68svh] overflow-hidden bg-background sm:min-h-[76vh] lg:mx-auto lg:mt-0 lg:max-w-[1280px] lg:min-h-[82vh]">
           <img src={item.backdrop} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} backdrop`} fetchPriority="high" decoding="async" className={`absolute inset-0 size-full object-cover object-[62%_center] transition-opacity duration-700 sm:object-center ${heroPreview && heroPreviewLoaded ? "opacity-0" : "opacity-100"}`} />
           {previewUrl && heroPreview && heroInView ? <iframe src={previewUrl} title={`${item.title} background trailer`} allow="autoplay; fullscreen; picture-in-picture" tabIndex={-1} aria-hidden="true" onLoad={() => setHeroPreviewLoaded(true)} className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${heroPreviewLoaded ? "opacity-100" : "opacity-0"}`} /> : null}
-          <div className="hero-shade absolute inset-0" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/25" />
-          <div className="relative z-10 flex min-h-[72svh] max-w-3xl flex-col justify-end px-5 pb-10 pt-28 sm:min-h-[72vh] sm:px-10 sm:pb-16 lg:px-14">
+          <div className="hero-shade absolute inset-0" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_36%,transparent_0%,rgba(0,0,0,.06)_34%,rgba(0,0,0,.68)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.38)_0%,transparent_24%,transparent_55%,rgba(24,24,24,.68)_78%,#181818_100%)]" />
+          <div className="relative z-10 flex min-h-[72svh] max-w-3xl flex-col justify-end px-5 pb-10 pt-28 sm:min-h-[72vh] sm:px-10 sm:pb-16 lg:min-h-[82vh] lg:px-14 lg:pb-20">
             <p className="eyebrow">Avant Cinema · {item.type === "movie" ? "Feature film" : "TV series"}</p>
             <h1 className="mt-3 text-[clamp(2.6rem,12vw,4.5rem)] font-black uppercase leading-[0.92] sm:mt-4 sm:text-7xl">{item.title}</h1>
             <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold"><span>{item.year ?? "Avant"}</span><span className="text-white/45">•</span><span>{item.quality ?? "HD"}</span>{item.maturityRating ? <><span className="text-white/45">•</span><span className="rounded border border-white/35 px-1.5 py-0.5 text-xs">{item.maturityRating}</span></> : null}<span className="text-white/45">•</span><span>{item.genres.join(" · ")}</span>{item.episodes ? <><span className="text-white/45">•</span><span>{seasons.length > 1 ? `${seasons.length} seasons` : "Season 1"} · {item.episodes.length} episodes</span></> : null}</div>
