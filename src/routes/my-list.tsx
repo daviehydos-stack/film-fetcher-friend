@@ -11,6 +11,7 @@ export const Route = createFileRoute("/my-list")({
     meta: [
       { title: "My List — Avant Movies" },
       { name: "description", content: "Your saved Avant Movies films and series." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: MyList,
