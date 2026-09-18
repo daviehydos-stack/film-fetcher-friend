@@ -361,7 +361,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "A governor's son and a girl from the slum meet in a city that never lets anyone forget where they come from.",
     artwork: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_930,h_523,enc_auto/file.png",
     backdrop: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
-    legacyPath: "/a-better-life", previewYoutubeId: "LzKnWnEIr1U", episodes: [...betterLifeFree, ...betterLifePaid],
+    legacyPath: "/a-better-life", previewYoutubeId: "p_PpjXPlaG8", episodes: [...betterLifeFree, ...betterLifePaid],
   },
   {
     id: "this-is-life", slug: "this-is-life", title: "This is Life", type: "series",
@@ -370,7 +370,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "An intimate series about love, work, difficult choices and the lives built in between.",
     artwork: "https://static.wixstatic.com/media/57086b_899d3183eb3c450e96b8ae328886165b~mv2.png/v1/fill/w_900,h_506,enc_auto/file.png",
     backdrop: "https://static.wixstatic.com/media/57086b_46bd84f76e9e40a0bfad5e2852bf6b09~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
-    legacyPath: "/this-is-life", previewYoutubeId: "JyqgBodtgbY", episodes: [...thisIsLifeFree, ...thisIsLifePaid],
+    legacyPath: "/this-is-life", previewYoutubeId: "xnYieNZ3kHQ", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/xnYieNZ3kHQ?rel=0", episodes: [...thisIsLifeFree, ...thisIsLifePaid],
   },
   {
     id: "better-days", slug: "better-days", title: "Better Days", type: "series",
