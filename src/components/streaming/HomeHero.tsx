@@ -16,7 +16,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [trailerVisible, setTrailerVisible] = useState(false);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
-  const playableContentId = item.type === "series" && item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
+  const playableContentId = item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
 

@@ -12,7 +12,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [hoverCapable, setHoverCapable] = useState(false);
   const previewTimer = useRef<number | null>(null);
-  const playableContentId = item.type === "series" && item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
+  const playableContentId = item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
   const accessLabel = playableContentId ? "Watch now" : item.available ? "Access required" : "Coming soon";
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
