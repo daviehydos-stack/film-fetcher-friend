@@ -2,7 +2,7 @@ import { useLocation } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type TransitionPhase = "idle" | "entering" | "navigating" | "revealing" | "complete";
-const REVEAL_MS = 420;
+const REVEAL_MS = 360;
 const SAFETY_MS = 2200;
 
 function stopPlayback() {
@@ -92,7 +92,8 @@ export function AvantTransitionEngine() {
       }
 
       setTransitionPhase("entering");
-      const enterDelay = isPlay ? 520 : isCheckout ? 220 : isBack ? 180 : isDetail ? 240 : 120;
+      const isCompactViewport = window.matchMedia("(max-width: 639px)").matches;
+      const enterDelay = isPlay ? (isCompactViewport ? 430 : 480) : isCheckout ? 200 : isBack ? 170 : isDetail ? 220 : 110;
       timers.current.push(window.setTimeout(() => {
         setTransitionPhase("navigating");
         const anchor = pendingAnchor.current;
@@ -120,7 +121,7 @@ export function AvantTransitionEngine() {
   if (phase === "idle") return null;
 
   return (
-    <div className={"avant-transition-engine avant-transition-" + phase + " avant-transition-mode-" + mode} aria-hidden="true">
+    <div className={"avant-transition-engine avant-transition-" + phase + " avant-transition-mode-" + mode} aria-hidden="true" role="presentation">
       <div className="avant-transition-vignette" />
       <div className="avant-transition-horizon" />
       <div className="avant-transition-mark">
