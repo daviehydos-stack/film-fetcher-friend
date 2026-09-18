@@ -3,7 +3,7 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: publicPageMeta("/about", "About Avant Cinema — Kenyan Film & Storytelling", "Learn about Avant Cinema, an independent Kenyan storytelling company creating films and series rooted in culture and the human experience."), links: publicPageLinks("/about") }),
+  head: () => ({ meta: publicPageMeta("/about", "About Avant Cinema — Kenyan Film & Storytelling", "Learn about Avant Cinema, an independent Kenyan storytelling company creating films and series rooted in culture and the human experience.", "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg"), links: publicPageLinks("/about") }),
   component: Page,
 });
 
