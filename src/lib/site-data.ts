@@ -146,12 +146,12 @@ export type Episode = {
 export const thisIsLifeFree: Episode[] = [
   {
     title: "This is Life Episode 1 — Why would the bride look so sad?",
-    duration: "24:10",
+    duration: "26:01",
     youtubeId: "JyqgBodtgbY",
   },
   {
     title: "This is Life Episode 2 — Life is tough, is it?",
-    duration: "23:44",
+    duration: "27:14",
     youtubeId: "6MRmTVPsM9w",
   },
   {
@@ -361,7 +361,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Nairobi gives, and Nairobi takes. Nairobby follows the people who decide to take something back — and the night it all goes wrong.",
     artwork: "https://static.wixstatic.com/media/57086b_66db2eaf1d4c44dd9a63ca85a2d0f058~mv2.jpg/v1/fill/w_1344,h_756,enc_auto/file.jpeg",
     backdrop: "https://static.wixstatic.com/media/57086b_66db2eaf1d4c44dd9a63ca85a2d0f058~mv2.jpg/v1/fill/w_1920,h_1080,enc_auto/file.jpeg",
-    legacyPath: "/nairobby", previewYoutubeId: "Xt-Zz-TNi9U", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/Xt-Zz-TNi9U?rel=0",
+    legacyPath: "/nairobby", previewYoutubeId: "Xt-Zz-TNi9U", previewDuration: 114, trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/Xt-Zz-TNi9U?rel=0",
   },
   {
     id: "a-better-life", slug: "a-better-life", title: "A Better Life", type: "series",
@@ -391,5 +391,38 @@ export const catalogue: CatalogueTitle[] = [
     legacyPath: "/better-days", previewYoutubeId: "jvJlWj2JgEk", previewStart: 83, previewDuration: 35,
   },
 ];
+
+export const avantVideoLibrary = [
+  { id: "bLuedvH9yX8", title: "June 10, 2026", duration: "01:09", kind: "promo" },
+  { id: "EvskdA-sao0", title: "April 1, 2026", duration: "01:33", kind: "promo" },
+  { id: "tsJPBALqvPc", title: "Watch This is Life", duration: "00:21", kind: "promo", catalogueSlug: "this-is-life" },
+  { id: "p_PpjXPlaG8", title: "Watch A Better Life", duration: "00:26", kind: "promo", catalogueSlug: "a-better-life" },
+  { id: "WKzloxLob-Q", title: "A Better Life weekend promo", duration: "00:38", kind: "promo", catalogueSlug: "a-better-life" },
+  { id: "jvJlWj2JgEk", title: "Changing Times KTN 2010", duration: "13:51", kind: "full" },
+  { id: "7krnA3G5qrI", title: "Another Way", duration: "05:11", kind: "short-film" },
+  { id: "sW1TaaGYwNE", title: "This is Life streaming promo", duration: "00:23", kind: "promo", catalogueSlug: "this-is-life" },
+  { id: "6MRmTVPsM9w", title: "This is Life Episode 2", duration: "27:14", kind: "episode", catalogueSlug: "this-is-life" },
+  { id: "JyqgBodtgbY", title: "This is Life Episode 1", duration: "26:01", kind: "episode", catalogueSlug: "this-is-life" },
+  { id: "A5YHj6IXUOc", title: "A Better Life S1 Episode 2", duration: "27:11", kind: "episode", catalogueSlug: "a-better-life" },
+  { id: "xnYieNZ3kHQ", title: "This is Life trailer", duration: "01:05", kind: "trailer", catalogueSlug: "this-is-life" },
+  { id: "Xt-Zz-TNi9U", title: "Nairobby trailer", duration: "01:54", kind: "trailer", catalogueSlug: "nairobby" },
+  { id: "teA8AmxVGFY", title: "An Instant Dad trailer", duration: "01:30", kind: "trailer" },
+  { id: "bUx3YibMvGI", title: "ADUI", duration: "07:27", kind: "short-film" },
+  { id: "ciUCZ3yIKv0", title: "Relationship Goals", duration: "06:22", kind: "short-film" },
+  { id: "R8kIX3ITyDs", title: "Best Friends Forever Episode 1", duration: "07:33", kind: "episode" },
+  { id: "x0TkWZMV2qc", title: "Best Friends Forever Episode 2", duration: "11:59", kind: "episode" },
+  { id: "dPaiBP_yfOI", title: "Best Friends Forever trailer", duration: "00:54", kind: "trailer" },
+  { id: "l-t4SDvNXuw", title: "This is Life Episode 1 4K", duration: "35:11", kind: "episode", catalogueSlug: "this-is-life" },
+  { id: "3fdhXgENfJk", title: "Isabella Series K24 classic", duration: "21:43", kind: "episode" },
+  { id: "xdR3xLwcWdQ", title: "Granted", duration: "08:53", kind: "short-film" },
+] as const;
+
+/** Deterministic fallback preview window for a full video when no dedicated trailer exists. */
+export function previewWindow(durationSeconds: number) {
+  if (durationSeconds <= 60) return { start: 0, end: Math.max(5, durationSeconds) };
+  const clip = durationSeconds >= 1200 ? 35 : durationSeconds >= 480 ? 30 : 22;
+  const safeStart = Math.max(8, Math.min(Math.floor(durationSeconds * 0.12), durationSeconds - clip - 5));
+  return { start: safeStart, end: Math.min(durationSeconds - 2, safeStart + clip) };
+}
 
 export const getTitle = (slug: string) => catalogue.find((item) => item.slug === slug);
