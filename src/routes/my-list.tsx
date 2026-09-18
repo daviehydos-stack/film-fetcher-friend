@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookmarkPlus } from "lucide-react";
+import { BookmarkPlus, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { TitleCard } from "@/components/streaming/TitleCard";
@@ -39,8 +39,8 @@ function MyList() {
 
         {items.length ? (
           <>
-            <p className="mt-8 text-sm text-muted-foreground">{items.length} {items.length === 1 ? "saved title" : "saved titles"}</p>
-            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="mt-8 flex flex-wrap items-center gap-3"><p className="text-sm text-muted-foreground">{items.length} {items.length === 1 ? "saved title" : "saved titles"}</p><Link to="/" className="inline-flex min-h-11 items-center gap-2 rounded-md border border-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/10"><Play className="size-4 fill-current" />Browse more</Link></div>
+            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
               {items.map((item) => <TitleCard key={item.id} item={item} layout="grid" />)}
             </div>
           </>
