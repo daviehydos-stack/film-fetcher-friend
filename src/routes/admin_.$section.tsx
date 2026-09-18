@@ -3,6 +3,7 @@ import { AdminPage } from "./admin";
 
 export const Route = createFileRoute("/admin/$section")({
   head: () => ({ meta: [{ name: "robots", content: "noindex, nofollow" }] }),
+  beforeLoad: ({ params }) => { if (params.section === "assistant") throw new Error("removed_admin_section") },
   component: AdminPage,
   errorComponent: () => (
     <main className="grid min-h-screen place-items-center bg-[#07090D] px-6 text-white">
