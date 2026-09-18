@@ -31,7 +31,13 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Stamp preview build
+        run: |
+          printf '{"sha":"%s"}\n' "$GITHUB_SHA" > public/version.json
+
       - name: Build static TanStack preview
+        env:
+          VITE_BUILD_SHA: ${{ github.sha }}
         run: bun run build
 
       - name: Prepare Pages artifact
