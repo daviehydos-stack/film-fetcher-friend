@@ -30,7 +30,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   }, [item.id, item.trailerEmbedUrl]);
 
   return (
-    <section className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[84svh]">
+    <section className="relative min-h-[76svh] overflow-hidden bg-background sm:min-h-[84svh]">
       <img src={item.backdrop} alt="" fetchPriority="high" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
 
       {item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen ? (
@@ -47,10 +47,10 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
       <div className="hero-shade absolute inset-0" />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />
 
-      <div className="relative z-10 flex min-h-[72svh] max-w-[1600px] items-end px-5 pb-16 pt-28 sm:min-h-[84svh] sm:px-10 sm:pb-28 lg:px-14">
+      <div className="relative z-10 flex min-h-[76svh] max-w-[1600px] items-end px-5 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[84svh] sm:px-10 sm:pb-28 lg:px-14">
         <div className="max-w-2xl">
           <p className="eyebrow">Avant Movies presents</p>
-          <h1 className="mt-3 max-w-xl text-[clamp(2.75rem,13vw,4.5rem)] font-black uppercase leading-[0.88] tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl">{item.title}</h1>
+          <h1 className="mt-3 max-w-xl text-[clamp(2.45rem,12vw,4.5rem)] font-black uppercase leading-[0.88] tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl">{item.title}</h1>
           <p className="mt-5 text-sm font-semibold text-white/80 sm:text-base">{item.type === "movie" ? "Film" : "Series"} · {item.genres.join(" · ")}</p>
           <p className="mt-3 max-w-xl line-clamp-3 text-sm leading-6 text-white/85 sm:mt-4 sm:text-lg sm:leading-7">{item.shortDescription}</p>
           <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
