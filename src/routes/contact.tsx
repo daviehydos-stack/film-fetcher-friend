@@ -5,7 +5,7 @@ import { WHATSAPP } from "@/lib/site-data";
 import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({ meta: publicPageMeta("/contact", "Contact Avant Cinema", "Contact Avant Cinema about productions, streaming access and support."), links: publicPageLinks("/contact") }),
+  head: () => ({ meta: publicPageMeta("/contact", "Contact Avant Cinema", "Contact Avant Cinema about productions, streaming access and support.", "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg"), links: publicPageLinks("/contact") }),
   component: Page,
 });
 
