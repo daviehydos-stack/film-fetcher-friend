@@ -11,6 +11,8 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [previewFailed, setPreviewFailed] = useState(false);
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [hoverCapable, setHoverCapable] = useState(false);
+  const [nearViewport, setNearViewport] = useState(false);
+  const cardRef = useRef<HTMLElement | null>(null);
   const previewTimer = useRef<number | null>(null);
   const playableContentId = item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
   const accessLabel = playableContentId ? "Watch now" : item.available ? "Access required" : "Coming soon";
@@ -26,10 +28,16 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   useEffect(() => () => {
     if (previewTimer.current) window.clearTimeout(previewTimer.current);
   }, []);
+  useEffect(() => {
+    if (!cardRef.current || !("IntersectionObserver" in window)) { setNearViewport(true); return; }
+    const observer = new IntersectionObserver(([entry]) => setNearViewport(entry.isIntersecting), { rootMargin: "240px" });
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
   const beginPreview = () => {
-    if (!hoverCapable || !item.previewYoutubeId || previewFailed || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!nearViewport || !hoverCapable || !item.previewYoutubeId || previewFailed || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     previewTimer.current = window.setTimeout(() => setPreviewing(true), 350);
   };
   const endPreview = () => {
@@ -41,6 +49,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
 
   return (
     <article
+      ref={cardRef}
       onMouseEnter={beginPreview}
       onMouseLeave={endPreview}
       className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[72vw] max-w-[18rem] shrink-0 min-[420px]:w-[64vw] sm:w-[18rem] lg:w-[21rem] lg:max-w-none"}
