@@ -11,6 +11,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { absoluteUrl, SEO_DEFAULT_DESCRIPTION, SEO_DEFAULT_TITLE, SEO_SITE_NAME } from "../lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -77,17 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Avant Movies — It’s time to feel again" },
-      { name: "description", content: "Independent Kenyan films and series from Avant Movies." },
+      { title: SEO_DEFAULT_TITLE },
+      { name: "description", content: SEO_DEFAULT_DESCRIPTION },
       { name: "author", content: "Avant Cinema" },
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { property: "og:title", content: "Avant Movies" },
       { property: "og:description", content: "It’s time to feel again. Independent Kenyan storytelling." },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Avant Cinema" },
+      { property: "og:site_name", content: SEO_SITE_NAME },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Avant Movies — It’s time to feel again" },
-      { name: "twitter:description", content: "Independent Kenyan films and series from Avant Movies." },
+      { name: "twitter:description", content: SEO_DEFAULT_DESCRIPTION },
       { name: "theme-color", content: "#111318" },
     ],
     links: [
@@ -96,7 +97,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      ...(absoluteUrl("/") ? [{ rel: "home", href: absoluteUrl("/")! }] : []),
     ],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: SEO_SITE_NAME,
+        description: SEO_DEFAULT_DESCRIPTION,
+        ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}),
+      }),
+    }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
