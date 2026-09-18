@@ -3,24 +3,13 @@ import { PageShell } from "@/components/site/PageShell";
 import { YoutubeCard } from "@/components/site/VideoCard";
 import { PricingSection, PaymentHelp } from "@/components/site/Pricing";
 import { thisIsLifeFree } from "@/lib/site-data";
+import { episodeCollectionSchema, publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/this-is-life-episodes")({
   head: () => ({
-    meta: [
-      { title: "This is Life — Free episodes 1 to 4 | Avant Cinema" },
-      {
-        name: "description",
-        content:
-          "Watch the first four episodes of the Kenyan series This is Life for free, then continue the season on Avant Cinema.",
-      },
-      { property: "og:title", content: "This is Life — Free episodes" },
-      {
-        property: "og:description",
-        content: "Episodes 1 to 4 of This is Life, free to stream.",
-      },
-      { property: "og:type", content: "video.tv_show" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+    meta: publicPageMeta("/this-is-life-episodes", "This is Life — Free Episodes | Avant Cinema", "Watch free episodes of the Kenyan series This is Life from Avant Cinema.", thisIsLifeFree.find((episode) => episode.youtubeId)?.youtubeId ? `https://i.ytimg.com/vi/${thisIsLifeFree.find((episode) => episode.youtubeId)!.youtubeId}/maxresdefault.jpg` : undefined, "video.tv_show"),
+    links: publicPageLinks("/this-is-life-episodes"),
+    scripts: episodeCollectionSchema("This is Life", "Watch free episodes of the Kenyan series This is Life from Avant Cinema.", "/this-is-life-episodes", thisIsLifeFree).map((schema) => ({ type: "application/ld+json", children: JSON.stringify(schema) })),
   }),
   component: ThisIsLifeEpisodes,
 });
