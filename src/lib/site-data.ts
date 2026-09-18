@@ -367,7 +367,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "A governor's son and a girl from the slum meet in a city that never lets anyone forget where they come from.",
     artwork: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_930,h_523,enc_auto/file.png",
     backdrop: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
-    legacyPath: "/a-better-life", previewYoutubeId: "p_PpjXPlaG8", episodes: [...betterLifeFree, ...betterLifePaid],
+    legacyPath: "/a-better-life", previewYoutubeId: "p_PpjXPlaG8", trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/p_PpjXPlaG8?rel=0", episodes: [...betterLifeFree, ...betterLifePaid],
   },
   {
     id: "this-is-life", slug: "this-is-life", title: "This is Life", type: "series",
