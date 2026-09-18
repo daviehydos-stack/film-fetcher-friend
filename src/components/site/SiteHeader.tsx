@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
-import { hasAdminSession } from "@/lib/avant-backend";
-import { customerSession, signInCustomer, signOutCustomer } from "@/lib/firebase-customer-auth";
+import { ADMIN_EMAIL, hasAdminSession } from "@/lib/avant-backend";
+import { customerSession, signInCustomer, signOutCustomer } from "@/lib/google-auth";
 
 export function SiteHeader(){
  const[open,setOpen]=useState(false),[scrolled,setScrolled]=useState(false),[admin,setAdmin]=useState(false),[customer,setCustomer]=useState<any>(null),[authBusy,setAuthBusy]=useState(false);
- useEffect(()=>{void hasAdminSession().then(setAdmin);void customerSession().then(setCustomer)},[]);
+ useEffect(()=>{void customerSession().then(user=>{setCustomer(user);setAdmin(String(user?.email||"").toLowerCase()===ADMIN_EMAIL);if(user)void hasAdminSession().then(ok=>{if(ok)setAdmin(true)})})},[]);
  useEffect(()=>{if(!open)return;const p=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&setOpen(false);window.addEventListener("keydown",key);return()=>{document.body.style.overflow=p;window.removeEventListener("keydown",key)}},[open]);
  useEffect(()=>{const scroll=()=>setScrolled(window.scrollY>16);scroll();window.addEventListener("scroll",scroll,{passive:true});return()=>window.removeEventListener("scroll",scroll)},[]);
- async function login(){setAuthBusy(true);try{setCustomer(await signInCustomer())}finally{setAuthBusy(false)}} async function logout(){setAuthBusy(true);try{await signOutCustomer();setCustomer(null)}finally{setAuthBusy(false)}}
+ async function login(){setAuthBusy(true);try{const user=await signInCustomer();setCustomer(user);setAdmin(String(user?.email||"").toLowerCase()===ADMIN_EMAIL)}finally{setAuthBusy(false)}} async function logout(){setAuthBusy(true);try{await signOutCustomer();setCustomer(null);setAdmin(false)}finally{setAuthBusy(false)}}
  return <header className={cn("fixed inset-x-0 top-0 z-50 text-white transition-all duration-300",scrolled||open?"border-b border-white/10 bg-[#050608]/95 shadow-2xl backdrop-blur-xl":"bg-gradient-to-b from-black/95 via-black/65 to-transparent")}>
   <div className="mx-auto flex h-[72px] max-w-[1800px] items-center gap-7 px-5 sm:px-10 lg:px-14">
    <Link to="/" aria-label="Avant Movies home" className="shrink-0"><BrandMark/></Link>
