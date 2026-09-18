@@ -1,6 +1,6 @@
 export type ProductType = 'movie_access' | 'season_access' | 'bundle' | 'subscription'
 export type BillingType = 'one_time' | 'recurring'
-export type PaymentStatus = 'pending' | 'successful' | 'failed' | 'refunded'
+export type PaymentStatus = 'pending' | 'processing' | 'successful' | 'failed' | 'refunded'
 export type EntitlementStatus = 'pending' | 'active' | 'expired' | 'revoked'
 
 export interface AccessProduct {
@@ -28,8 +28,11 @@ export interface PaymentRecord {
   currency: string
   status: PaymentStatus
   providerReference?: string
+  idempotencyKey?: string
   verifiedAt?: string
+  failureReason?: string
   createdAt: string
+  updatedAt?: string
 }
 
 export interface Entitlement {
