@@ -27,6 +27,8 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+            <li><Link to="/about" className="text-ink-foreground/80 hover:text-flame">About</Link></li>
+            <li><Link to="/contact" className="text-ink-foreground/80 hover:text-flame">Contact</Link></li>
           </ul>
         </div>
 
