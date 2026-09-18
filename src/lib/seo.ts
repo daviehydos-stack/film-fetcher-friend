@@ -47,9 +47,26 @@ export function titleSchema(item: CatalogueTitle) {
     ...(item.type === "series" && item.episodes?.length ? { numberOfEpisodes: item.episodes.length } : {}),
     ...(absoluteUrl(`/title/${item.slug}`) ? { url: absoluteUrl(`/title/${item.slug}`) } : {}),
     publisher: { "@type": "Organization", name: SEO_SITE_NAME },
+    ...(item.previewYoutubeId ? {
+      subjectOf: videoObjectSchema({
+        name: `${item.title} ${item.trailerEmbedUrl ? "trailer" : "preview"}`,
+        description: item.shortDescription,
+        youtubeId: item.previewYoutubeId,
+        duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
+        pagePath: `/title/${item.slug}`,
+        alreadyIsoDuration: true,
+      }),
+    } : {}),
   };
 }
 
+function secondsToIso(seconds: number) {
+  const value = Math.max(0, Math.round(seconds));
+  const hours = Math.floor(value / 3600);
+  const minutes = Math.floor((value % 3600) / 60);
+  const secs = value % 60;
+  return `PT${hours ? `${hours}H` : ""}${minutes ? `${minutes}M` : ""}${secs ? `${secs}S` : "0S"}`;
+}
 
 function isoDuration(value?: string) {
   if (!value) return undefined;
@@ -65,7 +82,7 @@ export function youtubeThumbnail(id: string) {
   return `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 }
 
-export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string; pagePath: string; episodeNumber?: number; seriesName?: string }) {
+export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string; pagePath: string; episodeNumber?: number; seriesName?: string; alreadyIsoDuration?: boolean }) {
   const pageUrl = absoluteUrl(input.pagePath);
   const embedUrl = `https://www.youtube-nocookie.com/embed/${input.youtubeId}`;
   return {
@@ -76,7 +93,7 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     thumbnailUrl: [youtubeThumbnail(input.youtubeId)],
     embedUrl,
     ...(pageUrl ? { url: pageUrl } : {}),
-    ...(isoDuration(input.duration) ? { duration: isoDuration(input.duration) } : {}),
+    ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
     ...(input.episodeNumber ? { episodeNumber: input.episodeNumber } : {}),
     ...(input.seriesName ? { partOfSeries: { "@type": "TVSeries", name: input.seriesName } } : {}),
     publisher: { "@type": "Organization", name: SEO_SITE_NAME },
