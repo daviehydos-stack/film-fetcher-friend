@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import type { CatalogueTitle } from "@/lib/site-data";
 
-export function TitleCard({ item }: { item: CatalogueTitle }) {
+export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
   const [saved, setSaved] = useState(false);
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
 
   return (
-    <article className="group relative w-[72vw] shrink-0 sm:w-[18rem] lg:w-[21rem]">
+    <article className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[72vw] shrink-0 sm:w-[18rem] lg:w-[21rem]"}>
       <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-2 md:group-hover:scale-[1.06]">
         <Link to="/title/$slug" params={{ slug: item.slug }} className="relative block aspect-video overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
           <img src={item.artwork} alt={item.title} loading="lazy" className="size-full object-cover transition duration-500 group-hover:scale-105" />
@@ -24,7 +24,7 @@ export function TitleCard({ item }: { item: CatalogueTitle }) {
             <button type="button" aria-label={saved ? "Remove from My List" : "Add to My List"} onClick={toggleSaved} className="grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
               {saved ? <Check className="size-4" /> : <Plus className="size-4" />}
             </button>
-            <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`More information about ${item.title}`} className="ml-auto grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white"><ChevronDown className="size-4" /></Link>
+            <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`More information about ${item.title}`} className="ml-auto grid size-9 place-items-center rounded-full border border-white/40 text-white transition hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><ChevronDown className="size-4" /></Link>
           </div>
           <h3 className="mt-3 text-sm font-bold text-white">{item.title}</h3>
           <p className="mt-1 text-xs text-muted-foreground">{item.type === "movie" ? "Movie" : "TV Series"} · {item.genres.join(" · ")}</p>
