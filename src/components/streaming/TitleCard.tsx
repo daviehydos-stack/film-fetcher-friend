@@ -62,7 +62,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
           <img src={item.artwork} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`} loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100"}`} />
           {previewing && item.previewYoutubeId ? (
             <iframe
-              src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted, controls: false, start: item.previewStart, end: item.previewDuration ? (item.previewStart ?? 0) + item.previewDuration : undefined, loop: true })}
+              src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted, controls: false, start: 0, end: 60, loop: true })}
               title={`${item.title} preview`}
               allow="autoplay; encrypted-media; picture-in-picture"
               tabIndex={-1}
