@@ -29,6 +29,8 @@ export function SiteFooter() {
             ))}
             <li><Link to="/about" className="text-ink-foreground/80 hover:text-flame">About</Link></li>
             <li><Link to="/contact" className="text-ink-foreground/80 hover:text-flame">Contact</Link></li>
+            <li><Link to="/privacy" className="text-ink-foreground/80 hover:text-flame">Privacy</Link></li>
+            <li><Link to="/terms" className="text-ink-foreground/80 hover:text-flame">Terms</Link></li>
           </ul>
         </div>
 
