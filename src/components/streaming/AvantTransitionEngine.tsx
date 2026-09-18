@@ -32,7 +32,7 @@ function shouldTransition(event: MouseEvent, anchor: HTMLAnchorElement) {
 export function AvantTransitionEngine() {
   const location = useLocation();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
-  const [mode, setMode] = useState<"standard" | "play">("standard");
+  const [mode, setMode] = useState<"quick" | "detail" | "checkout" | "back" | "play">("quick");
   const phaseRef = useRef<TransitionPhase>("idle");
   const pendingAnchor = useRef<HTMLAnchorElement | null>(null);
   const timers = useRef<number[]>([]);
@@ -76,7 +76,10 @@ export function AvantTransitionEngine() {
       pendingAnchor.current = element;
       const nextUrl = new URL(element.href, window.location.href);
       const isPlay = /\\/watch\\//.test(nextUrl.pathname);
-      setMode(isPlay ? "play" : "standard");
+      const isDetail = /\\/title\\//.test(nextUrl.pathname);
+      const isCheckout = /\\/checkout\\//.test(nextUrl.pathname);
+      const isBack = element.dataset.avantTransition === "back";
+      setMode(isPlay ? "play" : isCheckout ? "checkout" : isBack ? "back" : isDetail ? "detail" : "quick");
       stopPlayback();
 
       if (reducedMotion.current) {
@@ -86,7 +89,7 @@ export function AvantTransitionEngine() {
       }
 
       setTransitionPhase("entering");
-      const enterDelay = /\\/watch\\//.test(new URL(element.href, window.location.href).pathname) ? 520 : ENTER_MS;
+      const enterDelay = isPlay ? 520 : isCheckout ? 220 : isBack ? 180 : isDetail ? 240 : 120;
       timers.current.push(window.setTimeout(() => {
         setTransitionPhase("navigating");
         const anchor = pendingAnchor.current;
@@ -114,7 +117,7 @@ export function AvantTransitionEngine() {
   if (phase === "idle") return null;
 
   return (
-    <div className={"avant-transition-engine avant-transition-" + phase + (mode === "play" ? " avant-transition-play" : "")} aria-hidden="true">
+    <div className={"avant-transition-engine avant-transition-" + phase + " avant-transition-mode-" + mode} aria-hidden="true">
       <div className="avant-transition-vignette" />
       <div className="avant-transition-mark">
         <span className="avant-transition-letter">A</span>
