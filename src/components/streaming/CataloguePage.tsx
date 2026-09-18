@@ -20,7 +20,7 @@ export function CataloguePage({ type, title, intro }: { type: ContentType; title
           <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-1" role="group" aria-label={`Filter ${title} by genre`}>{genres.map((item) => <Button key={item} size="sm" variant={genre === item ? "default" : "secondary"} onClick={() => setGenre(item)}>{item}</Button>)}</div>
           <label className="relative block w-full sm:w-72"><span className="sr-only">Search {title}</span><Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" /><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search titles" className="h-10 bg-surface pl-9" /></label>
         </div>
-        {visible.length ? <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{visible.map((item) => <TitleCard key={item.id} item={item} />)}</div> : <div className="py-24 text-center"><h2 className="text-2xl font-bold">No stories found</h2><p className="mt-2 text-muted-foreground">Try another title or genre.</p></div>}
+        {visible.length ? <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{visible.map((item) => <TitleCard key={item.id} item={item} layout="grid" />)}</div> : <div className="py-24 text-center"><h2 className="text-2xl font-bold">No stories found</h2><p className="mt-2 text-muted-foreground">Try another title or genre.</p></div>}
       </main>
     </StreamingShell>
   );
