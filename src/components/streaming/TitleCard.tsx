@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
-import { customerToken, requireCustomerToken } from "@/lib/firebase-customer-auth";
+import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
