@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
+import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({ meta: [{ title: "Privacy — Avant Movies" }, { name: "description", content: "Privacy information for the Avant Movies streaming service." }] }),
+  head: () => ({ meta: publicPageMeta("/privacy", "Privacy — Avant Movies", "Privacy information for the Avant Movies streaming service."), links: publicPageLinks("/privacy") }),
   component: Page,
 });
 
