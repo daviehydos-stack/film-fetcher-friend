@@ -2,7 +2,7 @@ import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { ArrowLeft, CheckCircle2, LockKeyhole, ShieldCheck, Smartphone, Zap } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { publicCatalogue, resolveCatalogueKey, startPalplussPayment } from '../lib/avant-backend'
-import { customerSession, requireCustomerToken, signInCustomer } from '../lib/firebase-customer-auth'
+import { customerSession, requireCustomerToken, signInCustomer } from '../lib/google-auth'
 import { productForLegacyContent } from '../lib/backend-catalogue-map'
 
 export const Route=createFileRoute('/checkout/$productId')({head:()=>({meta:[{name:'robots',content:'noindex, nofollow'}]}),component:CheckoutRoute})
