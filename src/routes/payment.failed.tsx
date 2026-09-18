@@ -1,4 +1,4 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { CircleX } from 'lucide-react'
-export const Route=createFileRoute('/payment/failed')({component:PaymentFailed})
+export const Route=createFileRoute('/payment/failed')({head:()=>({meta:[{name:'robots',content:'noindex, nofollow'}]}),component:PaymentFailed})
 function PaymentFailed(){return <main className="min-h-[100svh] bg-[#07090D] text-white grid place-items-center px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))]"><section className="w-full max-w-md text-center"><CircleX className="mx-auto size-9 text-white/70" aria-hidden/><h1 className="mt-5 text-2xl font-semibold">Payment not completed</h1><p className="mt-3 text-sm leading-6 text-white/55">No access was activated. You can safely return to the title and try again.</p><Link to="/" className="mt-7 inline-flex min-h-12 items-center justify-center rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black">Return to Avant</Link></section></main>}
