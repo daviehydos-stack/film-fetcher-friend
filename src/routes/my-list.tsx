@@ -3,8 +3,9 @@ import { BookmarkPlus, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { TitleCard } from "@/components/streaming/TitleCard";
-import { catalogue } from "@/lib/site-data";
-import { readMyList } from "@/lib/my-list";
+import { catalogue, type CatalogueTitle } from "@/lib/site-data";
+import { readMyList, syncMyList } from "@/lib/my-list";
+import { publicCatalogue } from "@/lib/avant-backend";
 
 export const Route = createFileRoute("/my-list")({
   head: () => ({
@@ -19,15 +20,16 @@ export const Route = createFileRoute("/my-list")({
 
 function MyList() {
   const [ids, setIds] = useState<string[]>([]);
+  const [live, setLive] = useState<CatalogueTitle[]>(catalogue);
 
   useEffect(() => {
     const sync = () => setIds(readMyList());
-    sync();
+    sync(); void syncMyList().then(setIds); void publicCatalogue().then((h:any)=>{const m=(h?.titles||[]).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return {...f,id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,available:true} as CatalogueTitle});if(m.length)setLive(m)}).catch(()=>{});
     window.addEventListener("avant-my-list", sync);
     return () => window.removeEventListener("avant-my-list", sync);
   }, []);
 
-  const items = catalogue.filter((item) => ids.includes(item.id));
+  const items = live.filter((item) => ids.includes(item.id));
 
   return (
     <StreamingShell>
@@ -50,7 +52,7 @@ function MyList() {
             <BookmarkPlus className="size-8 text-white/70" />
             <h2 className="mt-5 text-xl font-bold">Your list is empty</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Add a film or series using My List and it will appear here. For now, saved titles stay on this device until customer accounts are connected.
+              Add a film or series using My List and it will appear here. Sign in with Google and your saved titles will follow your Avant account across supported devices.
             </p>
             <Link to="/" className="mt-5 inline-flex min-h-11 items-center rounded-md bg-white px-5 text-sm font-bold text-black transition hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
               Browse Avant
