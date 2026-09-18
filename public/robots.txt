@@ -4,5 +4,3 @@ Disallow: /admin
 Disallow: /checkout/
 Disallow: /payment/
 Disallow: /watch/
-
-Sitemap: https://www.avantcinema.com/sitemap.xml
