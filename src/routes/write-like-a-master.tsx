@@ -6,6 +6,7 @@ import { WHATSAPP, WHATSAPP_TEL } from "@/lib/site-data";
 export const Route = createFileRoute("/write-like-a-master")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Write Like a Master — Screenwriting masterclass | Avant Cinema" },
       {
         name: "description",
