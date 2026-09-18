@@ -393,3 +393,29 @@ main>section,main>div{isolation:isolate}
  from{opacity:1;transform:scale(8.4) translate3d(0,0,0);filter:blur(.7px)}
  to{opacity:0;transform:scale(10.2) translate3d(0,0,0);filter:blur(1.2px)}
 }
+
+
+/* Route stability pass — one motion system only. The routed page itself no longer
+   re-animates on every render; special overlays own cinematic handoffs. */
+.avant-page-transition{opacity:1!important;filter:none!important;animation:none!important;transition:none!important;will-change:auto!important}
+.avant-page-transition.is-leaving{opacity:1!important;filter:none!important}
+.avant-transition-mode-detail.avant-transition-entering .avant-transition-vignette{animation-duration:160ms}
+.avant-transition-mode-detail.avant-transition-revealing{animation-duration:220ms}
+.avant-transition-mode-checkout.avant-transition-entering .avant-transition-vignette{animation-duration:150ms}
+.avant-transition-mode-checkout.avant-transition-revealing{animation-duration:220ms}
+.avant-transition-mode-back.avant-transition-entering .avant-transition-vignette{animation-duration:120ms}
+.avant-transition-mode-back.avant-transition-revealing{animation-duration:180ms}
+@media(max-width:639px){
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-mark,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-vignette,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-light,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-horizon,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-flare{animation-duration:390ms}
+}
+@media(min-width:640px){
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-mark,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-vignette,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-light,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-horizon,
+ .avant-transition-mode-play.avant-transition-entering .avant-transition-flare{animation-duration:430ms}
+}
