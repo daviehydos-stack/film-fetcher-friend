@@ -27,8 +27,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const fullSeconds = durationToSeconds(item.episodes?.[0]?.duration);
   const autoPlan = buildAutoTrailerPlan(fullSeconds);
   const generatedClip = autoPlan.clips[0] ?? { start: 0, end: 35, duration: 35, zone: 0 };
-  const previewStart = item.previewStart ?? generatedClip.start;
-  const previewEnd = previewStart + (item.previewDuration ?? generatedClip.duration);
+  const previewStart = 0;
+  const previewEnd = item.previewDuration ?? generatedClip.end ?? 120;
   const previewUrl = item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, heroMuted) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: previewStart, end: previewEnd, loop: true }) : null;
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
   const [season, setSeason] = useState(seasons[0] ?? 1);
