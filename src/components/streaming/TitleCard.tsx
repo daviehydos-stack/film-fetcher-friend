@@ -28,7 +28,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
   const beginPreview = () => {
     if (!hoverCapable || !item.previewYoutubeId || previewFailed || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    previewTimer.current = window.setTimeout(() => setPreviewing(true), 650);
+    previewTimer.current = window.setTimeout(() => setPreviewing(true), 350);
   };
   const endPreview = () => {
     if (previewTimer.current) window.clearTimeout(previewTimer.current);
@@ -43,7 +43,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
       onMouseLeave={endPreview}
       className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[78vw] max-w-[19rem] shrink-0 min-[480px]:w-[72vw] sm:w-[18rem] lg:w-[21rem] lg:max-w-none"}
     >
-      <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-2 md:group-hover:scale-[1.06]">
+      <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-3 md:group-hover:scale-[1.08]">
         <Link to="/title/$slug" params={{ slug: item.slug }} className="relative block aspect-video overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
           <img src={item.artwork} alt={item.title} loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
           {previewing && item.previewYoutubeId ? (
