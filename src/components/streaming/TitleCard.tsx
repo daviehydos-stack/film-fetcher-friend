@@ -14,7 +14,8 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [nearViewport, setNearViewport] = useState(false);
   const cardRef = useRef<HTMLElement | null>(null);
   const previewTimer = useRef<number | null>(null);
-  const playableContentId = item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
+  const firstEpisode=item.episodes?.[0];
+  const playableContentId = firstEpisode?.youtubeId && firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
   const accessLabel = playableContentId ? "Watch now" : item.available ? "Access required" : "Coming soon";
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
