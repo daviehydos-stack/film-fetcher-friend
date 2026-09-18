@@ -30,7 +30,8 @@ export type CatalogueTitle = {
   legacyPath: string;
   featured?: boolean;
   available?: boolean;
-  trailerEmbedUrl?: string;\n  previewYoutubeId?: string;
+  trailerEmbedUrl?: string;
+  previewYoutubeId?: string;
   episodes?: Episode[];
 };
 
