@@ -299,3 +299,28 @@ main>section,main>div{isolation:isolate}
 .avant-transition-letter{display:none!important}
 .avant-transition-mode-play .avant-transition-light{z-index:2;mix-blend-mode:screen;pointer-events:none}
 @media(max-width:639px){.avant-transition-picture{width:min(58vw,18rem)}}
+
+
+/* Cross-device transition performance tuning */
+.avant-transition-engine{contain:strict;transform:translateZ(0);backface-visibility:hidden}
+.avant-transition-vignette,.avant-transition-mark,.avant-transition-picture,.avant-transition-image,.avant-transition-light{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.avant-transition-mark{will-change:transform,opacity;transform-origin:center center}
+.avant-transition-vignette{will-change:opacity}
+.avant-transition-picture{will-change:transform,opacity}
+.avant-transition-light{will-change:transform,opacity}
+@media(max-width:639px){
+  .avant-transition-engine{overflow:hidden}
+  .avant-transition-image{filter:drop-shadow(0 0 .8rem oklch(.72 .19 215/.18))}
+  .avant-transition-mode-play.avant-transition-entering .avant-transition-mark{animation-duration:460ms}
+  .avant-transition-mode-play.avant-transition-entering .avant-transition-vignette{animation-duration:460ms}
+  .avant-transition-mode-play.avant-transition-entering .avant-transition-light{animation-duration:460ms}
+  .avant-transition-mode-play.avant-transition-revealing{animation-duration:300ms}
+}
+@media(min-width:640px){
+  .avant-transition-mode-play.avant-transition-entering .avant-transition-mark,
+  .avant-transition-mode-play.avant-transition-entering .avant-transition-vignette,
+  .avant-transition-mode-play.avant-transition-entering .avant-transition-light{animation-duration:520ms}
+}
+@media(prefers-reduced-motion:reduce){
+  .avant-transition-engine,.avant-transition-engine *{animation:none!important;transition:none!important}
+}
