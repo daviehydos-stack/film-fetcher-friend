@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ContentRail } from "@/components/streaming/ContentRail";
 import { HomeHero } from "@/components/streaming/HomeHero";
+import { ContinueWatching } from "@/components/streaming/ContinueWatching";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { catalogue } from "@/lib/site-data";
 
@@ -42,6 +43,7 @@ function Index() {
         <HomeHero item={featured} />
 
         <div className="relative z-20 -mt-16 pb-12 sm:-mt-20">
+          <ContinueWatching />
           <ContentRail title="Featured on Avant" items={catalogue} />
           {available.length > 0 ? (
             <ContentRail title="Watch Now" items={available} />
