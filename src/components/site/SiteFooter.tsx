@@ -1,16 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Youtube, Instagram, Music2 } from "lucide-react";
 import { navLinks, socials, WHATSAPP, WHATSAPP_TEL } from "@/lib/site-data";
-import { publicPages } from "@/lib/avant-backend";
+import { publicCatalogue, publicPages } from "@/lib/avant-backend";
 import { useEffect, useState } from "react";
 
 export function SiteFooter() {
-  const [cmsNav,setCmsNav]=useState<any[]>([]);useEffect(()=>{void publicPages().then(x=>setCmsNav(x?.pages||[])).catch(()=>{})},[]);const links=[...navLinks,...cmsNav.filter((p:any)=>!navLinks.some(n=>n.to==="/"+p.slug)).map((p:any)=>({to:"/"+p.slug,label:p.navigation_label||p.title}))];
+  const [cmsNav,setCmsNav]=useState<any[]>([]),[appearance,setAppearance]=useState<any>({});useEffect(()=>{void publicPages().then(x=>setCmsNav(x?.pages||[])).catch(()=>{});void publicCatalogue().then(x=>setAppearance(x?.appearance||{})).catch(()=>{})},[]);const links=[...navLinks,...cmsNav.filter((p:any)=>!navLinks.some(n=>n.to==="/"+p.slug)).map((p:any)=>({to:"/"+p.slug,label:p.navigation_label||p.title}))];
   return (
     <footer className="bg-ink text-ink-foreground">
       <div className="mx-auto grid max-w-7xl gap-9 px-5 py-12 sm:px-10 sm:py-14 md:grid-cols-3">
         <div>
-          <p className="headline text-3xl text-flame">Avant Movies</p>
+          <p className="headline text-3xl text-flame">{appearance.siteName||"Avant Movies"}</p>
           <p className="mt-1 text-sm tracking-[0.18em] text-ink-foreground/70 uppercase">
             It&apos;s time to feel again
           </p>
@@ -61,7 +61,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-border/50 py-5 text-center text-xs text-ink-foreground/55">
-        © 2026 Avant Movies. All rights reserved.
+        {appearance?.footer?.copyright||"© 2026 Avant Movies. All rights reserved."}
       </div>
     </footer>
   );
