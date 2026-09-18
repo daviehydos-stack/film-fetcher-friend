@@ -6,17 +6,23 @@ type TransitionMode = "quick" | "detail" | "checkout" | "back" | "play";
 const REVEAL_MS = 260;
 const SAFETY_MS = 1600;
 
-function stopPlayback() {
-  window.dispatchEvent(new CustomEvent("avant:transition-start"));
+function pauseAllPlayers(except?: HTMLIFrameElement | HTMLMediaElement | null) {
   document.querySelectorAll<HTMLMediaElement>("video, audio").forEach((media) => {
+    if (media === except) return;
     try { media.pause(); } catch { /* detached media */ }
   });
   document.querySelectorAll<HTMLIFrameElement>("iframe").forEach((frame) => {
+    if (frame === except) return;
     try {
       frame.contentWindow?.postMessage({ method: "pause" }, "*");
       frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "pauseVideo", args: [] }), "*");
     } catch { /* cross-origin player */ }
   });
+}
+
+function stopPlayback() {
+  window.dispatchEvent(new CustomEvent("avant:transition-start"));
+  pauseAllPlayers();
 }
 
 function shouldTransition(event: MouseEvent, anchor: HTMLAnchorElement) {
@@ -58,6 +64,17 @@ export function AvantTransitionEngine() {
     reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     [`${import.meta.env.BASE_URL}avant-transition-a.webp`, `${import.meta.env.BASE_URL}avant-transition-a-mobile.webp`]
       .forEach((src) => { const image = new Image(); image.src = src; });
+
+    const onPlayerStarted = (event: Event) => {
+      const detail = (event as CustomEvent<{ player?: HTMLIFrameElement | HTMLMediaElement | null }>).detail;
+      pauseAllPlayers(detail?.player ?? null);
+    };
+    const onMediaPlay = (event: Event) => {
+      const media = event.target instanceof HTMLMediaElement ? event.target : null;
+      if (media) pauseAllPlayers(media);
+    };
+    window.addEventListener("avant:player-started", onPlayerStarted);
+    document.addEventListener("play", onMediaPlay, true);
 
     const onClick = (event: MouseEvent) => {
       const element = event.target instanceof Element ? event.target.closest("a[href]") : null;
@@ -111,6 +128,8 @@ export function AvantTransitionEngine() {
     document.addEventListener("click", onClick, true);
     return () => {
       document.removeEventListener("click", onClick, true);
+      window.removeEventListener("avant:player-started", onPlayerStarted);
+      document.removeEventListener("play", onMediaPlay, true);
       clearTimers();
     };
   }, [clearTimers, finish, setTransitionPhase]);
