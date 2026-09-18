@@ -1,7 +1,9 @@
-import { Lock, Play } from "lucide-react";
+import { Check, ChevronDown, Lock, Play, Plus, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { youtubeEmbedUrl } from "@/lib/video-embeds";
+import { readMyList, toggleMyList } from "@/lib/my-list";
+import { customerToken, requireCustomerToken } from "@/lib/firebase-customer-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
@@ -11,6 +13,8 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [hoverCapable, setHoverCapable] = useState(false);
   const [nearViewport, setNearViewport] = useState(false);
+  const [saved,setSaved]=useState(()=>readMyList().includes(item.id));
+  const [muted,setMuted]=useState(true);
   const cardRef = useRef<HTMLElement | null>(null);
   const previewTimer = useRef<number | null>(null);
   const firstEpisode=item.episodes?.[0];
@@ -38,6 +42,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
     if (!nearViewport || !hoverCapable || !item.previewYoutubeId || previewFailed || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     previewTimer.current = window.setTimeout(() => setPreviewing(true), 350);
   };
+  const toggleSaved = async (event: React.MouseEvent) => { event.stopPropagation(); const token=await customerToken(false); if(!token){try{await requireCustomerToken()}catch{return}} setSaved(toggleMyList(item.id).includes(item.id)); };
   const endPreview = () => {
     if (previewTimer.current) window.clearTimeout(previewTimer.current);
     previewTimer.current = null;
@@ -50,14 +55,14 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
       ref={cardRef}
       onMouseEnter={beginPreview}
       onMouseLeave={endPreview}
-      className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[72vw] max-w-[18rem] shrink-0 min-[420px]:w-[64vw] sm:w-[18rem] lg:w-[21rem] lg:max-w-none"}
+      className={layout === "grid" ? "group relative z-0 w-full min-w-0 md:hover:z-30" : "group relative z-0 w-[72vw] max-w-[18rem] shrink-0 min-[420px]:w-[64vw] sm:w-[18rem] md:hover:z-30 lg:w-[21rem] lg:max-w-none"}
     >
-      <div className="relative overflow-hidden rounded-md bg-surface shadow-none transition-[filter] duration-200 md:group-hover:brightness-110">
+      <div className="relative overflow-hidden rounded-md bg-surface shadow-none transition-[transform,box-shadow] duration-300 ease-out md:origin-center md:group-hover:scale-[1.055] md:group-hover:shadow-[0_18px_45px_rgba(0,0,0,.75)]">
         <button type="button" onClick={()=>setDetailsOpen(true)} className="relative block aspect-video w-full overflow-hidden text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
           <img src={item.artwork} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`} loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100"}`} />
           {previewing && item.previewYoutubeId ? (
             <iframe
-              src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted: true, controls: false, start: item.previewStart, end: item.previewDuration ? (item.previewStart ?? 0) + item.previewDuration : undefined, loop: true })}
+              src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted, controls: false, start: item.previewStart, end: item.previewDuration ? (item.previewStart ?? 0) + item.previewDuration : undefined, loop: true })}
               title={`${item.title} preview`}
               allow="autoplay; encrypted-media; picture-in-picture"
               tabIndex={-1}
@@ -70,7 +75,15 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
           <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100" />
           <span className="absolute inset-x-0 bottom-0 p-3 text-white md:hidden"><span className="block text-sm font-bold leading-tight">{item.title}</span><span className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-white/70">{playableContentId ? <Play className="size-3 fill-current" /> : <Lock className="size-3" />}{accessLabel}</span></span>
         </button>
-
+        <div className="hidden h-0 overflow-hidden bg-[#181818] opacity-0 transition-[height,opacity] duration-300 md:block md:group-hover:h-[5.2rem] md:group-hover:opacity-100">
+          <div className="flex items-center gap-2 px-3 pt-2">
+            <button type="button" onClick={()=>setDetailsOpen(true)} aria-label={`Play ${item.title}`} className="grid size-9 place-items-center rounded-full bg-white text-black"><Play className="size-4 fill-current"/></button>
+            <button type="button" onClick={toggleSaved} aria-label={saved?"Remove from My List":"Add to My List"} className="grid size-9 place-items-center rounded-full border-2 border-white/45 text-white">{saved?<Check className="size-4"/>:<Plus className="size-4"/>}</button>
+            {item.previewYoutubeId?<button type="button" onClick={(e)=>{e.stopPropagation();setMuted(v=>!v)}} aria-label={muted?"Unmute preview":"Mute preview"} className="grid size-9 place-items-center rounded-full border-2 border-white/45 text-white">{muted?<VolumeX className="size-4"/>:<Volume2 className="size-4"/>}</button>:null}
+            <button type="button" onClick={()=>setDetailsOpen(true)} aria-label={`More information about ${item.title}`} className="ml-auto grid size-9 place-items-center rounded-full border-2 border-white/45 text-white"><ChevronDown className="size-5"/></button>
+          </div>
+          <div className="truncate px-3 pt-2 text-xs font-semibold text-white/75">{accessLabel}<span className="px-1.5 text-white/35">•</span>{item.type==="series"?"Series":"Movie"}{item.quality?<><span className="px-1.5 text-white/35">•</span>{item.quality}</>:null}</div>
+        </div>
       </div>
       {detailsOpen?<TitlePreviewModal item={item} onClose={()=>setDetailsOpen(false)}/>:null}
     </article>
