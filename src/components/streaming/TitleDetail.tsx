@@ -21,25 +21,26 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   useEffect(() => {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
-    if (!item.trailerEmbedUrl || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(min-width: 640px)").matches) return;
+    if (!item.trailerEmbedUrl || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = window.setTimeout(() => setHeroPreview(true), 900);
     return () => window.clearTimeout(timer);
   }, [item.id, item.trailerEmbedUrl]);
+  useEffect(() => { if (!trailerOpen) return; const close = (event: KeyboardEvent) => { if (event.key === "Escape") setTrailerOpen(false); }; window.addEventListener("keydown", close); const previous = document.body.style.overflow; document.body.style.overflow = "hidden"; return () => { window.removeEventListener("keydown", close); document.body.style.overflow = previous; }; }, [trailerOpen]);
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));
   const related = catalogue.filter((candidate) => candidate.id !== item.id && candidate.genres.some((genre) => item.genres.includes(genre))).slice(0, 6);
   return (
     <StreamingShell>
       <main>
-        <section className="relative min-h-[68svh] overflow-hidden bg-background sm:min-h-[72vh]">
+        <section className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[72vh]">
           <img src={item.backdrop} alt="" fetchPriority="high" className={`absolute inset-0 size-full object-cover object-[62%_center] transition-opacity duration-700 sm:object-center ${heroPreview && heroPreviewLoaded ? "opacity-0" : "opacity-100"}`} />
           {item.trailerEmbedUrl && heroPreview ? <iframe src={heroTrailerUrl(item.trailerEmbedUrl, heroMuted)} title={`${item.title} background trailer`} allow="autoplay; fullscreen; picture-in-picture" tabIndex={-1} aria-hidden="true" onLoad={() => setHeroPreviewLoaded(true)} className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${heroPreviewLoaded ? "opacity-100" : "opacity-0"}`} /> : null}
           <div className="hero-shade absolute inset-0" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/25" />
-          <div className="relative z-10 flex min-h-[68svh] max-w-3xl flex-col justify-end px-5 pb-10 pt-28 sm:min-h-[72vh] sm:px-10 sm:pb-16 lg:px-14">
+          <div className="relative z-10 flex min-h-[72svh] max-w-3xl flex-col justify-end px-5 pb-10 pt-28 sm:min-h-[72vh] sm:px-10 sm:pb-16 lg:px-14">
             <p className="eyebrow">Avant original · {item.type === "movie" ? "Feature film" : "TV series"}</p>
             <h1 className="mt-3 text-[clamp(2.6rem,12vw,4.5rem)] font-black uppercase leading-[0.92] sm:mt-4 sm:text-7xl">{item.title}</h1>
-            <p className="mt-4 text-sm font-semibold text-primary">{item.genres.join(" · ")} {item.episodes ? `· ${item.episodes.length} episodes` : ""}</p>
-            <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.synopsis}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold"><span className="text-primary">Avant Original</span><span className="text-white/45">•</span><span>{item.genres.join(" · ")}</span>{item.episodes ? <><span className="text-white/45">•</span><span>{seasons.length > 1 ? `${seasons.length} seasons` : "Season 1"} · {item.episodes.length} episodes</span></> : null}</div>
+            <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.synopsis}</p><p className="mt-3 max-w-xl text-xs leading-5 text-white/55 sm:text-sm">Independent Kenyan storytelling · Stream inside Avant Movies.</p>
             <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
               {item.type === "series" && item.episodes?.[0]?.youtubeId ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: `${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 bg-black/30 px-4 text-sm font-semibold text-white/75 backdrop-blur-sm"><Lock className="size-4" />{item.available ? "Streaming access required" : "Coming to Avant"}</span>}
               {item.trailerEmbedUrl ? <Button type="button" size="lg" variant="outline" onClick={() => setTrailerOpen(true)}><Play />Trailer</Button> : null}
