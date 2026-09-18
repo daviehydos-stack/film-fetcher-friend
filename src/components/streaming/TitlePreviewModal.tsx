@@ -13,7 +13,7 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  useEffect(()=>{const old=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&requestClose();addEventListener("keydown",key);return()=>{document.body.style.overflow=old;removeEventListener("keydown",key)}},[onClose]);
  const requestClose=()=>{if(closing)return;setClosing(true);window.setTimeout(onClose,220)};
  const toggleSaved=async()=>{const token=await customerToken(false);if(!token){try{await requireCustomerToken()}catch{return}}setSaved(toggleMyList(item.id).includes(item.id))};
- const start=item.previewStart??0,end=start+Math.min(45,Math.max(8,item.previewDuration??35)); const video=!closing&&item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true}):null;
+ const start=0,end=Math.min(120,Math.max(30,item.previewDuration??120)); const video=!closing&&item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true}):null;
  const content=<div className={`avant-preview-backdrop ${closing?"is-closing":""} fixed inset-0 z-[100] overflow-y-auto bg-black/75 backdrop-blur-[2px]`} onMouseDown={e=>{if(e.target===e.currentTarget)requestClose()}}>
   <div className={`avant-preview-dialog ${closing?"is-closing":""} relative mx-auto my-5 w-[min(94vw,1120px)] overflow-hidden rounded-xl bg-[#181818] shadow-2xl sm:my-10`}>
    <button onClick={requestClose} aria-label="Close" className="absolute right-4 top-4 z-30 grid size-10 place-items-center rounded-full bg-[#181818] text-white"><X/></button>
