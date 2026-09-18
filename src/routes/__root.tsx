@@ -146,7 +146,7 @@ function RootComponent() {
     if (!deepLink) return;
     const safePath = deepLink.startsWith("/") ? deepLink : "/" + deepLink;
     window.history.replaceState({}, "", import.meta.env.BASE_URL.replace(/\/$/, "") + safePath);
-    window.location.reload();
+    window.dispatchEvent(new PopStateEvent("popstate"));
   }, []);
   useEffect(() => { let dead=false; void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{});return()=>{dead=true}; }, []);
   useEffect(() => {
