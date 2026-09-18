@@ -1,0 +1,1 @@
+export const FIREBASE_CONFIG={apiKey:(import.meta.env.VITE_FIREBASE_API_KEY as string|undefined)?.trim()||"AIzaSyATgy-SsQL0yEjXTJYVZGI0-yEh_c3Dj5M",authDomain:"avant-movies-b6b94.firebaseapp.com",projectId:"avant-movies-b6b94",storageBucket:"avant-movies-b6b94.firebasestorage.app",messagingSenderId:"12797178987",appId:"1:12797178987:web:968dcb951f0ae4725c6d2e"} as const;
