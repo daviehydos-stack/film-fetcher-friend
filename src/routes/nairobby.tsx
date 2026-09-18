@@ -9,6 +9,7 @@ const POSTER =
 export const Route = createFileRoute("/nairobby")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Nairobby — A Nairobi crime story | Avant Cinema" },
       {
         name: "description",
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/nairobby")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  links: [{ rel: "canonical", href: `/title/nairobby` }],
   component: Nairobby,
 });
 
