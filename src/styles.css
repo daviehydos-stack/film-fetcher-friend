@@ -89,6 +89,7 @@
     -webkit-font-smoothing: antialiased;
     min-width: 320px;
     overflow-x: hidden;
+    overscroll-behavior-x: none;
     text-rendering: optimizeLegibility;
   }
 
@@ -167,7 +168,7 @@
 
 /* Streaming navigation: a restrained cinematic fade/wipe keeps route changes inside the app. */
 .avant-route-stage {
-  min-height: 100vh;
+  min-height: 100svh;
   opacity: 1;
   transform: translateZ(0);
   transition: opacity 180ms ease, transform 260ms cubic-bezier(.2,.8,.2,1), filter 220ms ease;
