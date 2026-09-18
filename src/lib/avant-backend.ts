@@ -23,3 +23,7 @@ export const getCloudMyList=(token:string)=>request<{ids:string[]}>("my-list",to
 export const setCloudMyList=(token:string,key:string,saved:boolean)=>request<any>("my-list",token,{method:"POST",body:JSON.stringify({key,saved})});
 
 export const myLibrary=(token:string)=>request<any>("my-library",token,{method:"GET"});
+
+export const adminVimeoGet=(token:string)=>request<any>("admin-vimeo",token,{method:"GET"});
+export const adminVimeoSave=(token:string,payload:{clientId?:string;clientSecret?:string;accessToken?:string;testOnly?:boolean})=>request<any>("admin-vimeo",token,{method:"POST",body:JSON.stringify(payload)});
+export const adminVimeoDisconnect=(token:string)=>request<any>("admin-vimeo",token,{method:"DELETE"});
