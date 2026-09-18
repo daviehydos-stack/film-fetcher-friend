@@ -10,6 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CheckoutProductIdRouteImport } from './routes/checkout.$productId'
+import { Route as PaymentFailedRouteImport } from './routes/payment.failed'
+import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
+import { Route as WatchContentIdRouteImport } from './routes/watch.$contentId'
 import { Route as ABetterLifeRouteImport } from './routes/a-better-life'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as BackToUsRouteImport } from './routes/back-to-us'
@@ -27,6 +31,11 @@ import { Route as TitleSlugRouteImport } from './routes/title.$slug'
 import { Route as TvShowsRouteImport } from './routes/tv-shows'
 import { Route as WatchThemAllRouteImport } from './routes/watch-them-all'
 import { Route as WriteLikeAMasterRouteImport } from './routes/write-like-a-master'
+
+const CheckoutProductIdRoute = CheckoutProductIdRouteImport.update({ id: '/checkout/$productId', path: '/checkout/$productId', getParentRoute: () => rootRouteImport } as any)
+const PaymentFailedRoute = PaymentFailedRouteImport.update({ id: '/payment/failed', path: '/payment/failed', getParentRoute: () => rootRouteImport } as any)
+const PaymentSuccessRoute = PaymentSuccessRouteImport.update({ id: '/payment/success', path: '/payment/success', getParentRoute: () => rootRouteImport } as any)
+const WatchContentIdRoute = WatchContentIdRouteImport.update({ id: '/watch/$contentId', path: '/watch/$contentId', getParentRoute: () => rootRouteImport } as any)
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -120,6 +129,10 @@ const WriteLikeAMasterRoute = WriteLikeAMasterRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
+  '/watch/$contentId': typeof WatchContentIdRoute
   '/': typeof IndexRoute
   '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
@@ -140,6 +153,10 @@ export interface FileRoutesByFullPath {
   '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRoutesByTo {
+  '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
+  '/watch/$contentId': typeof WatchContentIdRoute
   '/': typeof IndexRoute
   '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
@@ -160,6 +177,10 @@ export interface FileRoutesByTo {
   '/write-like-a-master': typeof WriteLikeAMasterRoute
 }
 export interface FileRoutesById {
+  '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
+  '/watch/$contentId': typeof WatchContentIdRoute
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/a-better-life': typeof ABetterLifeRoute
@@ -183,6 +204,10 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/checkout/$productId'
+    | '/payment/failed'
+    | '/payment/success'
+    | '/watch/$contentId'
     | '/'
     | '/a-better-life'
     | '/about'
@@ -203,6 +228,10 @@ export interface FileRouteTypes {
     | '/write-like-a-master'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/checkout/$productId'
+    | '/payment/failed'
+    | '/payment/success'
+    | '/watch/$contentId'
     | '/'
     | '/a-better-life'
     | '/about'
@@ -222,6 +251,10 @@ export interface FileRouteTypes {
     | '/watch-them-all'
     | '/write-like-a-master'
   id:
+    | '/checkout/$productId'
+    | '/payment/failed'
+    | '/payment/success'
+    | '/watch/$contentId'
     | '__root__'
     | '/'
     | '/a-better-life'
@@ -244,6 +277,10 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  CheckoutProductIdRoute: typeof CheckoutProductIdRoute
+  PaymentFailedRoute: typeof PaymentFailedRoute
+  PaymentSuccessRoute: typeof PaymentSuccessRoute
+  WatchContentIdRoute: typeof WatchContentIdRoute
   IndexRoute: typeof IndexRoute
   ABetterLifeRoute: typeof ABetterLifeRoute
   AboutRoute: typeof AboutRoute
@@ -266,6 +303,10 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/checkout/$productId': { id: '/checkout/$productId'; path: '/checkout/$productId'; fullPath: '/checkout/$productId'; preLoaderRoute: typeof CheckoutProductIdRouteImport; parentRoute: typeof rootRouteImport }
+    '/payment/failed': { id: '/payment/failed'; path: '/payment/failed'; fullPath: '/payment/failed'; preLoaderRoute: typeof PaymentFailedRouteImport; parentRoute: typeof rootRouteImport }
+    '/payment/success': { id: '/payment/success'; path: '/payment/success'; fullPath: '/payment/success'; preLoaderRoute: typeof PaymentSuccessRouteImport; parentRoute: typeof rootRouteImport }
+    '/watch/$contentId': { id: '/watch/$contentId'; path: '/watch/$contentId'; fullPath: '/watch/$contentId'; preLoaderRoute: typeof WatchContentIdRouteImport; parentRoute: typeof rootRouteImport }
     '/': {
       id: '/'
       path: '/'
@@ -396,6 +437,10 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  CheckoutProductIdRoute: CheckoutProductIdRoute,
+  PaymentFailedRoute: PaymentFailedRoute,
+  PaymentSuccessRoute: PaymentSuccessRoute,
+  WatchContentIdRoute: WatchContentIdRoute,
   IndexRoute: IndexRoute,
   ABetterLifeRoute: ABetterLifeRoute,
   AboutRoute: AboutRoute,
