@@ -419,3 +419,30 @@ main>section,main>div{isolation:isolate}
  .avant-transition-mode-play.avant-transition-entering .avant-transition-horizon,
  .avant-transition-mode-play.avant-transition-entering .avant-transition-flare{animation-duration:430ms}
 }
+
+
+/* Mobile foundation v1 — hard viewport containment. Nothing may make the document
+   wider than the phone; horizontal rails scroll inside their own viewport. */
+html,body,#root{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+body{min-width:0}
+main,header,footer,section,nav{max-width:100%}
+@media(max-width:767px){
+ html,body,#root{overflow-x:clip}
+ main{width:100%;min-width:0;overflow-x:clip}
+ header>div,footer>div{max-width:100vw}
+ img,video,iframe,svg{max-width:100%}
+ .avant-horizontal-rail{
+   box-sizing:border-box;
+   width:100%;
+   max-width:100vw;
+   min-width:0;
+   overflow-x:auto!important;
+   overflow-y:hidden!important;
+   overscroll-behavior-x:contain;
+   -webkit-overflow-scrolling:touch;
+   touch-action:pan-x pan-y;
+ }
+ .avant-horizontal-rail>[data-title-card],
+ .avant-horizontal-rail>div{min-width:0}
+ .avant-rail-fade{-webkit-mask-image:none!important;mask-image:none!important}
+}
