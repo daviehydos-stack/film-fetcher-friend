@@ -15,7 +15,7 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const openTitle=()=>{rememberReturnContext("catalogue",item.slug);requestClose()};
  const requestClose=()=>{if(closing)return;setClosing(true);window.setTimeout(onClose,220)};
  const toggleSaved=async()=>{const token=await customerToken(false);if(!token){try{await requireCustomerToken()}catch{return}}setSaved(toggleMyList(item.id).includes(item.id))};
- const start=0,end=Math.min(180,Math.max(30,item.previewDuration??120));
+ const start=0,end=Math.min(60,Math.max(30,item.previewDuration??60));
  useEffect(()=>{if(!video){setElapsed(0);return}
  const receive=(event:MessageEvent)=>{try{const data=typeof event.data==="string"?JSON.parse(event.data):event.data;if(data?.event==="infoDelivery"&&typeof data?.info?.currentTime==="number"){const total=Math.max(1,end-start);const t=Math.max(0,data.info.currentTime-start);setElapsed(t>=total?0:t)}}catch{}};
  window.addEventListener("message",receive);
