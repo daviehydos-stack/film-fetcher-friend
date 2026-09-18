@@ -137,6 +137,16 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const [routeFading, setRouteFading] = useState(false);
+  useEffect(() => {
+    let timer: number | undefined;
+    const unsubscribe = router.subscribe("onBeforeNavigate", () => {
+      setRouteFading(true);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setRouteFading(false), 180);
+    });
+    return () => { window.clearTimeout(timer); unsubscribe(); };
+  }, [router]);
   useEffect(() => {
     const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
     if (!buildSha || typeof window === "undefined") return;
