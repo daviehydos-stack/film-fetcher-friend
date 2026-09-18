@@ -36,10 +36,10 @@ export function ContinueWatching() {
       (item.episodes ?? []).map((episode, index) => ({ item, episode, index })),
     );
     return combined.filter((entry) => !entry.duration || entry.seconds < entry.duration * 0.95).sort((a, b) => b.updatedAt - a.updatedAt).flatMap((entry): ProgressRow[] => {
-      const match = episodes.find(({ item, index }) => entry.contentId === `${item.slug}-${index + 1}`);
+      const match = episodes.find(({ item, index }) => entry.contentId === (episode.legacyKey ?? `${item.slug}-${index + 1}`));
       return match ? [{ ...match, progress: entry }] : [];
     });
-  }, [progress]);
+  }, [progress, serverProgress]);
 
   if (!rows.length) return null;
 
