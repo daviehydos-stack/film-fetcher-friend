@@ -1,4 +1,4 @@
-import { customerToken } from "./firebase-customer-auth";
+import { customerToken } from "./google-auth";
 import { getCloudMyList, setCloudMyList } from "./avant-backend";
 const KEY = "avant-my-list";
 
