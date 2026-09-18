@@ -1,9 +1,9 @@
 import{ADMIN_EMAIL,setAdminToken,adminSession}from"./avant-backend";import{customerSession,requireCustomerToken,signOutCustomer}from"./google-auth";
-const U="https://bnuyhrsezkepsaebwlmu.supabase.co/functions/v1/admin-mfa",K="avant_admin_mfa_verified";
+const U="https://bnuyhrsezkepsaebwlmu.supabase.co/functions/v1/admin-mfa",K="avant_admin_mfa_verified",P="avant_admin_mfa_proof";
 async function req(token:string,method="GET",body?:any){const r=await fetch(U,{method,headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const x=await r.json().catch(()=>({}));if(!r.ok)throw new Error(x.error||"Authenticator verification failed");return x}
 async function finish(){const user=await customerSession();if(String(user?.email||"").toLowerCase()!==ADMIN_EMAIL){setAdminToken(null);throw new Error("This Google account is not an Avant administrator.")}const token=await requireCustomerToken(),session=await adminSession(token);if(!session.admin){setAdminToken(null);throw new Error("Admin authorization denied.")}setAdminToken(token);const m=await req(token),ok=typeof window!=="undefined"&&sessionStorage.getItem(K)==="1";return{mfaRequired:m.required===true&&!ok,enrolled:m.enrolled===true,session}}
 export async function restoreAdminSession(){try{return await finish()}catch{setAdminToken(null);return null}}
 export async function signInAdmin(){await requireCustomerToken();return finish()}
 export async function enrollAdminMfa(){return req(await requireCustomerToken(),"POST",{action:"enroll"})}
-export async function verifyAdminMfa(code:string){const r=await req(await requireCustomerToken(),"POST",{action:"verify",code});if(r.verified&&typeof window!=="undefined")sessionStorage.setItem(K,"1");return r}
-export async function signOutAdmin(){setAdminToken(null);if(typeof window!=="undefined")sessionStorage.removeItem(K);await signOutCustomer()}
+export async function verifyAdminMfa(code:string){const r=await req(await requireCustomerToken(),"POST",{action:"verify",code});if(r.verified&&typeof window!=="undefined"){sessionStorage.setItem(K,"1");if(r.proof)sessionStorage.setItem(P,r.proof)}return r}
+export async function signOutAdmin(){setAdminToken(null);if(typeof window!=="undefined")sessionStorage.removeItem(K);sessionStorage.removeItem(P);await signOutCustomer()}
