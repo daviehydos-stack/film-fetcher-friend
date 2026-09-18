@@ -44,25 +44,25 @@ function CheckoutRoute() {
   }
 
   return (
-    <main className="min-h-screen bg-[#07090D] px-5 py-12 text-white">
+    <main className="min-h-[100svh] bg-[#07090D] px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] text-white sm:py-12">
       <section className="mx-auto max-w-lg">
-        <Link to="/" className="text-sm text-white/60 hover:text-white">← Back to Avant</Link>
-        <div className="mt-10">
+        <Link to="/" className="inline-flex min-h-11 items-center text-sm text-white/60 hover:text-white">← Back to Avant</Link>
+        <div className="mt-6 sm:mt-10">
           <p className="text-xs uppercase tracking-[0.22em] text-white/45">Secure access</p>
-          <h1 className="mt-2 text-3xl font-semibold">Get access</h1>
+          <h1 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">Get access</h1>
           <p className="mt-3 text-sm leading-6 text-white/60">
             The server resolves the product, amount, currency and access duration. Nothing from the browser is trusted for pricing.
           </p>
         </div>
 
-        <div className="mt-8 space-y-3">
+        <div className="mt-7 space-y-3 sm:mt-8">
           <input
             value={mobile}
             onChange={(event) => setMobile(event.target.value)}
             placeholder="M-PESA mobile number"
             inputMode="tel"
             autoComplete="tel"
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-white/35"
+            className="min-h-12 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base text-white outline-none placeholder:text-white/35 focus:border-white/30 focus:ring-2 focus:ring-white/10"
           />
           <input
             value={email}
@@ -70,11 +70,11 @@ function CheckoutRoute() {
             placeholder="Email (optional)"
             type="email"
             autoComplete="email"
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-white/35"
+            className="min-h-12 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base text-white outline-none placeholder:text-white/35 focus:border-white/30 focus:ring-2 focus:ring-white/10"
           />
 
           <button
-            className="flex w-full items-center gap-4 rounded-lg bg-white px-5 py-4 text-left text-black disabled:opacity-50"
+            className="flex min-h-16 w-full items-center gap-4 rounded-lg bg-white px-5 py-4 text-left text-black transition active:scale-[.99] disabled:opacity-50"
             type="button"
             disabled={busy !== null}
             onClick={() => void start('mpesa')}
@@ -87,7 +87,7 @@ function CheckoutRoute() {
           </button>
 
           <button
-            className="flex w-full items-center gap-4 rounded-lg bg-white/8 px-5 py-4 text-left disabled:opacity-50"
+            className="flex min-h-16 w-full items-center gap-4 rounded-lg bg-white/8 px-5 py-4 text-left transition active:scale-[.99] disabled:opacity-50"
             type="button"
             disabled={busy !== null}
             onClick={() => void start('card')}
