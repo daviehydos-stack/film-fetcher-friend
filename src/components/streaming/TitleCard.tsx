@@ -57,7 +57,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
       onMouseLeave={endPreview}
       className={layout === "grid" ? "group relative z-0 w-full min-w-0 md:hover:z-30" : "group relative z-0 w-[72vw] max-w-[18rem] shrink-0 min-[420px]:w-[64vw] sm:w-[18rem] md:hover:z-30 lg:w-[21rem] lg:max-w-none"}
     >
-      <div className="relative overflow-hidden rounded-md bg-surface shadow-none transition-[transform,box-shadow] duration-300 ease-out md:origin-center md:group-hover:scale-[1.055] md:group-hover:shadow-[0_18px_45px_rgba(0,0,0,.75)]">
+      <div className="relative overflow-hidden rounded-md bg-surface shadow-none transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:origin-center md:group-hover:scale-[1.035] md:group-hover:shadow-[0_18px_45px_rgba(0,0,0,.75)]">
         <button type="button" onClick={()=>setDetailsOpen(true)} className="relative block aspect-video w-full overflow-hidden text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
           <img src={item.artwork} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`} loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100"}`} />
           {previewing && item.previewYoutubeId ? (
@@ -75,7 +75,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
           <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100" />
           <span className="absolute inset-x-0 bottom-0 p-3 text-white md:hidden"><span className="block text-sm font-bold leading-tight">{item.title}</span><span className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-white/70">{playableContentId ? <Play className="size-3 fill-current" /> : <Lock className="size-3" />}{accessLabel}</span></span>
         </button>
-        <div className="hidden h-0 overflow-hidden bg-[#181818] opacity-0 transition-[height,opacity] duration-300 md:block md:group-hover:h-[5.2rem] md:group-hover:opacity-100">
+        <div className="hidden h-0 overflow-hidden bg-[#181818] opacity-0 transition-[height,opacity] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:block md:group-hover:h-[5.2rem] md:group-hover:opacity-100">
           <div className="flex items-center gap-2 px-3 pt-2">
             <button type="button" onClick={()=>setDetailsOpen(true)} aria-label={`Play ${item.title}`} className="grid size-9 place-items-center rounded-full bg-white text-black"><Play className="size-4 fill-current"/></button>
             <button type="button" onClick={toggleSaved} aria-label={saved?"Remove from My List":"Add to My List"} className="grid size-9 place-items-center rounded-full border-2 border-white/45 text-white">{saved?<Check className="size-4"/>:<Plus className="size-4"/>}</button>

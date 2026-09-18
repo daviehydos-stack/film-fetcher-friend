@@ -11,8 +11,8 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const episodes=item.episodes?.filter(e=>(e.season??1)===season)??[]; const seasons=[...new Set(item.episodes?.map(e=>e.season??1)??[])];
  useEffect(()=>{const old=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&onClose();addEventListener("keydown",key);return()=>{document.body.style.overflow=old;removeEventListener("keydown",key)}},[onClose]);
  const start=item.previewStart??0,end=start+(item.previewDuration??35); const video=item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,start,end,loop:true}):null;
- const content=<div className="fixed inset-0 z-[100] overflow-y-auto bg-black/75 backdrop-blur-[2px]" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
-  <div className="relative mx-auto my-5 w-[min(94vw,1120px)] overflow-hidden rounded-xl bg-[#181818] shadow-2xl sm:my-10">
+ const content=<div className="avant-preview-backdrop fixed inset-0 z-[100] overflow-y-auto bg-black/75 backdrop-blur-[2px]" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
+  <div className="avant-preview-dialog relative mx-auto my-5 w-[min(94vw,1120px)] overflow-hidden rounded-xl bg-[#181818] shadow-2xl sm:my-10">
    <button onClick={onClose} aria-label="Close" className="absolute right-4 top-4 z-30 grid size-10 place-items-center rounded-full bg-[#181818] text-white"><X/></button>
    <section className="relative aspect-[16/8.7] min-h-[360px] overflow-hidden bg-black">
     <img src={item.backdrop||item.artwork} alt="" className="absolute inset-0 size-full object-cover"/>

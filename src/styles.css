@@ -183,3 +183,10 @@
 .avant-page-enter{animation:avantPageEnter 220ms cubic-bezier(.2,.7,.2,1) both}
 @keyframes avantPageEnter{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.avant-page-enter{animation:none!important}}
+
+/* Soft Netflix-like card-to-detail motion. */
+.avant-preview-backdrop{animation:avantPreviewBackdropIn 240ms ease-out both}
+.avant-preview-dialog{transform-origin:center 32%;animation:avantPreviewDialogIn 420ms cubic-bezier(.16,1,.3,1) both}
+@keyframes avantPreviewBackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes avantPreviewDialogIn{from{opacity:0;transform:translateY(10px) scale(.965)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.avant-preview-backdrop,.avant-preview-dialog{animation:none!important}}
