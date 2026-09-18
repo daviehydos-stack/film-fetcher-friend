@@ -33,7 +33,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const generatedClip = autoPlan.clips[0] ?? { start: 0, end: 35, duration: 35, zone: 0 };
   const previewStart = 0;
   const previewEnd = Math.min(60, item.previewDuration ?? generatedClip.end ?? 60);
-  const previewUrl = item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, heroMuted) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: previewStart, end: previewEnd, loop: true, jsApi:true }) : null;
+  const cappedTrailerUrl=(raw:string,muted:boolean,controls=false)=>{try{const u=new URL(heroTrailerUrl(raw,muted));if(u.hostname.includes("youtube")){u.searchParams.set("start","0");u.searchParams.set("end","60");u.searchParams.set("loop","1");const id=u.pathname.split("/").filter(Boolean).pop();if(id)u.searchParams.set("playlist",id);u.searchParams.set("controls",controls?"1":"0")}return u.toString()}catch{return raw}};
+  const previewUrl = item.trailerEmbedUrl ? cappedTrailerUrl(item.trailerEmbedUrl, heroMuted, false) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: 0, end: 60, loop: true, jsApi:true }) : null;
   const previewFrameRef=useRef<HTMLIFrameElement|null>(null);
   const pausePreview=()=>{previewFrameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*");};
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
@@ -90,7 +91,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     <button type="button" onClick={() => setTrailerOpen(false)} aria-label="Close trailer" className="absolute right-4 top-[max(1rem,env(safe-area-inset-top))] grid size-10 place-items-center rounded-full border border-white/20 bg-black/65 text-2xl leading-none text-white backdrop-blur-md transition hover:scale-105 hover:bg-white/15 sm:right-5 sm:top-5">×</button>
    </div>
    <div className="relative aspect-video w-full overflow-hidden bg-black sm:rounded-2xl">
-    <iframe key={`${item.id}-trailer-${trailerOpen}`} src={item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, false) : youtubeEmbedUrl(previewId!, { autoplay: true, muted: false, controls: true, start: previewStart, end: previewEnd, loop:true })} title={`${item.title} preview`} allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowFullScreen className="absolute inset-0 size-full border-0" />
+    <iframe key={`${item.id}-trailer-${trailerOpen}`} src={item.trailerEmbedUrl ? cappedTrailerUrl(item.trailerEmbedUrl, false, true) : youtubeEmbedUrl(previewId!, { autoplay: true, muted: false, controls: true, start: 0, end: 60, loop:true, jsApi:true })} title={`${item.title} preview`} allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowFullScreen className="absolute inset-0 size-full border-0" />
     <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent"/>
    </div>
    <div className="flex items-center justify-between gap-3 border-t border-white/[.06] px-4 py-3 text-xs text-white/50 sm:px-6"><span>{item.trailerEmbedUrl ? "Official trailer" : "1 minute preview"}</span><span className="hidden sm:inline">Press Esc or click outside to close</span></div>
