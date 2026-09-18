@@ -34,13 +34,13 @@ function PaymentSuccess() {
   }, [reference])
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#07090D] px-6 text-white">
-      <section className="max-w-md text-center">
+    <main className="grid min-h-[100svh] place-items-center bg-[#07090D] px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))] text-white">
+      <section className="w-full max-w-md text-center">
         <h1 className="text-2xl font-semibold">
           {status === 'checking' ? 'Confirming your payment' : status === 'success' ? 'Payment confirmed' : 'Payment not confirmed'}
         </h1>
         <p className="mt-3 text-sm leading-6 text-white/55">{message}</p>
-        <Link to="/" className="mt-7 inline-block text-sm text-white/60 hover:text-white">Return to Avant</Link>
+        <Link to="/" className="mt-7 inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 px-5 text-sm text-white/75 hover:bg-white/10 hover:text-white">Return to Avant</Link>
       </section>
     </main>
   )
