@@ -1,4 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
-export const Route = createFileRoute("/my-list")({ component: MyList });
-function MyList() { return <StreamingShell><main className="mx-auto min-h-[70vh] max-w-[1500px] px-5 pb-20 pt-28 sm:px-10 lg:px-14"><p className="eyebrow">Your collection</p><h1 className="mt-3 text-4xl font-black sm:text-6xl">My List</h1><div className="mt-10 max-w-xl rounded-lg border border-white/10 bg-surface p-8"><h2 className="text-xl font-bold">Nothing here yet</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">Save movies and shows you want to come back to. Account-backed My List will connect here when the customer backend is ready.</p></div></main></StreamingShell>; }
+import { TitleCard } from "@/components/streaming/TitleCard";
+import { catalogue } from "@/lib/site-data";
+import { readMyList } from "@/lib/my-list";
+export const Route=createFileRoute("/my-list")({component:MyList});
+function MyList(){const [ids,setIds]=useState<string[]>([]); useEffect(()=>{const sync=()=>setIds(readMyList());sync();window.addEventListener("avant-my-list",sync);return()=>window.removeEventListener("avant-my-list",sync)},[]); const items=catalogue.filter(x=>ids.includes(x.id)); return <StreamingShell><main className="mx-auto min-h-[70vh] max-w-[1500px] px-5 pb-20 pt-28 sm:px-10 lg:px-14"><p className="eyebrow">Your collection</p><h1 className="mt-3 text-4xl font-black sm:text-6xl">My List</h1>{items.length?<div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{items.map(item=><TitleCard key={item.id} item={item}/>)}</div>:<div className="mt-10 max-w-xl rounded-lg border border-white/10 bg-surface p-8"><h2 className="text-xl font-bold">Nothing here yet</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">Add movies and shows using the + button. Your list is saved on this device while customer accounts are being connected.</p></div>}</main></StreamingShell>}
