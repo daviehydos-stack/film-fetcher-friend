@@ -3,6 +3,7 @@ import { Check, ChevronDown, Play, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import type { CatalogueTitle } from "@/lib/site-data";
+import { youtubeEmbedUrl } from "@/lib/video-embeds";
 
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
   const [saved, setSaved] = useState(false);
@@ -39,14 +40,14 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
     <article
       onMouseEnter={beginPreview}
       onMouseLeave={endPreview}
-      className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[78vw] max-w-[19rem] shrink-0 xs:w-[72vw] sm:w-[18rem] lg:w-[21rem] lg:max-w-none"}
+      className={layout === "grid" ? "group relative w-full min-w-0" : "group relative w-[78vw] max-w-[19rem] shrink-0 min-[480px]:w-[72vw] sm:w-[18rem] lg:w-[21rem] lg:max-w-none"}
     >
       <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-2 md:group-hover:scale-[1.06]">
         <Link to="/title/$slug" params={{ slug: item.slug }} className="relative block aspect-video overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
           <img src={item.artwork} alt={item.title} loading="lazy" className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
           {previewing && item.previewYoutubeId ? (
             <iframe
-              src={`https://www.youtube-nocookie.com/embed/${item.previewYoutubeId}?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1`}
+              src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted: true, controls: false })}
               title={`${item.title} preview`}
               allow="autoplay; encrypted-media; picture-in-picture"
               tabIndex={-1}
