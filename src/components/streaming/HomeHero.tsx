@@ -3,6 +3,7 @@ import { Info, Play, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
+import { heroTrailerUrl } from "@/lib/video-embeds";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [muted, setMuted] = useState(true);
@@ -29,7 +30,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
       {item.trailerEmbedUrl && trailerReady && !reducedMotion && largeScreen ? (
         <iframe
-          src={`${item.trailerEmbedUrl}${item.trailerEmbedUrl.includes("?") ? "&" : "?"}autoplay=1&muted=${muted ? 1 : 0}&background=1`}
+          src={heroTrailerUrl(item.trailerEmbedUrl, muted)}
           title={`${item.title} trailer`}
           allow="autoplay; fullscreen; picture-in-picture"
           className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
