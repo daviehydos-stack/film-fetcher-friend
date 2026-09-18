@@ -18,9 +18,9 @@ export function PageShell({
   return (
     <div className="min-h-screen">
       <SiteHeader />
-      <section className="mx-auto max-w-6xl px-6 pt-12">
+      <section className="mx-auto w-full max-w-6xl px-4 pt-24 sm:px-6 sm:pt-28 lg:px-8">
         <p className="eyebrow">{eyebrow}</p>
-        <h1 className="headline mt-3 text-5xl text-foreground sm:text-6xl">
+        <h1 className="headline mt-3 break-words text-[clamp(2.5rem,11vw,3.75rem)] leading-[.95] text-foreground">
           {title}
         </h1>
         {intro ? (
@@ -29,7 +29,7 @@ export function PageShell({
           </div>
         ) : null}
         {hero ? (
-          <div className="panel mt-8 overflow-hidden rounded-2xl">
+          <div className="panel mt-7 overflow-hidden rounded-xl sm:mt-8 sm:rounded-2xl">
             <img src={hero} alt={`${title} featured artwork`} decoding="async" className="w-full object-cover" />
           </div>
         ) : null}
