@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 const origin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
 const productionOrigin = origin || "https://www.avantcinema.com";
 const supabaseUrl = "https://bnuyhrsezkepsaebwlmu.supabase.co";
-const staticPaths = ["/", "/movies", "/tv-shows", "/about", "/betterlife-episodes", "/this-is-life-episodes"];
+const staticPaths = ["/", "/movies", "/tv-shows", "/about", "/contact", "/privacy", "/terms", "/betterlife-episodes", "/this-is-life-episodes", "/a-better-life", "/back-to-us", "/better-days", "/nairobby", "/this-is-life", "/watch-them-all", "/write-like-a-master"];
 
 mkdirSync("public", { recursive: true });
 
