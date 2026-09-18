@@ -67,7 +67,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
               allow="autoplay; encrypted-media; picture-in-picture"
               tabIndex={-1}
               aria-hidden="true"
-              onLoad={() => setPreviewLoaded(true)}
+              onLoad={(event) => { window.dispatchEvent(new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } })); setPreviewLoaded(true); }}
               onError={() => { setPreviewFailed(true); setPreviewing(false); setPreviewLoaded(false); }}
               className={`pointer-events-none absolute inset-0 size-full border-0 transition-opacity duration-300 ${previewLoaded ? "opacity-100" : "opacity-0"}`}
             />
