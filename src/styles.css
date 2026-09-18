@@ -446,3 +446,13 @@ main,header,footer,section,nav{max-width:100%}
  .avant-horizontal-rail>div{min-width:0}
  .avant-rail-fade{-webkit-mask-image:none!important;mask-image:none!important}
 }
+
+/* Mobile QA guardrails */
+@media(max-width:767px){
+  button,a,select,input{max-width:100%}
+  button,a{-webkit-tap-highlight-color:transparent}
+  .avant-horizontal-rail{scroll-snap-type:x mandatory;scroll-behavior:smooth}
+  .avant-horizontal-rail>*{scroll-snap-align:start}
+  iframe{display:block}
+  [role="dialog"]{max-width:100vw}
+}
