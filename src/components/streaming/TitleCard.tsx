@@ -7,7 +7,8 @@ import { youtubeEmbedUrl } from "@/lib/video-embeds";
 
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
   const [saved, setSaved] = useState(false);
-  const [previewing, setPreviewing] = useState(false);\n  const [previewFailed, setPreviewFailed] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
+  const [previewFailed, setPreviewFailed] = useState(false);
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [hoverCapable, setHoverCapable] = useState(false);
   const previewTimer = useRef<number | null>(null);
