@@ -3,7 +3,7 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({ meta: publicPageMeta("/terms", "Terms of Use — Avant Movies", "Terms information for the Avant Movies streaming service."), links: publicPageLinks("/terms") }),
+  head: () => ({ meta: [{ name: "robots", content: "noindex, follow" }, ...publicPageMeta("/terms", "Terms of Use — Avant Movies", "Terms information for the Avant Movies streaming service.")].filter((entry) => entry.name !== "robots"), links: publicPageLinks("/terms") }),
   component: Page,
 });
 
