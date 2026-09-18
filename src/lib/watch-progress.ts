@@ -34,6 +34,13 @@ export function formatWatchTime(seconds: number) {
   return hours ? `${hours}h ${minutes}m` : `${minutes}m`;
 }
 
+export function clearCompletedProgress() {
+  if (typeof window === "undefined") return;
+  const remaining = readProgress().filter((item) => !item.duration || item.seconds < item.duration * 0.95);
+  localStorage.setItem(KEY, JSON.stringify(remaining));
+  window.dispatchEvent(new Event("avant-progress"));
+}
+
 export function clearProgress(contentId: string) {
   if (typeof window === "undefined") return;
   localStorage.setItem(KEY, JSON.stringify(readProgress().filter((item) => item.contentId !== contentId)));
