@@ -478,12 +478,4 @@ export const avantVideoLibrary = [
   { id: "xdR3xLwcWdQ", title: "Granted", duration: "08:53", kind: "short-film" },
 ] as const;
 
-/** Deterministic fallback preview window for a full video when no dedicated trailer exists. */
-export function previewWindow(durationSeconds: number) {
-  if (durationSeconds <= 60) return { start: 0, end: Math.max(5, durationSeconds) };
-  const clip = durationSeconds >= 1200 ? 35 : durationSeconds >= 480 ? 30 : 22;
-  const safeStart = Math.max(8, Math.min(Math.floor(durationSeconds * 0.12), durationSeconds - clip - 5));
-  return { start: safeStart, end: Math.min(durationSeconds - 2, safeStart + clip) };
-}
-
 export const getTitle = (slug: string) => catalogue.find((item) => item.slug === slug);
