@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Youtube, Instagram, Twitter } from "lucide-react";
+import { Facebook, Youtube, Instagram, Music2 } from "lucide-react";
 import { navLinks, socials, WHATSAPP, WHATSAPP_TEL } from "@/lib/site-data";
 
 export function SiteFooter() {
@@ -51,8 +51,8 @@ export function SiteFooter() {
             <a href={socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-flame">
               <Instagram className="size-5" />
             </a>
-            <a href={socials.twitter} target="_blank" rel="noreferrer" aria-label="Twitter" className="hover:text-flame">
-              <Twitter className="size-5" />
+            <a href={socials.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="hover:text-flame">
+              <Music2 className="size-5" />
             </a>
           </div>
         </div>
