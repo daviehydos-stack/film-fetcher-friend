@@ -48,7 +48,7 @@ export function ContinueWatching() {
       <div className="mb-4 px-5 sm:px-10 lg:px-14">
         <h2 id="continue-watching-heading" className="text-xl font-bold sm:text-2xl">Continue Watching</h2>
       </div>
-      <div className="hide-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-5 overscroll-x-contain px-5 pb-5 touch-pan-y sm:scroll-px-10 sm:px-10 lg:scroll-px-14 lg:px-14">
+      <div className="hide-scrollbar avant-horizontal-rail avant-rail-fade flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-5 overscroll-x-contain px-5 pb-5 touch-pan-y sm:scroll-px-10 sm:px-10 lg:scroll-px-14 lg:px-14">
         {rows.map(({ item, episode, index, progress: entry }) => {
           const percent = entry.duration ? Math.min(100, Math.max(4, (entry.seconds / entry.duration) * 100)) : null;
           return (
