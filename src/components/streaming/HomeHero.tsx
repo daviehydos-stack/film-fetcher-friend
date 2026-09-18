@@ -17,17 +17,17 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     setTrailerReady(false);
     setTrailerLoaded(false);
     setTrailerFailed(false);
-    const screen = window.matchMedia("(min-width: 768px)");
+    const screen = window.matchMedia("(min-width: 640px)");
     const syncScreen = () => setLargeScreen(screen.matches);
     syncScreen();
     screen.addEventListener?.("change", syncScreen);
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (media.matches || !screen.matches) return () => screen.removeEventListener?.("change", syncScreen);
-    const timer = window.setTimeout(() => setTrailerReady(true), 2200);
+    if (media.matches || !screen.matches || !item.trailerEmbedUrl) return () => screen.removeEventListener?.("change", syncScreen);
+    const timer = window.setTimeout(() => setTrailerReady(true), 1200);
     return () => { window.clearTimeout(timer); screen.removeEventListener?.("change", syncScreen); };
-  }, [item.id]);
+  }, [item.id, item.trailerEmbedUrl]);
 
   return (
     <section className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[84svh]">
