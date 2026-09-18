@@ -16,7 +16,7 @@ export function SiteHeader(){
  return <header className={cn("fixed inset-x-0 top-0 z-50 text-white transition-all duration-300",scrolled||open?"border-b border-white/10 bg-[#050608]/95 shadow-2xl backdrop-blur-xl":"bg-gradient-to-b from-black/95 via-black/65 to-transparent")}>
   <div className="mx-auto flex h-[72px] max-w-[1800px] items-center gap-7 px-5 sm:px-10 lg:px-14">
    <Link to="/" aria-label="Avant Movies home" className="shrink-0"><BrandMark/></Link>
-   <nav className="hidden items-center gap-1 rounded-full border border-white/[.07] bg-white/[.04] p-1 md:flex">{navLinks.map(l=><Link key={l.to} to={l.to} className="rounded-full px-4 py-2 text-sm font-semibold text-white/65 transition hover:bg-white/[.07] hover:text-white" activeProps={{className:"bg-white text-black hover:bg-white hover:text-black shadow-lg"}} activeOptions={{exact:l.to==="/"}}>{l.label}</Link>)}</nav>
+   <nav className="hidden items-center gap-1 rounded-full border border-white/[.07] bg-white/[.04] p-1 md:flex">{navLinks.map(l=><Link key={l.to} to={l.to} className="rounded-full px-4 py-2 text-sm font-semibold text-white/65 transition hover:bg-white/[.07] hover:text-white" activeProps={{className:"bg-white/[.12] text-white hover:bg-white/[.16] shadow-inner"}} activeOptions={{exact:l.to==="/"}}>{l.label}</Link>)}</nav>
    <div className="ml-auto flex items-center gap-2">
     <Link to="/search" className="grid size-10 place-items-center rounded-full border border-transparent transition hover:border-white/10 hover:bg-white/10" aria-label="Search"><Search className="size-5"/></Link>
     {admin?<Link to="/admin" className="hidden rounded-full px-3 py-2 text-xs font-semibold text-orange-300 hover:bg-orange-400/10 lg:block">Admin</Link>:null}
