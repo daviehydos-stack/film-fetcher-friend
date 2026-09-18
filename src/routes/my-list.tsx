@@ -40,7 +40,7 @@ function MyList() {
         {items.length ? (
           <>
             <p className="mt-8 text-sm text-muted-foreground">{items.length} {items.length === 1 ? "saved title" : "saved titles"}</p>
-            <div className="mt-5 grid grid-cols-1 gap-4 min-[520px]:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
               {items.map((item) => <TitleCard key={item.id} item={item} layout="grid" />)}
             </div>
           </>
