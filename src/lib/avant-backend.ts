@@ -21,3 +21,5 @@ export async function hasAdminSession(){const token=getAdminToken();if(!token)re
 
 export const getCloudMyList=(token:string)=>request<{ids:string[]}>("my-list",token,{method:"GET"});
 export const setCloudMyList=(token:string,key:string,saved:boolean)=>request<any>("my-list",token,{method:"POST",body:JSON.stringify({key,saved})});
+
+export const myLibrary=(token:string)=>request<any>("my-library",token,{method:"GET"});
