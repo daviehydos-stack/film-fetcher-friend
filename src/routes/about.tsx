@@ -1,0 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { StreamingShell } from "@/components/streaming/StreamingShell";
+export const Route = createFileRoute("/about")({ component: About });
+function About(){return <StreamingShell><main className="mx-auto max-w-5xl px-5 pb-24 pt-32 sm:px-10"><p className="eyebrow">Our story</p><h1 className="mt-4 text-5xl font-black uppercase sm:text-7xl">Stories that feel human.</h1><div className="mt-10 max-w-3xl space-y-6 text-lg leading-8 text-foreground/80"><p>We’re not here to follow the rules; we’re here to rewrite them as underdogs driven by passion, purpose and the relentless pursuit of stories authentic to the true human experience.</p><p>Avant Movies is built around Kenyan stories rich in culture and meaning — work designed to entertain, connect and spark change.</p></div></main></StreamingShell>}
