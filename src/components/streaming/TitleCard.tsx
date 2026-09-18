@@ -44,7 +44,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
     >
       <div className="relative overflow-hidden rounded-md bg-card shadow-reel transition duration-300 md:group-hover:z-30 md:group-hover:-translate-y-2 md:group-hover:scale-[1.06]">
         <Link to="/title/$slug" params={{ slug: item.slug }} className="relative block aspect-video overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
-          <img src={item.artwork} alt={item.title} loading="lazy" className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
+          <img src={item.artwork} alt={item.title} loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
           {previewing && item.previewYoutubeId ? (
             <iframe
               src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted: true, controls: false })}
@@ -53,6 +53,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
               tabIndex={-1}
               aria-hidden="true"
               onLoad={() => setPreviewLoaded(true)}
+              onError={() => { setPreviewFailed(true); setPreviewing(false); setPreviewLoaded(false); }}
               className={`pointer-events-none absolute inset-0 size-full border-0 transition-opacity duration-300 ${previewLoaded ? "opacity-100" : "opacity-0"}`}
             />
           ) : null}
