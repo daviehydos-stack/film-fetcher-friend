@@ -32,7 +32,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const autoPlan = buildAutoTrailerPlan(fullSeconds);
   const generatedClip = autoPlan.clips[0] ?? { start: 0, end: 35, duration: 35, zone: 0 };
   const previewStart = 0;
-  const previewEnd = item.previewDuration ?? generatedClip.end ?? 120;
+  const previewEnd = Math.min(60, item.previewDuration ?? generatedClip.end ?? 60);
   const previewUrl = item.trailerEmbedUrl ? heroTrailerUrl(item.trailerEmbedUrl, heroMuted) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: previewStart, end: previewEnd, loop: true, jsApi:true }) : null;
   const previewFrameRef=useRef<HTMLIFrameElement|null>(null);
   const pausePreview=()=>{previewFrameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*");};
