@@ -27,3 +27,5 @@ export const myLibrary=(token:string)=>request<any>("my-library",token,{method:"
 export const adminVimeoGet=(token:string)=>request<any>("admin-vimeo",token,{method:"GET"});
 export const adminVimeoSave=(token:string,payload:{clientId?:string;clientSecret?:string;accessToken?:string;testOnly?:boolean})=>request<any>("admin-vimeo",token,{method:"POST",body:JSON.stringify(payload)});
 export const adminVimeoDisconnect=(token:string)=>request<any>("admin-vimeo",token,{method:"DELETE"});
+
+export const adminVimeoVideos=(token:string,query="")=>request<any>(`admin-vimeo?view=videos&query=${encodeURIComponent(query)}`,token,{method:"GET"});
