@@ -9,8 +9,8 @@ export function TitleCard({ item }: { item: CatalogueTitle }) {
   const [saved, setSaved] = useState(false);
   useEffect(() => setSaved(isInMyList(item.id)), [item.id]);
   return (
-    <article className="group relative w-[78vw] shrink-0 overflow-hidden rounded-md bg-card shadow-reel sm:w-[19rem] lg:w-[22rem]">
-      <Link to="/title/$slug" params={{ slug: item.slug }} className="block aspect-video overflow-hidden">
+    <article className="group relative w-[78vw] shrink-0 overflow-hidden rounded-md bg-card shadow-reel transition duration-300 hover:-translate-y-1 hover:shadow-2xl focus-within:ring-2 focus-within:ring-primary sm:w-[19rem] lg:w-[22rem]">
+      <Link to="/title/$slug" params={{ slug: item.slug }} className="block aspect-video overflow-hidden focus:outline-none">
         <img src={item.artwork} alt={item.title} loading="lazy" className="size-full object-cover transition duration-500 group-hover:scale-105" />
         <span className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
       </Link>
