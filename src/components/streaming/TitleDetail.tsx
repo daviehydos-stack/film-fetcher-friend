@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Check, Lock, Play, Plus } from "lucide-react";
+import { Check, Film, Lock, Play, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
             <p className="mt-4 text-sm font-semibold text-primary">{item.genres.join(" · ")} {item.episodes ? `· ${item.episodes.length} episodes` : ""}</p>
             <p className="mt-5 max-w-xl text-base leading-7 text-foreground/85 sm:text-lg">{item.synopsis}</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              {item.type === "series" && item.episodes?.[0]?.youtubeId ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: `${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : <Button size="lg" disabled><Lock />Get access</Button>}
+              {item.type === "series" && item.episodes?.[0]?.youtubeId ? <Button asChild size="lg"><Link to="/watch/$contentId" params={{ contentId: `${item.slug}-1` }}><Play className="fill-current" />Watch now</Link></Button> : item.available ? <Button size="lg" disabled><Play />Watch</Button> : <Button size="lg" disabled><Lock />Get access</Button>}
+              {item.trailerEmbedUrl ? <Button asChild size="lg" variant="outline"><a href={item.trailerEmbedUrl} target="_blank" rel="noreferrer"><Film />Trailer</a></Button> : null}
               <Button size="lg" variant="secondary" onClick={toggleSaved}>{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
             </div>
           </div>
