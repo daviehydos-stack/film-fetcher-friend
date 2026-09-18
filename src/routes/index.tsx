@@ -20,9 +20,10 @@ function Index() {
   const [previewing, setPreviewing] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
+    if (!featured.heroPreviewUrl || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = window.setTimeout(() => setPreviewing(true), 1800);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [featured.heroPreviewUrl]);
   const movies = catalogue.filter((item) => item.type === "movie");
   const shows = catalogue.filter((item) => item.type === "series");
   return <div className="min-h-screen bg-background text-foreground">
@@ -30,7 +31,7 @@ function Index() {
     <main>
       <section className="relative min-h-[78svh] overflow-hidden sm:min-h-[86svh]">
         <img src={featured.backdrop} alt="" className={`absolute inset-0 size-full object-cover object-center transition-opacity duration-1000 ${previewing && featured.heroPreviewUrl ? "opacity-0" : "opacity-100"}`} fetchPriority="high" />
-        {featured.heroPreviewUrl && previewing ? <video ref={videoRef} src={featured.heroPreviewUrl} poster={featured.backdrop} autoPlay muted={muted} playsInline onEnded={() => setPreviewing(false)} onError={() => setPreviewing(false)} className="absolute inset-0 size-full object-cover" /> : null}
+        {featured.heroPreviewUrl && previewing ? <video ref={videoRef} src={featured.heroPreviewUrl} poster={featured.backdrop} autoPlay muted={muted} playsInline onEnded={() => setPreviewing(false)} onError={() => setPreviewing(false)} preload="metadata" className="absolute inset-0 size-full object-cover" /> : null}
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/45 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/20" />
         <div className="relative z-10 flex min-h-[78svh] max-w-3xl flex-col justify-end px-5 pb-24 pt-28 sm:min-h-[86svh] sm:px-10 sm:pb-28 lg:px-14">
@@ -43,7 +44,7 @@ function Index() {
             <Link to="/title/$slug" params={{ slug: featured.slug }} className="inline-flex items-center gap-2 rounded-md bg-white/20 px-6 py-3 font-bold text-white backdrop-blur-md transition hover:bg-white/30"><Info className="size-5" /> More Info</Link>
           </div>
         </div>
-        {featured.heroPreviewUrl ? <button onClick={() => { setMuted((v) => !v); if (videoRef.current) videoRef.current.muted = !muted; }} className="absolute bottom-24 right-5 z-20 rounded-full border border-white/40 bg-black/30 p-3 backdrop-blur transition hover:bg-black/60 sm:right-10" aria-label={muted ? "Unmute trailer" : "Mute trailer"}>{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
+        {featured.heroPreviewUrl ? <button onClick={() => setMuted((value) => { const next = !value; if (videoRef.current) videoRef.current.muted = next; return next; })} className="absolute bottom-24 right-5 z-20 rounded-full border border-white/40 bg-black/30 p-3 backdrop-blur transition hover:bg-black/60 sm:right-10" aria-label={muted ? "Unmute trailer" : "Mute trailer"}>{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
       </section>
       <div className="relative z-20 -mt-12 pb-8">
         <ContentRail title="Featured on Avant" items={catalogue} />
