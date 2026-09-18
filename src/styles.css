@@ -291,3 +291,11 @@ main>section,main>div{isolation:isolate}
 @keyframes avantCheckoutOut{from{opacity:1}to{opacity:0}}
 @keyframes avantBackIn{from{opacity:0}to{opacity:.82}}
 @keyframes avantBackOut{from{opacity:.82}to{opacity:0}}
+
+
+/* Official Avant 3D transition mark */
+.avant-transition-picture{display:block;width:min(34vw,25rem);max-width:78vw;line-height:0;transform:translateZ(0)}
+.avant-transition-image{display:block;width:100%;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 0 1.6rem oklch(.72 .19 215/.22));will-change:transform,filter,opacity}
+.avant-transition-letter{display:none!important}
+.avant-transition-mode-play .avant-transition-light{z-index:2;mix-blend-mode:screen;pointer-events:none}
+@media(max-width:639px){.avant-transition-picture{width:min(58vw,18rem)}}
