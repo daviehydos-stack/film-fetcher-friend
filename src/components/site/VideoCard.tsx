@@ -28,8 +28,9 @@ export function YoutubeCard({ episode }: { episode: Episode }) {
           >
             <img
               src={poster}
-              alt={episode.title}
+              alt={`${episode.title} video thumbnail`}
               loading="lazy"
+              decoding="async"
               className="size-full object-cover opacity-90 transition group-hover:opacity-100"
             />
             <span className="absolute inset-0 grid place-items-center">
@@ -61,8 +62,9 @@ export function LockedCard({
         {episode.poster ? (
           <img
             src={episode.poster}
-            alt={episode.title}
+            alt={`${episode.title} episode artwork`}
             loading="lazy"
+            decoding="async"
             className="size-full object-cover opacity-45"
           />
         ) : (
@@ -107,8 +109,9 @@ export function TrailerCard({
       <div className="relative aspect-video w-full bg-black">
         <img
           src={poster}
-          alt={title}
+          alt={`${title} trailer thumbnail`}
           loading="lazy"
+          decoding="async"
           className="size-full object-cover opacity-90 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
         />
         <span className="absolute inset-0 grid place-items-center">
