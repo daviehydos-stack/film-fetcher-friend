@@ -19,7 +19,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [saved, setSaved] = useState(false);
   const [heroInView,setHeroInView]=useState(true);
   const heroRef=useRef<HTMLElement|null>(null);
-  const playableContentId = item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
+  const firstEpisode=item.episodes?.[0];
+  const playableContentId = firstEpisode?.youtubeId && firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
   useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=0.22),{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
