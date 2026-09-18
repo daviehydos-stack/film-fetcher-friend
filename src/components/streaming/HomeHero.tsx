@@ -45,7 +45,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
 
   return (
-    <section ref={heroRef} className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-14 lg:mt-20 lg:min-h-0 lg:aspect-[16/7] lg:rounded-[1.75rem] lg:border lg:border-white/10 lg:shadow-[0_30px_90px_rgba(0,0,0,.55)]">
+    <section ref={heroRef} className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-0 lg:mt-0 lg:min-h-[88vh] lg:rounded-none">
       <img src={item.backdrop} alt={`${item.title} featured artwork`} fetchPriority="high" decoding="async" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
 
       {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen && heroInView ? (
@@ -59,10 +59,9 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         />
       ) : null}
 
-      <div className="hero-shade absolute inset-0" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_45%,transparent_0%,rgba(0,0,0,.05)_35%,rgba(0,0,0,.72)_100%)]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />
+      <div className="hero-shade absolute inset-0" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_38%,transparent_0%,rgba(0,0,0,.08)_34%,rgba(0,0,0,.72)_100%)]" /><div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.46)_0%,transparent_24%,transparent_54%,rgba(10,12,16,.55)_76%,var(--background)_100%)]" />
 
-      <div className="relative z-10 flex min-h-[76svh] max-w-[1600px] items-end px-5 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[82svh] sm:px-10 sm:pb-24 lg:min-h-0 lg:h-full lg:px-12 lg:pb-12">
+      <div className="relative z-10 flex min-h-[76svh] max-w-[1600px] items-end px-5 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[82svh] sm:px-10 sm:pb-24 lg:min-h-[88vh] lg:h-full lg:px-14 lg:pb-28">
         <div className="max-w-2xl">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-orange-400/25 bg-orange-400/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-orange-300 backdrop-blur"><Sparkles className="size-3"/>Featured on Avant</div>
           <h1 className="max-w-xl text-[clamp(2.8rem,11vw,4.8rem)] font-black uppercase leading-[.86] tracking-[-.055em] text-white sm:text-7xl lg:text-[5.5rem]">{item.title}</h1>
