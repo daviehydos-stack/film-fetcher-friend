@@ -9,6 +9,7 @@ const POSTER =
 export const Route = createFileRoute("/back-to-us")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Back to Us — A Kenyan romance | Avant Cinema" },
       {
         name: "description",
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/back-to-us")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  links: [{ rel: "canonical", href: `/title/back-to-us` }],
   component: BackToUs,
 });
 
