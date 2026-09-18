@@ -119,6 +119,20 @@ function WatchRoute() {
             {index < total - 1 ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${index + 2}` }} className="inline-flex items-center gap-2 rounded border border-white/15 px-4 py-2 text-sm hover:bg-white/10">Next<ChevronRight className="size-4" /></Link> : null}
           </nav>
         </div>
+
+        {total > 1 ? (
+          <div className="mx-4 mt-7 sm:mx-0">
+            <p className="text-sm font-bold">More episodes</p>
+            <div className="hide-scrollbar mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-3 touch-pan-x">
+              {item.episodes?.map((candidate, candidateIndex) => (
+                <Link key={candidate.title} to="/watch/$contentId" params={{ contentId: `${item.slug}-${candidateIndex + 1}` }} aria-current={candidateIndex === index ? "page" : undefined} className={`w-40 shrink-0 snap-start rounded border p-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${candidateIndex === index ? "border-white/60 bg-white/10" : "border-white/10 hover:bg-white/5"}`}>
+                  <div className="aspect-video overflow-hidden rounded bg-neutral-900"><img src={candidate.poster ?? (candidate.youtubeId ? `https://i.ytimg.com/vi/${candidate.youtubeId}/mqdefault.jpg` : item.artwork)} alt="" loading="lazy" className="size-full object-cover" /></div>
+                  <p className="mt-2 truncate text-xs font-semibold">Episode {candidateIndex + 1}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </section>
     </main>
   )
