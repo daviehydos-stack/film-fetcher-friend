@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const origin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
-const staticPaths = ["/", "/movies", "/tv-shows", "/about", "/contact", "/privacy", "/terms", "/betterlife-episodes", "/this-is-life-episodes"];
+const staticPaths = ["/", "/movies", "/tv-shows", "/about", "/contact", "/betterlife-episodes", "/this-is-life-episodes"];
 
 mkdirSync("public", { recursive: true });
 
