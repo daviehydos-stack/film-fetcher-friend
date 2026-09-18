@@ -47,31 +47,34 @@ jobs:
             cp -R dist/. pages-dist/
           else
             echo "No static client build directory found."
-            find . -maxdepth 3 -type d | sort
             exit 1
           fi
 
-          # TanStack Start normally renders the HTML shell through its server.
-          # GitHub Pages is static-only, so guarantee an index.html exists for the preview.
-          if [ ! -f "pages-dist/index.html" ]; then
-            cat > pages-dist/index.html <<'EOF'
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Avant Movies</title>
-  <link rel="stylesheet" href="./assets/styles-yhSLaQu4.css" />
-</head>
-<body>
-  <div id="root"></div>
-  <script type="module" src="./assets/index-CR4JuI1a.js"></script>
-</body>
-</html>
-EOF
+          CSS_FILE="$(find pages-dist/assets -maxdepth 1 -type f -name 'styles-*.css' -printf '%f\n' | head -n 1)"
+          JS_FILE="$(find pages-dist/assets -maxdepth 1 -type f -name 'index-*.js' -printf '%f\n' | head -n 1)"
+
+          if [ -z "$CSS_FILE" ] || [ -z "$JS_FILE" ]; then
+            echo "Could not locate generated client entry assets."
+            find pages-dist -maxdepth 2 -type f | sort
+            exit 1
           fi
 
-          # SPA fallback for direct links in the static preview.
+          {
+            echo '<!doctype html>'
+            echo '<html lang="en">'
+            echo '<head>'
+            echo '  <meta charset="UTF-8" />'
+            echo '  <meta name="viewport" content="width=device-width, initial-scale=1.0" />'
+            echo '  <title>Avant Movies</title>'
+            printf '  <link rel="stylesheet" href="./assets/%s" />\n' "$CSS_FILE"
+            echo '</head>'
+            echo '<body>'
+            echo '  <div id="root"></div>'
+            printf '  <script type="module" src="./assets/%s"></script>\n' "$JS_FILE"
+            echo '</body>'
+            echo '</html>'
+          } > pages-dist/index.html
+
           cp pages-dist/index.html pages-dist/404.html
           touch pages-dist/.nojekyll
 
