@@ -5,7 +5,7 @@ import { publicCatalogue, resolveCatalogueKey, startPalplussPayment } from '../l
 import { customerSession, requireCustomerToken, signInCustomer } from '../lib/firebase-customer-auth'
 import { productForLegacyContent } from '../lib/backend-catalogue-map'
 
-export const Route=createFileRoute('/checkout/$productId')({component:CheckoutRoute})
+export const Route=createFileRoute('/checkout/$productId')({head:()=>({meta:[{name:'robots',content:'noindex, nofollow'}]}),component:CheckoutRoute})
 
 function CheckoutRoute(){
  const{productId}=Route.useParams(),router=useRouter()
