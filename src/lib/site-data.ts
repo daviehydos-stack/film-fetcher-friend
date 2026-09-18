@@ -27,6 +27,7 @@ export type CatalogueTitle = {
   shortDescription: string;
   artwork: string;
   backdrop: string;
+  heroPreviewUrl?: string;
   legacyPath: string;
   featured?: boolean;
   available?: boolean;
