@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { catalogue } from "@/lib/site-data";
+import { youtubeEmbedUrl } from "@/lib/video-embeds";
 
 export const Route = createFileRoute("/watch/$contentId")({
   head: () => ({ meta: [{ title: "Watch — Avant Movies" }] }),
@@ -23,15 +24,15 @@ function Watch() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <header className="mx-auto flex h-16 max-w-[1600px] items-center gap-4 px-5 sm:px-10 lg:px-14">
-        <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`Back to ${item.title}`} className="rounded p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><ArrowLeft /></Link>
+      <header className="mx-auto flex min-h-16 max-w-[1600px] items-center gap-3 px-4 py-3 sm:gap-4 sm:px-10 lg:px-14">
+        <Link to="/title/$slug" params={{ slug: item.slug }} aria-label={`Back to ${item.title}`} className="grid size-11 shrink-0 place-items-center rounded-md transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><ArrowLeft /></Link>
         <div className="min-w-0"><p className="truncate text-sm font-bold">{item.title}</p><p className="text-xs text-white/50">Episode {index + 1} of {total}</p></div>
       </header>
 
-      <section className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+      <section className="mx-auto max-w-6xl px-0 pb-10 sm:px-6 sm:pb-12">
         {playable ? (
-          <div className="aspect-video overflow-hidden rounded-md bg-neutral-950 shadow-2xl">
-            <iframe src={`https://www.youtube-nocookie.com/embed/${episode.youtubeId}?rel=0`} title={episode.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen className="size-full border-0" />
+          <div className="aspect-video w-full overflow-hidden bg-neutral-950 shadow-2xl sm:rounded-md">
+            <iframe src={youtubeEmbedUrl(episode.youtubeId!)} title={episode.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen className="size-full border-0" />
           </div>
         ) : (
           <div className="grid aspect-video min-h-[18rem] place-items-center rounded-md border border-white/10 bg-neutral-950 px-6">
@@ -39,7 +40,7 @@ function Watch() {
           </div>
         )}
 
-        <div className="mt-7 flex flex-col gap-6 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mx-4 mt-6 flex flex-col gap-5 border-b border-white/10 pb-6 sm:mx-0 sm:mt-7 sm:gap-6 sm:pb-7 sm:flex-row sm:items-end sm:justify-between">
           <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/45">Episode {index + 1}</p><h1 className="mt-2 text-xl font-bold sm:text-2xl">{episode.title}</h1><p className="mt-2 text-sm text-white/55">{episode.duration}</p></div>
           <nav className="flex gap-2" aria-label="Episode navigation">
             {index > 0 ? <Link to="/watch/$contentId" params={{ contentId: `${item.slug}-${index}` }} className="inline-flex items-center gap-2 rounded border border-white/15 px-4 py-2 text-sm hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><ChevronLeft className="size-4" />Previous</Link> : null}
@@ -47,7 +48,7 @@ function Watch() {
           </nav>
         </div>
 
-        {total > 1 ? <div className="mt-7"><p className="text-sm font-bold">More episodes</p><div className="hide-scrollbar mt-4 flex gap-3 overflow-x-auto pb-3">{item.episodes?.map((candidate, candidateIndex) => <Link key={candidate.title} to="/watch/$contentId" params={{ contentId: `${item.slug}-${candidateIndex + 1}` }} aria-current={candidateIndex === index ? "page" : undefined} className={`w-40 shrink-0 rounded border p-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${candidateIndex === index ? "border-white/60 bg-white/10" : "border-white/10 hover:bg-white/5"}`}><div className="aspect-video overflow-hidden rounded bg-neutral-900"><img src={candidate.poster ?? (candidate.youtubeId ? `https://i.ytimg.com/vi/${candidate.youtubeId}/mqdefault.jpg` : item.artwork)} alt="" loading="lazy" className="size-full object-cover" /></div><p className="mt-2 truncate text-xs font-semibold">Episode {candidateIndex + 1}</p></Link>)}</div></div> : null}
+        {total > 1 ? <div className="mx-4 mt-7 sm:mx-0"><p className="text-sm font-bold">More episodes</p><div className="hide-scrollbar mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-3 touch-pan-x">{item.episodes?.map((candidate, candidateIndex) => <Link key={candidate.title} to="/watch/$contentId" params={{ contentId: `${item.slug}-${candidateIndex + 1}` }} aria-current={candidateIndex === index ? "page" : undefined} className={`w-40 shrink-0 snap-start rounded border p-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${candidateIndex === index ? "border-white/60 bg-white/10" : "border-white/10 hover:bg-white/5"}`}><div className="aspect-video overflow-hidden rounded bg-neutral-900"><img src={candidate.poster ?? (candidate.youtubeId ? `https://i.ytimg.com/vi/${candidate.youtubeId}/mqdefault.jpg` : item.artwork)} alt="" loading="lazy" className="size-full object-cover" /></div><p className="mt-2 truncate text-xs font-semibold">Episode {candidateIndex + 1}</p></Link>)}</div></div> : null}
       </section>
     </main>
   );
