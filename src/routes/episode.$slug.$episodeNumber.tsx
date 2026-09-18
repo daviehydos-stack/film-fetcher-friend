@@ -18,8 +18,7 @@ export const Route = createFileRoute("/episode/$slug/$episodeNumber")({
     const path = `/episode/${item.slug}/${episodeNumber}`;
     const title = `${episode.title} — ${item.title} | Avant Movies`;
     const description = episode.description || `Watch ${episode.title} from ${item.title} on Avant Movies.`;
-    const shareEpisode = async () => { const path=`/episode/${item.slug}/${episodeNumber}`;const url=new URL(path.replace(/^\\//,""),document.baseURI).href;try{if(navigator.share)await navigator.share({title:`${episode.title} — ${item.title}`,text:episode.description||`Watch ${episode.title} from ${item.title} on Avant Movies.`,url});else{await navigator.clipboard.writeText(url);window.alert("Episode link copied.");}}catch(error:any){if(error?.name!=="AbortError")window.alert("Unable to share this episode.");}};
-  const image = episode.poster || (episode.youtubeId ? `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg` : item.backdrop || item.artwork);
+    const image = episode.poster || (episode.youtubeId ? `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg` : item.backdrop || item.artwork);
     return {
       meta: publicPageMeta(path, title, description, image, "video.episode"),
       links: publicPageLinks(path),
@@ -31,6 +30,7 @@ export const Route = createFileRoute("/episode/$slug/$episodeNumber")({
 
 function EpisodeSharePage() {
   const { item, episode, episodeNumber } = Route.useLoaderData();
+  const shareEpisode = async () => { const path=`/episode/${item.slug}/${episodeNumber}`; const url=new URL(path.replace(/^\\//,""),document.baseURI).href; try { if(navigator.share) await navigator.share({title:`${episode.title} — ${item.title}`,text:episode.description||`Watch ${episode.title} from ${item.title} on Avant Movies.`,url}); else { await navigator.clipboard.writeText(url); window.alert("Episode link copied."); } } catch(error:any) { if(error?.name!=="AbortError") window.alert("Unable to share this episode."); } };
   const image = episode.poster || (episode.youtubeId ? `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg` : item.backdrop || item.artwork);
   return <StreamingShell><main className="mx-auto min-h-[80vh] max-w-5xl px-5 pb-20 pt-28 sm:px-10">
     <Link to="/title/$slug" params={{ slug: item.slug }} className="text-sm text-white/55 hover:text-white">← {item.title}</Link>
