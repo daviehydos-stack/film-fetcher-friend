@@ -164,3 +164,37 @@
     background: linear-gradient(90deg, oklch(0.08 0.006 255 / 0.82) 0%, oklch(0.08 0.006 255 / 0.34) 70%, transparent 100%), linear-gradient(0deg, var(--background) 0%, transparent 52%);
   }
 }
+
+/* Streaming navigation: a restrained cinematic fade/wipe keeps route changes inside the app. */
+.avant-route-stage {
+  min-height: 100vh;
+  opacity: 1;
+  transform: translateZ(0);
+  transition: opacity 180ms ease, transform 260ms cubic-bezier(.2,.8,.2,1), filter 220ms ease;
+}
+.avant-route-stage.is-transitioning {
+  opacity: .72;
+  transform: scale(.994);
+  filter: brightness(.72);
+}
+.avant-cinema-wipe {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 45%, transparent 0%, oklch(0.06 0.006 255 / .16) 42%, oklch(0.04 0.004 255 / .72) 100%);
+  transition: opacity 180ms ease;
+}
+.avant-cinema-wipe.is-active {
+  opacity: 1;
+  animation: avant-cinema-transition 520ms cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes avant-cinema-transition {
+  0% { opacity: 0; backdrop-filter: blur(0); }
+  38% { opacity: 1; backdrop-filter: blur(3px); }
+  100% { opacity: 0; backdrop-filter: blur(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .avant-route-stage, .avant-cinema-wipe { transition: none !important; animation: none !important; }
+}
