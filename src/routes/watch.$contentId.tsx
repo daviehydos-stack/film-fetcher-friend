@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArrowLeft, ChevronLeft, ChevronRight, LockKeyhole } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, LockKeyhole, Play } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { authorizeContent } from '../lib/backend.functions'
 import { catalogue } from '../lib/site-data'
@@ -18,8 +18,13 @@ function WatchRoute() {
 
   const [authorized, setAuthorized] = useState<boolean | null>(null)
   const [error, setError] = useState('')
+  const [playerReady, setPlayerReady] = useState(false)
 
   const playableForFree = Boolean(match?.episode.youtubeId)
+
+  useEffect(() => {
+    setPlayerReady(false)
+  }, [contentId])
 
   useEffect(() => {
     if (!match) return
@@ -77,13 +82,16 @@ function WatchRoute() {
 
       <section className="mx-auto max-w-6xl px-0 pb-10 sm:px-6 sm:pb-12">
         {playable ? (
-          <div className="aspect-video w-full overflow-hidden bg-neutral-950 shadow-2xl sm:rounded-md">
+          <div className="relative aspect-video w-full overflow-hidden bg-neutral-950 shadow-2xl sm:rounded-md">
+            <img src={episode.poster ?? `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg`} alt="" className={`absolute inset-0 size-full object-cover transition duration-700 ${playerReady ? 'scale-[1.02] opacity-0' : 'opacity-70'}`} />
+            <div className={`pointer-events-none absolute inset-0 z-10 grid place-items-center bg-gradient-to-t from-black/70 via-black/10 to-black/30 transition duration-500 ${playerReady ? 'opacity-0' : 'opacity-100'}`}><span className="grid size-16 place-items-center rounded-full bg-white text-black shadow-2xl"><Play className="ml-1 size-7 fill-current" /></span></div>
             <iframe
-              src={youtubeEmbedUrl(episode.youtubeId!)}
+              src={youtubeEmbedUrl(episode.youtubeId!, { autoplay: true, muted: false, controls: true })}
               title={episode.title}
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
               allowFullScreen
-              className="size-full border-0"
+              onLoad={() => setPlayerReady(true)}
+              className={`absolute inset-0 size-full border-0 transition-opacity duration-500 ${playerReady ? 'opacity-100' : 'opacity-0'}`}
             />
           </div>
         ) : showAccessRequired ? (
