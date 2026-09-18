@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
+
+# Private/application routes are not search landing pages.
+# Page-level noindex is also applied in the app.
 Disallow: /admin
 Disallow: /checkout/
 Disallow: /payment/
