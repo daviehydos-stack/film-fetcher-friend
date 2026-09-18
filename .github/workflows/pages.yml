@@ -51,6 +51,28 @@ jobs:
             exit 1
           fi
 
+          # TanStack Start normally renders the HTML shell through its server.
+          # GitHub Pages is static-only, so guarantee an index.html exists for the preview.
+          if [ ! -f "pages-dist/index.html" ]; then
+            cat > pages-dist/index.html <<'EOF'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avant Movies</title>
+  <link rel="stylesheet" href="./assets/styles-yhSLaQu4.css" />
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./assets/index-CR4JuI1a.js"></script>
+</body>
+</html>
+EOF
+          fi
+
+          # SPA fallback for direct links in the static preview.
+          cp pages-dist/index.html pages-dist/404.html
           touch pages-dist/.nojekyll
 
       - name: Configure Pages
