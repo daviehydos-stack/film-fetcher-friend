@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Youtube, Instagram, Twitter } from "lucide-react";
-import { navLinks, socials, WHATSAPP, WHATSAPP_TEL } from "@/lib/site-data";
+import { Facebook, Youtube, Instagram } from "lucide-react";
+import { navLinks, socials, WHATSAPP } from "@/lib/site-data";
 
 export function SiteFooter() {
   return (
@@ -12,8 +12,8 @@ export function SiteFooter() {
             It&apos;s time to feel again
           </p>
           <p className="mt-5 max-w-sm text-sm text-ink-foreground/75">
-            Authentic storytellers driven by purpose. Every purchase moves us
-            closer to a fully independent Kenyan channel.
+            Independent Kenyan stories shaped by culture, purpose and the human
+            experience.
           </p>
         </div>
 
@@ -37,13 +37,13 @@ export function SiteFooter() {
         <div>
           <p className="eyebrow">Need help?</p>
           <a
-            href={WHATSAPP_TEL}
+            href={`https://wa.me/${WHATSAPP.replace(/\D/g, "")}`}
             className="mt-4 inline-block text-lg font-semibold text-flame hover:underline"
           >
             WhatsApp {WHATSAPP}
           </a>
           <p className="mt-2 text-sm text-ink-foreground/70">
-            Issues with payment? Talk to us directly.
+            Questions about Avant Movies? Talk to us directly.
           </p>
           <div className="mt-6 flex gap-4">
             <a href={socials.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:text-flame">
@@ -54,9 +54,6 @@ export function SiteFooter() {
             </a>
             <a href={socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-flame">
               <Instagram className="size-5" />
-            </a>
-            <a href={socials.twitter} target="_blank" rel="noreferrer" aria-label="Twitter" className="hover:text-flame">
-              <Twitter className="size-5" />
             </a>
           </div>
         </div>
