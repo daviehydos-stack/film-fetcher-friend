@@ -16,6 +16,10 @@ function Watch() {
     .flatMap((item) => (item.episodes ?? []).map((episode, index) => ({ item, episode, index })))
     .find(({ item, index }) => contentId === `${item.slug}-${index + 1}`);
 
+  useEffect(() => {
+    if (match?.episode.youtubeId) markStarted(contentId);
+  }, [contentId, match?.episode.youtubeId]);
+
   if (!match) {
     return <main className="grid min-h-screen place-items-center bg-black px-6 text-white"><div className="text-center"><h1 className="text-3xl font-bold">Content unavailable</h1><p className="mt-3 text-sm text-white/55">This title could not be found in the current Avant catalogue.</p><Link to="/" className="mt-6 inline-flex rounded border border-white/20 px-4 py-2 text-sm hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">Return home</Link></div></main>;
   }
@@ -24,9 +28,6 @@ function Watch() {
   const playable = Boolean(episode.youtubeId);
   const total = item.episodes?.length ?? 0;
 
-  useEffect(() => {
-    if (playable) markStarted(contentId);
-  }, [contentId, playable]);
 
   return (
     <main className="min-h-screen bg-black text-white">
