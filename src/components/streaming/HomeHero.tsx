@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Check, Info, Play, Plus, Volume2, VolumeX, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { heroTrailerUrl } from "@/lib/video-embeds";
@@ -16,9 +16,12 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [trailerVisible, setTrailerVisible] = useState(false);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [heroInView,setHeroInView]=useState(true);
+  const heroRef=useRef<HTMLElement|null>(null);
   const playableContentId = item.episodes?.[0]?.youtubeId ? `${item.slug}-1` : null;
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
+  useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=0.22),{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
 
   useEffect(() => {
     setTrailerReady(false);
@@ -38,10 +41,10 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
 
   return (
-    <section className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-14 lg:mt-20 lg:min-h-0 lg:aspect-[16/7] lg:rounded-[1.75rem] lg:border lg:border-white/10 lg:shadow-[0_30px_90px_rgba(0,0,0,.55)]">
+    <section ref={heroRef} className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-14 lg:mt-20 lg:min-h-0 lg:aspect-[16/7] lg:rounded-[1.75rem] lg:border lg:border-white/10 lg:shadow-[0_30px_90px_rgba(0,0,0,.55)]">
       <img src={item.backdrop} alt={`${item.title} featured artwork`} fetchPriority="high" decoding="async" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
 
-      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen ? (
+      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen && heroInView ? (
         <iframe
           src={heroTrailerUrl(item.trailerEmbedUrl, muted)}
           title={`${item.title} trailer`}
@@ -69,7 +72,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         </div>
       </div>
 
-      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && trailerLoaded && trailerVisible && !trailerFailed && !reducedMotion && largeScreen ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
+      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && trailerLoaded && trailerVisible && !trailerFailed && !reducedMotion && largeScreen && heroInView ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
     </section>
   );
 }
