@@ -13,8 +13,10 @@ export interface PaymentsAccessStore {
     product: AccessProduct
     provider: string
     method: PaymentRecord['method']
+    idempotencyKey: string
   }): Promise<PaymentRecord>
   getPaymentByReference(reference: string): Promise<PaymentRecord | null>
+  getPaymentByIdempotencyKey(idempotencyKey: string): Promise<PaymentRecord | null>
   markPaymentVerified(input: {
     paymentId: string
     providerReference?: string
