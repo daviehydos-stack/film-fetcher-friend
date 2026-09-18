@@ -1,95 +1,32 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Menu, X, Facebook, Youtube, Instagram, Twitter } from "lucide-react";
-import { navLinks, socials } from "@/lib/site-data";
+import { Menu, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BrandMark } from "@/components/streaming/BrandMark";
+import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
-    <header className="sticky top-0 z-50 bg-ink text-ink-foreground shadow-reel">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link to="/" className="group flex flex-col leading-none">
-          <span className="headline text-2xl text-flame sm:text-3xl">
-            Avant Cinema
-          </span>
-          <span className="text-[11px] font-semibold tracking-[0.18em] text-ink-foreground/80 uppercase">
-            It&apos;s time to feel again
-          </span>
-        </Link>
-
-        <nav className="hidden items-center gap-5 lg:flex">
-          {navLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-sm font-medium text-ink-foreground/85 transition-colors hover:text-flame"
-              activeProps={{ className: "text-flame" }}
-              activeOptions={{ exact: l.to === "/" }}
-            >
-              {l.label}
-            </Link>
-          ))}
+    <header className={cn("fixed inset-x-0 top-0 z-50 text-foreground transition-all duration-500", scrolled || open ? "bg-background/95 shadow-lg backdrop-blur-xl" : "bg-gradient-to-b from-black/80 to-transparent")}>
+      <div className="flex h-16 items-center gap-8 px-5 sm:px-10 lg:px-14">
+        <Link to="/" aria-label="Avant Movies home"><BrandMark /></Link>
+        <nav className="hidden items-center gap-6 md:flex">
+          {navLinks.map((l) => <Link key={l.to} to={l.to} className="text-sm font-medium text-foreground/80 transition hover:text-foreground" activeProps={{ className: "text-foreground font-semibold" }} activeOptions={{ exact: l.to === "/" }}>{l.label}</Link>)}
         </nav>
-
-        <div className="hidden items-center gap-3 lg:flex">
-          <SocialRow />
+        <div className="ml-auto flex items-center gap-2">
+          <button className="rounded-full p-2 transition hover:bg-white/10" aria-label="Search"><Search className="size-5" /></button>
+          <button className="rounded-full p-2 md:hidden" aria-label="Menu" onClick={() => setOpen((v) => !v)}>{open ? <X /> : <Menu />}</button>
         </div>
-
-        <button
-          type="button"
-          aria-label="Menu"
-          onClick={() => setOpen((v) => !v)}
-          className="rounded-md p-2 text-ink-foreground lg:hidden"
-        >
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
       </div>
-
-      <div
-        className={cn(
-          "overflow-hidden border-t border-border/60 lg:hidden",
-          open ? "max-h-[32rem]" : "max-h-0",
-        )}
-      >
-        <nav className="flex flex-col gap-1 px-5 py-4">
-          {navLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              onClick={() => setOpen(false)}
-              className="rounded-md px-2 py-2 text-base font-medium text-ink-foreground/90 hover:bg-flame/15 hover:text-flame"
-            >
-              {l.label}
-            </Link>
-          ))}
-          <div className="mt-3 flex gap-4 px-2">
-            <SocialRow />
-          </div>
-        </nav>
-      </div>
+      {open && <nav className="border-t border-white/10 bg-background px-5 py-4 md:hidden">{navLinks.map((l) => <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="block py-3 text-base font-medium">{l.label}</Link>)}</nav>}
     </header>
-  );
-}
-
-function SocialRow() {
-  const cls =
-    "text-ink-foreground/70 transition-colors hover:text-flame";
-  return (
-    <>
-      <a href={socials.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className={cls}>
-        <Facebook className="size-5" />
-      </a>
-      <a href={socials.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className={cls}>
-        <Youtube className="size-5" />
-      </a>
-      <a href={socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className={cls}>
-        <Instagram className="size-5" />
-      </a>
-      <a href={socials.twitter} target="_blank" rel="noreferrer" aria-label="Twitter" className={cls}>
-        <Twitter className="size-5" />
-      </a>
-    </>
   );
 }
