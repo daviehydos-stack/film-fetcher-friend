@@ -50,7 +50,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
           <img src={item.artwork} alt={item.title} loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100 group-hover:scale-105"}`} />
           {previewing && item.previewYoutubeId ? (
             <iframe
-              src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted: true, controls: false })}
+              src={youtubeEmbedUrl(item.previewYoutubeId, { autoplay: true, muted: true, controls: false, start: item.previewStart, end: item.previewDuration ? (item.previewStart ?? 0) + item.previewDuration : undefined, loop: true })}
               title={`${item.title} preview`}
               allow="autoplay; encrypted-media; picture-in-picture"
               tabIndex={-1}
