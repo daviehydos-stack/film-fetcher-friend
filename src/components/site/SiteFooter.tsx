@@ -58,7 +58,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-border/50 py-5 text-center text-xs text-ink-foreground/55">
-        © {new Date().getFullYear()} Avant Movies. All rights reserved.
+        © 2026 Avant Movies. All rights reserved.
       </div>
     </footer>
   );
