@@ -11,7 +11,7 @@ export function buildAutoTrailerPlan(sourceDuration:number):AutoTrailerPlan{
  if(d<=0)return{sourceDuration:0,targetDuration:0,clips:[]};
  // A missing trailer must feel like the beginning of the story, never a random montage.
  // Use one continuous opening preview so dialogue/action is not interrupted by jumps.
- const target=d>=180?180:d>=120?120:Math.max(15,Math.floor(d*.75));
+ const target=d>=60?60:Math.max(15,Math.floor(d*.75));
  const end=Math.min(d,target);
  return{sourceDuration:d,targetDuration:end,clips:[{start:0,end,duration:end,zone:1}]};
 }
