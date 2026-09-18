@@ -1,15 +1,32 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
-//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
-//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
+// @lovable.dev/vite-tanstack-config already includes the core TanStack Start,
+// React, Tailwind, Nitro, env and path-alias plugins. Do not duplicate them here.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+const isGitHubPages = process.env.GITHUB_PAGES === "true";
+
 export default defineConfig({
+  vite: {
+    // GitHub project Pages is served below /film-fetcher-friend/.
+    // Production server deployments continue to use the normal root base.
+    base: isGitHubPages ? "/film-fetcher-friend/" : "/",
+  },
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
+    // Keep the real application SSR/server capable.
     server: { entry: "server" },
+
+    // Pages is a static preview host. TanStack Start SPA mode generates the
+    // hydration-aware shell instead of us fabricating an index.html.
+    ...(isGitHubPages
+      ? {
+          spa: {
+            enabled: true,
+            prerender: {
+              outputPath: "/index.html",
+              crawlLinks: false,
+              retryCount: 0,
+            },
+          },
+        }
+      : {}),
   },
 });
