@@ -6,7 +6,7 @@ import type { CatalogueTitle } from "@/lib/site-data";
 import { heroTrailerUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
-import { myLibrary, subscribeAccessChanged } from "@/lib/avant-backend";
+import { accessForContent, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { rememberReturnContext } from "@/lib/navigation-memory";
 
@@ -19,12 +19,12 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [trailerVisible, setTrailerVisible] = useState(false);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [hasAccess,setHasAccess]=useState(false); const [accessVersion,setAccessVersion]=useState(0);
+  const [accessState,setAccessState]=useState<AccessState>("loading"); const [accessVersion,setAccessVersion]=useState(0);
   const [heroInView,setHeroInView]=useState(true);
   const heroRef=useRef<HTMLElement|null>(null);
   const firstEpisode=item.episodes?.[0];
   const playableContentId = firstEpisode?.youtubeId && firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
-  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);useEffect(()=>{let live=true;customerToken(false).then(async token=>{if(!token){if(live)setHasAccess(false);return}try{const lib=await myLibrary(token);const hit=(lib.entitlements||[]).some((e:any)=>e.status==="active"&&(e.title?.slug===item.slug||e.access_type==="bundle"||e.access_type==="subscription"));if(live)setHasAccess(hit)}catch{}});return()=>{live=false}},[item.slug,accessVersion]);
+  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);useEffect(()=>{let live=true;const key=firstEpisode?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(playableContentId){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");accessForContent(key).then(r=>{if(live)setAccessState(r.state)});return()=>{live=false}},[item.slug,firstEpisode?.legacyKey,playableContentId,accessVersion]);
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
   useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=0.22),{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
@@ -72,7 +72,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold sm:text-sm"><span>{item.type === "movie" ? "Film" : "Series"}</span><span className="text-white/30">•</span><span>{item.genres.join(" · ")}</span><span className="rounded border border-white/25 px-1.5 py-0.5 text-[10px] text-white/70">HD</span></div>
           <p className="mt-3 max-w-xl line-clamp-3 text-sm leading-6 text-white/85 sm:mt-4 sm:text-lg sm:leading-7">{item.shortDescription}</p>
           <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-            <Button asChild size="lg" className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85">{(playableContentId||hasAccess) ? <Link to="/watch/$contentId" params={{ contentId: playableContentId??item.slug }}><Play className="fill-current" />Play</Link> : item.available ? <Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }} search={{returnTo:`/title/${item.slug}`,origin:"/",originScroll:String(typeof window!=="undefined"?window.scrollY:0)}} onClick={()=>rememberReturnContext("home",item.slug)}><Play className="fill-current" />Get Access</Link> : <Link to="/title/$slug" params={{ slug: item.slug }} onClick={()=>rememberReturnContext("home",item.slug)}><Play className="fill-current" />More Info</Link>}</Button>
+            <Button asChild size="lg" className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85">{(playableContentId||accessState==="authorized") ? <Link to="/watch/$contentId" params={{ contentId: playableContentId??item.slug }}><Play className="fill-current" />Play</Link> : item.available ? <Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }} search={{returnTo:`/title/${item.slug}`,origin:"/",originScroll:String(typeof window!=="undefined"?window.scrollY:0)}} onClick={()=>rememberReturnContext("home",item.slug)}><Play className="fill-current" />Get Access</Link> : <Link to="/title/$slug" params={{ slug: item.slug }} onClick={()=>rememberReturnContext("home",item.slug)}><Play className="fill-current" />More Info</Link>}</Button>
             <Button asChild size="lg" variant="secondary" className="h-11 w-full bg-white/20 px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-white backdrop-blur-md hover:bg-white/30"><Link to="/title/$slug" params={{ slug: item.slug }} onClick={()=>rememberReturnContext("home",item.slug)}><Info />More Info</Link></Button>
           <Button type="button" size="lg" variant="secondary" onClick={() => void toggleSaved()} className="col-span-2 h-11 w-full bg-black/35 px-4 text-sm font-bold text-white backdrop-blur-md hover:bg-white/15 sm:col-auto sm:h-12 sm:w-auto sm:px-5 sm:text-base">{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
           </div>
