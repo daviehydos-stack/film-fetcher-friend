@@ -27,8 +27,8 @@ export const Route = createFileRoute("/back-to-us")({
       { property: "og:type", content: "video.movie" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: publicPageLinks("/title/back-to-us"),
   }),
-  links: publicPageLinks("/title/back-to-us"),
   component: BackToUs,
 });
 

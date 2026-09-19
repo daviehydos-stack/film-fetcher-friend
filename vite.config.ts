@@ -2,7 +2,7 @@
 // React, Tailwind, Nitro, env and path-alias plugins. Do not duplicate them here.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-const isGitHubPages = process.env.GITHUB_PAGES === "true";
+const isGitHubPages = process.env["GITHUB_PAGES"] === "true";
 
 export default defineConfig({
   vite: {
@@ -31,7 +31,7 @@ export default defineConfig({
             crawlLinks: true,
             retryCount: 1,
             autoSubfolderIndex: true,
-            filter: ({ path }) =>
+            filter: ({ path }: { path: string }) =>
               !path.startsWith("/admin") &&
               !path.startsWith("/checkout/") &&
               !path.startsWith("/payment/") &&

@@ -23,8 +23,8 @@ export const Route = createFileRoute("/this-is-life")({
       { property: "og:type", content: "video.tv_show" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: publicPageLinks("/title/this-is-life"),
   }),
-  links: publicPageLinks("/title/this-is-life"),
   component: ThisIsLife,
 });
 
