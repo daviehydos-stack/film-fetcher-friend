@@ -288,15 +288,6 @@ export const catalogue: CatalogueTitle[] = [
     legacyPath: "/this-is-life", previewYoutubeId: "xnYieNZ3kHQ", previewDuration: 65, trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/xnYieNZ3kHQ?rel=0", episodes: [...thisIsLifeFree, ...thisIsLifePaid],
   },
   {
-    id: "better-days", slug: "better-days", title: "Better Days", type: "series",
-    genres: ["Drama"], available: true,
-    shortDescription: "Where the Avant story began, on KTN.",
-    synopsis: "Better Days aired on KTN and set everything that followed in motion — honest Kenyan stories, small rooms and big feelings.",
-    artwork: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_900,h_506,enc_auto/file.jpeg",
-    backdrop: "https://static.wixstatic.com/media/57086b_3c2c8674850045c78312f3397ae32e13~mv2.jpg/v1/fill/w_1400,h_788,enc_auto/file.jpeg",
-    legacyPath: "/better-days", previewYoutubeId: "jvJlWj2JgEk", previewDuration: 120,
-  },
-  {
     id: "another-way", slug: "another-way", title: "Another Way", type: "movie",
     genres: ["Short Film", "Drama"], available: true,
     shortDescription: "A short Avant story, now streaming.",
