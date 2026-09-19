@@ -11,6 +11,7 @@ import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 import { buildAutoTrailerPlan, durationToSeconds } from "@/lib/auto-trailer";
 import { readReturnContext } from "@/lib/navigation-memory";
 import { ContentRail } from "./ContentRail";
+import { relatedTitles } from "@/lib/discovery";
 import { StreamingShell } from "./StreamingShell";
 
 export function TitleDetail({ item }: { item: CatalogueTitle }) {
@@ -61,8 +62,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
       else { await navigator.clipboard.writeText(url); window.alert("Episode link copied."); }
     } catch (error: any) { if (error?.name !== "AbortError") window.alert("Unable to share this episode."); }
   };
-  useEffect(()=>{let active=true;publicCatalogue().then((home:any)=>{if(!active)return;const mapped:CatalogueTitle[]=(home?.titles||[]).filter((t:any)=>t.slug!==item.slug).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return{id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,year:t.year?String(t.year):f?.year,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||t.synopsis||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,featured:!!t.featured,available:true,previewYoutubeId:t.trailer_youtube_id||f?.previewYoutubeId,previewStart:t.preview_start_seconds??f?.previewStart,previewDuration:t.preview_duration_seconds??f?.previewDuration,quality:t.quality_label||"HD",maturityRating:t.maturity_rating||undefined};});const scored=mapped.map(x=>({x,score:x.genres.filter(g=>item.genres.includes(g)).length+(x.type===item.type?1:0)})).sort((a,b)=>b.score-a.score).slice(0,6).map(v=>v.x);setLiveRelated(scored)}).catch(()=>{});return()=>{active=false}},[item.slug,item.type,item.genres.join("|")]);
-  const related = liveRelated.length?liveRelated:catalogue.filter((candidate) => candidate.id !== item.id && candidate.genres.some((genre) => item.genres.includes(genre))).slice(0, 6);
+  useEffect(()=>{let active=true;publicCatalogue().then((home:any)=>{if(!active)return;const mapped:CatalogueTitle[]=(home?.titles||[]).filter((t:any)=>t.slug!==item.slug).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return{id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,year:t.year?String(t.year):f?.year,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||t.synopsis||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,featured:!!t.featured,available:true,previewYoutubeId:t.trailer_youtube_id||f?.previewYoutubeId,previewStart:t.preview_start_seconds??f?.previewStart,previewDuration:t.preview_duration_seconds??f?.previewDuration,quality:t.quality_label||"HD",maturityRating:t.maturity_rating||undefined};});setLiveRelated(relatedTitles(item,mapped,8))}).catch(()=>{});return()=>{active=false}},[item.slug,item.type,item.genres.join("|")]);
+  const related = liveRelated.length?liveRelated:relatedTitles(item,catalogue,8);
   return (
     <StreamingShell>
       <main>
