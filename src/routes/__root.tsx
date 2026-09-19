@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -141,6 +142,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -180,7 +182,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AvantTransitionEngine />
-      <div className="avant-page-transition"><Outlet /></div>
+      <div key={`${location.pathname}${location.searchStr}`} className="avant-route-surface"><Outlet /></div>
     </QueryClientProvider>
   );
 }

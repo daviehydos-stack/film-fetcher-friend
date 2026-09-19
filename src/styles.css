@@ -494,8 +494,32 @@ main,header,footer,section,nav{max-width:100%}
   main{animation:avantRouteFade 140ms ease-out both}
 }
 
-/* Plan 2 — navigation and discovery stability. Normal route changes are native and immediate. */
-@media (prefers-reduced-motion:no-preference){main{animation:none!important}}
+/* Unified navigation motion — quick tabs crossfade; story and player routes keep cinematic handoffs. */
+@media (prefers-reduced-motion:no-preference){
+  .avant-route-surface{animation:avantRouteSurfaceIn 220ms cubic-bezier(.22,1,.36,1) both;transform-origin:50% 22%;will-change:opacity,transform}
+  .avant-filter-results,.avant-tab-panel[data-state="active"]{animation:avantContentSwap 240ms cubic-bezier(.22,1,.36,1) both}
+  .avant-mobile-menu{transform-origin:top;transition:opacity 180ms ease,transform 240ms cubic-bezier(.22,1,.36,1),visibility 240ms;opacity:0;transform:translateY(-10px) scaleY(.96);visibility:hidden}
+  .avant-mobile-menu.is-open{opacity:1;transform:translateY(0) scaleY(1);visibility:visible}
+  @keyframes avantRouteSurfaceIn{from{opacity:.7;transform:translate3d(0,7px,0) scale(.997)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+  @keyframes avantContentSwap{from{opacity:.35;transform:translate3d(0,8px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+}
+.avant-mobile-menu{position:absolute;inset-inline:0;top:100%}
+.avant-transition-mode-quick.avant-transition-entering .avant-transition-vignette{animation:avantQuickIn 70ms ease-out both;background:var(--color-background)}
+.avant-transition-mode-quick.avant-transition-revealing{animation:avantQuickOut 120ms ease-out both}
+@keyframes avantQuickIn{from{opacity:0}to{opacity:.34}}
+@keyframes avantQuickOut{from{opacity:.34}to{opacity:0}}
 [data-title-card] article>div{transition-duration:220ms!important}
 @media(min-width:768px){[data-title-card] article:hover>div{transform:scale(1.025)!important}}
 @media(max-width:767px){.avant-horizontal-rail{scroll-snap-type:x proximity!important;scroll-behavior:auto!important}}
+
+/* Overlays close with the same physical direction they opened. */
+.avant-checkout-overlay{animation:avantOverlayIn 180ms ease-out both}
+.avant-checkout-sheet{animation:avantSheetIn 300ms cubic-bezier(.22,1,.36,1) both;transform-origin:center}
+.avant-checkout-overlay.is-closing{animation:avantOverlayOut 220ms ease-in both}
+.avant-checkout-sheet.is-closing{animation:avantSheetOut 220ms cubic-bezier(.4,0,1,1) both}
+@keyframes avantOverlayIn{from{opacity:0}to{opacity:1}}
+@keyframes avantOverlayOut{from{opacity:1}to{opacity:0}}
+@keyframes avantSheetIn{from{opacity:0;transform:translate3d(0,14px,0) scale(.985)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+@keyframes avantSheetOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,14px,0) scale(.985)}}
+@media(max-width:639px){.avant-checkout-sheet{animation-name:avantSheetInMobile}.avant-checkout-sheet.is-closing{animation-name:avantSheetOutMobile}@keyframes avantSheetInMobile{from{transform:translate3d(0,5%,0)}to{transform:translate3d(0,0,0)}}@keyframes avantSheetOutMobile{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,5%,0)}}}
+@media(prefers-reduced-motion:reduce){.avant-route-surface,.avant-filter-results,.avant-tab-panel,.avant-mobile-menu,.avant-checkout-overlay,.avant-checkout-sheet{animation:none!important;transition:none!important}}

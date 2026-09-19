@@ -4,13 +4,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 type TransitionPhase = "idle" | "entering" | "navigating" | "revealing";
 type TransitionMode = "quick" | "detail" | "checkout" | "back" | "play";
 const REVEAL_BY_MODE: Record<TransitionMode, number> = {
-  play: 360,
-  detail: 220,
-  checkout: 220,
-  back: 180,
-  quick: 180,
+  play: 260,
+  detail: 180,
+  checkout: 180,
+  back: 150,
+  quick: 120,
 };
-const SAFETY_MS = 1600;
+const SAFETY_MS = 1100;
 
 function pauseAllPlayers(except?: HTMLIFrameElement | HTMLMediaElement | null) {
   document.querySelectorAll<HTMLMediaElement>("video, audio").forEach((media) => {
@@ -88,6 +88,15 @@ export function AvantTransitionEngine() {
     };
     window.addEventListener("avant:player-started", onPlayerStarted);
     document.addEventListener("play", onMediaPlay, true);
+    const onHistoryNavigation = () => {
+      stopPlayback();
+      if (reducedMotion.current) return;
+      modeRef.current = "back";
+      setMode("back");
+      setTransitionPhase("navigating");
+      timers.current.push(window.setTimeout(finish, 450));
+    };
+    window.addEventListener("popstate", onHistoryNavigation);
 
     const onClick = (event: MouseEvent) => {
       const element = event.target instanceof Element ? event.target.closest("a[href]") : null;
@@ -116,10 +125,6 @@ export function AvantTransitionEngine() {
               ? "detail"
               : "quick";
 
-      /* Ordinary navigation should stay native-fast. Only cinematic destinations
-         need an interception overlay. This removes the black flash between tabs/pages. */
-      if (nextMode === "quick") return;
-
       event.preventDefault();
       event.stopPropagation();
       pendingAnchor.current = element;
@@ -135,7 +140,7 @@ export function AvantTransitionEngine() {
 
       setTransitionPhase("entering");
       const compact = window.matchMedia("(max-width: 639px)").matches;
-      const enterDelay = isPlay ? (compact ? 390 : 430) : isCheckout ? 150 : isBack ? 120 : 160;
+      const enterDelay = isPlay ? (compact ? 280 : 320) : isCheckout ? 110 : isBack ? 80 : isDetail ? 110 : 70;
       timers.current.push(window.setTimeout(() => {
         setTransitionPhase("navigating");
         const anchor = pendingAnchor.current;
@@ -151,6 +156,7 @@ export function AvantTransitionEngine() {
     return () => {
       document.removeEventListener("click", onClick, true);
       window.removeEventListener("avant:player-started", onPlayerStarted);
+      window.removeEventListener("popstate", onHistoryNavigation);
       document.removeEventListener("play", onMediaPlay, true);
       clearTimers();
     };
