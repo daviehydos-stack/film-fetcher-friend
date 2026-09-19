@@ -15,9 +15,11 @@ import {
 export function TitleCard({
   item,
   layout = "rail",
+  badgeLabel,
 }: {
   item: CatalogueTitle;
   layout?: "rail" | "grid";
+  badgeLabel?: string;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [previewing, setPreviewing] = useState(false);
@@ -97,7 +99,7 @@ export function TitleCard({
       setNearViewport(true);
       return;
     }
-    const observer = new IntersectionObserver(([entry]) => setNearViewport(entry.isIntersecting), {
+    const observer = new IntersectionObserver(([entry]) => setNearViewport(entry?.isIntersecting ?? false), {
       rootMargin: "240px",
     });
     observer.observe(cardRef.current);
@@ -161,6 +163,11 @@ export function TitleCard({
             }}
             className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100"}`}
           />
+          {badgeLabel ? (
+            <span className="absolute left-2.5 top-2.5 rounded-sm bg-primary px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-reel">
+              {badgeLabel}
+            </span>
+          ) : null}
           {previewing && item.previewYoutubeId ? (
             <iframe
               src={youtubeEmbedUrl(item.previewYoutubeId, {

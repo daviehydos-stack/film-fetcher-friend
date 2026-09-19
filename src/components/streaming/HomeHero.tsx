@@ -1,11 +1,10 @@
-import { Link } from "@tanstack/react-router";
 import { Check, Info, Play, Plus, Volume2, VolumeX, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
-import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 import {
   accountAccess,
   cachedSubscriber,
@@ -13,7 +12,6 @@ import {
   type AccessState,
 } from "@/lib/avant-backend";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
-import { rememberReturnContext } from "@/lib/navigation-memory";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
@@ -31,7 +29,6 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [accessVersion, setAccessVersion] = useState(0);
   const [heroInView, setHeroInView] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [playRequested, setPlayRequested] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const trailerFrameRef = useRef<HTMLIFrameElement | null>(null);
   const firstEpisode = item.episodes?.[0];
@@ -43,6 +40,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           firstEpisode.locked === false
         ? (firstEpisode.legacyKey ?? `${item.slug}-1`)
         : null;
+  const watchContentId = playableContentId ?? firstEpisode?.legacyKey ?? (item.type === "movie" ? item.slug : `${item.slug}-1`);
   useEffect(() => subscribeAccessChanged(() => setAccessVersion((v) => v + 1)), []);
   useEffect(() => {
     let live = true;
@@ -78,6 +76,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     if (!node) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
         const visible = entry.isIntersecting && entry.intersectionRatio >= 0.22;
         setHeroInView(visible);
         if (!visible) pauseEmbeddedPlayer(trailerFrameRef.current);
@@ -126,7 +125,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-0 lg:mt-0 lg:min-h-[88vh] lg:rounded-none"
+      className="relative min-h-[70svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
     >
       <img
         src={item.backdrop}
@@ -160,49 +159,48 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         />
       ) : null}
 
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.88)_0%,rgba(0,0,0,.58)_28%,rgba(0,0,0,.14)_58%,rgba(0,0,0,.06)_100%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.34)_0%,transparent_25%,transparent_62%,rgba(0,0,0,.34)_78%,var(--background)_100%)]" />
+      <div className="absolute inset-0 hero-shade" />
 
-      <div className="relative z-10 flex min-h-[76svh] max-w-[1600px] items-end px-5 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[82svh] sm:px-10 sm:pb-24 lg:min-h-[88vh] lg:h-full lg:px-14 lg:pb-28">
-        <div className="max-w-2xl">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-orange-400/25 bg-orange-400/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-orange-300 backdrop-blur">
+      <div className="relative z-10 mx-auto flex min-h-[72svh] max-w-[1800px] items-end px-5 pb-[max(3rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20">
+        <div className="max-w-[42rem]">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-primary backdrop-blur">
             <Sparkles className="size-3" />
             Featured on Avant
           </div>
-          <h1 className="max-w-xl text-[clamp(2.8rem,11vw,4.8rem)] font-black uppercase leading-[.86] tracking-[-.055em] text-white sm:text-7xl lg:text-[5.5rem]">
+          <h1 className="max-w-xl text-[clamp(2.65rem,11vw,4.8rem)] font-black uppercase leading-[.9] text-foreground sm:text-7xl lg:text-[5rem]">
             {item.title}
           </h1>
-          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold sm:text-sm">
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-bold text-foreground/85 sm:mt-5 sm:text-sm">
             <span>{item.type === "movie" ? "Film" : "Series"}</span>
-            <span className="text-white/30">•</span>
+            <span className="text-foreground/30">•</span>
             <span>{item.genres.join(" · ")}</span>
-            <span className="rounded border border-white/25 px-1.5 py-0.5 text-[10px] text-white/70">
+            <span className="rounded border border-foreground/25 px-1.5 py-0.5 text-[10px] text-foreground/70">
               HD
             </span>
           </div>
-          <p className="mt-3 max-w-xl line-clamp-3 text-sm leading-6 text-white/85 sm:mt-4 sm:text-lg sm:leading-7">
+          <p className="mt-3 max-w-xl line-clamp-2 text-sm leading-6 text-foreground/80 sm:mt-4 sm:line-clamp-3 sm:text-lg sm:leading-7">
             {item.shortDescription}
           </p>
-          <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-            <Button
-              type="button"
-              size="lg"
-              onClick={() => {
-                setMuted(true);
-                setPlayRequested(true);
-                setTrailerReady(true);
-              }}
-              className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85"
-            >
-              <Play className="fill-current" />
-              {playableContentId || accessState === "authorized" ? "Play" : "Preview"}
-            </Button>
+          <div className="mt-5 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
+            {playableContentId || accessState === "authorized" ? (
+              <Button asChild size="lg" className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
+                <Link to="/watch/$contentId" params={{ contentId: watchContentId }}><Play className="fill-current" />Watch</Link>
+              </Button>
+            ) : item.trailerEmbedUrl ? (
+              <Button type="button" size="lg" onClick={() => { if (largeScreen && !reducedMotion) { setMuted(false); setTrailerReady(true); } else { setDetailsOpen(true); } }} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
+                <Play className="fill-current" />Trailer
+              </Button>
+            ) : (
+              <Button type="button" size="lg" onClick={() => setDetailsOpen(true)} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
+                <Play className="fill-current" />Explore
+              </Button>
+            )}
             <Button
               type="button"
               size="lg"
               variant="secondary"
               onClick={() => setDetailsOpen(true)}
-              className="h-11 w-full bg-white/20 px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-white backdrop-blur-md hover:bg-white/30"
+              className="h-11 w-full bg-secondary/85 px-3 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base backdrop-blur-md hover:bg-secondary"
             >
               <Info />
               More Info
@@ -212,10 +210,12 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
               size="lg"
               variant="secondary"
               onClick={() => void toggleSaved()}
-              className="col-span-2 h-11 w-full bg-black/35 px-4 text-sm font-bold text-white backdrop-blur-md hover:bg-white/15 sm:col-auto sm:h-12 sm:w-auto sm:px-5 sm:text-base"
+              aria-label={saved ? "Remove from My List" : "Add to My List"}
+              title={saved ? "Remove from My List" : "Add to My List"}
+              className="h-11 w-11 bg-secondary/65 p-0 text-sm font-bold backdrop-blur-md hover:bg-secondary sm:h-12 sm:w-auto sm:px-5 sm:text-base"
             >
               {saved ? <Check /> : <Plus />}
-              {saved ? "In My List" : "My List"}
+              <span className="hidden sm:inline">{saved ? "In My List" : "My List"}</span>
             </Button>
           </div>
         </div>

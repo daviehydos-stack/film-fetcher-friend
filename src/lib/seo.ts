@@ -79,7 +79,7 @@ function isoDuration(value?: string) {
 }
 
 export function youtubeThumbnail(id: string) {
-  return `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
 export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string; pagePath: string; episodeNumber?: number; seriesName?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string }) {

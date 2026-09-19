@@ -1,10 +1,9 @@
 # Avant Movies roadmap
 
-- [ ] Build the cinematic streaming design system and shared navigation
-- [ ] Rebuild the homepage with featured media and curated rails
-- [ ] Add catalogue, search, My List, title details, seasons, and episodes
-- [ ] Add the minimal watch experience and access-required states
+- [x] Build the cinematic streaming design system and shared navigation
+- [x] Complete Phase 1 homepage evolution: concise curation, refined hero/header/footer, responsive QA
+- [x] Add catalogue, search, My List, title details, seasons, and episodes
+- [x] Add the minimal watch experience and access-required states
 - [ ] Add About, Awards, Contact, Studio, and legal placeholder pages
-- [ ] Verify desktop/mobile rendering, interactions, metadata, and errors
-- [ ] Await frontend confirmation before enabling Lovable Cloud and supplying migrations
-- [ ] Implement Cloud schema, authentication, entitlements, progress, payments, and admin
+- [x] Verify Phase 1 across phone, tablet, desktop, interactions, metadata, and errors
+- [x] Preserve and verify the existing external Supabase integrations; no backend changes in Phase 1
