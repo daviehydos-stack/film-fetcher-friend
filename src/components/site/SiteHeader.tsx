@@ -176,7 +176,7 @@ export function SiteHeader() {
               to="/admin"
               className="hidden rounded-full border border-orange-300/25 bg-orange-300/10 px-3 py-2 text-xs font-black text-orange-200 hover:bg-orange-300/20 lg:block"
             >
-              Admin
+              {admin ? "Admin" : "Admin Login"}
             </Link>
           {!authReady ? (
             <span
@@ -274,7 +274,7 @@ export function SiteHeader() {
               onClick={() => setOpen(false)}
               className="mt-2 flex min-h-12 items-center rounded-xl border border-orange-300/20 bg-orange-300/10 px-3 font-black text-orange-200"
             >
-              Admin
+              {admin ? "Admin" : "Admin Login"}
             </Link>
         </nav>
       ) : null}
