@@ -35,6 +35,7 @@ export function TitleCard({
   );
   const [accessVersion, setAccessVersion] = useState(0);
   const cardRef = useRef<HTMLElement | null>(null);
+  const detailsButtonRef = useRef<HTMLButtonElement | null>(null);
   const previewTimer = useRef<number | null>(null);
   const firstEpisode = item.episodes?.[0];
   const freeFullTitle = isFreeTitle(item);
@@ -144,6 +145,7 @@ export function TitleCard({
     >
       <div className="relative overflow-hidden rounded-lg border border-white/[.055] bg-surface shadow-[0_10px_28px_rgba(0,0,0,.22)] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:origin-center md:group-hover:scale-[1.045] md:group-hover:border-white/[.12] md:group-hover:shadow-[0_24px_60px_rgba(0,0,0,.78)]">
         <button
+          ref={detailsButtonRef}
           type="button"
           onClick={() => setDetailsOpen(true)}
           className="relative block aspect-video w-full overflow-hidden text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
@@ -259,7 +261,7 @@ export function TitleCard({
           </div>
         </div>
       </div>
-      {detailsOpen ? <TitlePreviewModal item={item} onClose={() => setDetailsOpen(false)} /> : null}
+      {detailsOpen ? <TitlePreviewModal item={item} onClose={() => { setDetailsOpen(false); window.requestAnimationFrame(() => detailsButtonRef.current?.focus()); }} /> : null}
     </article>
   );
 }
