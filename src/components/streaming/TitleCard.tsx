@@ -5,6 +5,7 @@ import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
+import { accessForContent, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
   const [detailsOpen,setDetailsOpen]=useState(false);
@@ -15,12 +16,15 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [nearViewport, setNearViewport] = useState(false);
   const [saved,setSaved]=useState(()=>readMyList().includes(item.id));
   const [muted,setMuted]=useState(true);
+  const [accessState,setAccessState]=useState<AccessState>("loading"); const [accessVersion,setAccessVersion]=useState(0);
   const cardRef = useRef<HTMLElement | null>(null);
   const previewTimer = useRef<number | null>(null);
   const firstEpisode=item.episodes?.[0];
   const playableContentId = firstEpisode?.youtubeId && firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
-  const accessLabel = playableContentId ? "Watch now" : item.available ? "Access required" : "Coming soon";
+  const accessLabel = playableContentId||accessState==="authorized" ? "Watch now" : accessState==="loading" ? "Checking access…" : item.available ? "Access required" : "Coming soon";
 
+  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);
+  useEffect(()=>{let live=true;const key=firstEpisode?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(playableContentId){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");accessForContent(key).then(r=>{if(live)setAccessState(r.state)});return()=>{live=false}},[item.slug,firstEpisode?.legacyKey,playableContentId,accessVersion]);
   useEffect(() => {
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
     const sync = () => setHoverCapable(media.matches);
@@ -73,7 +77,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
             />
           ) : null}
           <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,.18)_58%,rgba(0,0,0,.88)_100%)] opacity-90 md:opacity-0 md:group-hover:opacity-100" />
-          <span className="absolute inset-x-0 bottom-0 p-3 text-white md:hidden"><span className="block text-sm font-bold leading-tight">{item.title}</span><span className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-white/70">{playableContentId ? <Play className="size-3 fill-current" /> : <Lock className="size-3" />}{accessLabel}</span></span>
+          <span className="absolute inset-x-0 bottom-0 p-3 text-white md:hidden"><span className="block text-sm font-bold leading-tight">{item.title}</span><span className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-white/70">{playableContentId||accessState==="authorized" ? <Play className="size-3 fill-current" /> : <Lock className="size-3" />}{accessLabel}</span></span>
         </button>
         <div className="hidden h-0 overflow-hidden bg-[#181818] opacity-0 transition-[height,opacity] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:block md:group-hover:h-[5.2rem] md:group-hover:opacity-100">
           <div className="flex items-center gap-2 px-3 pt-2">
