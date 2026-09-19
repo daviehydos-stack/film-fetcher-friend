@@ -20,7 +20,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const cardRef = useRef<HTMLElement | null>(null);
   const previewTimer = useRef<number | null>(null);
   const firstEpisode=item.episodes?.[0];
-  const playableContentId = firstEpisode?.youtubeId && firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
+  const playableContentId = item.type==="movie"&&(item.youtubeVideoId||item.vimeoVideoId) ? item.slug : firstEpisode&&(firstEpisode.youtubeId||firstEpisode.vimeoVideoId)&&firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
   const accessLabel = playableContentId||accessState==="authorized" ? "Watch now" : accessState==="loading" ? "Checking access…" : item.available ? "Access required" : "Coming soon";
 
   useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);
