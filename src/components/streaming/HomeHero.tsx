@@ -6,7 +6,7 @@ import type { CatalogueTitle } from "@/lib/site-data";
 import { heroTrailerUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
-import { accountAccess, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { rememberReturnContext } from "@/lib/navigation-memory";
 
@@ -19,7 +19,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [trailerVisible, setTrailerVisible] = useState(false);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [accessState,setAccessState]=useState<AccessState>("loading"); const [accessVersion,setAccessVersion]=useState(0);
+  const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
   const [heroInView,setHeroInView]=useState(true);
   const heroRef=useRef<HTMLElement|null>(null);
   const firstEpisode=item.episodes?.[0];
