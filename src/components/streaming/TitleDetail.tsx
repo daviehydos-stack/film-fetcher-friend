@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
-import { publicCatalogue, accessForContent, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { publicCatalogue, accountAccess, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken } from "@/lib/google-auth";
 import { heroTrailerUrl, youtubeEmbedUrl } from "@/lib/video-embeds";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
@@ -40,7 +40,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
   const [season, setSeason] = useState(seasons[0] ?? 1);
   const seasonEpisodes = item.episodes?.map((episode, absoluteIndex) => ({ episode, absoluteIndex })).filter(({ episode }) => (episode.season ?? 1) === season) ?? [];
-  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); let live=true; const first=item.episodes?.[0]; const key=first?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`); if(first?.youtubeId&&first?.locked===false){setAccessState("authorized");return()=>{live=false}} setAccessState("loading"); accessForContent(key).then(r=>{if(live)setAccessState(r.state)}); return()=>{live=false}}, [item.id,item.slug,accessVersion]);
+  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); let live=true; const first=item.episodes?.[0]; const key=first?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`); if(first?.youtubeId&&first?.locked===false){setAccessState("authorized");return()=>{live=false}} setAccessState("loading"); customerToken(false).then(async token=>{if(!live)return;if(!token){setAccessState("signed_out");return}try{const a=await accountAccess(token);if(live)setAccessState(a.subscriber?"authorized":"locked")}catch{if(live)setAccessState("error")}}); return()=>{live=false}}, [item.id,item.slug,accessVersion]);
   useEffect(() => {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
