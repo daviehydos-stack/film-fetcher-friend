@@ -27,7 +27,8 @@ export default function VimeoSettings() {
     [showSecret, setShowSecret] = useState(false),
     [showToken, setShowToken] = useState(false),
     [videos, setVideos] = useState<any[]>([]),
-    [videoBusy, setVideoBusy] = useState(false);
+    [videoBusy, setVideoBusy] = useState(false),
+    [replaceMode, setReplaceMode] = useState(false);
   async function load() {
     const t = getAdminToken();
     if (!t) return;
@@ -72,10 +73,10 @@ export default function VimeoSettings() {
       setBusy(false);
     }
   }
-  async function disconnect() {
+  async function disconnect(replace = false) {
     if (
       !confirm(
-        "Disconnect Vimeo from Avant Movies? Saved Vimeo credentials will be removed from Avant.",
+        replace ? "Replace the connected Vimeo account? The current Vimeo credentials will be permanently removed from Avant, then you can enter the new account credentials." : "Disconnect Vimeo from Avant Movies? Saved Vimeo credentials will be permanently removed from Avant.",
       )
     )
       return;
@@ -84,14 +85,15 @@ export default function VimeoSettings() {
     setBusy(true);
     setNote("");
     try {
-      await adminVimeoDisconnect(t);
+      await adminVimeoDisconnect(t, replace ? "replace" : "disconnect");
       setSaved({ configured: false, connected: false });
       setClientId("");
       setClientSecret("");
       setAccessToken("");
       setVideos([]);
+      setReplaceMode(replace);
       await load();
-      setNote("Vimeo disconnected. Saved Vimeo credentials were removed from Avant.");
+      setNote(replace ? "Previous Vimeo credentials removed. Enter the new account credentials below." : "Vimeo disconnected. Saved Vimeo credentials were removed from Avant.");
     } catch (e: any) {
       setNote(e.message || "Could not disconnect Vimeo");
     } finally {
@@ -130,7 +132,7 @@ export default function VimeoSettings() {
               </p>
               <h3 className="mt-1 text-xl font-semibold">Vimeo</h3>
               <p className="mt-1 text-sm text-white/45">
-                Connect the Vimeo account used to host Avant Movies videos.
+                Connect, replace or disconnect the Vimeo account used to host Avant Movies videos. Credentials belong to the currently connected account, not to a specific administrator.
               </p>
             </div>
           </div>
@@ -140,6 +142,7 @@ export default function VimeoSettings() {
             {saved?.connected ? "Connected" : "Not connected"}
           </span>
         </div>
+        {replaceMode&&!saved?.connected?<div className="mt-5 rounded-lg border border-orange-300/20 bg-orange-300/[.05] p-4 text-sm text-orange-100"><b>Ready for a new Vimeo account.</b><p className="mt-1 text-xs leading-5 text-white/45">The previous credentials are no longer stored in Avant. Paste this administrator’s Vimeo credentials below, test the connection, then Save & connect.</p></div>:null}
         {saved?.connected ? (
           <div className="mt-5 rounded-lg border border-emerald-400/15 bg-emerald-400/[.05] p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-emerald-300">
@@ -202,16 +205,7 @@ export default function VimeoSettings() {
             <Save className="size-4" />
             Save & connect
           </button>
-          {saved?.configured ? (
-            <button
-              disabled={busy}
-              onClick={() => void disconnect()}
-              className="inline-flex items-center gap-2 rounded-lg border border-red-400/20 px-4 py-2.5 text-sm font-semibold text-red-200"
-            >
-              <Unplug className="size-4" />
-              Disconnect
-            </button>
-          ) : null}
+          {saved?.configured ? (<><button disabled={busy} onClick={() => void disconnect(true)} className="inline-flex items-center gap-2 rounded-lg border border-orange-300/25 px-4 py-2.5 text-sm font-semibold text-orange-200"><RefreshCw className="size-4" />Replace account</button><button disabled={busy} onClick={() => void disconnect(false)} className="inline-flex items-center gap-2 rounded-lg border border-red-400/20 px-4 py-2.5 text-sm font-semibold text-red-200"><Unplug className="size-4" />Disconnect & remove credentials</button></>) : null}
         </div>
         {note ? (
           <p className="mt-4 rounded-lg border border-white/10 bg-black/20 p-3 text-sm text-white/65">
