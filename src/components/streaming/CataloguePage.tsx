@@ -1,256 +1,107 @@
-import { ChevronDown, Play, Search, Volume2, VolumeX, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowDownAZ, ChevronDown, Film, Play, Search, SlidersHorizontal, Tv, X } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { catalogue, type ContentType, type CatalogueTitle } from "@/lib/site-data";
-import { publicCatalogue } from "@/lib/avant-backend";
-import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
-import { genreCollections } from "@/lib/discovery";
+import type { CatalogueTitle } from "@/lib/site-data";
+import { isFreeTitle, useCatalogue } from "@/lib/catalogue";
+import { catalogueGenres } from "@/lib/discovery";
 import { rememberReturnContext } from "@/lib/navigation-memory";
 import { StreamingShell } from "./StreamingShell";
-import { ContentRail, RankedRail } from "./ContentRail";
+import { DiscoveryGrid } from "./DiscoveryGrid";
+
+type CatalogueMode = "movies" | "series" | "free";
+type SortMode = "curated" | "az" | "newest";
 
 export function CataloguePage({
-  type,
+  mode,
   title,
   intro,
 }: {
-  type: ContentType;
+  mode: CatalogueMode;
   title: string;
   intro: string;
 }) {
   const [query, setQuery] = useState(""),
     [genre, setGenre] = useState("All"),
-    [muted, setMuted] = useState(true),
-    [heroInView, setHeroInView] = useState(true),
-    [heroPreview, setHeroPreview] = useState(false),
-    [live, setLive] = useState<CatalogueTitle[]>(catalogue);
-  const heroRef = useRef<HTMLElement | null>(null);
-  const frameRef = useRef<HTMLIFrameElement | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    publicCatalogue()
-      .then((h: any) => {
-        if (cancelled) return;
-        const mapped = (h?.titles || []).map((t: any) => {
-          const f = catalogue.find((x) => x.slug === t.slug || x.id === t.legacy_key);
-          return {
-            ...f,
-            id: t.legacy_key || t.slug,
-            slug: t.slug,
-            title: t.title,
-            type: t.content_type,
-            year: t.year ? String(t.year) : f?.year,
-            genres: t.genres || f?.genres || [],
-            synopsis: t.synopsis || f?.synopsis || "",
-            shortDescription: t.short_description || f?.shortDescription || t.synopsis || "",
-            artwork: t.poster_url || f?.artwork || "",
-            backdrop: t.backdrop_url || f?.backdrop || t.poster_url || "",
-            legacyPath: f?.legacyPath || "/" + t.slug,
-            featured: Boolean(t.featured),
-            available: true,
-            trailerEmbedUrl: t.trailer_youtube_id
-              ? `https://www.youtube-nocookie.com/embed/${t.trailer_youtube_id}?rel=0`
-              : f?.trailerEmbedUrl,
-            previewYoutubeId: t.trailer_youtube_id || f?.previewYoutubeId,
-            previewStart: t.preview_start_seconds ?? f?.previewStart,
-            previewDuration: t.preview_duration_seconds ?? f?.previewDuration,
-            heroAutoplay: t.hero_autoplay !== false,
-            episodes: f?.episodes,
-          } as CatalogueTitle;
-        });
-        if (mapped.length) setLive(mapped);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-  const pool = useMemo(() => live.filter((i) => i.type === type), [live, type]);
+    [sort, setSort] = useState<SortMode>("curated");
+  const { items, loading, usingFallback } = useCatalogue();
+  const pool = useMemo(
+    () => items.filter((item) => mode === "free" ? isFreeTitle(item) : item.type === (mode === "movies" ? "movie" : "series")),
+    [items, mode],
+  );
   const genres = useMemo(() => ["All", ...new Set(pool.flatMap((i) => i.genres))], [pool]);
-  const visible = useMemo(
-    () =>
-      pool.filter(
+  const visible = useMemo(() => {
+    const filtered = pool.filter(
         (i) =>
           (genre === "All" || i.genres.includes(genre)) &&
           `${i.title} ${i.synopsis} ${i.genres.join(" ")}`
             .toLowerCase()
-            .includes(query.toLowerCase()),
-      ),
-    [genre, pool, query],
-  );
-  const hero = visible.find((i) => i.trailerEmbedUrl) || visible[0] || pool[0];
-  const trailer = hero?.trailerEmbedUrl ? heroTrailerUrl(hero.trailerEmbedUrl, muted) : null;
-  const collections = genreCollections(visible, 5);
-  useEffect(() => {
-    setHeroPreview(false);
-    if (!trailer) return;
-    const t = window.setTimeout(() => setHeroPreview(true), 2000);
-    return () => window.clearTimeout(t);
-  }, [hero?.id, Boolean(trailer)]);
-  useEffect(() => {
-    const node = heroRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const visible = entry.isIntersecting && entry.intersectionRatio >= 0.18;
-        setHeroInView(visible);
-        if (!visible) pauseEmbeddedPlayer(frameRef.current);
-        else if (heroPreview) playEmbeddedPlayer(frameRef.current);
-      },
-      { threshold: [0, 0.18, 0.5] },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [hero?.id, heroPreview]);
+            .includes(query.trim().toLowerCase()),
+      );
+    if (sort === "az") return [...filtered].sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "newest") return [...filtered].sort((a, b) => Number(b.year || 0) - Number(a.year || 0));
+    return filtered;
+  }, [genre, pool, query, sort]);
+  const hero = pool.find((item) => item.featured) || pool[0];
+  const quickGenres = catalogueGenres(pool).slice(0, 4);
+  const label = mode === "series" ? "series" : mode === "free" ? "free titles" : "films";
+  const icon = mode === "series" ? <Tv className="size-4" /> : <Film className="size-4" />;
   return (
     <StreamingShell>
-      <main className="min-h-[80vh] w-full min-w-0 overflow-x-clip pb-16 pt-[72px] sm:pb-20 sm:pt-20">
-        <div className="w-full min-w-0 px-4 pt-5 sm:px-10 sm:pt-6 lg:px-14">
-          <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <h1 className="min-w-0 mr-1 text-[clamp(1.75rem,8vw,2.25rem)] font-black leading-tight sm:text-4xl">
-              {title}
-            </h1>
-            <div className="relative">
-              <select
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-                className="min-h-11 appearance-none rounded-full border border-white/20 bg-black/40 py-2 pl-4 pr-10 text-sm font-bold text-white outline-none backdrop-blur"
-              >
-                <option value="All">Genres</option>
-                {genres
-                  .filter((g) => g !== "All")
-                  .map((g) => (
-                    <option key={g}>{g}</option>
-                  ))}
+      <main id="main-content" className="min-h-[80vh] overflow-x-clip pb-16 pt-20 sm:pb-24 sm:pt-24">
+        <header className="mx-auto max-w-[1600px] px-5 pt-8 sm:px-10 lg:px-14 lg:pt-12">
+          <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,.65fr)]">
+            <div>
+              <p className="eyebrow">Avant catalogue · {mode === "free" ? "Open access" : "Discover"}</p>
+              <h1 className="mt-3 text-[clamp(2.8rem,10vw,7rem)] font-black leading-[.86]">{title}</h1>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-foreground/70 sm:text-lg">{intro}</p>
+            </div>
+            {hero ? <Link to="/title/$slug" params={{ slug: hero.slug }} onClick={() => rememberReturnContext(mode, hero.slug)} className="group relative hidden aspect-[16/8] overflow-hidden rounded-md border border-border/60 bg-surface shadow-reel lg:block">
+              <img src={hero.backdrop || hero.artwork} alt="" className="size-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+              <span className="hero-shade absolute inset-0" />
+              <span className="absolute inset-x-0 bottom-0 p-6">
+                <span className="eyebrow">Editor’s opening frame</span>
+                <span className="mt-2 block text-2xl font-black">{hero.title}</span>
+                <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold"><Play className="size-4 fill-current" />Open story</span>
+              </span>
+            </Link> : null}
+          </div>
+        </header>
+
+        <section className="sticky top-16 z-30 mt-9 border-y border-border/60 bg-background/90 backdrop-blur-2xl sm:top-[72px]">
+          <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-2 px-5 py-3 sm:px-10 lg:px-14">
+            <label className="relative min-w-0 flex-[1_1_15rem] lg:max-w-sm">
+              <span className="sr-only">Search {label}</span>
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Search ${label}`} className="h-11 bg-surface pl-10 pr-10" />
+              {query ? <Button size="icon" variant="ghost" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-0.5 top-0.5"><X className="size-4" /></Button> : null}
+            </label>
+            <div className="relative flex-1 sm:flex-none">
+              <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <select aria-label="Filter by genre" value={genre} onChange={(event) => setGenre(event.target.value)} className="h-11 w-full appearance-none rounded-md border border-border bg-surface pl-9 pr-9 text-sm font-semibold outline-none sm:w-auto">
+                {genres.map((value) => <option key={value} value={value}>{value === "All" ? "All genres" : value}</option>)}
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2" />
             </div>
-            <label className="relative ml-auto hidden w-64 md:block">
-              <Search className="absolute left-3 top-3 size-4 text-white/40" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search"
-                className="h-10 rounded-full bg-white/5 pl-9"
-              />
-              {query && (
-                <button
-                  onClick={() => setQuery("")}
-                  className="absolute right-2 top-2 grid size-6 place-items-center"
-                >
-                  <X className="size-3" />
-                </button>
-              )}
-            </label>
-          </div>
-        </div>
-        {hero ? (
-          <section
-            ref={heroRef}
-            className="relative mt-4 h-[min(68svh,36rem)] w-full min-w-0 overflow-hidden bg-black shadow-[0_30px_100px_rgba(0,0,0,.48)] sm:mt-5 sm:aspect-[16/7] sm:h-auto sm:min-h-[30rem] lg:min-h-[72vh]"
-          >
-            <img
-              src={hero.backdrop}
-              alt={`${hero.title} featured ${type === "movie" ? "movie" : "series"} artwork`}
-              fetchPriority="high"
-              decoding="async"
-              className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center"
-            />
-            {trailer && heroInView && heroPreview ? (
-              <iframe
-                ref={frameRef}
-                src={trailer}
-                title={`${hero.title} preview`}
-                allow="autoplay; encrypted-media; picture-in-picture"
-                className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
-              />
-            ) : null}
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.9)_0%,rgba(0,0,0,.48)_34%,transparent_72%)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.32)_0%,transparent_28%,transparent_52%,rgba(10,12,16,.62)_76%,var(--background)_100%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_38%,transparent_0%,rgba(0,0,0,.05)_36%,rgba(0,0,0,.48)_100%)]" />
-            <div className="absolute inset-x-0 bottom-0 z-10 flex min-w-0 items-end justify-between gap-3 px-4 pb-8 sm:gap-5 sm:p-10 sm:pb-20 lg:px-14">
-              <div className="min-w-0 max-w-xl">
-                <h2 className="break-words text-[clamp(2rem,10vw,3rem)] leading-[.95] font-black tracking-[-.04em] sm:text-6xl">
-                  {hero.title}
-                </h2>
-                <p className="mt-3 text-sm font-semibold text-white/80">
-                  {hero.genres.join(" · ")}
-                  {hero.year ? ` · ${hero.year}` : ""}
-                </p>
-                <p className="mt-3 hidden max-w-lg text-sm leading-6 text-white/70 sm:line-clamp-2">
-                  {hero.shortDescription}
-                </p>
-                <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:gap-3">
-                  <Button
-                    asChild
-                    size="lg"
-                    className="w-full min-w-0 bg-white px-3 font-bold text-black hover:bg-white/85 sm:w-auto sm:px-4"
-                  >
-                    <Link
-                      to="/title/$slug"
-                      params={{ slug: hero.slug }}
-                      onClick={() =>
-                        rememberReturnContext(type === "movie" ? "movies" : "tv", hero.slug)
-                      }
-                    >
-                      <Play className="fill-current" />
-                      View title
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="secondary"
-                    className="w-full min-w-0 bg-white/20 px-3 font-bold text-white backdrop-blur hover:bg-white/30 sm:w-auto sm:px-4"
-                  >
-                    <Link
-                      to="/title/$slug"
-                      params={{ slug: hero.slug }}
-                      onClick={() =>
-                        rememberReturnContext(type === "movie" ? "movies" : "tv", hero.slug)
-                      }
-                    >
-                      More info
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-              {trailer && heroInView && heroPreview ? (
-                <button
-                  onClick={() => setMuted((v) => !v)}
-                  className="mb-1 grid size-11 shrink-0 place-items-center rounded-full border border-white/40 bg-black/35 backdrop-blur"
-                  aria-label={muted ? "Sound on" : "Mute"}
-                >
-                  {muted ? <VolumeX /> : <Volume2 />}
-                </button>
-              ) : null}
+            <div className="relative flex-1 sm:flex-none">
+              <ArrowDownAZ className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <select aria-label="Sort catalogue" value={sort} onChange={(event) => setSort(event.target.value as SortMode)} className="h-11 w-full appearance-none rounded-md border border-border bg-surface pl-9 pr-9 text-sm font-semibold outline-none sm:w-auto">
+                <option value="curated">Curated</option><option value="az">A–Z</option><option value="newest">Newest year</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2" />
             </div>
-          </section>
-        ) : null}
-        {visible.length ? (
-          <div className="mt-8">
-            <RankedRail title={`Featured ${title.toLowerCase()} on Avant`} items={visible} />
-            <ContentRail
-              title={type === "movie" ? "Essential Kenyan cinema" : "Series worth staying for"}
-              items={visible}
-            />
-            <ContentRail title="More stories for you" items={[...visible].reverse()} />
-            {collections.map(({ genre: collectionGenre, items }) => (
-              <ContentRail
-                key={collectionGenre}
-                title={`${collectionGenre} on Avant`}
-                items={items}
-              />
-            ))}
           </div>
-        ) : (
-          <div className="py-24 text-center">
-            <h2 className="text-2xl font-bold">No stories found</h2>
-            <p className="mt-2 text-white/50">Try another genre or title.</p>
+        </section>
+
+        <section className="mx-auto max-w-[1600px] px-5 py-8 sm:px-10 sm:py-12 lg:px-14">
+          {!query && genre === "All" && quickGenres.length ? <div className="mb-8 flex flex-wrap items-center gap-2"><span className="mr-1 text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground">Browse by mood</span>{quickGenres.map((value) => <Button key={value} type="button" size="sm" variant="outline" onClick={() => setGenre(value)}>{value}</Button>)}</div> : null}
+          <div className="mb-6 flex items-end justify-between gap-4 border-b border-border/60 pb-4">
+            <div><p className="flex items-center gap-2 text-sm font-bold">{icon}{visible.length} {visible.length === 1 ? label.replace(/s$/, "") : label}</p>{usingFallback ? <p className="mt-1 text-xs text-muted-foreground">Showing the available Avant selection while live updates reconnect.</p> : null}</div>
+            {(query || genre !== "All") ? <Button variant="ghost" size="sm" onClick={() => { setQuery(""); setGenre("All"); }}>Clear filters</Button> : null}
           </div>
-        )}
+          {loading ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">{Array.from({ length: 5 }, (_, index) => <div key={index} className="aspect-video animate-pulse rounded-md bg-surface" />)}</div> : visible.length ? <DiscoveryGrid items={visible} {...(mode === "free" ? { badgeLabel: "Free to watch" } : {})} /> : <div className="border-y border-border py-20 text-center"><h2 className="text-2xl font-bold">No matching stories</h2><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">Try another title or genre, or clear the filters to return to the full catalogue.</p><Button className="mt-5" onClick={() => { setQuery(""); setGenre("All"); }}>Show all {label}</Button></div>}
+        </section>
       </main>
     </StreamingShell>
   );

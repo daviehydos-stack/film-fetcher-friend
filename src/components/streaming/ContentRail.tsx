@@ -19,7 +19,7 @@ export function ContentRail({
   items: CatalogueTitle[];
   eyebrow?: string;
   description?: string;
-  href?: "/movies" | "/tv-shows";
+  href?: "/movies" | "/tv-shows" | "/watch-free";
   linkLabel?: string;
   badgeLabel?: string;
 }) {

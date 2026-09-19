@@ -40,7 +40,7 @@ function Index() {
   return (
     <StreamingShell>
       <main id="main-content" className="overflow-hidden">
-        <HomeHero item={featured} />
+        {featured ? <HomeHero item={featured} /> : null}
 
         <div className="relative z-20 pb-10 pt-3 sm:pt-5 lg:pt-6">
           <ContinueWatching />
