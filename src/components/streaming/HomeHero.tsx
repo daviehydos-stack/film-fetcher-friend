@@ -23,7 +23,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [heroInView,setHeroInView]=useState(true);
   const heroRef=useRef<HTMLElement|null>(null);
   const firstEpisode=item.episodes?.[0];
-  const playableContentId = firstEpisode?.youtubeId && firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
+  const playableContentId = item.type==="movie"&&(item.youtubeVideoId||item.vimeoVideoId) ? item.slug : firstEpisode&&(firstEpisode.youtubeId||firstEpisode.vimeoVideoId)&&firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
   useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);useEffect(()=>{let live=true;const key=firstEpisode?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(playableContentId){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");customerToken(false).then(async token=>{if(!live)return;if(!token){setAccessState("signed_out");return}try{const a=await accountAccess(token);if(live)setAccessState(a.subscriber?"authorized":"locked")}catch{if(live)setAccessState("error")}});return()=>{live=false}},[item.slug,firstEpisode?.legacyKey,playableContentId,accessVersion]);
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
