@@ -148,6 +148,7 @@ export type Episode = {
   season?: number;
   duration: string;
   youtubeId?: string;
+  vimeoVideoId?: string;
   poster?: string;
   locked?: boolean;
   description?: string;
