@@ -166,6 +166,7 @@ export function SiteHeader() {
           {appearance?.header?.showSearch !== false ? (
             <Link
               to="/search"
+              search={{ q: "", type: "all", sort: "curated" }}
               className="grid size-10 shrink-0 place-items-center rounded-full border border-transparent transition hover:border-white/10 hover:bg-white/10"
               aria-label="Search"
             >
