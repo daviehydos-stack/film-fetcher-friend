@@ -6,7 +6,7 @@ export function YoutubeCard({ episode }: { episode: Episode }) {
   const [playing, setPlaying] = useState(false);
   const poster =
     episode.poster ??
-    `https://i.ytimg.com/vi/${episode.youtubeId}/maxresdefault.jpg`;
+    `https://i.ytimg.com/vi/${episode.youtubeId}/hqdefault.jpg`;
 
   return (
     <div className="panel overflow-hidden rounded-xl">
