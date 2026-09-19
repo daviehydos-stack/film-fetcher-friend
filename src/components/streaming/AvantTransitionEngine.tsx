@@ -15,7 +15,11 @@ const SAFETY_MS = 1600;
 function pauseAllPlayers(except?: HTMLIFrameElement | HTMLMediaElement | null) {
   document.querySelectorAll<HTMLMediaElement>("video, audio").forEach((media) => {
     if (media === except) return;
-    try {\n      media.pause();\n    } catch {\n      /* detached media */\n    }
+    try {
+      media.pause();
+    } catch {
+      /* detached media */
+    }
   });
   document.querySelectorAll<HTMLIFrameElement>("iframe").forEach((frame) => {
     if (frame === except) return;
@@ -73,7 +77,9 @@ export function AvantTransitionEngine() {
       .forEach((src) => { const image = new Image(); image.src = src; });
 
     const onPlayerStarted = (event: Event) => {
-      const detail = (\n        event as CustomEvent<{ player?: HTMLIFrameElement | HTMLMediaElement | null }>\n      ).detail;
+      const detail = (
+        event as CustomEvent<{ player?: HTMLIFrameElement | HTMLMediaElement | null }>
+      ).detail;
       pauseAllPlayers(detail?.player ?? null);
     };
     const onMediaPlay = (event: Event) => {
@@ -100,7 +106,15 @@ export function AvantTransitionEngine() {
       const isDetail = nextUrl.pathname.includes("/title/");
       const isCheckout = nextUrl.pathname.includes("/checkout/");
       const isBack = element.dataset.avantTransition === "back";
-      const nextMode: TransitionMode = isPlay\n        ? "play"\n        : isCheckout\n          ? "checkout"\n          : isBack\n            ? "back"\n            : isDetail\n              ? "detail"\n              : "quick";
+      const nextMode: TransitionMode = isPlay
+        ? "play"
+        : isCheckout
+          ? "checkout"
+          : isBack
+            ? "back"
+            : isDetail
+              ? "detail"
+              : "quick";
 
       /* Ordinary navigation should stay native-fast. Only cinematic destinations
          need an interception overlay. This removes the black flash between tabs/pages. */
@@ -151,13 +165,22 @@ export function AvantTransitionEngine() {
         timers.current.push(window.setTimeout(finish, REVEAL_BY_MODE[modeRef.current]));
       });
     });
-    return () => {\n      cancelAnimationFrame(r1);\n      cancelAnimationFrame(r2);\n    };
+    return () => {
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+    };
   }, [location.pathname, location.searchStr, finish, setTransitionPhase]);
 
   if (phase === "idle") return null;
 
   return (
-    <div\n      className={\n        "avant-transition-engine avant-transition-" + phase + " avant-transition-mode-" + mode\n      }\n      aria-hidden="true"\n      role="presentation"\n    >
+    <div
+      className={
+        "avant-transition-engine avant-transition-" + phase + " avant-transition-mode-" + mode
+      }
+      aria-hidden="true"
+      role="presentation"
+    >
       <div className="avant-transition-vignette" />
       <div className="avant-transition-horizon" />
       <div className="avant-transition-mark">
