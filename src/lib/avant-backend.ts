@@ -25,6 +25,10 @@ export const adminApiPost=(token:string,payload:Record<string,unknown>)=>request
 export type AdminView="content"|"customers"|"payments"|"products"|"entitlements"|"audit"|"pages"|"seo"|"appearance"|"media"|"system_settings"|"gemini_settings"|"cloudinary_settings"|"settings_bundle"|"integration_settings";
 export const adminView=(token:string,view:AdminView)=>request<any>(`admin-api?view=${view}${adminScopeQuery()}`,token,{method:"GET"});
 export const adminContent=(token:string,payload:Record<string,unknown>)=>request<any>("admin-content",token,{method:"POST",body:JSON.stringify(payload)});
+export const adminVideoVariants=(token:string,input:{titleId?:string;episodeId?:string})=>adminContent(token,{operation:"list_video_variants",...input});
+export const saveAdminVideoVariant=(token:string,input:Record<string,unknown>)=>adminContent(token,{operation:"upsert_video_variant",...input});
+export const publishAdminVideoVariant=(token:string,id:string)=>adminContent(token,{operation:"publish_video_variant",id});
+export const deleteAdminVideoVariant=(token:string,id:string)=>adminContent(token,{operation:"delete_video_variant",id});
 export const adminCustomers=(token:string,payload:Record<string,unknown>)=>request<any>("admin-customers",token,{method:"POST",body:JSON.stringify(payload)});
 export async function hasAdminSession(){const token=getAdminToken();if(!token)return false;try{return (await adminSession(token)).admin===true}catch{return false}}
 
