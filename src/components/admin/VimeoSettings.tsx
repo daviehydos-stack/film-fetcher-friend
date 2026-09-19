@@ -228,7 +228,7 @@ export default function VimeoSettings() {
               </p>
               <h3 className="mt-1 text-lg font-semibold">Vimeo library</h3>
               <p className="mt-1 text-sm text-white/45">
-                Confirm Avant can browse this account before assigning videos to movies or episodes.
+                Confirm Avant can browse this account and identify videos suitable for subscriber playback.
               </p>
             </div>
             <button
@@ -252,9 +252,7 @@ export default function VimeoSettings() {
                   ) : null}
                   <div className="p-3">
                     <p className="truncate text-sm font-semibold">{v.name}</p>
-                    <p className="mt-1 text-xs text-white/35">
-                      {Math.floor((v.duration || 0) / 60)} min · ID {v.id}
-                    </p>
+                    <p className="mt-1 text-xs text-white/35">{Math.floor((v.duration || 0) / 60)} min · {v.privacy || "privacy unknown"}</p><p className={`mt-1 text-[11px] font-semibold ${v.recommendedForPremium ? "text-emerald-300" : v.playable ? "text-amber-200" : "text-red-300"}`}>{v.recommendedForPremium ? "Ready for premium use" : v.playable ? "Playable · review privacy" : "Not ready for playback"}</p>
                   </div>
                 </div>
               ))}
