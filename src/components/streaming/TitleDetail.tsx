@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
-import { publicCatalogue, accountAccess, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { publicCatalogue, accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken } from "@/lib/google-auth";
 import { heroTrailerUrl, youtubeEmbedUrl } from "@/lib/video-embeds";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
@@ -23,7 +23,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [heroPreview, setHeroPreview] = useState(false);
   const [heroPreviewLoaded, setHeroPreviewLoaded] = useState(false);
   const [heroMuted, setHeroMuted] = useState(false);
-  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [accessState,setAccessState]=useState<AccessState>("loading"); const [accessVersion,setAccessVersion]=useState(0);
+  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
   const heroRef = useRef<HTMLElement | null>(null);
   const [heroInView, setHeroInView] = useState(true);
   const episodesRef = useRef<HTMLElement | null>(null);
