@@ -1,4 +1,4 @@
-export type WatchProgress = { contentId: string; seconds: number; duration?: number; updatedAt: number };
+export type WatchProgress = { contentId: string; seconds: number; duration?: number | undefined; updatedAt: number };
 const KEY = "avant-watch-progress";
 
 export function readProgress(): WatchProgress[] {
@@ -20,7 +20,7 @@ export function saveProgress(entry: WatchProgress) {
 
 export function markStarted(contentId: string) {
   const existing = readProgress().find((item) => item.contentId === contentId);
-  saveProgress({ contentId, seconds: existing?.seconds ?? 1, duration: existing?.duration, updatedAt: Date.now() });
+  saveProgress({ contentId, seconds: existing?.seconds ?? 1, duration: existing?.duration ?? 0, updatedAt: Date.now() });
 }
 
 export function getProgress(contentId: string) {

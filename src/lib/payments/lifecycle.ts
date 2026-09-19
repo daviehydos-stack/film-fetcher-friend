@@ -14,7 +14,7 @@ export class PaymentLifecycleService {
     const payment = await this.store.getPaymentByReference(reference); if (!payment) throw new Error('Payment not found')
     if (payment.status === 'successful') { const product = await this.requireProduct(payment.productId); return { payment, entitlement: await this.store.createEntitlementOnce(payment, product) } }
     const verification = await this.providers.get(payment.provider).verifyTransaction(payment); if (!verification.verified) return { payment }
-    const verifiedPayment = await this.store.markPaymentVerified({ paymentId: payment.id, providerReference: verification.providerReference })
+    const verifiedPayment = await this.store.markPaymentVerified({ paymentId: payment.id, providerReference: verification.providerReference ?? undefined })
     const product = await this.requireProduct(verifiedPayment.productId)
     return { payment: verifiedPayment, entitlement: await this.store.createEntitlementOnce(verifiedPayment, product) }
   }

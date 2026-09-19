@@ -10,7 +10,7 @@ export interface AccessDecision {
 
 export async function authorizeContent(
   store: PaymentsAccessStore,
-  input: { customerId?: string | null; contentId: string; seasonId?: string },
+  input: { customerId?: string | null; contentId: string; seasonId?: string | undefined },
 ): Promise<AccessDecision> {
   if (!input.customerId) return { authorized: false, reason: 'no_customer' }
   const entitlements = await store.findValidEntitlements(input.customerId, input.contentId, input.seasonId)

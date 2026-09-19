@@ -1,7 +1,7 @@
 import type { Entitlement, PaymentRecord } from '../access/types'
 import type { PaymentProviderRegistry } from './provider'
 import type { PaymentsAccessStore } from './server-contract'
-export type WebhookResult = { accepted: false; reason: 'invalid_signature' } | { accepted: true; duplicate: boolean; payment?: PaymentRecord; entitlement?: Entitlement }
+export type WebhookResult = { accepted: false; reason: 'invalid_signature' } | { accepted: true; duplicate: boolean; payment?: PaymentRecord | undefined; entitlement?: Entitlement | undefined }
 export async function processPaymentWebhook(input: { providerId: string; headers: Headers; rawBody: string; providers: PaymentProviderRegistry; store: PaymentsAccessStore }): Promise<WebhookResult> {
   const provider = input.providers.get(input.providerId); if (!(await provider.verifyWebhook({ headers: input.headers, rawBody: input.rawBody }))) return { accepted: false, reason: 'invalid_signature' }
   const event = await provider.parseWebhook({ headers: input.headers, rawBody: input.rawBody }); const payment = await input.store.getPaymentByReference(event.reference); if (!payment) return { accepted: true, duplicate: false }
