@@ -459,3 +459,26 @@ main,header,footer,section,nav{max-width:100%}
 
 /* Locked fallback preview: visible 60-second countdown ribbon. */
 @keyframes avant-preview-minute{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+
+/* Smoothness pass v4 — compositor-only motion, no phase pops */
+.avant-transition-mark,.avant-transition-image{filter:none!important}
+@media(max-width:639px){
+  .avant-transition-light,.avant-transition-flare{filter:none;mix-blend-mode:normal}
+}
+.avant-transition-horizon{width:140vw}
+@keyframes avantHorizon{
+  0%,12%{transform:translate(-50%,-50%) scaleX(0);opacity:0}
+  34%{transform:translate(-50%,-50%) scaleX(.13);opacity:.25}
+  58%{transform:translate(-50%,-50%) scaleX(.44);opacity:.92}
+  100%{transform:translate(-50%,-50%) scaleX(.96);opacity:.26}
+}
+.avant-transition-mode-play.avant-transition-navigating .avant-transition-horizon{width:140vw;transform:translate(-50%,-50%) scaleX(.96);opacity:.26}
+.avant-transition-mode-play.avant-transition-revealing .avant-transition-horizon{width:140vw;transform:translate(-50%,-50%) scaleX(.96);opacity:0}
+.avant-transition-navigating{background:transparent}
+.avant-transition-mode-play .avant-transition-vignette{background:radial-gradient(circle at 50% 50%,oklch(.1 .04 230),#000 62%)}
+.avant-transition-mode-detail .avant-transition-vignette{background:radial-gradient(circle at 50% 40%,oklch(.14 .02 250),#050608 78%)}
+.avant-transition-mode-checkout .avant-transition-vignette{background:linear-gradient(105deg,#020305 0%,oklch(.18 .075 235) 52%,#020305 100%)}
+.avant-transition-mode-back .avant-transition-vignette{background:#030405}
+@keyframes avantBackIn{from{opacity:0}to{opacity:1}}
+@keyframes avantBackOut{from{opacity:1}to{opacity:0}}
