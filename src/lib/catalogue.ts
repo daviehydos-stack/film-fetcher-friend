@@ -128,8 +128,9 @@ export function freeContentId(item: CatalogueTitle) {
 
 export function useCatalogue() {
   const [items, setItems] = useState<CatalogueTitle[]>(catalogue);
-  const [loading, setLoading] = useState(true);
-  const [usingFallback, setUsingFallback] = useState(false);
+  // Render the bundled catalogue immediately, then refresh it quietly.
+  const [loading, setLoading] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(true);
 
   useEffect(() => {
     let active = true;
