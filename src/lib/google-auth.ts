@@ -18,7 +18,7 @@ export async function requireCustomerToken(){const token=await customerToken(tru
 export async function customerSession(){const token=validToken();if(!token)return null;const p=payload(token);return p?{email:p.email??"",name:p.name??"",photoURL:p.picture??""}:null}
 export async function customerEmail(){return (await customerSession())?.email??null}
 export async function signInCustomer(){await requireCustomerToken();return customerSession()}
-export async function signOutCustomer(){if(typeof window!=="undefined"){localStorage.removeItem(TOKEN_KEY);try{await loadGoogle();window.google.accounts.id.disableAutoSelect()}catch{}}}
+export async function signOutCustomer(){if(typeof window!=="undefined"){localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("avant_subscriber");try{await loadGoogle();window.google.accounts.id.disableAutoSelect()}catch{}}}
 
 
 export const GOOGLE_CLIENT_ID="12797178987-c8vk15t4gplabjhap4d0ebbv8s2fhk9a.apps.googleusercontent.com";
