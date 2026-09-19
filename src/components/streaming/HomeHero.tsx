@@ -45,10 +45,11 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false || !playRequested) return () => screen.removeEventListener?.("change", syncScreen);
-    const timer = window.setTimeout(() => setTrailerReady(true), 150);
+    if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false) return () => screen.removeEventListener?.("change", syncScreen);
+    // Keep the artwork visible for two seconds, then begin the cinematic autoplay preview.
+    const timer = window.setTimeout(() => setTrailerReady(true), 2000);
   return () => { window.clearTimeout(timer); screen.removeEventListener?.("change", syncScreen); };
-  }, [item.id, item.trailerEmbedUrl, item.heroAutoplay, playRequested]);
+  }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
 
   return (
     <section ref={heroRef} className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-0 lg:mt-0 lg:min-h-[88vh] lg:rounded-none">
@@ -74,7 +75,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold sm:text-sm"><span>{item.type === "movie" ? "Film" : "Series"}</span><span className="text-white/30">•</span><span>{item.genres.join(" · ")}</span><span className="rounded border border-white/25 px-1.5 py-0.5 text-[10px] text-white/70">HD</span></div>
           <p className="mt-3 max-w-xl line-clamp-3 text-sm leading-6 text-white/85 sm:mt-4 sm:text-lg sm:leading-7">{item.shortDescription}</p>
           <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-            <Button type="button" size="lg" onClick={()=>{setMuted(true);setPlayRequested(true)}} className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85"><Play className="fill-current" />{(playableContentId||accessState==="authorized")?"Play":"Preview"}</Button>
+            <Button type="button" size="lg" onClick={()=>{setMuted(true);setPlayRequested(true);setTrailerReady(true)}} className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85"><Play className="fill-current" />{(playableContentId||accessState==="authorized")?"Play":"Preview"}</Button>
             <Button type="button" size="lg" variant="secondary" onClick={()=>setDetailsOpen(true)} className="h-11 w-full bg-white/20 px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-white backdrop-blur-md hover:bg-white/30"><Info />More Info</Button>
           <Button type="button" size="lg" variant="secondary" onClick={() => void toggleSaved()} className="col-span-2 h-11 w-full bg-black/35 px-4 text-sm font-bold text-white backdrop-blur-md hover:bg-white/15 sm:col-auto sm:h-12 sm:w-auto sm:px-5 sm:text-base">{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
           </div>
