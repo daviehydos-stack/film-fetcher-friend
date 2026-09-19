@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
 import { publicCatalogue, accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken } from "@/lib/google-auth";
-import { heroTrailerUrl, youtubeEmbedUrl } from "@/lib/video-embeds";
+import { heroTrailerUrl, youtubeEmbedUrl, pauseEmbeddedPlayer } from "@/lib/video-embeds";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 import { buildAutoTrailerPlan, durationToSeconds } from "@/lib/auto-trailer";
 import { readReturnContext } from "@/lib/navigation-memory";
@@ -36,7 +36,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const cappedTrailerUrl=(raw:string,muted:boolean,controls=false)=>{try{const u=new URL(heroTrailerUrl(raw,muted));if(u.hostname.includes("youtube")){u.searchParams.set("start","0");u.searchParams.set("end","60");u.searchParams.set("loop","1");const id=u.pathname.split("/").filter(Boolean).pop();if(id)u.searchParams.set("playlist",id);u.searchParams.set("controls",controls?"1":"0")}return u.toString()}catch{return raw}};
   const previewUrl = item.trailerEmbedUrl ? cappedTrailerUrl(item.trailerEmbedUrl, heroMuted, false) : previewId ? youtubeEmbedUrl(previewId, { autoplay: true, muted: heroMuted, controls: false, start: 0, end: 60, loop: true, jsApi:true }) : null;
   const previewFrameRef=useRef<HTMLIFrameElement|null>(null);
-  const pausePreview=()=>{previewFrameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*");};
+  const pausePreview=()=>pauseEmbeddedPlayer(previewFrameRef.current);
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
   const [season, setSeason] = useState(seasons[0] ?? 1);
   const seasonEpisodes = item.episodes?.map((episode, absoluteIndex) => ({ episode, absoluteIndex })).filter(({ episode }) => (episode.season ?? 1) === season) ?? [];
@@ -45,7 +45,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
     if (!previewUrl || !heroInView || trailerOpen || item.heroAutoplay === false || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setTimeout(() => setHeroPreview(true), 120);
+    const timer = window.setTimeout(() => setHeroPreview(true), 2000);
     return () => window.clearTimeout(timer);
   }, [item.id, previewUrl, item.heroAutoplay, heroInView, trailerOpen]);
   useEffect(() => { const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{const visible=entry.isIntersecting&&entry.intersectionRatio>=0.35;setHeroInView(visible);if(!visible){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}},{threshold:[0,.15,.35,.6]});observer.observe(node);return()=>observer.disconnect(); }, [item.id]);
