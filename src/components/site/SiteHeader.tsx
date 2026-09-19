@@ -234,8 +234,7 @@ export function SiteHeader() {
           </button>
         </div>
       </div>
-      {open ? (
-        <nav className="max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-white/10 bg-[#07080a] px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 shadow-2xl md:hidden sm:px-5 sm:py-4">
+      <nav aria-hidden={!open} className={cn("avant-mobile-menu max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-border bg-background px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 shadow-2xl md:hidden sm:px-5 sm:py-4",open?"is-open":"pointer-events-none")}>
           {[
             ...navLinks,
             ...cmsNav
@@ -278,7 +277,6 @@ export function SiteHeader() {
               Admin
             </Link> : null}
         </nav>
-      ) : null}
     </header></>
   );
 }

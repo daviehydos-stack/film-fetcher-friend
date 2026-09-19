@@ -4,13 +4,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 type TransitionPhase = "idle" | "entering" | "navigating" | "revealing";
 type TransitionMode = "quick" | "detail" | "checkout" | "back" | "play";
 const REVEAL_BY_MODE: Record<TransitionMode, number> = {
-  play: 360,
-  detail: 220,
-  checkout: 220,
-  back: 180,
-  quick: 180,
+  play: 260,
+  detail: 180,
+  checkout: 180,
+  back: 150,
+  quick: 120,
 };
-const SAFETY_MS = 1600;
+const SAFETY_MS = 1100;
 
 function pauseAllPlayers(except?: HTMLIFrameElement | HTMLMediaElement | null) {
   document.querySelectorAll<HTMLMediaElement>("video, audio").forEach((media) => {
@@ -54,6 +54,7 @@ export function AvantTransitionEngine() {
   const pendingAnchor = useRef<HTMLAnchorElement | null>(null);
   const timers = useRef<number[]>([]);
   const reducedMotion = useRef(false);
+  const lastPath = useRef(location.pathname);
 
   const setTransitionPhase = useCallback((next: TransitionPhase) => {
     phaseRef.current = next;
@@ -116,10 +117,6 @@ export function AvantTransitionEngine() {
               ? "detail"
               : "quick";
 
-      /* Ordinary navigation should stay native-fast. Only cinematic destinations
-         need an interception overlay. This removes the black flash between tabs/pages. */
-      if (nextMode === "quick") return;
-
       event.preventDefault();
       event.stopPropagation();
       pendingAnchor.current = element;
@@ -135,7 +132,7 @@ export function AvantTransitionEngine() {
 
       setTransitionPhase("entering");
       const compact = window.matchMedia("(max-width: 639px)").matches;
-      const enterDelay = isPlay ? (compact ? 390 : 430) : isCheckout ? 150 : isBack ? 120 : 160;
+      const enterDelay = isPlay ? (compact ? 280 : 320) : isCheckout ? 110 : isBack ? 80 : isDetail ? 110 : 70;
       timers.current.push(window.setTimeout(() => {
         setTransitionPhase("navigating");
         const anchor = pendingAnchor.current;
@@ -157,6 +154,8 @@ export function AvantTransitionEngine() {
   }, [clearTimers, finish, setTransitionPhase]);
 
   useEffect(() => {
+    const movedBack = location.pathname !== lastPath.current;
+    lastPath.current = location.pathname;
     if (phaseRef.current !== "navigating") return;
     let r2 = 0;
     const r1 = requestAnimationFrame(() => {
@@ -165,6 +164,10 @@ export function AvantTransitionEngine() {
         timers.current.push(window.setTimeout(finish, REVEAL_BY_MODE[modeRef.current]));
       });
     });
+    return () => {
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+    };
     return () => {
       cancelAnimationFrame(r1);
       cancelAnimationFrame(r2);
