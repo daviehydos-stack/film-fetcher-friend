@@ -24,13 +24,16 @@ export function PageShell({
           {title}
         </h1>
         {intro ? (
-          <div className="mt-5 max-w-3xl text-base leading-relaxed text-foreground/85">
-            {intro}
-          </div>
+          <div className="mt-5 max-w-3xl text-base leading-relaxed text-foreground/85">{intro}</div>
         ) : null}
         {hero ? (
           <div className="panel mt-7 overflow-hidden rounded-xl sm:mt-8 sm:rounded-2xl">
-            <img src={hero} alt={`${title} featured artwork`} decoding="async" className="w-full object-cover" />
+            <img
+              src={hero}
+              alt={`${title} featured artwork`}
+              decoding="async"
+              className="w-full object-cover"
+            />
           </div>
         ) : null}
       </section>

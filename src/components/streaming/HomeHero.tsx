@@ -6,7 +6,12 @@ import type { CatalogueTitle } from "@/lib/site-data";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
-import { accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import {
+  accountAccess,
+  cachedSubscriber,
+  subscribeAccessChanged,
+  type AccessState,
+} from "@/lib/avant-backend";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { rememberReturnContext } from "@/lib/navigation-memory";
 import { TitlePreviewModal } from "./TitlePreviewModal";
@@ -20,18 +25,81 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [trailerVisible, setTrailerVisible] = useState(false);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
-  const [heroInView,setHeroInView]=useState(true);
-  const [detailsOpen,setDetailsOpen]=useState(false); const [playRequested,setPlayRequested]=useState(false);
-  const heroRef=useRef<HTMLElement|null>(null); const trailerFrameRef=useRef<HTMLIFrameElement|null>(null);
-  const firstEpisode=item.episodes?.[0];
-  const playableContentId = item.type==="movie"&&(item.youtubeVideoId||item.vimeoVideoId) ? item.slug : firstEpisode&&(firstEpisode.youtubeId||firstEpisode.vimeoVideoId)&&firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
-  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);useEffect(()=>{let live=true;const key=firstEpisode?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(playableContentId){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");customerToken(false).then(async token=>{if(!live)return;if(!token){setAccessState("signed_out");return}try{const a=await accountAccess(token);if(live)setAccessState(a.subscriber?"authorized":"locked")}catch{if(live)setAccessState("error")}});return()=>{live=false}},[item.slug,firstEpisode?.legacyKey,playableContentId,accessVersion]);
+  const [accessState, setAccessState] = useState<AccessState>(() =>
+    cachedSubscriber() ? "authorized" : "loading",
+  );
+  const [accessVersion, setAccessVersion] = useState(0);
+  const [heroInView, setHeroInView] = useState(true);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [playRequested, setPlayRequested] = useState(false);
+  const heroRef = useRef<HTMLElement | null>(null);
+  const trailerFrameRef = useRef<HTMLIFrameElement | null>(null);
+  const firstEpisode = item.episodes?.[0];
+  const playableContentId =
+    item.type === "movie" && (item.youtubeVideoId || item.vimeoVideoId)
+      ? item.slug
+      : firstEpisode &&
+          (firstEpisode.youtubeId || firstEpisode.vimeoVideoId) &&
+          firstEpisode.locked === false
+        ? (firstEpisode.legacyKey ?? `${item.slug}-1`)
+        : null;
+  useEffect(() => subscribeAccessChanged(() => setAccessVersion((v) => v + 1)), []);
+  useEffect(() => {
+    let live = true;
+    const key = firstEpisode?.legacyKey ?? (item.type === "movie" ? item.slug : `${item.slug}-1`);
+    if (playableContentId) {
+      setAccessState("authorized");
+      return () => {
+        live = false;
+      };
+    }
+    setAccessState("loading");
+    customerToken(false).then(async (token) => {
+      if (!live) return;
+      if (!token) {
+        setAccessState("signed_out");
+        return;
+      }
+      try {
+        const a = await accountAccess(token);
+        if (live) setAccessState(a.subscriber ? "authorized" : "locked");
+      } catch {
+        if (live) setAccessState("error");
+      }
+    });
+    return () => {
+      live = false;
+    };
+  }, [item.slug, firstEpisode?.legacyKey, playableContentId, accessVersion]);
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
-  useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{const visible=entry.isIntersecting&&entry.intersectionRatio>=0.22;setHeroInView(visible);if(!visible)pauseEmbeddedPlayer(trailerFrameRef.current);else if(trailerVisible)playEmbeddedPlayer(trailerFrameRef.current)},{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
+  useEffect(() => {
+    const node = heroRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting && entry.intersectionRatio >= 0.22;
+        setHeroInView(visible);
+        if (!visible) pauseEmbeddedPlayer(trailerFrameRef.current);
+        else if (trailerVisible) playEmbeddedPlayer(trailerFrameRef.current);
+      },
+      { threshold: [0, 0.22, 0.5] },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [item.id]);
 
-  async function toggleSaved(){ const token=await customerToken(false); if(!token){ try{await requireCustomerToken()}catch{return} } setSaved(toggleMyList(item.id).includes(item.id)); }
+  async function toggleSaved() {
+    const token = await customerToken(false);
+    if (!token) {
+      try {
+        await requireCustomerToken();
+      } catch {
+        return;
+      }
+    }
+    setSaved(toggleMyList(item.id).includes(item.id));
+  }
 
   useEffect(() => {
     setTrailerReady(false);
@@ -45,46 +113,133 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false) return () => screen.removeEventListener?.("change", syncScreen);
+    if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+      return () => screen.removeEventListener?.("change", syncScreen);
     // Keep the artwork visible for two seconds, then begin the cinematic autoplay preview.
     const timer = window.setTimeout(() => setTrailerReady(true), 2000);
-  return () => { window.clearTimeout(timer); screen.removeEventListener?.("change", syncScreen); };
+    return () => {
+      window.clearTimeout(timer);
+      screen.removeEventListener?.("change", syncScreen);
+    };
   }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
 
   return (
-    <section ref={heroRef} className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-0 lg:mt-0 lg:min-h-[88vh] lg:rounded-none">
-      <img src={item.backdrop} alt={`${item.title} featured artwork`} fetchPriority="high" decoding="async" className={`absolute inset-0 size-full object-cover object-[62%_center] sm:object-center transition-opacity duration-500 ${trailerVisible ? "opacity-0" : "opacity-100"}`} />
+    <section
+      ref={heroRef}
+      className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-0 lg:mt-0 lg:min-h-[88vh] lg:rounded-none"
+    >
+      <img
+        src={item.backdrop}
+        alt={`${item.title} featured artwork`}
+        fetchPriority="high"
+        decoding="async"
+        className={`absolute inset-0 size-full object-cover object-[62%_center] sm:object-center transition-opacity duration-500 ${trailerVisible ? "opacity-0" : "opacity-100"}`}
+      />
 
-      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen && heroInView ? (
+      {item.heroAutoplay !== false &&
+      item.trailerEmbedUrl &&
+      trailerReady &&
+      !trailerFailed &&
+      !reducedMotion &&
+      largeScreen &&
+      heroInView ? (
         <iframe
           ref={trailerFrameRef}
           src={heroTrailerUrl(item.trailerEmbedUrl, muted, false)}
           title={`${item.title} trailer`}
           allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-          onLoad={(event) => { window.dispatchEvent(new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } })); setTrailerLoaded(true); window.setTimeout(() => setTrailerVisible(true), 120); }}
+          onLoad={(event) => {
+            window.dispatchEvent(
+              new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } }),
+            );
+            setTrailerLoaded(true);
+            window.setTimeout(() => setTrailerVisible(true), 120);
+          }}
           onError={() => setTrailerFailed(true)}
           className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
         />
       ) : null}
 
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.88)_0%,rgba(0,0,0,.58)_28%,rgba(0,0,0,.14)_58%,rgba(0,0,0,.06)_100%)]" /><div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.34)_0%,transparent_25%,transparent_62%,rgba(0,0,0,.34)_78%,var(--background)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.88)_0%,rgba(0,0,0,.58)_28%,rgba(0,0,0,.14)_58%,rgba(0,0,0,.06)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.34)_0%,transparent_25%,transparent_62%,rgba(0,0,0,.34)_78%,var(--background)_100%)]" />
 
       <div className="relative z-10 flex min-h-[76svh] max-w-[1600px] items-end px-5 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[82svh] sm:px-10 sm:pb-24 lg:min-h-[88vh] lg:h-full lg:px-14 lg:pb-28">
         <div className="max-w-2xl">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-orange-400/25 bg-orange-400/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-orange-300 backdrop-blur"><Sparkles className="size-3"/>Featured on Avant</div>
-          <h1 className="max-w-xl text-[clamp(2.8rem,11vw,4.8rem)] font-black uppercase leading-[.86] tracking-[-.055em] text-white sm:text-7xl lg:text-[5.5rem]">{item.title}</h1>
-          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold sm:text-sm"><span>{item.type === "movie" ? "Film" : "Series"}</span><span className="text-white/30">•</span><span>{item.genres.join(" · ")}</span><span className="rounded border border-white/25 px-1.5 py-0.5 text-[10px] text-white/70">HD</span></div>
-          <p className="mt-3 max-w-xl line-clamp-3 text-sm leading-6 text-white/85 sm:mt-4 sm:text-lg sm:leading-7">{item.shortDescription}</p>
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-orange-400/25 bg-orange-400/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-orange-300 backdrop-blur">
+            <Sparkles className="size-3" />
+            Featured on Avant
+          </div>
+          <h1 className="max-w-xl text-[clamp(2.8rem,11vw,4.8rem)] font-black uppercase leading-[.86] tracking-[-.055em] text-white sm:text-7xl lg:text-[5.5rem]">
+            {item.title}
+          </h1>
+          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold sm:text-sm">
+            <span>{item.type === "movie" ? "Film" : "Series"}</span>
+            <span className="text-white/30">•</span>
+            <span>{item.genres.join(" · ")}</span>
+            <span className="rounded border border-white/25 px-1.5 py-0.5 text-[10px] text-white/70">
+              HD
+            </span>
+          </div>
+          <p className="mt-3 max-w-xl line-clamp-3 text-sm leading-6 text-white/85 sm:mt-4 sm:text-lg sm:leading-7">
+            {item.shortDescription}
+          </p>
           <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-            <Button type="button" size="lg" onClick={()=>{setMuted(true);setPlayRequested(true);setTrailerReady(true)}} className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85"><Play className="fill-current" />{(playableContentId||accessState==="authorized")?"Play":"Preview"}</Button>
-            <Button type="button" size="lg" variant="secondary" onClick={()=>setDetailsOpen(true)} className="h-11 w-full bg-white/20 px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-white backdrop-blur-md hover:bg-white/30"><Info />More Info</Button>
-          <Button type="button" size="lg" variant="secondary" onClick={() => void toggleSaved()} className="col-span-2 h-11 w-full bg-black/35 px-4 text-sm font-bold text-white backdrop-blur-md hover:bg-white/15 sm:col-auto sm:h-12 sm:w-auto sm:px-5 sm:text-base">{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
+            <Button
+              type="button"
+              size="lg"
+              onClick={() => {
+                setMuted(true);
+                setPlayRequested(true);
+                setTrailerReady(true);
+              }}
+              className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85"
+            >
+              <Play className="fill-current" />
+              {playableContentId || accessState === "authorized" ? "Play" : "Preview"}
+            </Button>
+            <Button
+              type="button"
+              size="lg"
+              variant="secondary"
+              onClick={() => setDetailsOpen(true)}
+              className="h-11 w-full bg-white/20 px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-white backdrop-blur-md hover:bg-white/30"
+            >
+              <Info />
+              More Info
+            </Button>
+            <Button
+              type="button"
+              size="lg"
+              variant="secondary"
+              onClick={() => void toggleSaved()}
+              className="col-span-2 h-11 w-full bg-black/35 px-4 text-sm font-bold text-white backdrop-blur-md hover:bg-white/15 sm:col-auto sm:h-12 sm:w-auto sm:px-5 sm:text-base"
+            >
+              {saved ? <Check /> : <Plus />}
+              {saved ? "In My List" : "My List"}
+            </Button>
           </div>
         </div>
       </div>
 
-      {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && trailerLoaded && trailerVisible && !trailerFailed && !reducedMotion && largeScreen && heroInView ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
-      {detailsOpen?<TitlePreviewModal item={item} onClose={()=>setDetailsOpen(false)}/>:null}
+      {item.heroAutoplay !== false &&
+      item.trailerEmbedUrl &&
+      trailerReady &&
+      trailerLoaded &&
+      trailerVisible &&
+      !trailerFailed &&
+      !reducedMotion &&
+      largeScreen &&
+      heroInView ? (
+        <button
+          type="button"
+          onClick={() => setMuted((value) => !value)}
+          aria-label={muted ? "Turn hero sound on" : "Mute hero"}
+          className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14"
+        >
+          {muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
+        </button>
+      ) : null}
+      {detailsOpen ? <TitlePreviewModal item={item} onClose={() => setDetailsOpen(false)} /> : null}
     </section>
   );
 }
