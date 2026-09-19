@@ -5,7 +5,7 @@ import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
-import { accessForContent, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { accountAccess, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
   const [detailsOpen,setDetailsOpen]=useState(false);
@@ -24,7 +24,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const accessLabel = playableContentId||accessState==="authorized" ? "Watch now" : accessState==="loading" ? "Checking access…" : item.available ? "Access required" : "Coming soon";
 
   useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);
-  useEffect(()=>{let live=true;const key=firstEpisode?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(playableContentId){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");accessForContent(key).then(r=>{if(live)setAccessState(r.state)});return()=>{live=false}},[item.slug,firstEpisode?.legacyKey,playableContentId,accessVersion]);
+  useEffect(()=>{let live=true;const key=firstEpisode?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(playableContentId){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");customerToken(false).then(async token=>{if(!live)return;if(!token){setAccessState("signed_out");return}try{const a=await accountAccess(token);if(live)setAccessState(a.subscriber?"authorized":"locked")}catch{if(live)setAccessState("error")}});return()=>{live=false}},[item.slug,firstEpisode?.legacyKey,playableContentId,accessVersion]);
   useEffect(() => {
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
     const sync = () => setHoverCapable(media.matches);
