@@ -145,8 +145,10 @@ export const films: Film[] = [
 ];
 
 export type Episode = {
+  id?: string;
   title: string;
   season?: number;
+  episodeNumber?: number;
   duration: string;
   youtubeId?: string;
   vimeoVideoId?: string;
@@ -156,6 +158,9 @@ export type Episode = {
   legacyKey?: string;
   previewStart?: number;
   previewDuration?: number;
+  previewYoutubeId?: string;
+  previewVimeoVideoId?: string;
+  previewEmbedUrl?: string;
 };
 
 export const thisIsLifeFree: Episode[] = [
