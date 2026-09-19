@@ -22,20 +22,23 @@ function mapPublicEpisode(value: unknown): Episode | null {
   const title = text(raw["title"]);
   if (!title) return null;
   const durationSeconds = numberValue(raw["duration_seconds"]);
+  const season = numberValue(raw["season_number"]);
+  const previewStart = numberValue(raw["preview_start_seconds"]);
+  const previewDuration = numberValue(raw["preview_duration_seconds"]);
   const youtubeId = text(raw["youtube_video_id"]) || text(raw["youtubeId"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]) || text(raw["vimeoVideoId"]);
   return {
     title,
     duration: text(raw["duration"]) || (durationSeconds ? `${Math.floor(durationSeconds / 60)}:${String(durationSeconds % 60).padStart(2, "0")}` : ""),
-    ...(numberValue(raw["season_number"]) ? { season: numberValue(raw["season_number"]) } : {}),
+    ...(season !== undefined ? { season } : {}),
     ...(youtubeId ? { youtubeId } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
     ...(text(raw["thumbnail_url"]) ? { poster: text(raw["thumbnail_url"]) } : {}),
     ...(typeof raw["access_required"] === "boolean" ? { locked: raw["access_required"] } : {}),
     ...(text(raw["description"]) ? { description: text(raw["description"]) } : {}),
     ...(text(raw["legacy_key"]) ? { legacyKey: text(raw["legacy_key"]) } : {}),
-    ...(numberValue(raw["preview_start_seconds"]) !== undefined ? { previewStart: numberValue(raw["preview_start_seconds"]) } : {}),
-    ...(numberValue(raw["preview_duration_seconds"]) !== undefined ? { previewDuration: numberValue(raw["preview_duration_seconds"]) } : {}),
+    ...(previewStart !== undefined ? { previewStart } : {}),
+    ...(previewDuration !== undefined ? { previewDuration } : {}),
   };
 }
 

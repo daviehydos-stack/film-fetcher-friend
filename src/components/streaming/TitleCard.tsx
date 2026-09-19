@@ -40,7 +40,7 @@ export function TitleCard({
   const playableContentId =
     item.type === "movie" && (item.youtubeVideoId || item.vimeoVideoId)
       ? item.slug
-      : isFreeEpisode(firstEpisode)
+      : firstEpisode && isFreeEpisode(firstEpisode)
         ? (firstEpisode.legacyKey ?? `${item.slug}-1`)
         : null;
   const accessLabel =
