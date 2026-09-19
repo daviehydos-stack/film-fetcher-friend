@@ -72,7 +72,7 @@ export function ContentRail({
       >
         {items.map((item) => (
           <div key={item.id} data-title-card className="shrink-0 snap-start">
-            <TitleCard item={item} badgeLabel={badgeLabel} />
+            {badgeLabel ? <TitleCard item={item} badgeLabel={badgeLabel} /> : <TitleCard item={item} />}
           </div>
         ))}
       </div>

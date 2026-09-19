@@ -186,7 +186,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
                 <Link to="/watch/$contentId" params={{ contentId: watchContentId }}><Play className="fill-current" />Watch</Link>
               </Button>
             ) : item.trailerEmbedUrl ? (
-              <Button type="button" size="lg" onClick={() => { setMuted(false); setTrailerReady(true); }} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
+              <Button type="button" size="lg" onClick={() => { if (largeScreen && !reducedMotion) { setMuted(false); setTrailerReady(true); } else { setDetailsOpen(true); } }} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
                 <Play className="fill-current" />Trailer
               </Button>
             ) : (
