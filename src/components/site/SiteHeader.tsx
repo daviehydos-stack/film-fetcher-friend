@@ -172,14 +172,12 @@ export function SiteHeader() {
               <Search className="size-5" />
             </Link>
           ) : null}
-          {admin ? (
-            <Link
+          <Link
               to="/admin"
-              className="hidden rounded-full px-3 py-2 text-xs font-semibold text-orange-300 hover:bg-orange-400/10 lg:block"
+              className="hidden rounded-full border border-orange-300/25 bg-orange-300/10 px-3 py-2 text-xs font-black text-orange-200 hover:bg-orange-300/20 lg:block"
             >
               Admin
             </Link>
-          ) : null}
           {!authReady ? (
             <span
               className="hidden h-10 w-36 rounded-full bg-white/[.04] sm:block"
@@ -271,15 +269,13 @@ export function SiteHeader() {
               Sign in with Google
             </button>
           )}
-          {admin ? (
-            <Link
+          <Link
               to="/admin"
               onClick={() => setOpen(false)}
-              className="mt-2 flex min-h-12 items-center rounded-xl px-3 font-semibold text-orange-300"
+              className="mt-2 flex min-h-12 items-center rounded-xl border border-orange-300/20 bg-orange-300/10 px-3 font-black text-orange-200"
             >
               Admin
             </Link>
-          ) : null}
         </nav>
       ) : null}
     </header>
