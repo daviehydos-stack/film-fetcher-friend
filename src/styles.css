@@ -482,3 +482,9 @@ main,header,footer,section,nav{max-width:100%}
 .avant-transition-mode-back .avant-transition-vignette{background:#030405}
 @keyframes avantBackIn{from{opacity:0}to{opacity:1}}
 @keyframes avantBackOut{from{opacity:1}to{opacity:0}}
+
+/* Calm catalogue navigation — Home / Movies / TV / My List */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes avantRouteFade{from{opacity:.82}to{opacity:1}}
+  main{animation:avantRouteFade 140ms ease-out both}
+}
