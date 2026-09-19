@@ -44,6 +44,8 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
       const previewYoutubeId = stringValue(raw["preview_youtube_id"]);
       const previewVimeoVideoId = stringValue(raw["preview_vimeo_video_id"]);
       const previewEmbedUrl = stringValue(raw["preview_embed_url"]) || stringValue(raw["trailer_embed_url"]);
+      const previewStart = numberValue(raw["preview_start_seconds"]);
+      const previewDuration = numberValue(raw["preview_duration_seconds"]);
       return {
         ...(id ? { id } : {}),
         title: stringValue(raw["title"]) || `Episode ${sourceIndex + 1}`,
@@ -56,8 +58,8 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
         ...(typeof raw["access_required"] === "boolean" ? { locked: raw["access_required"] } : {}),
         ...(description ? { description } : {}),
         ...(legacyKey ? { legacyKey } : {}),
-        ...(numberValue(raw["preview_start_seconds"]) !== undefined ? { previewStart: numberValue(raw["preview_start_seconds"]) } : {}),
-        ...(numberValue(raw["preview_duration_seconds"]) !== undefined ? { previewDuration: numberValue(raw["preview_duration_seconds"]) } : {}),
+        ...(previewStart !== undefined ? { previewStart } : {}),
+        ...(previewDuration !== undefined ? { previewDuration } : {}),
         ...(previewYoutubeId ? { previewYoutubeId } : {}),
         ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
         ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
