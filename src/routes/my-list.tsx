@@ -22,7 +22,7 @@ export const Route = createFileRoute("/my-list")({
 function MyList() {
   const [ids, setIds] = useState<string[]>([]);
   const [live, setLive] = useState<CatalogueTitle[]>(catalogue);
-  const [customer,setCustomer]=useState<any>(()=>{if(typeof window==="undefined")return undefined;try{const t=localStorage.getItem("avant_google_id_token");if(!t)return null;const p=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return p?.exp*1000>Date.now()?{email:p.email,name:p.name,photoURL:p.picture}:null}catch{return null}});
+  const [customer,setCustomer]=useState<any>(()=>{if(typeof window==="undefined")return undefined;try{const t=localStorage.getItem("avant_google_id_token");if(!t)return null;const p=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return ((p as any)?.exp||0)*1000>Date.now()?{email:(p as any).email,name:(p as any).name,photoURL:(p as any).picture}:null}catch{return null}});
   const [authBusy,setAuthBusy]=useState(false);
 
   useEffect(() => {

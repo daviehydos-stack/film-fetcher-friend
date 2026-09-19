@@ -7,7 +7,7 @@ export function entitlementIsActive(entitlement: Entitlement, now = new Date()) 
   return true
 }
 
-export function entitlementGrantsContent(entitlement: Entitlement, target: { contentId: string; seasonId?: string }, now = new Date()) {
+export function entitlementGrantsContent(entitlement: Entitlement, target: { contentId: string; seasonId?: string | undefined }, now = new Date()) {
   if (!entitlementIsActive(entitlement, now)) return false
   if (entitlement.contentId === target.contentId) return true
   if (target.seasonId && entitlement.seasonId === target.seasonId) return true

@@ -8,3 +8,5 @@
 - [x] Verify Phase 1 across phone, tablet, desktop, interactions, metadata, and errors
 - [x] Preserve and verify the existing external Supabase integrations; no backend changes in Phase 1
 - [ ] Complete Phase 2 discovery: Movies, TV Shows, Watch for Free, Search, filters, responsive QA
+
+- [ ] Complete Phase 3 title, series, trailer, watch, continuity, and responsive QA

@@ -21,13 +21,13 @@ export type BackendAccessResponse = {
 }
 
 function backendBaseUrl() {
-  const value = process.env.FILM_BACKEND_URL?.trim()
+  const value = process.env['FILM_BACKEND_URL']?.trim()
   if (!value) throw new Error('FILM_BACKEND_URL is not configured')
   return value.replace(/\/$/, '')
 }
 
 async function callBackend<T>(path: string, init: RequestInit): Promise<T> {
-  const secret = process.env.FILM_BACKEND_SECRET?.trim()
+  const secret = process.env['FILM_BACKEND_SECRET']?.trim()
   if (!secret) throw new Error('FILM_BACKEND_SECRET is not configured')
 
   const response = await fetch(`${backendBaseUrl()}${path}`, {
@@ -74,7 +74,7 @@ export const backendVerifyPayment = createServerOnlyFn(async (reference: string)
 )
 
 export const backendAuthorizeContent = createServerOnlyFn(
-  async (input: { customerId: string; contentId: string; seasonId?: string }) =>
+  async (input: { customerId: string; contentId: string; seasonId?: string | undefined }) =>
     callBackend<BackendAccessResponse>('/api/access/authorize', {
       method: 'POST',
       body: JSON.stringify({
