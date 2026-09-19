@@ -6,7 +6,7 @@ import type { CatalogueTitle } from "@/lib/site-data";
 import { heroTrailerUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
-import { myLibrary } from "@/lib/avant-backend";
+import { myLibrary, subscribeAccessChanged } from "@/lib/avant-backend";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { rememberReturnContext } from "@/lib/navigation-memory";
 
@@ -19,12 +19,12 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [trailerVisible, setTrailerVisible] = useState(false);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [hasAccess,setHasAccess]=useState(false);
+  const [hasAccess,setHasAccess]=useState(false); const [accessVersion,setAccessVersion]=useState(0);
   const [heroInView,setHeroInView]=useState(true);
   const heroRef=useRef<HTMLElement|null>(null);
   const firstEpisode=item.episodes?.[0];
   const playableContentId = firstEpisode?.youtubeId && firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
-  useEffect(()=>{let live=true;customerToken(false).then(async token=>{if(!token)return;try{const lib=await myLibrary(token);const hit=(lib.entitlements||[]).some((e:any)=>e.status==="active"&&(e.title?.slug===item.slug||e.access_type==="bundle"||e.access_type==="subscription"));if(live)setHasAccess(hit)}catch{}});return()=>{live=false}},[item.slug]);
+  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);useEffect(()=>{let live=true;customerToken(false).then(async token=>{if(!token){if(live)setHasAccess(false);return}try{const lib=await myLibrary(token);const hit=(lib.entitlements||[]).some((e:any)=>e.status==="active"&&(e.title?.slug===item.slug||e.access_type==="bundle"||e.access_type==="subscription"));if(live)setHasAccess(hit)}catch{}});return()=>{live=false}},[item.slug,accessVersion]);
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
   useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=0.22),{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
