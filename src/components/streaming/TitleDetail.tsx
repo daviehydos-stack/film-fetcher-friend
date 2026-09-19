@@ -22,7 +22,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [detailExpanded, setDetailExpanded] = useState(false);
   const [heroPreview, setHeroPreview] = useState(false);
   const [heroPreviewLoaded, setHeroPreviewLoaded] = useState(false);
-  const [heroMuted, setHeroMuted] = useState(false);
+  const [heroMuted, setHeroMuted] = useState(true);
   const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
   const heroRef = useRef<HTMLElement | null>(null);
   const [heroInView, setHeroInView] = useState(true);
@@ -45,7 +45,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
     if (!previewUrl || !heroInView || trailerOpen || item.heroAutoplay === false || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setTimeout(() => setHeroPreview(true), 900);
+    const timer = window.setTimeout(() => setHeroPreview(true), 120);
     return () => window.clearTimeout(timer);
   }, [item.id, previewUrl, item.heroAutoplay, heroInView, trailerOpen]);
   useEffect(() => { const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{const visible=entry.isIntersecting&&entry.intersectionRatio>=0.35;setHeroInView(visible);if(!visible){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}},{threshold:[0,.15,.35,.6]});observer.observe(node);return()=>observer.disconnect(); }, [item.id]);
