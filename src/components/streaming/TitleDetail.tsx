@@ -49,7 +49,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     const timer = window.setTimeout(() => setHeroPreview(true), 2000);
     return () => window.clearTimeout(timer);
   }, [item.id, previewUrl, item.heroAutoplay, heroInView, trailerOpen]);
-  useEffect(() => { const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{const visible=entry.isIntersecting&&entry.intersectionRatio>=0.35;setHeroInView(visible);if(!visible){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}},{threshold:[0,.15,.35,.6]});observer.observe(node);return()=>observer.disconnect(); }, [item.id]);
+  useEffect(() => { const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{if(!entry)return;const visible=entry.isIntersecting&&entry.intersectionRatio>=0.35;setHeroInView(visible);if(!visible){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}},{threshold:[0,.15,.35,.6]});observer.observe(node);return()=>observer.disconnect(); }, [item.id]);
   useEffect(()=>{const hide=()=>{if(document.hidden){pausePreview();setHeroPreview(false);setHeroPreviewLoaded(false)}};document.addEventListener("visibilitychange",hide);return()=>{document.removeEventListener("visibilitychange",hide);pausePreview()}},[item.id]);
   
   const toggleSaved = () => setSaved(toggleMyList(item.id).includes(item.id));

@@ -23,14 +23,14 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const fallbackVimeo=item.type==="movie"?item.vimeoVideoId:item.episodes?.[0]?.vimeoVideoId;
  const fallbackPreview=!dedicatedPreview&&(fallbackYoutube||fallbackVimeo);
  const video=!closing&&previewInView?(item.trailerEmbedUrl|| (item.previewYoutubeId?youtubeEmbedUrl(item.previewYoutubeId,{autoplay:true,muted,controls:false,loop:true,jsApi:true}):fallbackYoutube?youtubeEmbedUrl(fallbackYoutube,{autoplay:true,muted,controls:false,start:0,end:60,loop:true,jsApi:true}):fallbackVimeo?`https://player.vimeo.com/video/${fallbackVimeo}?autoplay=1&muted=${muted?1:0}&controls=0&dnt=1&title=0&byline=0&portrait=0`:null)):null;
- useEffect(()=>{if(fallbackPreview){setFallbackCycle(0);const t=window.setInterval(()=>setFallbackCycle(v=>v+1),60000);return()=>window.clearInterval(t)}},[item.slug,Boolean(fallbackPreview)]);
+ useEffect(()=>{if(!fallbackPreview)return;setFallbackCycle(0);const t=window.setInterval(()=>setFallbackCycle(v=>v+1),60000);return()=>window.clearInterval(t)},[item.slug,Boolean(fallbackPreview)]);
  useEffect(()=>{if(!video){setElapsed(0);return}
  const receive=(event:MessageEvent)=>{try{const data=typeof event.data==="string"?JSON.parse(event.data):event.data;if(data?.event==="infoDelivery"&&typeof data?.info?.currentTime==="number"){const total=Math.max(1,end-start);const t=Math.max(0,data.info.currentTime-start);setElapsed(t>=total?0:t)}}catch{}};
  window.addEventListener("message",receive);
  const poll=window.setInterval(()=>frameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"listening",id:"avant-preview"}),"*"),500);
  return()=>{window.removeEventListener("message",receive);window.clearInterval(poll)}
  },[video,end,start]);
- useEffect(()=>{const node=heroRef.current;if(!node)return;const ob=new IntersectionObserver(([e])=>{const visible=e.isIntersecting&&e.intersectionRatio>=.25;setPreviewInView(visible);if(!visible)frameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*")},{threshold:[0,.25,.5]});ob.observe(node);return()=>ob.disconnect()},[item.id]);
+ useEffect(()=>{const node=heroRef.current;if(!node)return;const ob=new IntersectionObserver(([e])=>{if(!e)return;const visible=e.isIntersecting&&e.intersectionRatio>=.25;setPreviewInView(visible);if(!visible)frameRef.current?.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*")},{threshold:[0,.25,.5]});ob.observe(node);return()=>ob.disconnect()},[item.id]);
  const content=<div className={`avant-preview-backdrop ${closing?"is-closing":""} fixed inset-0 z-[100] overflow-y-auto bg-black/82 backdrop-blur-[10px]`} onMouseDown={e=>{if(e.target===e.currentTarget)requestClose()}}>
   <div className={`avant-preview-dialog ${closing?"is-closing":""} relative mx-auto my-0 w-full max-w-[1180px] overflow-hidden rounded-none border border-white/[.07] bg-[#171717] shadow-[0_45px_130px_rgba(0,0,0,.88)] sm:my-8 sm:w-[min(96vw,1180px)] sm:rounded-2xl`}>
    <button onClick={requestClose} aria-label="Close" className="absolute right-3 top-[max(.75rem,env(safe-area-inset-top))] z-30 grid size-11 place-items-center rounded-full border border-white/10 bg-black/70 text-white shadow-lg backdrop-blur-md transition hover:bg-white/15"><X/></button>

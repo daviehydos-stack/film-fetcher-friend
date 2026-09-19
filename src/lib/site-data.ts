@@ -11,6 +11,7 @@ export const navLinks = [
   { label: "Home", to: "/" },
   { label: "TV Shows", to: "/tv-shows" },
   { label: "Movies", to: "/movies" },
+  { label: "Watch Free", to: "/watch-free" },
   { label: "My List", to: "/my-list" },
 ] as const;
 

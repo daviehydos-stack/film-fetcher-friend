@@ -4,7 +4,7 @@ export const SEO_SITE_NAME = "Avant Cinema";
 export const SEO_BRAND = "Avant Movies";
 export const SEO_DEFAULT_TITLE = "Avant Movies — It’s time to feel again";
 export const SEO_DEFAULT_DESCRIPTION = "Stream independent Kenyan films and series from Avant Movies.";
-export const SEO_ORIGIN = (import.meta.env.VITE_PUBLIC_SITE_URL || "https://www.avantcinema.com").replace(/\/$/, "");
+export const SEO_ORIGIN = (import.meta.env["VITE_PUBLIC_SITE_URL"] || "https://www.avantcinema.com").replace(/\/$/, "");
 
 export function absoluteUrl(path: string) {
   if (!SEO_ORIGIN) return undefined;
@@ -82,7 +82,7 @@ export function youtubeThumbnail(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
-export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string; pagePath: string; episodeNumber?: number; seriesName?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string }) {
+export function videoObjectSchema(input: { name: string; description: string; youtubeId: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string }) {
   const pageUrl = absoluteUrl(input.pagePath);
   const embedUrl = `https://www.youtube-nocookie.com/embed/${input.youtubeId}`;
   return {
