@@ -12,6 +12,33 @@ function textList(value: unknown) {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
+function numberValue(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
+function mapPublicEpisode(value: unknown): Episode | null {
+  if (!value || typeof value !== "object") return null;
+  const raw = value as Record<string, unknown>;
+  const title = text(raw["title"]);
+  if (!title) return null;
+  const durationSeconds = numberValue(raw["duration_seconds"]);
+  const youtubeId = text(raw["youtube_video_id"]) || text(raw["youtubeId"]);
+  const vimeoVideoId = text(raw["vimeo_video_id"]) || text(raw["vimeoVideoId"]);
+  return {
+    title,
+    duration: text(raw["duration"]) || (durationSeconds ? `${Math.floor(durationSeconds / 60)}:${String(durationSeconds % 60).padStart(2, "0")}` : ""),
+    ...(numberValue(raw["season_number"]) ? { season: numberValue(raw["season_number"]) } : {}),
+    ...(youtubeId ? { youtubeId } : {}),
+    ...(vimeoVideoId ? { vimeoVideoId } : {}),
+    ...(text(raw["thumbnail_url"]) ? { poster: text(raw["thumbnail_url"]) } : {}),
+    ...(typeof raw["access_required"] === "boolean" ? { locked: raw["access_required"] } : {}),
+    ...(text(raw["description"]) ? { description: text(raw["description"]) } : {}),
+    ...(text(raw["legacy_key"]) ? { legacyKey: text(raw["legacy_key"]) } : {}),
+    ...(numberValue(raw["preview_start_seconds"]) !== undefined ? { previewStart: numberValue(raw["preview_start_seconds"]) } : {}),
+    ...(numberValue(raw["preview_duration_seconds"]) !== undefined ? { previewDuration: numberValue(raw["preview_duration_seconds"]) } : {}),
+  };
+}
+
 export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
   const slug = text(raw["slug"]);
   const title = text(raw["title"]);
@@ -22,7 +49,9 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
   const fallback = catalogue.find((item) => item.slug === slug || item.id === legacyKey);
   const youtubeVideoId = text(raw["youtube_video_id"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]);
-  const liveEpisodes = Array.isArray(raw["episodes"]) ? (raw["episodes"] as Episode[]) : undefined;
+  const liveEpisodes = Array.isArray(raw["episodes"])
+    ? raw["episodes"].map(mapPublicEpisode).filter((episode): episode is Episode => Boolean(episode))
+    : undefined;
   const movieEpisode: Episode[] | undefined =
     contentType === "movie" && (youtubeVideoId || vimeoVideoId)
       ? [{ title, duration: "", ...(youtubeVideoId ? { youtubeId: youtubeVideoId } : {}), ...(vimeoVideoId ? { vimeoVideoId } : {}), locked: false, legacyKey: slug }]
@@ -65,7 +94,11 @@ export function mergePublicCatalogue(payload: unknown) {
 
 export function isFreeTitle(item: CatalogueTitle) {
   if (item.type === "movie" && Boolean(item.youtubeVideoId || item.vimeoVideoId)) return true;
-  return Boolean(item.episodes?.some((episode) => (episode.youtubeId || episode.vimeoVideoId) && episode.locked !== true));
+  return Boolean(item.episodes?.some(isFreeEpisode));
+}
+
+export function isFreeEpisode(episode: Episode | undefined) {
+  return Boolean(episode && (episode.youtubeId || episode.vimeoVideoId) && episode.locked !== true);
 }
 
 export function useCatalogue() {
