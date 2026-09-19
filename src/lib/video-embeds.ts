@@ -1,7 +1,7 @@
 export type EmbedOptions = { autoplay?: boolean; muted?: boolean; controls?: boolean; loop?: boolean; start?: number; end?: number; jsApi?: boolean };
 
 export function youtubeEmbedUrl(id:string,options:EmbedOptions={}){
- const params=new URLSearchParams({rel:"0",playsinline:"1",modestbranding:"1",controls:options.controls===false?"0":"1"});
+ const params=new URLSearchParams({rel:"0",playsinline:"1",modestbranding:"1",iv_load_policy:"3",disablekb:"1",fs:"0",controls:options.controls===false?"0":"1"});
  if(options.autoplay)params.set("autoplay","1"); if(options.start&&options.start>0)params.set("start",String(Math.floor(options.start))); if(options.end&&options.end>0)params.set("end",String(Math.floor(options.end))); if(options.jsApi)params.set("enablejsapi","1"); if(options.muted)params.set("mute","1"); if(options.loop){params.set("loop","1");params.set("playlist",id)}
  return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
 }
