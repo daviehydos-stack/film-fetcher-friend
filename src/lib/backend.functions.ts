@@ -14,7 +14,7 @@ export const createPayment = createServerFn({ method: 'POST' })
     customer: customerSchema,
     provider: z.enum(['mpesa', 'card']),
   }))
-  .handler(async ({ data }) => backendCreatePayment(data))
+  .handler(async ({ data }) => backendCreatePayment(data as any))
 
 export const verifyPayment = createServerFn({ method: 'POST' })
   .validator(z.object({ reference: z.string().trim().min(1) }))
@@ -26,4 +26,4 @@ export const authorizeContent = createServerFn({ method: 'POST' })
     contentId: z.string().trim().min(1),
     seasonId: z.string().trim().min(1).optional(),
   }))
-  .handler(async ({ data }) => backendAuthorizeContent(data))
+  .handler(async ({ data }) => backendAuthorizeContent(data as any))

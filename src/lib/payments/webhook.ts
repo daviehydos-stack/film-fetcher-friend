@@ -8,7 +8,7 @@ export async function processPaymentWebhook(input: { providerId: string; headers
   if (payment.status === 'successful') { const product = await input.store.getActiveProduct(payment.productId); const entitlement = product ? await input.store.createEntitlementOnce(payment, product) : undefined; return { accepted: true, duplicate: true, payment, entitlement } }
   if (!['success','successful','completed','paid'].includes(event.status.toLowerCase())) return { accepted: true, duplicate: false, payment }
   const verification = await provider.verifyTransaction(payment); if (!verification.verified) return { accepted: true, duplicate: false, payment }
-  const verifiedPayment = await input.store.markPaymentVerified({ paymentId: payment.id, providerReference: verification.providerReference ?? event.providerReference })
+  const verifiedPayment = await input.store.markPaymentVerified({ paymentId: payment.id, providerReference: (verification.providerReference ?? event.providerReference) as any })
   const product = await input.store.getActiveProduct(verifiedPayment.productId); if (!product) return { accepted: true, duplicate: false, payment: verifiedPayment }
   return { accepted: true, duplicate: false, payment: verifiedPayment, entitlement: await input.store.createEntitlementOnce(verifiedPayment, product) }
 }
