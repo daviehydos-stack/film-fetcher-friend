@@ -1,5 +1,5 @@
 const SUPABASE_URL="https://bnuyhrsezkepsaebwlmu.supabase.co";
-const SUPABASE_ANON_KEY=import.meta.env.VITE_SUPABASE_ANON_KEY||import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY||"sb_publishable_B3mlx-n0maE2rSIusRZmKw_ITK6QUeo";
+const SUPABASE_ANON_KEY=import.meta.env["VITE_SUPABASE_ANON_KEY"]||import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"]||"sb_publishable_B3mlx-n0maE2rSIusRZmKw_ITK6QUeo";
 export const ADMIN_EMAIL="hydrocephcare@gmail.com";
 export type AdminSession={admin:boolean;role?:string;requireMfa?:boolean;email?:string;reason?:string};
 export function getAdminToken(){return typeof window==="undefined"?null:window.localStorage.getItem("avant_admin_token")}

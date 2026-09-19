@@ -28,6 +28,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ThisIsLifeRouteImport } from './routes/this-is-life'
 import { Route as ThisIsLifeEpisodesRouteImport } from './routes/this-is-life-episodes'
 import { Route as TvShowsRouteImport } from './routes/tv-shows'
+import { Route as WatchFreeRouteImport } from './routes/watch-free'
 import { Route as WatchThemAllRouteImport } from './routes/watch-them-all'
 import { Route as WriteLikeAMasterRouteImport } from './routes/write-like-a-master'
 import { Route as AdminSectionRouteImport } from './routes/admin_.$section'
@@ -133,6 +134,11 @@ const TvShowsRoute = TvShowsRouteImport.update({
   path: '/tv-shows',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WatchFreeRoute = WatchFreeRouteImport.update({
+  id: '/watch-free',
+  path: '/watch-free',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WatchThemAllRoute = WatchThemAllRouteImport.update({
   id: '/watch-them-all',
   path: '/watch-them-all',
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
   '/tv-shows': typeof TvShowsRoute
+  '/watch-free': typeof WatchFreeRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin/$section': typeof AdminSectionRoute
@@ -230,6 +237,7 @@ export interface FileRoutesByTo {
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
   '/tv-shows': typeof TvShowsRoute
+  '/watch-free': typeof WatchFreeRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin/$section': typeof AdminSectionRoute
@@ -261,6 +269,7 @@ export interface FileRoutesById {
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
   '/tv-shows': typeof TvShowsRoute
+  '/watch-free': typeof WatchFreeRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin_/$section': typeof AdminSectionRoute
@@ -293,6 +302,7 @@ export interface FileRouteTypes {
     | '/this-is-life'
     | '/this-is-life-episodes'
     | '/tv-shows'
+    | '/watch-free'
     | '/watch-them-all'
     | '/write-like-a-master'
     | '/admin/$section'
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/this-is-life'
     | '/this-is-life-episodes'
     | '/tv-shows'
+    | '/watch-free'
     | '/watch-them-all'
     | '/write-like-a-master'
     | '/admin/$section'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/this-is-life'
     | '/this-is-life-episodes'
     | '/tv-shows'
+    | '/watch-free'
     | '/watch-them-all'
     | '/write-like-a-master'
     | '/admin_/$section'
@@ -384,6 +396,7 @@ export interface RootRouteChildren {
   ThisIsLifeRoute: typeof ThisIsLifeRoute
   ThisIsLifeEpisodesRoute: typeof ThisIsLifeEpisodesRoute
   TvShowsRoute: typeof TvShowsRoute
+  WatchFreeRoute: typeof WatchFreeRoute
   WatchThemAllRoute: typeof WatchThemAllRoute
   WriteLikeAMasterRoute: typeof WriteLikeAMasterRoute
   AdminSectionRoute: typeof AdminSectionRoute
@@ -530,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TvShowsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/watch-free': {
+      id: '/watch-free'
+      path: '/watch-free'
+      fullPath: '/watch-free'
+      preLoaderRoute: typeof WatchFreeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/watch-them-all': {
       id: '/watch-them-all'
       path: '/watch-them-all'
@@ -616,6 +636,7 @@ const rootRouteChildren: RootRouteChildren = {
   ThisIsLifeRoute: ThisIsLifeRoute,
   ThisIsLifeEpisodesRoute: ThisIsLifeEpisodesRoute,
   TvShowsRoute: TvShowsRoute,
+  WatchFreeRoute: WatchFreeRoute,
   WatchThemAllRoute: WatchThemAllRoute,
   WriteLikeAMasterRoute: WriteLikeAMasterRoute,
   AdminSectionRoute: AdminSectionRoute,

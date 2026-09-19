@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
+import { isFreeEpisode } from "@/lib/catalogue";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import {
@@ -35,9 +36,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const playableContentId =
     item.type === "movie" && (item.youtubeVideoId || item.vimeoVideoId)
       ? item.slug
-      : firstEpisode &&
-          (firstEpisode.youtubeId || firstEpisode.vimeoVideoId) &&
-          firstEpisode.locked === false
+      : firstEpisode && isFreeEpisode(firstEpisode)
         ? (firstEpisode.legacyKey ?? `${item.slug}-1`)
         : null;
   const watchContentId = playableContentId ?? firstEpisode?.legacyKey ?? (item.type === "movie" ? item.slug : `${item.slug}-1`);

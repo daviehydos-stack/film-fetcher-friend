@@ -153,7 +153,7 @@ function RootComponent() {
   useEffect(() => { let dead=false; const sync=async()=>{const token=await customerToken(false);if(dead)return;if(!token){rememberSubscriber(false);return}try{const a=await accountAccess(token);if(!dead)rememberSubscriber(Boolean(a.subscriber))}catch{}};void sync();const off=subscribeAccessChanged(()=>void sync());return()=>{dead=true;off()}; }, []);
   useEffect(() => { let dead=false; void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{});return()=>{dead=true}; }, []);
   useEffect(() => {
-    const buildSha = import.meta.env.VITE_BUILD_SHA?.trim();
+    const buildSha = import.meta.env["VITE_BUILD_SHA"]?.trim();
     if (!buildSha || typeof window === "undefined") return;
 
     let cancelled = false;

@@ -15,4 +15,4 @@ export function buildAutoTrailerPlan(sourceDuration:number):AutoTrailerPlan{
  const end=Math.min(d,target);
  return{sourceDuration:d,targetDuration:end,clips:[{start:0,end,duration:end,zone:1}]};
 }
-export function durationToSeconds(raw?:string){if(!raw)return 0;const p=raw.split(":").map(Number);return p.length===3?p[0]*3600+p[1]*60+p[2]:p.length===2?p[0]*60+p[1]:Number(raw)||0;}
+export function durationToSeconds(raw?:string){if(!raw)return 0;const p=raw.split(":").map(Number);const a=p[0]??0,b=p[1]??0,c=p[2]??0;return p.length===3?a*3600+b*60+c:p.length===2?a*60+b:Number(raw)||0;}

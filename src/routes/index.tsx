@@ -40,14 +40,14 @@ function Index() {
   return (
     <StreamingShell>
       <main id="main-content" className="overflow-hidden">
-        <HomeHero item={featured} />
+        {featured ? <HomeHero item={featured} /> : null}
 
         <div className="relative z-20 pb-10 pt-3 sm:pt-5 lg:pt-6">
           <ContinueWatching />
           {availableNow.length>0?<ContentRail eyebrow="Curated on Avant" title="Available Now" description="Stories ready to watch, selected from the current Avant catalogue." items={availableNow}/>:null}
           {moviePreview.length>0?<ContentRail eyebrow="Feature films & shorts" title="Movies" description="Independent films with a distinct Kenyan point of view." items={moviePreview} href="/movies" linkLabel="All movies"/>:null}
           {seriesPreview.length>0?<ContentRail eyebrow="Stories in chapters" title="TV Shows" description="Series built around characters, choices and everyday life." items={seriesPreview} href="/tv-shows" linkLabel="All shows"/>:null}
-          {freePreview.length>0?<ContentRail eyebrow="Open access" title="Watch for Free" description="Short films and selected episodes, available without purchase." items={freePreview} badgeLabel="Free to watch"/>:null}
+          {freePreview.length>0?<ContentRail eyebrow="Open access" title="Watch for Free" description="Short films and selected episodes, available without purchase." items={freePreview} badgeLabel="Free to watch" href="/watch-free" linkLabel="Explore free"/>:null}
           {myList.length>0?<ContentRail title="My List" items={myList}/>:null}
         </div>
       </main>

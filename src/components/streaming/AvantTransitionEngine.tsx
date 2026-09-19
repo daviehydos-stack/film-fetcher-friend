@@ -38,7 +38,7 @@ function stopPlayback() {
 function shouldTransition(event: MouseEvent, anchor: HTMLAnchorElement) {
   if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey ||
       event.shiftKey || event.altKey || anchor.target === "_blank" ||
-      anchor.hasAttribute("download") || anchor.dataset.avantTransition === "off") return false;
+      anchor.hasAttribute("download") || anchor.dataset["avantTransition"] === "off") return false;
   const next = new URL(anchor.href, window.location.href);
   const current = new URL(window.location.href);
   return next.origin === current.origin &&
@@ -92,8 +92,8 @@ export function AvantTransitionEngine() {
     const onClick = (event: MouseEvent) => {
       const element = event.target instanceof Element ? event.target.closest("a[href]") : null;
       if (!(element instanceof HTMLAnchorElement) || !shouldTransition(event, element)) return;
-      if (element.dataset.avantTransitionBypass === "true") {
-        delete element.dataset.avantTransitionBypass;
+      if (element.dataset["avantTransitionBypass"] === "true") {
+        delete element.dataset["avantTransitionBypass"];
         return;
       }
       if (phaseRef.current !== "idle") {
@@ -105,7 +105,7 @@ export function AvantTransitionEngine() {
       const isPlay = nextUrl.pathname.includes("/watch/");
       const isDetail = nextUrl.pathname.includes("/title/");
       const isCheckout = nextUrl.pathname.includes("/checkout/");
-      const isBack = element.dataset.avantTransition === "back";
+      const isBack = element.dataset["avantTransition"] === "back";
       const nextMode: TransitionMode = isPlay
         ? "play"
         : isCheckout
@@ -128,7 +128,7 @@ export function AvantTransitionEngine() {
       stopPlayback();
 
       if (reducedMotion.current) {
-        element.dataset.avantTransitionBypass = "true";
+        element.dataset["avantTransitionBypass"] = "true";
         element.click();
         return;
       }
@@ -140,7 +140,7 @@ export function AvantTransitionEngine() {
         setTransitionPhase("navigating");
         const anchor = pendingAnchor.current;
         if (anchor) {
-          anchor.dataset.avantTransitionBypass = "true";
+          anchor.dataset["avantTransitionBypass"] = "true";
           anchor.click();
         }
       }, enterDelay));

@@ -3,3 +3,6 @@ const genresOf=(item:Partial<CatalogueTitle>|null|undefined)=>Array.isArray(item
 export function relatedTitles(current:Partial<CatalogueTitle>|null|undefined,items:CatalogueTitle[],limit=8){const currentGenres=genresOf(current);return items.filter(x=>x.id!==current?.id&&x.slug!==current?.slug).map(x=>({x,score:genresOf(x).filter(g=>currentGenres.includes(g)).length*4+(current?.type&&x.type===current.type?2:0)+(typeof current?.available==="boolean"&&x.available===current.available?1:0)})).filter(v=>v.score>0||currentGenres.length===0).sort((a,b)=>b.score-a.score||a.x.title.localeCompare(b.x.title)).slice(0,limit).map(v=>v.x)}
 export function genreCollections(items:CatalogueTitle[],limit=6){const counts=new Map<string,number>();items.forEach(x=>genresOf(x).forEach(g=>counts.set(g,(counts.get(g)||0)+1)));return [...counts.entries()].filter(([,n])=>n>=2).sort((a,b)=>b[1]-a[1]).slice(0,limit).map(([genre])=>({genre,items:items.filter(x=>genresOf(x).includes(genre))}))}
 export function recentFallback(items:CatalogueTitle[],limit=10){return [...items].reverse().slice(0,limit)}
+export function catalogueGenres(items: CatalogueTitle[]) {
+  return [...new Set(items.flatMap((item) => genresOf(item)))].sort((a, b) => a.localeCompare(b));
+}
