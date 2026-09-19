@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
-import { publicCatalogue, myLibrary } from "@/lib/avant-backend";
+import { publicCatalogue, myLibrary, subscribeAccessChanged } from "@/lib/avant-backend";
 import { customerToken } from "@/lib/google-auth";
 import { heroTrailerUrl, youtubeEmbedUrl } from "@/lib/video-embeds";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
@@ -23,7 +23,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [heroPreview, setHeroPreview] = useState(false);
   const [heroPreviewLoaded, setHeroPreviewLoaded] = useState(false);
   const [heroMuted, setHeroMuted] = useState(false);
-  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [hasAccess,setHasAccess]=useState(false);
+  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [hasAccess,setHasAccess]=useState(false); const [accessVersion,setAccessVersion]=useState(0);
   const heroRef = useRef<HTMLElement | null>(null);
   const [heroInView, setHeroInView] = useState(true);
   const episodesRef = useRef<HTMLElement | null>(null);
@@ -40,7 +40,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const seasons = item.episodes ? [...new Set(item.episodes.map((episode) => episode.season ?? 1))].sort((a, b) => a - b) : [];
   const [season, setSeason] = useState(seasons[0] ?? 1);
   const seasonEpisodes = item.episodes?.map((episode, absoluteIndex) => ({ episode, absoluteIndex })).filter(({ episode }) => (episode.season ?? 1) === season) ?? [];
-  useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); customerToken(false).then(async token=>{if(!token){setHasAccess(false);return}try{const lib=await myLibrary(token);const ok=(lib.entitlements||[]).some((e:any)=>e.title?.slug===item.slug||e.title?.id===item.id||(e.season_id&&item.episodes?.some((ep:any)=>ep.season===season)));setHasAccess(ok)}catch{setHasAccess(false)}})}, [item.id,item.slug]);
+  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); customerToken(false).then(async token=>{if(!token){setHasAccess(false);return}try{const lib=await myLibrary(token);const ok=(lib.entitlements||[]).some((e:any)=>e.status==='active'&&(e.title?.slug===item.slug||e.title?.id===item.id||(e.season_id&&item.episodes?.some((ep:any)=>ep.season===season))));setHasAccess(ok)}catch{setHasAccess(false)}})}, [item.id,item.slug,accessVersion]);
   useEffect(() => {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
