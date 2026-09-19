@@ -25,7 +25,10 @@ function MyList() {
   const [customer,setCustomer]=useState<any>(()=>{if(typeof window==="undefined")return undefined;try{const t=localStorage.getItem("avant_google_id_token");if(!t)return null;const p=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return p?.exp*1000>Date.now()?{email:p.email,name:p.name,photoURL:p.picture}:null}catch{return null}});
   const [authBusy,setAuthBusy]=useState(false);
 
-  useEffect(() => {\n    void customerSession().then(setCustomer);\n    return watchCustomerSession(() => void customerSession().then(setCustomer));\n  }, []);
+  useEffect(() => {
+    void customerSession().then(setCustomer);
+    return watchCustomerSession(() => void customerSession().then(setCustomer));
+  }, []);
 
   useEffect(() => {
     if (!customer) { setIds([]); return; }
