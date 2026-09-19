@@ -1,11 +1,28 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { TitleCard } from "./TitleCard";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 
-export function ContentRail({ title, items }: { title: string; items: CatalogueTitle[] }) {
+export function ContentRail({
+  title,
+  items,
+  eyebrow,
+  description,
+  href,
+  linkLabel = "View all",
+  badgeLabel,
+}: {
+  title: string;
+  items: CatalogueTitle[];
+  eyebrow?: string;
+  description?: string;
+  href?: "/movies" | "/tv-shows";
+  linkLabel?: string;
+  badgeLabel?: string;
+}) {
   const rail = useRef<HTMLDivElement>(null);
   const move = (direction: number) => {
     const viewport = rail.current?.clientWidth ?? 680;
@@ -16,10 +33,20 @@ export function ContentRail({ title, items }: { title: string; items: CatalogueT
     });
   };
   return (
-    <section className="min-w-0 overflow-hidden py-5 sm:py-7" aria-label={title} role="region">
-      <div className="mb-4 flex items-center justify-between px-5 sm:px-10 lg:px-14">
-        <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
-        <div className="hidden gap-2 sm:flex">
+    <section className="avant-home-section min-w-0 overflow-hidden py-6 sm:py-8" aria-label={title} role="region">
+      <div className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 px-5 sm:px-10 lg:px-14">
+        <div className="min-w-0">
+          {eyebrow ? <p className="eyebrow mb-1.5">{eyebrow}</p> : null}
+          <h2 className="truncate text-xl font-bold sm:text-2xl">{title}</h2>
+          {description ? <p className="mt-1.5 hidden max-w-xl text-sm text-muted-foreground sm:block">{description}</p> : null}
+        </div>
+        <div className="flex shrink-0 items-center gap-1">
+          {href ? (
+            <Link to={href} className="mr-1 inline-flex min-h-10 items-center gap-1.5 px-2 text-xs font-bold text-foreground/75 transition hover:text-primary sm:text-sm">
+              {linkLabel}<ArrowRight className="size-4" />
+            </Link>
+          ) : null}
+          <div className="hidden gap-1 sm:flex">
           <Button
             size="icon"
             variant="ghost"
@@ -36,6 +63,7 @@ export function ContentRail({ title, items }: { title: string; items: CatalogueT
           >
             <ChevronRight />
           </Button>
+          </div>
         </div>
       </div>
       <div
@@ -44,7 +72,7 @@ export function ContentRail({ title, items }: { title: string; items: CatalogueT
       >
         {items.map((item) => (
           <div key={item.id} data-title-card className="shrink-0 snap-start">
-            <TitleCard item={item} />
+            <TitleCard item={item} badgeLabel={badgeLabel} />
           </div>
         ))}
       </div>

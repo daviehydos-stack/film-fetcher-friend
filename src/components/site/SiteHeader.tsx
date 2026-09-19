@@ -104,12 +104,12 @@ export function SiteHeader() {
     }
   }
   return (
-    <header
+    <><a href="#main-content" className="fixed left-3 top-3 z-[60] -translate-y-20 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition focus:translate-y-0">Skip to content</a><header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 text-white transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 text-foreground transition-all duration-300",
         scrolled || open
-          ? "border-b border-white/[.07] bg-[#050608]/88 shadow-[0_14px_40px_rgba(0,0,0,.28)] backdrop-blur-2xl"
-          : "bg-gradient-to-b from-black/90 via-black/48 to-transparent",
+          ? "border-b border-border/50 bg-background/90 shadow-reel backdrop-blur-2xl"
+          : "bg-gradient-to-b from-background/95 via-background/55 to-transparent drop-shadow-md",
       )}
     >
       <div className="mx-auto flex h-[64px] w-full min-w-0 max-w-[1800px] items-center gap-2 px-3 sm:h-[72px] sm:gap-7 sm:px-10 lg:px-14">
@@ -172,12 +172,12 @@ export function SiteHeader() {
               <Search className="size-5" />
             </Link>
           ) : null}
-          <Link
+          {admin ? <Link
               to="/admin"
-              className="hidden rounded-full border border-orange-300/25 bg-orange-300/10 px-3 py-2 text-xs font-black text-orange-200 hover:bg-orange-300/20 lg:block"
+              className="hidden rounded-full border border-primary/25 bg-primary/10 px-3 py-2 text-xs font-black text-primary hover:bg-primary/20 lg:block"
             >
-              {admin ? "Admin" : "Admin Login"}
-            </Link>
+              Admin
+            </Link> : null}
           {!authReady ? (
             <span
               className="hidden h-10 w-36 rounded-full bg-white/[.04] sm:block"
@@ -269,15 +269,15 @@ export function SiteHeader() {
               Sign in with Google
             </button>
           )}
-          <Link
+          {admin ? <Link
               to="/admin"
               onClick={() => setOpen(false)}
-              className="mt-2 flex min-h-12 items-center rounded-xl border border-orange-300/20 bg-orange-300/10 px-3 font-black text-orange-200"
+              className="mt-2 flex min-h-12 items-center rounded-md border border-primary/20 bg-primary/10 px-3 font-black text-primary"
             >
-              {admin ? "Admin" : "Admin Login"}
-            </Link>
+              Admin
+            </Link> : null}
         </nav>
       ) : null}
-    </header>
+    </header></>
   );
 }
