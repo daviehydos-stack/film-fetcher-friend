@@ -1,0 +1,4 @@
+import type { CatalogueTitle } from "./site-data";
+export function relatedTitles(current:CatalogueTitle,items:CatalogueTitle[],limit=8){return items.filter(x=>x.id!==current.id&&x.slug!==current.slug).map(x=>({x,score:x.genres.filter(g=>current.genres.includes(g)).length*4+(x.type===current.type?2:0)+(x.available===current.available?1:0)})).filter(v=>v.score>0).sort((a,b)=>b.score-a.score||a.x.title.localeCompare(b.x.title)).slice(0,limit).map(v=>v.x)}
+export function genreCollections(items:CatalogueTitle[],limit=6){const counts=new Map<string,number>();items.forEach(x=>x.genres.forEach(g=>counts.set(g,(counts.get(g)||0)+1)));return [...counts.entries()].filter(([,n])=>n>=2).sort((a,b)=>b[1]-a[1]).slice(0,limit).map(([genre])=>({genre,items:items.filter(x=>x.genres.includes(genre))}))}
+export function recentFallback(items:CatalogueTitle[],limit=10){return [...items].reverse().slice(0,limit)}
