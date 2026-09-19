@@ -16,13 +16,14 @@ function numberValue(value: unknown) {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
-function mapPublicEpisode(value: unknown): Episode | null {
+export function mapPublicEpisode(value: unknown): Episode | null {
   if (!value || typeof value !== "object") return null;
   const raw = value as Record<string, unknown>;
   const title = text(raw["title"]);
   if (!title) return null;
   const durationSeconds = numberValue(raw["duration_seconds"]);
   const season = numberValue(raw["season_number"]);
+  const episodeNumber = numberValue(raw["episode_number"]);
   const previewStart = numberValue(raw["preview_start_seconds"]);
   const previewDuration = numberValue(raw["preview_duration_seconds"]);
   const youtubeId = text(raw["youtube_video_id"]) || text(raw["youtubeId"]);
@@ -34,6 +35,8 @@ function mapPublicEpisode(value: unknown): Episode | null {
     title,
     duration: text(raw["duration"]) || (durationSeconds ? `${Math.floor(durationSeconds / 60)}:${String(durationSeconds % 60).padStart(2, "0")}` : ""),
     ...(season !== undefined ? { season } : {}),
+    ...(episodeNumber !== undefined ? { episodeNumber } : {}),
+    ...(text(raw["id"]) ? { id: text(raw["id"]) } : {}),
     ...(youtubeId ? { youtubeId } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
     ...(poster ? { poster } : {}),
@@ -42,6 +45,11 @@ function mapPublicEpisode(value: unknown): Episode | null {
     ...(episodeLegacyKey ? { legacyKey: episodeLegacyKey } : {}),
     ...(previewStart !== undefined ? { previewStart } : {}),
     ...(previewDuration !== undefined ? { previewDuration } : {}),
+    ...(text(raw["preview_youtube_id"]) ? { previewYoutubeId: text(raw["preview_youtube_id"]) } : {}),
+    ...(text(raw["preview_vimeo_video_id"]) ? { previewVimeoVideoId: text(raw["preview_vimeo_video_id"]) } : {}),
+    ...(text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"])
+      ? { previewEmbedUrl: text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"]) }
+      : {}),
   };
 }
 
