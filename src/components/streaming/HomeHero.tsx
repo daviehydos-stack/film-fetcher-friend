@@ -12,7 +12,7 @@ import { rememberReturnContext } from "@/lib/navigation-memory";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
   const [trailerReady, setTrailerReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [largeScreen, setLargeScreen] = useState(false);
@@ -46,26 +46,26 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
     if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false) return () => screen.removeEventListener?.("change", syncScreen);
-    const timer = window.setTimeout(() => setTrailerReady(true), 1200);
+    const timer = window.setTimeout(() => setTrailerReady(true), 150);
   return () => { window.clearTimeout(timer); screen.removeEventListener?.("change", syncScreen); };
   }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
 
   return (
     <section ref={heroRef} className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[82svh] lg:mx-0 lg:mt-0 lg:min-h-[88vh] lg:rounded-none">
-      <img src={item.backdrop} alt={`${item.title} featured artwork`} fetchPriority="high" decoding="async" className="absolute inset-0 size-full object-cover object-[62%_center] sm:object-center" />
+      <img src={item.backdrop} alt={`${item.title} featured artwork`} fetchPriority="high" decoding="async" className={`absolute inset-0 size-full object-cover object-[62%_center] sm:object-center transition-opacity duration-500 ${trailerVisible ? "opacity-0" : "opacity-100"}`} />
 
       {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen && heroInView ? (
         <iframe
           src={heroTrailerUrl(item.trailerEmbedUrl, muted)}
           title={`${item.title} trailer`}
           allow="autoplay; fullscreen; picture-in-picture"
-          onLoad={(event) => { window.dispatchEvent(new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } })); setTrailerLoaded(true); window.setTimeout(() => setTrailerVisible(true), 900); }}
+          onLoad={(event) => { window.dispatchEvent(new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } })); setTrailerLoaded(true); window.setTimeout(() => setTrailerVisible(true), 120); }}
           onError={() => setTrailerFailed(true)}
           className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
         />
       ) : null}
 
-      <div className="hero-shade absolute inset-0" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_38%,transparent_0%,rgba(0,0,0,.08)_34%,rgba(0,0,0,.72)_100%)]" /><div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.46)_0%,transparent_24%,transparent_54%,rgba(10,12,16,.55)_76%,var(--background)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.88)_0%,rgba(0,0,0,.58)_28%,rgba(0,0,0,.14)_58%,rgba(0,0,0,.06)_100%)]" /><div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.34)_0%,transparent_25%,transparent_62%,rgba(0,0,0,.34)_78%,var(--background)_100%)]" />
 
       <div className="relative z-10 flex min-h-[76svh] max-w-[1600px] items-end px-5 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[82svh] sm:px-10 sm:pb-24 lg:min-h-[88vh] lg:h-full lg:px-14 lg:pb-28">
         <div className="max-w-2xl">
