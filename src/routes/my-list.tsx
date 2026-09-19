@@ -5,7 +5,7 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { TitleCard } from "@/components/streaming/TitleCard";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
 import { readMyList, syncMyList } from "@/lib/my-list";
-import { customerSession, signInCustomer } from "@/lib/google-auth";
+import { customerSession, rememberedCustomer, signInCustomer, watchCustomerSession } from "@/lib/google-auth";
 import { publicCatalogue } from "@/lib/avant-backend";
 
 export const Route = createFileRoute("/my-list")({
@@ -25,7 +25,7 @@ function MyList() {
   const [customer,setCustomer]=useState<any>(()=>{if(typeof window==="undefined")return undefined;try{const t=localStorage.getItem("avant_google_id_token");if(!t)return null;const p=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return p?.exp*1000>Date.now()?{email:p.email,name:p.name,photoURL:p.picture}:null}catch{return null}});
   const [authBusy,setAuthBusy]=useState(false);
 
-  useEffect(() => { if(customer===undefined) void customerSession().then(setCustomer); }, []);
+  useEffect(() => {\n    void customerSession().then(setCustomer);\n    return watchCustomerSession(() => void customerSession().then(setCustomer));\n  }, []);
 
   useEffect(() => {
     if (!customer) { setIds([]); return; }
@@ -48,7 +48,7 @@ function MyList() {
           Keep the Avant stories you want to come back to in one place.
         </p>
 
-        {customer === undefined ? <div className="mt-10 text-sm text-muted-foreground">Checking your account…</div> : !customer ? <div className="mt-8 max-w-xl rounded-2xl border border-white/[.07] bg-white/[.035] p-6 shadow-[0_24px_70px_rgba(0,0,0,.25)] backdrop-blur sm:mt-10 sm:p-8"><BookmarkPlus className="size-8 text-white/70"/><h2 className="mt-5 text-xl font-bold">Sign in to use My List</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">My List belongs to your Avant account so your saved films and series stay with you across supported devices.</p><button type="button" disabled={authBusy} onClick={async()=>{setAuthBusy(true);try{setCustomer(await signInCustomer())}finally{setAuthBusy(false)}}} className="mt-5 inline-flex min-h-11 items-center rounded-md bg-white px-5 text-sm font-bold text-black transition hover:bg-white/85">{authBusy?"Signing in…":"Sign in with Google"}</button></div> : items.length ? (
+        {customer === undefined ? <div className="mt-10 text-sm text-muted-foreground">Checking your account…</div> : !customer ? <div className="mt-8 max-w-xl rounded-2xl border border-white/[.07] bg-white/[.035] p-6 shadow-[0_24px_70px_rgba(0,0,0,.25)] backdrop-blur sm:mt-10 sm:p-8"><BookmarkPlus className="size-8 text-white/70"/><h2 className="mt-5 text-xl font-bold">Sign in to use My List</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">My List belongs to your Avant account so your saved films and series stay with you across supported devices.</p><button type="button" disabled={authBusy} onClick={async()=>{setAuthBusy(true);try{setCustomer(await signInCustomer(rememberedCustomer()?.email))}finally{setAuthBusy(false)}}} className="mt-5 inline-flex min-h-11 items-center rounded-md bg-white px-5 text-sm font-bold text-black transition hover:bg-white/85">{authBusy?"Signing in…":rememberedCustomer()?`Continue as ${rememberedCustomer()?.name||rememberedCustomer()?.email}`:"Sign in with Google"}</button></div> : items.length ? (
           <>
             <div className="mt-8 flex flex-wrap items-center gap-3"><p className="text-sm text-muted-foreground">{items.length} {items.length === 1 ? "saved title" : "saved titles"}</p><Link to="/" className="inline-flex min-h-11 items-center gap-2 rounded-md border border-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/10"><Play className="size-4 fill-current" />Browse more</Link></div>
             <div className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
