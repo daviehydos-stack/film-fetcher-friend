@@ -19,10 +19,12 @@ async function googleCredential(loginHint?:string){await loadGoogle();return new
 
 export async function customerToken(interactive=false){const token=validToken();if(token)return token;if(!interactive)return null;return googleCredential()}
 export async function requireCustomerToken(loginHint?:string){const token=validToken()||await googleCredential(loginHint);if(!token)throw new Error("Please sign in to continue.");return token}
-export function hasCustomerSession(){return Boolean(validToken())}\nexport async function customerSession(){const token=validToken();if(!token)return null;const p=payload(token);return p?{email:p.email??"",name:p.name??"",photoURL:p.picture??""}:null}
+export function hasCustomerSession(){return Boolean(validToken())}
+export async function customerSession(){const token=validToken();if(!token)return null;const p=payload(token);return p?{email:p.email??"",name:p.name??"",photoURL:p.picture??""}:null}
 export async function customerEmail(){return (await customerSession())?.email??null}
-export async function signInCustomer(loginHint?:string){await requireCustomerToken(loginHint);return customerSession()}
-export function watchCustomerSession(callback:()=>void){if(typeof window==="undefined")return()=>{};const onChange=()=>callback();const onStorage=(e:StorageEvent)=>{if(e.key===TOKEN_KEY||e.key===REMEMBERED_KEY)callback()};window.addEventListener("avant:access-changed",onChange);window.addEventListener("storage",onStorage);return()=>{window.removeEventListener("avant:access-changed",onChange);window.removeEventListener("storage",onStorage)}}\nexport async function signOutCustomer(){if(typeof window!=="undefined"){localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("avant_subscriber");window.dispatchEvent(new CustomEvent("avant:access-changed",{detail:{source:"sign-out"}}));try{await loadGoogle();window.google.accounts.id.disableAutoSelect()}catch{}}}
+export async function signInCustomer(loginHint?:string){await requireCustomerToken(loginHint);return customerSession()}\nexport async function signInRememberedCustomer(){return signInCustomer(rememberedCustomer()?.email)}
+export function watchCustomerSession(callback:()=>void){if(typeof window==="undefined")return()=>{};const onChange=()=>callback();const onStorage=(e:StorageEvent)=>{if(e.key===TOKEN_KEY||e.key===REMEMBERED_KEY)callback()};window.addEventListener("avant:access-changed",onChange);window.addEventListener("storage",onStorage);return()=>{window.removeEventListener("avant:access-changed",onChange);window.removeEventListener("storage",onStorage)}}
+export async function signOutCustomer(){if(typeof window!=="undefined"){localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("avant_subscriber");window.dispatchEvent(new CustomEvent("avant:access-changed",{detail:{source:"sign-out"}}));try{await loadGoogle();window.google.accounts.id.disableAutoSelect()}catch{}}}
 
 
 export const GOOGLE_CLIENT_ID="12797178987-c8vk15t4gplabjhap4d0ebbv8s2fhk9a.apps.googleusercontent.com";
