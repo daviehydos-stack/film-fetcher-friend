@@ -118,7 +118,7 @@ export function AvantTransitionEngine() {
 
       /* Ordinary navigation should stay native-fast. Only cinematic destinations
          need an interception overlay. This removes the black flash between tabs/pages. */
-      if (nextMode === "quick" || nextMode === "detail" || nextMode === "back") return;
+      if (nextMode === "quick") return;
 
       event.preventDefault();
       event.stopPropagation();
