@@ -5,7 +5,13 @@ import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 import { ADMIN_EMAIL, publicCatalogue, publicPages } from "@/lib/avant-backend";
-import {\n  customerSession,\n  rememberedCustomer,\n  signInCustomer,\n  signOutCustomer,\n  watchCustomerSession,\n} from "@/lib/google-auth";
+import {
+  customerSession,
+  rememberedCustomer,
+  signInCustomer,
+  signOutCustomer,
+  watchCustomerSession,
+} from "@/lib/google-auth";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false),
