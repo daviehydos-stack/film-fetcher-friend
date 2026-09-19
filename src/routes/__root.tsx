@@ -182,7 +182,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AvantTransitionEngine />
-      <div key={`${location.pathname}${location.searchStr}`} className="avant-route-surface"><Outlet /></div>
+      <div key={location.pathname} className="avant-route-surface"><Outlet /></div>
     </QueryClientProvider>
   );
 }

@@ -488,26 +488,16 @@ main,header,footer,section,nav{max-width:100%}
 @keyframes avantBackIn{from{opacity:0}to{opacity:1}}
 @keyframes avantBackOut{from{opacity:1}to{opacity:0}}
 
-/* Calm catalogue navigation — Home / Movies / TV / My List */
+/* One lightweight dissolve. Navigation is immediate; no outgoing layer delays or replays a click. */
 @media (prefers-reduced-motion:no-preference){
-  @keyframes avantRouteFade{from{opacity:.82}to{opacity:1}}
-  main{animation:avantRouteFade 140ms ease-out both}
-}
-
-/* Unified navigation motion — quick tabs crossfade; story and player routes keep cinematic handoffs. */
-@media (prefers-reduced-motion:no-preference){
-  .avant-route-surface{animation:avantRouteSurfaceIn 220ms cubic-bezier(.22,1,.36,1) both;transform-origin:50% 22%;will-change:opacity,transform}
-  .avant-filter-results,.avant-tab-panel[data-state="active"]{animation:avantContentSwap 240ms cubic-bezier(.22,1,.36,1) both}
+  .avant-route-surface{animation:avantRouteSurfaceIn 140ms ease-out both}
+  .avant-filter-results,.avant-tab-panel[data-state="active"]{animation:avantContentSwap 110ms ease-out both}
   .avant-mobile-menu{transform-origin:top;transition:opacity 180ms ease,transform 240ms cubic-bezier(.22,1,.36,1),visibility 240ms;opacity:0;transform:translateY(-10px) scaleY(.96);visibility:hidden}
   .avant-mobile-menu.is-open{opacity:1;transform:translateY(0) scaleY(1);visibility:visible}
-  @keyframes avantRouteSurfaceIn{from{opacity:.7;transform:translate3d(0,7px,0) scale(.997)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
-  @keyframes avantContentSwap{from{opacity:.35;transform:translate3d(0,8px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+  @keyframes avantRouteSurfaceIn{from{opacity:.76}to{opacity:1}}
+  @keyframes avantContentSwap{from{opacity:.65}to{opacity:1}}
 }
 .avant-mobile-menu{position:absolute;inset-inline:0;top:100%}
-.avant-transition-mode-quick.avant-transition-entering .avant-transition-vignette{animation:avantQuickIn 70ms ease-out both;background:var(--color-background)}
-.avant-transition-mode-quick.avant-transition-revealing{animation:avantQuickOut 120ms ease-out both}
-@keyframes avantQuickIn{from{opacity:0}to{opacity:.34}}
-@keyframes avantQuickOut{from{opacity:.34}to{opacity:0}}
 [data-title-card] article>div{transition-duration:220ms!important}
 @media(min-width:768px){[data-title-card] article:hover>div{transform:scale(1.025)!important}}
 @media(max-width:767px){.avant-horizontal-rail{scroll-snap-type:x proximity!important;scroll-behavior:auto!important}}
