@@ -35,25 +35,32 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
     .filter((value): value is RawRecord => Boolean(value && typeof value === "object"))
     .map((raw, sourceIndex) => {
       const seconds = numberValue(raw["duration_seconds"]);
+      const id = stringValue(raw["id"]);
+      const youtubeId = stringValue(raw["youtube_video_id"]);
+      const vimeoVideoId = stringValue(raw["vimeo_video_id"]);
+      const poster = stringValue(raw["thumbnail_url"]);
+      const description = stringValue(raw["description"]);
+      const legacyKey = stringValue(raw["legacy_key"]);
+      const previewYoutubeId = stringValue(raw["preview_youtube_id"]);
+      const previewVimeoVideoId = stringValue(raw["preview_vimeo_video_id"]);
+      const previewEmbedUrl = stringValue(raw["preview_embed_url"]) || stringValue(raw["trailer_embed_url"]);
       return {
-        ...(stringValue(raw["id"]) ? { id: stringValue(raw["id"]) } : {}),
+        ...(id ? { id } : {}),
         title: stringValue(raw["title"]) || `Episode ${sourceIndex + 1}`,
         season: numberValue(raw["season_number"]) ?? seasonNumber(raw["season_id"]),
         episodeNumber: numberValue(raw["episode_number"]) ?? sourceIndex + 1,
         duration: stringValue(raw["duration"]) || (seconds ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}` : ""),
-        ...(stringValue(raw["youtube_video_id"]) ? { youtubeId: stringValue(raw["youtube_video_id"]) } : {}),
-        ...(stringValue(raw["vimeo_video_id"]) ? { vimeoVideoId: stringValue(raw["vimeo_video_id"]) } : {}),
-        ...(stringValue(raw["thumbnail_url"]) ? { poster: stringValue(raw["thumbnail_url"]) } : {}),
+        ...(youtubeId ? { youtubeId } : {}),
+        ...(vimeoVideoId ? { vimeoVideoId } : {}),
+        ...(poster ? { poster } : {}),
         ...(typeof raw["access_required"] === "boolean" ? { locked: raw["access_required"] } : {}),
-        ...(stringValue(raw["description"]) ? { description: stringValue(raw["description"]) } : {}),
-        ...(stringValue(raw["legacy_key"]) ? { legacyKey: stringValue(raw["legacy_key"]) } : {}),
+        ...(description ? { description } : {}),
+        ...(legacyKey ? { legacyKey } : {}),
         ...(numberValue(raw["preview_start_seconds"]) !== undefined ? { previewStart: numberValue(raw["preview_start_seconds"]) } : {}),
         ...(numberValue(raw["preview_duration_seconds"]) !== undefined ? { previewDuration: numberValue(raw["preview_duration_seconds"]) } : {}),
-        ...(stringValue(raw["preview_youtube_id"]) ? { previewYoutubeId: stringValue(raw["preview_youtube_id"]) } : {}),
-        ...(stringValue(raw["preview_vimeo_video_id"]) ? { previewVimeoVideoId: stringValue(raw["preview_vimeo_video_id"]) } : {}),
-        ...(stringValue(raw["preview_embed_url"]) || stringValue(raw["trailer_embed_url"])
-          ? { previewEmbedUrl: stringValue(raw["preview_embed_url"]) || stringValue(raw["trailer_embed_url"]) }
-          : {}),
+        ...(previewYoutubeId ? { previewYoutubeId } : {}),
+        ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
+        ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
       } satisfies Episode;
     })
     .sort((a, b) => (a.season ?? 1) - (b.season ?? 1) || (a.episodeNumber ?? 0) - (b.episodeNumber ?? 0));

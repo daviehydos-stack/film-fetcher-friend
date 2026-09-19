@@ -31,12 +31,16 @@ export function mapPublicEpisode(value: unknown): Episode | null {
   const poster = text(raw["thumbnail_url"]);
   const description = text(raw["description"]);
   const episodeLegacyKey = text(raw["legacy_key"]);
+  const episodeId = text(raw["id"]);
+  const previewYoutubeId = text(raw["preview_youtube_id"]);
+  const previewVimeoVideoId = text(raw["preview_vimeo_video_id"]);
+  const previewEmbedUrl = text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"]);
   return {
     title,
     duration: text(raw["duration"]) || (durationSeconds ? `${Math.floor(durationSeconds / 60)}:${String(durationSeconds % 60).padStart(2, "0")}` : ""),
     ...(season !== undefined ? { season } : {}),
     ...(episodeNumber !== undefined ? { episodeNumber } : {}),
-    ...(text(raw["id"]) ? { id: text(raw["id"]) } : {}),
+    ...(episodeId ? { id: episodeId } : {}),
     ...(youtubeId ? { youtubeId } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
     ...(poster ? { poster } : {}),
@@ -45,11 +49,9 @@ export function mapPublicEpisode(value: unknown): Episode | null {
     ...(episodeLegacyKey ? { legacyKey: episodeLegacyKey } : {}),
     ...(previewStart !== undefined ? { previewStart } : {}),
     ...(previewDuration !== undefined ? { previewDuration } : {}),
-    ...(text(raw["preview_youtube_id"]) ? { previewYoutubeId: text(raw["preview_youtube_id"]) } : {}),
-    ...(text(raw["preview_vimeo_video_id"]) ? { previewVimeoVideoId: text(raw["preview_vimeo_video_id"]) } : {}),
-    ...(text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"])
-      ? { previewEmbedUrl: text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"]) }
-      : {}),
+    ...(previewYoutubeId ? { previewYoutubeId } : {}),
+    ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
+    ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
   };
 }
 
