@@ -5,7 +5,7 @@ import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 import { ADMIN_EMAIL, publicCatalogue, publicPages } from "@/lib/avant-backend";
-import { customerSession, signInCustomer, signOutCustomer } from "@/lib/google-auth";
+import {\n  customerSession,\n  rememberedCustomer,\n  signInCustomer,\n  signOutCustomer,\n  watchCustomerSession,\n} from "@/lib/google-auth";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false),
@@ -43,18 +43,21 @@ export function SiteHeader() {
   }, [lang]);
   useEffect(() => {
     let live = true;
-    void customerSession()
-      .then((user) => {
+    const sync = async () => {
+      try {
+        const user = await customerSession();
         if (!live) return;
         setCustomer(user);
         setAdmin(String(user?.email || "").toLowerCase() === ADMIN_EMAIL);
-        setAuthReady(true);
-      })
-      .catch(() => {
+      } finally {
         if (live) setAuthReady(true);
-      });
+      }
+    };
+    void sync();
+    const unwatch = watchCustomerSession(() => void sync());
     return () => {
       live = false;
+      unwatch();
     };
   }, []);
   useEffect(() => {
@@ -77,7 +80,7 @@ export function SiteHeader() {
   async function login() {
     setAuthBusy(true);
     try {
-      const user = await signInCustomer();
+      const user = await signInCustomer(rememberedCustomer()?.email);
       setCustomer(user);
       setAdmin(String(user?.email || "").toLowerCase() === ADMIN_EMAIL);
     } finally {
