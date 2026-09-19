@@ -10,6 +10,7 @@ let publicPagesCache:any=null,publicPagesAt=0;export const publicPages=()=>{cons
 export const publicPage=(slug:string)=>request<any>(`public-pages?slug=${encodeURIComponent(slug)}`);
 export const startPalplussPayment=(token:string,input:{productId:string;phone:string;idempotencyKey:string})=>request<any>("palpluss-checkout",token,{method:"POST",body:JSON.stringify(input)});
 export const paymentStatus=(token:string,reference:string)=>request<any>("payment-status",token,{method:"POST",body:JSON.stringify({reference})});
+export const recoverPayment=(token:string,input:{phone?:string;mpesaCode?:string})=>request<any>("payment-recover",token,{method:"POST",body:JSON.stringify(input)});
 export const issueAccessCode=(paymentId:string)=>request<any>("access-code-issue",null,{method:"POST",body:JSON.stringify({paymentId})});
 export const loginWithAccessCode=(accessCode:string,deviceId:string,deviceName?:string)=>request<any>("access-code-login",null,{method:"POST",body:JSON.stringify({accessCode,deviceId,deviceName})});
 export const authorizeWatch=(token:string,contentId:string,seasonId?:string)=>request<any>("authorize-watch",token,{method:"POST",body:JSON.stringify({contentId,seasonId})});
