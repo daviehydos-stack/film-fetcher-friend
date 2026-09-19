@@ -7,11 +7,11 @@ import { readMyList, toggleMyList } from "@/lib/my-list";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { rememberReturnContext } from "@/lib/navigation-memory";
-import { accessForContent, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { accountAccess, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 
 export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()=>void}){
  const frameRef=useRef<HTMLIFrameElement|null>(null); const [previewInView,setPreviewInView]=useState(true); const heroRef=useRef<HTMLElement|null>(null); const [elapsed,setElapsed]=useState(0); const [saved,setSaved]=useState(()=>readMyList().includes(item.id)); const [muted,setMuted]=useState(false); const [season,setSeason]=useState(item.episodes?.[0]?.season??1); const [closing,setClosing]=useState(false); const [accessState,setAccessState]=useState<AccessState>("loading"); const [accessVersion,setAccessVersion]=useState(0);
- useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(()=>{let live=true;const e=item.episodes?.[0];const key=e?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(e?.youtubeId&&e.locked===false){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");accessForContent(key).then(r=>{if(live)setAccessState(r.state)});return()=>{live=false}},[item.slug,item.episodes?.[0]?.legacyKey,accessVersion]);
+ useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(()=>{let live=true;const e=item.episodes?.[0];const key=e?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(e?.youtubeId&&e.locked===false){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");customerToken(false).then(async token=>{if(!live)return;if(!token){setAccessState("signed_out");return}try{const a=await accountAccess(token);if(live)setAccessState(a.subscriber?"authorized":"locked")}catch{if(live)setAccessState("error")}});return()=>{live=false}},[item.slug,item.episodes?.[0]?.legacyKey,accessVersion]);
  const episodes=item.episodes?.filter(e=>(e.season??1)===season)??[]; const seasons=[...new Set(item.episodes?.map(e=>e.season??1)??[])];
  useEffect(()=>{const old=document.body.style.overflow;document.body.style.overflow="hidden";const key=(e:KeyboardEvent)=>e.key==="Escape"&&requestClose();addEventListener("keydown",key);return()=>{document.body.style.overflow=old;removeEventListener("keydown",key)}},[onClose]);
  const openTitle=()=>{rememberReturnContext("catalogue",item.slug);requestClose()};
