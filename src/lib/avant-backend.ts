@@ -32,6 +32,9 @@ export const getCloudMyList=(token:string)=>request<{ids:string[]}>("my-list",to
 export const setCloudMyList=(token:string,key:string,saved:boolean)=>request<any>("my-list",token,{method:"POST",body:JSON.stringify({key,saved})});
 
 export const myLibrary=(token:string)=>request<any>("my-library",token,{method:"GET"});
+export const ACCESS_CHANGED_EVENT="avant:access-changed";
+export function broadcastAccessChanged(detail:Record<string,unknown>={}){if(typeof window==="undefined")return;window.dispatchEvent(new CustomEvent(ACCESS_CHANGED_EVENT,{detail}));try{localStorage.setItem("avant_access_changed",JSON.stringify({at:Date.now(),...detail}))}catch{}}
+export function subscribeAccessChanged(handler:()=>void){if(typeof window==="undefined")return()=>{};const local=()=>handler();const storage=(e:StorageEvent)=>{if(e.key==="avant_access_changed")handler()};window.addEventListener(ACCESS_CHANGED_EVENT,local);window.addEventListener("storage",storage);return()=>{window.removeEventListener(ACCESS_CHANGED_EVENT,local);window.removeEventListener("storage",storage)}}
 
 export const adminVimeoGet=(token:string)=>request<any>("admin-vimeo",token,{method:"GET"});
 export const adminVimeoSave=(token:string,payload:{clientId?:string;clientSecret?:string;accessToken?:string;testOnly?:boolean})=>request<any>("admin-vimeo",token,{method:"POST",body:JSON.stringify(payload)});
