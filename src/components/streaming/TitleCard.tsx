@@ -5,7 +5,7 @@ import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
-import { accountAccess, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 
 export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; layout?: "rail" | "grid" }) {
   const [detailsOpen,setDetailsOpen]=useState(false);
@@ -16,7 +16,7 @@ export function TitleCard({ item, layout = "rail" }: { item: CatalogueTitle; lay
   const [nearViewport, setNearViewport] = useState(false);
   const [saved,setSaved]=useState(()=>readMyList().includes(item.id));
   const [muted,setMuted]=useState(true);
-  const [accessState,setAccessState]=useState<AccessState>("loading"); const [accessVersion,setAccessVersion]=useState(0);
+  const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
   const cardRef = useRef<HTMLElement | null>(null);
   const previewTimer = useRef<number | null>(null);
   const firstEpisode=item.episodes?.[0];
