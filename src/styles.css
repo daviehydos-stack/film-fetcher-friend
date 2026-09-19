@@ -488,3 +488,9 @@ main,header,footer,section,nav{max-width:100%}
   @keyframes avantRouteFade{from{opacity:.82}to{opacity:1}}
   main{animation:avantRouteFade 140ms ease-out both}
 }
+
+/* Plan 2 — navigation and discovery stability. Normal route changes are native and immediate. */
+@media (prefers-reduced-motion:no-preference){main{animation:none!important}}
+[data-title-card] article>div{transition-duration:220ms!important}
+@media(min-width:768px){[data-title-card] article:hover>div{transform:scale(1.025)!important}}
+@media(max-width:767px){.avant-horizontal-rail{scroll-snap-type:x proximity!important;scroll-behavior:auto!important}}
