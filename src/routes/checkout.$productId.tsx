@@ -43,7 +43,7 @@ function CheckoutRoute(){
       <p className="mt-2 text-center text-[11px] leading-4 text-white/40">{payStage==='sending'?'Please wait. We’re sending an M-PESA prompt to your phone.':payStage==='phone'?'Check your phone and enter your M-PESA PIN.':payStage==='confirming'?'Payment sent. We’re confirming it automatically…':'You will confirm the payment on your phone. We never ask for your M-PESA PIN on this website.'}</p>
       {error&&<div className="mt-5 rounded-xl border border-red-400/20 bg-red-400/10 p-4 text-sm leading-6 text-red-100">{error}</div>}
      </div></div>
-     <div className={`${embedded?"mt-3":"mt-4"}` mx-auto grid max-w-xl grid-cols-3 gap-2 sm:mx-0 sm:gap-3`}>
+     <div className={`${embedded?"mt-3":"mt-4"} mx-auto grid max-w-xl grid-cols-3 gap-2 sm:mx-0 sm:gap-3`}>
       {['Sign in','Pay with M-PESA','Start watching'].map((label,i)=><div key={label} className="flex min-w-0 flex-col items-center gap-1.5 rounded-xl border border-white/10 px-2 py-2.5 text-center text-[10px] font-semibold text-white/65 sm:flex-row sm:gap-3 sm:px-4 sm:py-3 sm:text-left sm:text-xs"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-white/10 text-[11px] text-white">{i+1}</span>{label}</div>)}
      </div>
     </section>
