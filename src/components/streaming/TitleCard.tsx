@@ -1,7 +1,7 @@
 import { Check, ChevronDown, Lock, Play, Plus, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { CatalogueTitle } from "@/lib/site-data";
-import { isFreeEpisode } from "@/lib/catalogue";
+import { isFreeTitle } from "@/lib/catalogue";
 import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
@@ -37,10 +37,11 @@ export function TitleCard({
   const cardRef = useRef<HTMLElement | null>(null);
   const previewTimer = useRef<number | null>(null);
   const firstEpisode = item.episodes?.[0];
+  const freeFullTitle = isFreeTitle(item);
   const playableContentId =
-    item.type === "movie" && (item.youtubeVideoId || item.vimeoVideoId)
+    item.type === "movie" && freeFullTitle
       ? item.slug
-      : firstEpisode && isFreeEpisode(firstEpisode)
+      : firstEpisode && freeFullTitle
         ? (firstEpisode.legacyKey ?? `${item.slug}-1`)
         : null;
   const accessLabel =

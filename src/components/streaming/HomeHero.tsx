@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
-import { isFreeEpisode } from "@/lib/catalogue";
+import { isFreeTitle } from "@/lib/catalogue";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import {
@@ -33,10 +33,11 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const heroRef = useRef<HTMLElement | null>(null);
   const trailerFrameRef = useRef<HTMLIFrameElement | null>(null);
   const firstEpisode = item.episodes?.[0];
+  const freeFullTitle = isFreeTitle(item);
   const playableContentId =
-    item.type === "movie" && (item.youtubeVideoId || item.vimeoVideoId)
+    item.type === "movie" && freeFullTitle
       ? item.slug
-      : firstEpisode && isFreeEpisode(firstEpisode)
+      : firstEpisode && freeFullTitle
         ? (firstEpisode.legacyKey ?? `${item.slug}-1`)
         : null;
   const watchContentId = playableContentId ?? firstEpisode?.legacyKey ?? (item.type === "movie" ? item.slug : `${item.slug}-1`);
@@ -183,7 +184,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           <div className="mt-5 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
             {playableContentId || accessState === "authorized" ? (
               <Button asChild size="lg" className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
-                <Link to="/watch/$contentId" params={{ contentId: watchContentId }}><Play className="fill-current" />Watch</Link>
+                 <Link to="/watch/$contentId" params={{ contentId: watchContentId }}><Play className="fill-current" />{freeFullTitle ? "Watch Free" : "Watch"}</Link>
               </Button>
             ) : item.trailerEmbedUrl ? (
               <Button type="button" size="lg" onClick={() => { if (largeScreen && !reducedMotion) { setMuted(false); setTrailerReady(true); } else { setDetailsOpen(true); } }} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
