@@ -27,8 +27,8 @@ export const Route = createFileRoute("/better-days")({
       { property: "og:type", content: "video.tv_show" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: publicPageLinks("/title/better-days"),
   }),
-  links: publicPageLinks("/title/better-days"),
   component: BetterDays,
 });
 

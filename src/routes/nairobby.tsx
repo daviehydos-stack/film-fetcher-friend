@@ -27,8 +27,8 @@ export const Route = createFileRoute("/nairobby")({
       { property: "og:type", content: "video.movie" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: publicPageLinks("/title/nairobby"),
   }),
-  links: publicPageLinks("/title/nairobby"),
   component: Nairobby,
 });
 
