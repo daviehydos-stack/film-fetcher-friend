@@ -76,6 +76,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     if (!node) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
         const visible = entry.isIntersecting && entry.intersectionRatio >= 0.22;
         setHeroInView(visible);
         if (!visible) pauseEmbeddedPlayer(trailerFrameRef.current);

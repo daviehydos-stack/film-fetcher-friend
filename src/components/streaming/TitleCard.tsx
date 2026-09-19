@@ -99,7 +99,7 @@ export function TitleCard({
       setNearViewport(true);
       return;
     }
-    const observer = new IntersectionObserver(([entry]) => setNearViewport(entry.isIntersecting), {
+    const observer = new IntersectionObserver(([entry]) => setNearViewport(entry?.isIntersecting ?? false), {
       rootMargin: "240px",
     });
     observer.observe(cardRef.current);
