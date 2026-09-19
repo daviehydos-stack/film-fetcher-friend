@@ -456,3 +456,6 @@ main,header,footer,section,nav{max-width:100%}
   iframe{display:block}
   [role="dialog"]{max-width:100vw}
 }
+
+/* Locked fallback preview: visible 60-second countdown ribbon. */
+@keyframes avant-preview-minute{from{transform:scaleX(0)}to{transform:scaleX(1)}}
