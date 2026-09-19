@@ -8,6 +8,7 @@ import { catalogue, type CatalogueTitle } from "@/lib/site-data";
 import { publicCatalogue } from "@/lib/avant-backend";
 import { readMyList } from "@/lib/my-list";
 import { publicPageLinks, publicPageMeta } from "@/lib/seo";
+import { genreCollections, recentFallback } from "@/lib/discovery";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,7 +29,7 @@ function Index() {
   }, []);
   useEffect(() => { const sync = () => setMyListIds(readMyList()); sync(); window.addEventListener("avant-my-list", sync); return () => window.removeEventListener("avant-my-list", sync); }, []);
   const dbTitles: CatalogueTitle[]=(home?.titles||[]).map((t:any)=>{const f=catalogue.find(x=>x.slug===t.slug||x.id===t.legacy_key);return{id:t.legacy_key||t.slug,slug:t.slug,title:t.title,type:t.content_type,year:t.year?String(t.year):f?.year,genres:t.genres||f?.genres||[],synopsis:t.synopsis||f?.synopsis||"",shortDescription:t.short_description||f?.shortDescription||t.synopsis||"",artwork:t.poster_url||f?.artwork||"",backdrop:t.backdrop_url||f?.backdrop||t.poster_url||"",legacyPath:f?.legacyPath||"/"+t.slug,featured:Boolean(t.featured),available:true,trailerEmbedUrl:t.trailer_youtube_id?`https://www.youtube-nocookie.com/embed/${t.trailer_youtube_id}?rel=0`:f?.trailerEmbedUrl,previewYoutubeId:t.trailer_youtube_id||f?.previewYoutubeId,previewStart:t.preview_start_seconds??f?.previewStart,previewDuration:t.preview_duration_seconds??f?.previewDuration,heroAutoplay:t.hero_autoplay!==false,youtubeVideoId:t.youtube_video_id||undefined,vimeoVideoId:t.vimeo_video_id||undefined,videoSource:t.video_source||undefined,episodes:t.content_type==='movie'&&(t.youtube_video_id||t.vimeo_video_id)?[{title:t.title,duration:'',youtubeId:t.youtube_video_id||undefined,vimeoVideoId:t.vimeo_video_id||undefined,locked:false,legacyKey:t.slug}]:f?.episodes};});const liveCatalogue=dbTitles.length?dbTitles:catalogue;const heroId=home?.featuredHero?.titleId;const featured=liveCatalogue.find((x:any)=>home?.titles?.find((t:any)=>t.id===heroId)?.slug===x.slug)||liveCatalogue.find(x=>x.featured)||liveCatalogue[0];const series=liveCatalogue.filter(x=>x.type==="series"),movies=liveCatalogue.filter(x=>x.type==="movie"),available=liveCatalogue.filter(x=>x.available),comingSoon=liveCatalogue.filter(x=>!x.available);const adminRails=(home?.collections||[]).map((c:any)=>({name:c.name,items:(home?.collectionTitles||[]).filter((x:any)=>x.collection_id===c.id).sort((x:any,y:any)=>x.display_order-y.display_order).map((x:any)=>liveCatalogue.find(t=>home.titles?.find((dt:any)=>dt.id===x.title_id)?.slug===t.slug)).filter(Boolean)})).filter((x:any)=>x.items.length);
-  const recentItems=(home?.recentlyAdded?.titleIds||[]).map((id:string)=>liveCatalogue.find((t:any)=>home?.titles?.find((dt:any)=>dt.id===id)?.slug===t.slug)).filter(Boolean);const myList = useMemo(() => myListIds.map((id) => liveCatalogue.find((item) => item.id === id)).filter((item): item is (typeof catalogue)[number] => Boolean(item)), [myListIds]);
+  const configuredRecent=(home?.recentlyAdded?.titleIds||[]).map((id:string)=>liveCatalogue.find((t:any)=>home?.titles?.find((dt:any)=>dt.id===id)?.slug===t.slug)).filter(Boolean);const recentItems=configuredRecent.length?configuredRecent:recentFallback(liveCatalogue);const genreRails=genreCollections(liveCatalogue);const myList = useMemo(() => myListIds.map((id) => liveCatalogue.find((item) => item.id === id)).filter((item): item is (typeof catalogue)[number] => Boolean(item)), [myListIds]);
 
   return (
     <StreamingShell>
@@ -39,7 +40,7 @@ function Index() {
           <ContinueWatching />
           {home?.recentlyAdded?.enabled!==false&&recentItems.length>0?<ContentRail title={home?.recentlyAdded?.title||"Recently Added"} items={recentItems}/>:null}
           {adminRails.length ? adminRails.map((rail:any,index:number)=>index===0?<RankedRail key={rail.name} title={rail.name} items={rail.items}/>:<ContentRail key={rail.name} title={rail.name} items={rail.items}/>) : <>{liveCatalogue.length>0?<RankedRail title="Featured on Avant" items={liveCatalogue}/>:null}{available.length>0?<ContentRail title="Available now" items={available}/>:null}{series.length>0?<ContentRail title="Series" items={series}/>:null}{movies.length>0?<ContentRail title="Films" items={movies}/>:null}{comingSoon.length>0?<ContentRail title="Coming Soon" items={comingSoon}/>:null}</>}
-          {myList.length>0?<ContentRail title="My List" items={myList}/>:null}
+          {genreRails.map(({genre,items})=><ContentRail key={`genre-${genre}`} title={`Because you like ${genre}`} items={items}/>)}{myList.length>0?<ContentRail title="My List" items={myList}/>:null}
         </div>
 
         <section className="mx-auto max-w-[1500px] px-5 pb-20 pt-10 sm:px-10 lg:px-14">
