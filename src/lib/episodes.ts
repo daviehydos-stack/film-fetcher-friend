@@ -55,7 +55,7 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
         ...(youtubeId ? { youtubeId } : {}),
         ...(vimeoVideoId ? { vimeoVideoId } : {}),
         ...(poster ? { poster } : {}),
-        ...(typeof raw["access_required"] === "boolean" ? { locked: raw["access_required"] } : {}),
+        locked: typeof raw["access_required"] === "boolean" ? raw["access_required"] : true,
         ...(description ? { description } : {}),
         ...(legacyKey ? { legacyKey } : {}),
         ...(previewStart !== undefined ? { previewStart } : {}),

@@ -44,7 +44,7 @@ export function mapPublicEpisode(value: unknown): Episode | null {
     ...(youtubeId ? { youtubeId } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
     ...(poster ? { poster } : {}),
-    ...(typeof raw["access_required"] === "boolean" ? { locked: raw["access_required"] } : {}),
+    locked: typeof raw["access_required"] === "boolean" ? raw["access_required"] : true,
     ...(description ? { description } : {}),
     ...(episodeLegacyKey ? { legacyKey: episodeLegacyKey } : {}),
     ...(previewStart !== undefined ? { previewStart } : {}),
@@ -68,9 +68,10 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
   const liveEpisodes = Array.isArray(raw["episodes"])
     ? raw["episodes"].map(mapPublicEpisode).filter((episode): episode is Episode => Boolean(episode))
     : undefined;
+  const accessRequired = typeof raw["access_required"] === "boolean" ? raw["access_required"] : true;
   const movieEpisode: Episode[] | undefined =
     contentType === "movie" && (youtubeVideoId || vimeoVideoId)
-      ? [{ title, duration: "", ...(youtubeVideoId ? { youtubeId: youtubeVideoId } : {}), ...(vimeoVideoId ? { vimeoVideoId } : {}), locked: false, legacyKey: slug }]
+      ? [{ title, duration: "", ...(youtubeVideoId ? { youtubeId: youtubeVideoId } : {}), ...(vimeoVideoId ? { vimeoVideoId } : {}), locked: accessRequired, legacyKey: slug }]
       : undefined;
 
   return {
@@ -88,6 +89,7 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     legacyPath: fallback?.legacyPath || `/${slug}`,
     featured: Boolean(raw["featured"]),
     available: raw["published"] !== false,
+    accessRequired,
     ...(text(raw["trailer_youtube_id"])
       ? { trailerEmbedUrl: `https://www.youtube-nocookie.com/embed/${text(raw["trailer_youtube_id"])}?rel=0`, previewYoutubeId: text(raw["trailer_youtube_id"]) }
       : fallback?.trailerEmbedUrl
@@ -109,7 +111,7 @@ export function mergePublicCatalogue(payload: unknown) {
 }
 
 export function isFreeTitle(item: CatalogueTitle) {
-  if (item.type === "movie" && Boolean(item.youtubeVideoId || item.vimeoVideoId)) return true;
+  if (item.type === "movie") return item.accessRequired === false || isFreeEpisode(item.episodes?.[0]);
   return Boolean(item.episodes?.some(isFreeEpisode));
 }
 
