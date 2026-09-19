@@ -3,7 +3,7 @@ import { Check, Info, Play, Plus, Volume2, VolumeX, Sparkles } from "lucide-reac
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
-import { heroTrailerUrl } from "@/lib/video-embeds";
+import { heroTrailerUrl, pauseEmbeddedPlayer } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 import { accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
@@ -23,13 +23,13 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
   const [heroInView,setHeroInView]=useState(true);
   const [detailsOpen,setDetailsOpen]=useState(false); const [playRequested,setPlayRequested]=useState(false);
-  const heroRef=useRef<HTMLElement|null>(null);
+  const heroRef=useRef<HTMLElement|null>(null); const trailerFrameRef=useRef<HTMLIFrameElement|null>(null);
   const firstEpisode=item.episodes?.[0];
   const playableContentId = item.type==="movie"&&(item.youtubeVideoId||item.vimeoVideoId) ? item.slug : firstEpisode&&(firstEpisode.youtubeId||firstEpisode.vimeoVideoId)&&firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
   useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]);useEffect(()=>{let live=true;const key=firstEpisode?.legacyKey??(item.type==="movie"?item.slug:`${item.slug}-1`);if(playableContentId){setAccessState("authorized");return()=>{live=false}}setAccessState("loading");customerToken(false).then(async token=>{if(!live)return;if(!token){setAccessState("signed_out");return}try{const a=await accountAccess(token);if(live)setAccessState(a.subscriber?"authorized":"locked")}catch{if(live)setAccessState("error")}});return()=>{live=false}},[item.slug,firstEpisode?.legacyKey,playableContentId,accessVersion]);
 
   useEffect(() => setSaved(readMyList().includes(item.id)), [item.id]);
-  useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setHeroInView(entry.isIntersecting&&entry.intersectionRatio>=0.22),{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
+  useEffect(()=>{const node=heroRef.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>{const visible=entry.isIntersecting&&entry.intersectionRatio>=0.22;setHeroInView(visible);if(!visible)pauseEmbeddedPlayer(trailerFrameRef.current)},{threshold:[0,.22,.5]});observer.observe(node);return()=>observer.disconnect()},[item.id]);
 
   async function toggleSaved(){ const token=await customerToken(false); if(!token){ try{await requireCustomerToken()}catch{return} } setSaved(toggleMyList(item.id).includes(item.id)); }
 
@@ -57,9 +57,10 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
       {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && !trailerFailed && !reducedMotion && largeScreen && heroInView ? (
         <iframe
-          src={heroTrailerUrl(item.trailerEmbedUrl, muted)}
+          ref={trailerFrameRef}
+          src={heroTrailerUrl(item.trailerEmbedUrl, muted, false)}
           title={`${item.title} trailer`}
-          allow="autoplay; fullscreen; picture-in-picture"
+          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
           onLoad={(event) => { window.dispatchEvent(new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } })); setTrailerLoaded(true); window.setTimeout(() => setTrailerVisible(true), 120); }}
           onError={() => setTrailerFailed(true)}
           className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
