@@ -119,6 +119,13 @@ export function isFreeEpisode(episode: Episode | undefined) {
   return Boolean(episode && (episode.youtubeId || episode.vimeoVideoId) && episode.locked !== true);
 }
 
+export function freeContentId(item: CatalogueTitle) {
+  if (item.type === "movie" && isFreeTitle(item)) return item.slug;
+  const index = item.episodes?.findIndex(isFreeEpisode) ?? -1;
+  if (index < 0) return null;
+  return item.episodes?.[index]?.legacyKey ?? `${item.slug}-${index + 1}`;
+}
+
 export function useCatalogue() {
   const [items, setItems] = useState<CatalogueTitle[]>(catalogue);
   const [loading, setLoading] = useState(true);

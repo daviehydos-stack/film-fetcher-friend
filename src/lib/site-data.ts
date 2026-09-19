@@ -12,7 +12,7 @@ export const navLinks = [
   { label: "TV Shows", to: "/tv-shows" },
   { label: "Movies", to: "/movies" },
   { label: "Watch Free", to: "/watch-free" },
-  { label: "My List", to: "/my-list" },
+  { label: "My Avant", to: "/account" },
 ] as const;
 
 export type ContentType = "movie" | "series";
