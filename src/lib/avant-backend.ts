@@ -33,7 +33,7 @@ export const setCloudMyList=(token:string,key:string,saved:boolean)=>request<any
 
 export const myLibrary=(token:string)=>request<any>("my-library",token,{method:"GET"});
 export type AccountAccess={authenticated:boolean;subscriber:boolean;email?:string;customerId?:string;subscription?:{active:boolean;plan:string;productType:string;expiresAt:string|null}|null;reason?:string};
-export const accountAccess=(token:string)=>request<AccountAccess>("account-access",token,{method:"GET"});
+export const accountAccess=(token:string)=>request<AccountAccess>("account-access",token,{method:"GET"}).then(x=>{rememberSubscriber(Boolean(x.subscriber));return x});
 export function cachedSubscriber(){if(typeof window==="undefined")return false;return sessionStorage.getItem("avant_subscriber")==="1"}
 export function rememberSubscriber(active:boolean){if(typeof window!=="undefined")sessionStorage.setItem("avant_subscriber",active?"1":"0")}
 export type AccessState="loading"|"signed_out"|"authorized"|"locked"|"unavailable"|"error";
