@@ -9,6 +9,7 @@ import { BACKEND_PRODUCT_IDS } from "@/lib/backend-catalogue-map";
 import { accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { rememberReturnContext } from "@/lib/navigation-memory";
+import { TitlePreviewModal } from "./TitlePreviewModal";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [muted, setMuted] = useState(false);
@@ -21,6 +22,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [saved, setSaved] = useState(false);
   const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
   const [heroInView,setHeroInView]=useState(true);
+  const [detailsOpen,setDetailsOpen]=useState(false);
   const heroRef=useRef<HTMLElement|null>(null);
   const firstEpisode=item.episodes?.[0];
   const playableContentId = item.type==="movie"&&(item.youtubeVideoId||item.vimeoVideoId) ? item.slug : firstEpisode&&(firstEpisode.youtubeId||firstEpisode.vimeoVideoId)&&firstEpisode.locked===false ? (firstEpisode.legacyKey??`${item.slug}-1`) : null;
@@ -72,14 +74,15 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold sm:text-sm"><span>{item.type === "movie" ? "Film" : "Series"}</span><span className="text-white/30">•</span><span>{item.genres.join(" · ")}</span><span className="rounded border border-white/25 px-1.5 py-0.5 text-[10px] text-white/70">HD</span></div>
           <p className="mt-3 max-w-xl line-clamp-3 text-sm leading-6 text-white/85 sm:mt-4 sm:text-lg sm:leading-7">{item.shortDescription}</p>
           <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
-            <Button asChild size="lg" className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85">{(playableContentId||accessState==="authorized") ? <Link to="/watch/$contentId" params={{ contentId: playableContentId??item.slug }}><Play className="fill-current" />Play</Link> : item.available ? <Link to="/checkout/$productId" params={{ productId: BACKEND_PRODUCT_IDS.allAccess }} search={{returnTo:`/title/${item.slug}`,origin:"/",originScroll:String(typeof window!=="undefined"?window.scrollY:0)}} onClick={()=>rememberReturnContext("home",item.slug)}><Play className="fill-current" />Get Access</Link> : <Link to="/title/$slug" params={{ slug: item.slug }} onClick={()=>rememberReturnContext("home",item.slug)}><Play className="fill-current" />More Info</Link>}</Button>
-            <Button asChild size="lg" variant="secondary" className="h-11 w-full bg-white/20 px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-white backdrop-blur-md hover:bg-white/30"><Link to="/title/$slug" params={{ slug: item.slug }} onClick={()=>rememberReturnContext("home",item.slug)}><Info />More Info</Link></Button>
+            <Button type="button" size="lg" onClick={()=>setDetailsOpen(true)} className="h-11 w-full bg-white px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-black hover:bg-white/85"><Play className="fill-current" />{(playableContentId||accessState==="authorized")?"Play":"Preview"}</Button>
+            <Button type="button" size="lg" variant="secondary" onClick={()=>setDetailsOpen(true)} className="h-11 w-full bg-white/20 px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base text-white backdrop-blur-md hover:bg-white/30"><Info />More Info</Button>
           <Button type="button" size="lg" variant="secondary" onClick={() => void toggleSaved()} className="col-span-2 h-11 w-full bg-black/35 px-4 text-sm font-bold text-white backdrop-blur-md hover:bg-white/15 sm:col-auto sm:h-12 sm:w-auto sm:px-5 sm:text-base">{saved ? <Check /> : <Plus />}{saved ? "In My List" : "My List"}</Button>
           </div>
         </div>
       </div>
 
       {item.heroAutoplay !== false && item.trailerEmbedUrl && trailerReady && trailerLoaded && trailerVisible && !trailerFailed && !reducedMotion && largeScreen && heroInView ? <button type="button" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn hero sound on" : "Mute hero"} className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14">{muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}</button> : null}
+      {detailsOpen?<TitlePreviewModal item={item} onClose={()=>setDetailsOpen(false)}/>:null}
     </section>
   );
 }
