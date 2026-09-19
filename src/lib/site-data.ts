@@ -34,6 +34,9 @@ export type CatalogueTitle = {
   previewStart?: number;
   previewDuration?: number;
   heroAutoplay?: boolean;
+  youtubeVideoId?: string;
+  vimeoVideoId?: string;
+  videoSource?: "youtube" | "vimeo" | "none";
   cast?: string[];
   creators?: string[];
   directors?: string[];
