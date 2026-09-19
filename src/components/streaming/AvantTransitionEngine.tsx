@@ -3,7 +3,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type TransitionPhase = "idle" | "entering" | "navigating" | "revealing";
 type TransitionMode = "quick" | "detail" | "checkout" | "back" | "play";
-const REVEAL_MS = 260;
+const REVEAL_BY_MODE: Record<TransitionMode, number> = {
+  play: 360,
+  detail: 220,
+  checkout: 220,
+  back: 180,
+  quick: 180,
+};
 const SAFETY_MS = 1600;
 
 function pauseAllPlayers(except?: HTMLIFrameElement | HTMLMediaElement | null) {
@@ -39,6 +45,7 @@ export function AvantTransitionEngine() {
   const location = useLocation();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
   const [mode, setMode] = useState<TransitionMode>("quick");
+  const modeRef = useRef<TransitionMode>("quick");
   const phaseRef = useRef<TransitionPhase>("idle");
   const pendingAnchor = useRef<HTMLAnchorElement | null>(null);
   const timers = useRef<number[]>([]);
@@ -103,6 +110,7 @@ export function AvantTransitionEngine() {
       event.stopPropagation();
       pendingAnchor.current = element;
       setMode(nextMode);
+      modeRef.current = nextMode;
       stopPlayback();
 
       if (reducedMotion.current) {
@@ -135,9 +143,15 @@ export function AvantTransitionEngine() {
   }, [clearTimers, finish, setTransitionPhase]);
 
   useEffect(() => {
-    if (phaseRef.current !== "navigating" && phaseRef.current !== "entering") return;
-    setTransitionPhase("revealing");
-    timers.current.push(window.setTimeout(finish, REVEAL_MS));
+    if (phaseRef.current !== "navigating") return;
+    let r2 = 0;
+    const r1 = requestAnimationFrame(() => {
+      r2 = requestAnimationFrame(() => {
+        setTransitionPhase("revealing");
+        timers.current.push(window.setTimeout(finish, REVEAL_BY_MODE[modeRef.current]));
+      });
+    });
+    return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
   }, [location.pathname, location.searchStr, finish, setTransitionPhase]);
 
   if (phase === "idle") return null;
