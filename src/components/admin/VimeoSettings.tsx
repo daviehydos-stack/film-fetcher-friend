@@ -246,7 +246,18 @@ export default function VimeoSettings() {
                   ) : null}
                   <div className="p-3">
                     <p className="truncate text-sm font-semibold">{v.name}</p>
-                    <p className="mt-1 text-xs text-white/35">\n                      {Math.floor((v.duration || 0) / 60)} min · {v.privacy || "privacy unknown"}\n                    </p>\n                    <p\n                      className={`mt-1 text-[11px] font-semibold ${v.recommendedForPremium ? "text-emerald-300" : v.playable ? "text-amber-200" : "text-red-300"}`}\n                    >\n                      {v.recommendedForPremium\n                        ? "Ready for premium use"\n                        : v.playable\n                          ? "Playable · review privacy"\n                          : "Not ready for playback"}\n                    </p>
+                    <p className="mt-1 text-xs text-white/35">
+                      {Math.floor((v.duration || 0) / 60)} min · {v.privacy || "privacy unknown"}
+                    </p>
+                    <p
+                      className={`mt-1 text-[11px] font-semibold ${v.recommendedForPremium ? "text-emerald-300" : v.playable ? "text-amber-200" : "text-red-300"}`}
+                    >
+                      {v.recommendedForPremium
+                        ? "Ready for premium use"
+                        : v.playable
+                          ? "Playable · review privacy"
+                          : "Not ready for playback"}
+                    </p>
                   </div>
                 </div>
               ))}
