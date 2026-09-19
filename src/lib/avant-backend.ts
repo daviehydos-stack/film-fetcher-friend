@@ -34,6 +34,8 @@ export const setCloudMyList=(token:string,key:string,saved:boolean)=>request<any
 export const myLibrary=(token:string)=>request<any>("my-library",token,{method:"GET"});
 export type AccountAccess={authenticated:boolean;subscriber:boolean;email?:string;customerId?:string;subscription?:{active:boolean;plan:string;productType:string;expiresAt:string|null}|null;reason?:string};
 export const accountAccess=(token:string)=>request<AccountAccess>("account-access",token,{method:"GET"});
+export function cachedSubscriber(){if(typeof window==="undefined")return false;return sessionStorage.getItem("avant_subscriber")==="1"}
+export function rememberSubscriber(active:boolean){if(typeof window!=="undefined")sessionStorage.setItem("avant_subscriber",active?"1":"0")}
 export type AccessState="loading"|"signed_out"|"authorized"|"locked"|"unavailable"|"error";
 export async function accessForContent(contentId:string,seasonId?:string){const {customerToken}=await import("./google-auth");const token=await customerToken(false);if(!token)return{state:"signed_out" as AccessState,authorized:false,reason:"login_required"};try{const r=await authorizeWatch(token,contentId,seasonId);return{...r,state:r.authorized?"authorized" as AccessState:"locked" as AccessState}}catch(e:any){const reason=e?.body?.reason;if(reason==="payment_required")return{state:"locked" as AccessState,authorized:false,reason};if(reason==="content_unavailable")return{state:"unavailable" as AccessState,authorized:false,reason};if(reason==="login_required")return{state:"signed_out" as AccessState,authorized:false,reason};return{state:"error" as AccessState,authorized:false,reason:reason||"authorization_failed"}}}
 export const ACCESS_CHANGED_EVENT="avant:access-changed";
