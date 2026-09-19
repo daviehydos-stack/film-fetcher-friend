@@ -54,7 +54,6 @@ export function AvantTransitionEngine() {
   const pendingAnchor = useRef<HTMLAnchorElement | null>(null);
   const timers = useRef<number[]>([]);
   const reducedMotion = useRef(false);
-  const lastPath = useRef(location.pathname);
 
   const setTransitionPhase = useCallback((next: TransitionPhase) => {
     phaseRef.current = next;
@@ -89,6 +88,15 @@ export function AvantTransitionEngine() {
     };
     window.addEventListener("avant:player-started", onPlayerStarted);
     document.addEventListener("play", onMediaPlay, true);
+    const onHistoryNavigation = () => {
+      stopPlayback();
+      if (reducedMotion.current) return;
+      modeRef.current = "back";
+      setMode("back");
+      setTransitionPhase("navigating");
+      timers.current.push(window.setTimeout(finish, 450));
+    };
+    window.addEventListener("popstate", onHistoryNavigation);
 
     const onClick = (event: MouseEvent) => {
       const element = event.target instanceof Element ? event.target.closest("a[href]") : null;
@@ -148,14 +156,13 @@ export function AvantTransitionEngine() {
     return () => {
       document.removeEventListener("click", onClick, true);
       window.removeEventListener("avant:player-started", onPlayerStarted);
+      window.removeEventListener("popstate", onHistoryNavigation);
       document.removeEventListener("play", onMediaPlay, true);
       clearTimers();
     };
   }, [clearTimers, finish, setTransitionPhase]);
 
   useEffect(() => {
-    const movedBack = location.pathname !== lastPath.current;
-    lastPath.current = location.pathname;
     if (phaseRef.current !== "navigating") return;
     let r2 = 0;
     const r1 = requestAnimationFrame(() => {
@@ -164,10 +171,6 @@ export function AvantTransitionEngine() {
         timers.current.push(window.setTimeout(finish, REVEAL_BY_MODE[modeRef.current]));
       });
     });
-    return () => {
-      cancelAnimationFrame(r1);
-      cancelAnimationFrame(r2);
-    };
     return () => {
       cancelAnimationFrame(r1);
       cancelAnimationFrame(r2);
