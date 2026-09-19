@@ -10,16 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as CheckoutProductIdRouteImport } from './routes/checkout.$productId'
-import { Route as PaymentFailedRouteImport } from './routes/payment.failed'
-import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
-import { Route as WatchContentIdRouteImport } from './routes/watch.$contentId'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as ABetterLifeRouteImport } from './routes/a-better-life'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BackToUsRouteImport } from './routes/back-to-us'
 import { Route as BetterDaysRouteImport } from './routes/better-days'
 import { Route as BetterlifeEpisodesRouteImport } from './routes/betterlife-episodes'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as MoviesRouteImport } from './routes/movies'
 import { Route as MyListRouteImport } from './routes/my-list'
 import { Route as NairobbyRouteImport } from './routes/nairobby'
@@ -28,24 +27,25 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ThisIsLifeRouteImport } from './routes/this-is-life'
 import { Route as ThisIsLifeEpisodesRouteImport } from './routes/this-is-life-episodes'
-import { Route as TitleSlugRouteImport } from './routes/title.$slug'
 import { Route as TvShowsRouteImport } from './routes/tv-shows'
 import { Route as WatchThemAllRouteImport } from './routes/watch-them-all'
 import { Route as WriteLikeAMasterRouteImport } from './routes/write-like-a-master'
+import { Route as AdminSectionRouteImport } from './routes/admin_.$section'
+import { Route as CheckoutProductIdRouteImport } from './routes/checkout.$productId'
+import { Route as PaymentFailedRouteImport } from './routes/payment.failed'
+import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
+import { Route as TitleSlugRouteImport } from './routes/title.$slug'
+import { Route as WatchContentIdRouteImport } from './routes/watch.$contentId'
+import { Route as EpisodeSlugEpisodeNumberRouteImport } from './routes/episode.$slug.$episodeNumber'
 
-const CheckoutProductIdRoute = CheckoutProductIdRouteImport.update({ id: '/checkout/$productId', path: '/checkout/$productId', getParentRoute: () => rootRouteImport } as any)
-const PaymentFailedRoute = PaymentFailedRouteImport.update({ id: '/payment/failed', path: '/payment/failed', getParentRoute: () => rootRouteImport } as any)
-const PaymentSuccessRoute = PaymentSuccessRouteImport.update({ id: '/payment/success', path: '/payment/success', getParentRoute: () => rootRouteImport } as any)
-const WatchContentIdRoute = WatchContentIdRouteImport.update({ id: '/watch/$contentId', path: '/watch/$contentId', getParentRoute: () => rootRouteImport } as any)
-
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ABetterLifeRoute = ABetterLifeRouteImport.update({
@@ -56,6 +56,16 @@ const ABetterLifeRoute = ABetterLifeRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BackToUsRoute = BackToUsRouteImport.update({
@@ -71,6 +81,11 @@ const BetterDaysRoute = BetterDaysRouteImport.update({
 const BetterlifeEpisodesRoute = BetterlifeEpisodesRouteImport.update({
   id: '/betterlife-episodes',
   path: '/betterlife-episodes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MoviesRoute = MoviesRouteImport.update({
@@ -113,11 +128,6 @@ const ThisIsLifeEpisodesRoute = ThisIsLifeEpisodesRouteImport.update({
   path: '/this-is-life-episodes',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TitleSlugRoute = TitleSlugRouteImport.update({
-  id: '/title/$slug',
-  path: '/title/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TvShowsRoute = TvShowsRouteImport.update({
   id: '/tv-shows',
   path: '/tv-shows',
@@ -133,19 +143,54 @@ const WriteLikeAMasterRoute = WriteLikeAMasterRouteImport.update({
   path: '/write-like-a-master',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSectionRoute = AdminSectionRouteImport.update({
+  id: '/admin_/$section',
+  path: '/admin/$section',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutProductIdRoute = CheckoutProductIdRouteImport.update({
+  id: '/checkout/$productId',
+  path: '/checkout/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentFailedRoute = PaymentFailedRouteImport.update({
+  id: '/payment/failed',
+  path: '/payment/failed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
+  id: '/payment/success',
+  path: '/payment/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TitleSlugRoute = TitleSlugRouteImport.update({
+  id: '/title/$slug',
+  path: '/title/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WatchContentIdRoute = WatchContentIdRouteImport.update({
+  id: '/watch/$contentId',
+  path: '/watch/$contentId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EpisodeSlugEpisodeNumberRoute =
+  EpisodeSlugEpisodeNumberRouteImport.update({
+    id: '/episode/$slug/$episodeNumber',
+    path: '/episode/$slug/$episodeNumber',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/admin': typeof AdminRoute
-  '/checkout/$productId': typeof CheckoutProductIdRoute
-  '/payment/failed': typeof PaymentFailedRoute
-  '/payment/success': typeof PaymentSuccessRoute
-  '/watch/$contentId': typeof WatchContentIdRoute
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/back-to-us': typeof BackToUsRoute
   '/better-days': typeof BetterDaysRoute
   '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/contact': typeof ContactRoute
   '/movies': typeof MoviesRoute
   '/my-list': typeof MyListRoute
   '/nairobby': typeof NairobbyRoute
@@ -154,23 +199,28 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
-  '/title/$slug': typeof TitleSlugRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
+  '/title/$slug': typeof TitleSlugRoute
+  '/watch/$contentId': typeof WatchContentIdRoute
+  '/episode/$slug/$episodeNumber': typeof EpisodeSlugEpisodeNumberRoute
 }
 export interface FileRoutesByTo {
-  '/admin': typeof AdminRoute
-  '/checkout/$productId': typeof CheckoutProductIdRoute
-  '/payment/failed': typeof PaymentFailedRoute
-  '/payment/success': typeof PaymentSuccessRoute
-  '/watch/$contentId': typeof WatchContentIdRoute
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/back-to-us': typeof BackToUsRoute
   '/better-days': typeof BetterDaysRoute
   '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/contact': typeof ContactRoute
   '/movies': typeof MoviesRoute
   '/my-list': typeof MyListRoute
   '/nairobby': typeof NairobbyRoute
@@ -179,24 +229,29 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
-  '/title/$slug': typeof TitleSlugRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
+  '/title/$slug': typeof TitleSlugRoute
+  '/watch/$contentId': typeof WatchContentIdRoute
+  '/episode/$slug/$episodeNumber': typeof EpisodeSlugEpisodeNumberRoute
 }
 export interface FileRoutesById {
-  '/admin': typeof AdminRoute
-  '/checkout/$productId': typeof CheckoutProductIdRoute
-  '/payment/failed': typeof PaymentFailedRoute
-  '/payment/success': typeof PaymentSuccessRoute
-  '/watch/$contentId': typeof WatchContentIdRoute
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/back-to-us': typeof BackToUsRoute
   '/better-days': typeof BetterDaysRoute
   '/betterlife-episodes': typeof BetterlifeEpisodesRoute
+  '/contact': typeof ContactRoute
   '/movies': typeof MoviesRoute
   '/my-list': typeof MyListRoute
   '/nairobby': typeof NairobbyRoute
@@ -205,25 +260,30 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/this-is-life': typeof ThisIsLifeRoute
   '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
-  '/title/$slug': typeof TitleSlugRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-them-all': typeof WatchThemAllRoute
   '/write-like-a-master': typeof WriteLikeAMasterRoute
+  '/admin_/$section': typeof AdminSectionRoute
+  '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
+  '/title/$slug': typeof TitleSlugRoute
+  '/watch/$contentId': typeof WatchContentIdRoute
+  '/episode/$slug/$episodeNumber': typeof EpisodeSlugEpisodeNumberRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/admin'
-    | '/checkout/$productId'
-    | '/payment/failed'
-    | '/payment/success'
-    | '/watch/$contentId'
     | '/'
+    | '/$'
     | '/a-better-life'
     | '/about'
+    | '/account'
+    | '/admin'
     | '/back-to-us'
     | '/better-days'
     | '/betterlife-episodes'
+    | '/contact'
     | '/movies'
     | '/my-list'
     | '/nairobby'
@@ -232,22 +292,28 @@ export interface FileRouteTypes {
     | '/terms'
     | '/this-is-life'
     | '/this-is-life-episodes'
-    | '/title/$slug'
     | '/tv-shows'
     | '/watch-them-all'
     | '/write-like-a-master'
+    | '/admin/$section'
+    | '/checkout/$productId'
+    | '/payment/failed'
+    | '/payment/success'
+    | '/title/$slug'
+    | '/watch/$contentId'
+    | '/episode/$slug/$episodeNumber'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/checkout/$productId'
-    | '/payment/failed'
-    | '/payment/success'
-    | '/watch/$contentId'
     | '/'
+    | '/$'
     | '/a-better-life'
     | '/about'
+    | '/account'
+    | '/admin'
     | '/back-to-us'
     | '/better-days'
     | '/betterlife-episodes'
+    | '/contact'
     | '/movies'
     | '/my-list'
     | '/nairobby'
@@ -256,22 +322,28 @@ export interface FileRouteTypes {
     | '/terms'
     | '/this-is-life'
     | '/this-is-life-episodes'
-    | '/title/$slug'
     | '/tv-shows'
     | '/watch-them-all'
     | '/write-like-a-master'
-  id:
+    | '/admin/$section'
     | '/checkout/$productId'
     | '/payment/failed'
     | '/payment/success'
+    | '/title/$slug'
     | '/watch/$contentId'
+    | '/episode/$slug/$episodeNumber'
+  id:
     | '__root__'
     | '/'
+    | '/$'
     | '/a-better-life'
     | '/about'
+    | '/account'
+    | '/admin'
     | '/back-to-us'
     | '/better-days'
     | '/betterlife-episodes'
+    | '/contact'
     | '/movies'
     | '/my-list'
     | '/nairobby'
@@ -280,24 +352,29 @@ export interface FileRouteTypes {
     | '/terms'
     | '/this-is-life'
     | '/this-is-life-episodes'
-    | '/title/$slug'
     | '/tv-shows'
     | '/watch-them-all'
     | '/write-like-a-master'
+    | '/admin_/$section'
+    | '/checkout/$productId'
+    | '/payment/failed'
+    | '/payment/success'
+    | '/title/$slug'
+    | '/watch/$contentId'
+    | '/episode/$slug/$episodeNumber'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AdminRoute: typeof AdminRoute
-  CheckoutProductIdRoute: typeof CheckoutProductIdRoute
-  PaymentFailedRoute: typeof PaymentFailedRoute
-  PaymentSuccessRoute: typeof PaymentSuccessRoute
-  WatchContentIdRoute: typeof WatchContentIdRoute
   IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
   ABetterLifeRoute: typeof ABetterLifeRoute
   AboutRoute: typeof AboutRoute
+  AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRoute
   BackToUsRoute: typeof BackToUsRoute
   BetterDaysRoute: typeof BetterDaysRoute
   BetterlifeEpisodesRoute: typeof BetterlifeEpisodesRoute
+  ContactRoute: typeof ContactRoute
   MoviesRoute: typeof MoviesRoute
   MyListRoute: typeof MyListRoute
   NairobbyRoute: typeof NairobbyRoute
@@ -306,23 +383,32 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ThisIsLifeRoute: typeof ThisIsLifeRoute
   ThisIsLifeEpisodesRoute: typeof ThisIsLifeEpisodesRoute
-  TitleSlugRoute: typeof TitleSlugRoute
   TvShowsRoute: typeof TvShowsRoute
   WatchThemAllRoute: typeof WatchThemAllRoute
   WriteLikeAMasterRoute: typeof WriteLikeAMasterRoute
+  AdminSectionRoute: typeof AdminSectionRoute
+  CheckoutProductIdRoute: typeof CheckoutProductIdRoute
+  PaymentFailedRoute: typeof PaymentFailedRoute
+  PaymentSuccessRoute: typeof PaymentSuccessRoute
+  TitleSlugRoute: typeof TitleSlugRoute
+  WatchContentIdRoute: typeof WatchContentIdRoute
+  EpisodeSlugEpisodeNumberRoute: typeof EpisodeSlugEpisodeNumberRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/checkout/$productId': { id: '/checkout/$productId'; path: '/checkout/$productId'; fullPath: '/checkout/$productId'; preLoaderRoute: typeof CheckoutProductIdRouteImport; parentRoute: typeof rootRouteImport }
-    '/payment/failed': { id: '/payment/failed'; path: '/payment/failed'; fullPath: '/payment/failed'; preLoaderRoute: typeof PaymentFailedRouteImport; parentRoute: typeof rootRouteImport }
-    '/payment/success': { id: '/payment/success'; path: '/payment/success'; fullPath: '/payment/success'; preLoaderRoute: typeof PaymentSuccessRouteImport; parentRoute: typeof rootRouteImport }
-    '/watch/$contentId': { id: '/watch/$contentId'; path: '/watch/$contentId'; fullPath: '/watch/$contentId'; preLoaderRoute: typeof WatchContentIdRouteImport; parentRoute: typeof rootRouteImport }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/a-better-life': {
@@ -337,6 +423,20 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/back-to-us': {
@@ -358,6 +458,13 @@ declare module '@tanstack/react-router' {
       path: '/betterlife-episodes'
       fullPath: '/betterlife-episodes'
       preLoaderRoute: typeof BetterlifeEpisodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/movies': {
@@ -416,13 +523,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ThisIsLifeEpisodesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/title/$slug': {
-      id: '/title/$slug'
-      path: '/title/$slug'
-      fullPath: '/title/$slug'
-      preLoaderRoute: typeof TitleSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/tv-shows': {
       id: '/tv-shows'
       path: '/tv-shows'
@@ -444,21 +544,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WriteLikeAMasterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/$section': {
+      id: '/admin_/$section'
+      path: '/admin/$section'
+      fullPath: '/admin/$section'
+      preLoaderRoute: typeof AdminSectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/$productId': {
+      id: '/checkout/$productId'
+      path: '/checkout/$productId'
+      fullPath: '/checkout/$productId'
+      preLoaderRoute: typeof CheckoutProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/failed': {
+      id: '/payment/failed'
+      path: '/payment/failed'
+      fullPath: '/payment/failed'
+      preLoaderRoute: typeof PaymentFailedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/success': {
+      id: '/payment/success'
+      path: '/payment/success'
+      fullPath: '/payment/success'
+      preLoaderRoute: typeof PaymentSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/title/$slug': {
+      id: '/title/$slug'
+      path: '/title/$slug'
+      fullPath: '/title/$slug'
+      preLoaderRoute: typeof TitleSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/watch/$contentId': {
+      id: '/watch/$contentId'
+      path: '/watch/$contentId'
+      fullPath: '/watch/$contentId'
+      preLoaderRoute: typeof WatchContentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/episode/$slug/$episodeNumber': {
+      id: '/episode/$slug/$episodeNumber'
+      path: '/episode/$slug/$episodeNumber'
+      fullPath: '/episode/$slug/$episodeNumber'
+      preLoaderRoute: typeof EpisodeSlugEpisodeNumberRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AdminRoute: AdminRoute,
-  CheckoutProductIdRoute: CheckoutProductIdRoute,
-  PaymentFailedRoute: PaymentFailedRoute,
-  PaymentSuccessRoute: PaymentSuccessRoute,
-  WatchContentIdRoute: WatchContentIdRoute,
   IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
   ABetterLifeRoute: ABetterLifeRoute,
   AboutRoute: AboutRoute,
+  AccountRoute: AccountRoute,
+  AdminRoute: AdminRoute,
   BackToUsRoute: BackToUsRoute,
   BetterDaysRoute: BetterDaysRoute,
   BetterlifeEpisodesRoute: BetterlifeEpisodesRoute,
+  ContactRoute: ContactRoute,
   MoviesRoute: MoviesRoute,
   MyListRoute: MyListRoute,
   NairobbyRoute: NairobbyRoute,
@@ -467,10 +615,16 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ThisIsLifeRoute: ThisIsLifeRoute,
   ThisIsLifeEpisodesRoute: ThisIsLifeEpisodesRoute,
-  TitleSlugRoute: TitleSlugRoute,
   TvShowsRoute: TvShowsRoute,
   WatchThemAllRoute: WatchThemAllRoute,
   WriteLikeAMasterRoute: WriteLikeAMasterRoute,
+  AdminSectionRoute: AdminSectionRoute,
+  CheckoutProductIdRoute: CheckoutProductIdRoute,
+  PaymentFailedRoute: PaymentFailedRoute,
+  PaymentSuccessRoute: PaymentSuccessRoute,
+  TitleSlugRoute: TitleSlugRoute,
+  WatchContentIdRoute: WatchContentIdRoute,
+  EpisodeSlugEpisodeNumberRoute: EpisodeSlugEpisodeNumberRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
