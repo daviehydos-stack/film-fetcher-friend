@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminPage } from "./admin";
 
-export const Route = createFileRoute("/admin/$section")({
+export const Route = createFileRoute("/admin_/$section")({
   head: () => ({ meta: [{ name: "robots", content: "noindex, nofollow" }] }),
   beforeLoad: ({ params }) => { if (params.section === "assistant") throw new Error("removed_admin_section") },
   component: AdminPage,
