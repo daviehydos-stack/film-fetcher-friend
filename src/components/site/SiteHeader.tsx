@@ -106,10 +106,10 @@ export function SiteHeader() {
   return (
     <><a href="#main-content" className="fixed left-3 top-3 z-[60] -translate-y-20 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition focus:translate-y-0">Skip to content</a><header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 text-foreground transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 border-b border-white/10 text-white transition-all duration-300",
         scrolled || open
-          ? "border-b border-border/50 bg-background/90 shadow-reel backdrop-blur-2xl"
-          : "bg-gradient-to-b from-background/95 via-background/55 to-transparent drop-shadow-md",
+          ? "bg-black/95 shadow-reel backdrop-blur-2xl"
+          : "bg-black/80 backdrop-blur-xl",
       )}
     >
       <div className="mx-auto flex h-[64px] w-full min-w-0 max-w-[1800px] items-center gap-2 px-3 sm:h-[72px] sm:gap-7 sm:px-10 lg:px-14">
