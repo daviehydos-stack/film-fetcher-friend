@@ -58,7 +58,7 @@ export function CataloguePage({
               <p className="mt-5 max-w-2xl text-base leading-7 text-foreground/70 sm:text-lg">{intro}</p>
             </div>
             {hero ? <Link to="/title/$slug" params={{ slug: hero.slug }} onClick={() => rememberReturnContext(mode, hero.slug)} className="group relative hidden aspect-[16/8] overflow-hidden rounded-md border border-border/60 bg-surface shadow-reel lg:block">
-              <img src={hero.backdrop || hero.artwork} alt="" className="size-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+              <img src={hero.backdrop || hero.artwork} alt={`${hero.title} ${hero.type === "movie" ? "film" : "series"} artwork`} className="size-full object-cover transition duration-700 group-hover:scale-[1.03]" />
               <span className="hero-shade absolute inset-0" />
               <span className="absolute inset-x-0 bottom-0 p-6">
                 <span className="eyebrow">Editor’s opening frame</span>
