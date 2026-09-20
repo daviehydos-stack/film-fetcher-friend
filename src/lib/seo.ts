@@ -1,6 +1,6 @@
 import type { CatalogueTitle } from "./site-data";
 
-export const SEO_SITE_NAME = "Avant Cinema";
+export const SEO_SITE_NAME = "Avant Movies";
 export const SEO_BRAND = "Avant Movies";
 export const SEO_DEFAULT_TITLE = "Avant Movies — It’s time to feel again";
 export const SEO_DEFAULT_DESCRIPTION = "Watch independent Kenyan films, short films and original series on Avant Movies — stories made in Kenya for audiences everywhere.";
@@ -71,10 +71,12 @@ export function titleSchema(item: CatalogueTitle) {
     } : {}),
   };
   const previewId = item.previewYoutubeId;
-  if (previewId) base.trailer = videoObjectSchema({
+  const previewVimeoId = item.previewVimeoId;
+  if (previewId || previewVimeoId) base.trailer = videoObjectSchema({
     name: `${item.title} trailer`,
     description: item.shortDescription || item.synopsis || `Watch the ${item.title} trailer on Avant Movies.`,
     youtubeId: previewId,
+    vimeoId: previewVimeoId,
     duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
     pagePath: `/title/${item.slug}`,
     alreadyIsoDuration: true,
