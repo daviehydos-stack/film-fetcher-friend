@@ -15,7 +15,8 @@ export const Route = createFileRoute("/title/$slug")({
     const title = (loaderData as any).seoTitle || `${loaderData.title} | Kenyan ${loaderData.type === "movie" ? "Film" : "Series"} | Avant Movies`;
     const fallbackDescription = `Watch ${loaderData.title} on Avant Movies, an independent Kenyan ${loaderData.type === "movie" ? "film" : "series"}${loaderData.genres?.length ? ` in ${loaderData.genres.slice(0, 2).join(" and ")}` : ""}.`;
     const rawDescription = (loaderData as any).metaDescription || loaderData.shortDescription || loaderData.synopsis || fallbackDescription;
-    const description = rawDescription.length >= 70 ? rawDescription.slice(0, 160) : `${rawDescription.replace(/[. ]+$/, "")}. ${fallbackDescription}`.slice(0, 160);
+    const cleanDescription = String(rawDescription).replace(/\s+/g, " ").trim();
+    const description = cleanDescription.length >= 70 ? cleanDescription.slice(0, 157).replace(/\s+\S*$/, "") + (cleanDescription.length > 157 ? "…" : "") : `${cleanDescription.replace(/[. ]+$/, "")}. ${fallbackDescription}`.slice(0, 160);
     return {
       meta: publicPageMeta(path, title, description, loaderData.backdrop, loaderData.type === "movie" ? "video.movie" : "video.tv_show"),
       links: publicPageLinks(path),
