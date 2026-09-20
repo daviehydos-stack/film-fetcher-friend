@@ -45,7 +45,8 @@ function SearchPage() {
       filtered=local.length?local:allowed.slice(0,6);
     }
     // Discovery must never imply Avant has no content merely because a query has no exact match.
-    if(!filtered.length&&allowed.length) filtered=allowed.slice(0,6);\n    if(!filtered.length&&items.length) filtered=items.slice(0,6);
+    if(!filtered.length&&allowed.length) filtered=allowed.slice(0,6);
+    if(!filtered.length&&items.length) filtered=items.slice(0,6);
     const ordered=aiSlugs.size?[...filtered].sort((a,b)=>(concierge?.slugs.indexOf(a.slug)??99)-(concierge?.slugs.indexOf(b.slug)??99)):filtered;
     return sort==="az"?[...ordered].sort((a,b)=>a.title.localeCompare(b.title)):ordered;
   }, [items,q,sort,type,concierge]);
