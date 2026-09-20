@@ -25,6 +25,16 @@ export const Route = createFileRoute("/title/$slug")({
         "@graph": [
           titleSchema(loaderData),
           {
+            "@type": "WebPage",
+            "@id": `${absoluteUrl(path)}#webpage`,
+            url: absoluteUrl(path),
+            name: title,
+            description,
+            primaryImageOfPage: loaderData.backdrop || loaderData.artwork ? { "@type": "ImageObject", url: loaderData.backdrop || loaderData.artwork } : undefined,
+            mainEntity: { "@id": `${absoluteUrl(path)}#title` },
+            isPartOf: { "@type": "WebSite", name: "Avant Movies", url: absoluteUrl("/") },
+          },
+          {
             "@type": "BreadcrumbList",
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Avant Movies", item: absoluteUrl("/") },
