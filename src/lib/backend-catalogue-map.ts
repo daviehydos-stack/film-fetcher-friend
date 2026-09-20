@@ -1,2 +1,3 @@
 export const BACKEND_PRODUCT_IDS={thisIsLife:"29613405-b7da-4bfc-a824-3027a6702657",aBetterLife:"c85d4c6a-6744-4123-9111-a9982bb5534c",allAccess:"0d8fe76f-f014-4b82-b3c8-de0487d97bcd"} as const;
-export function productForLegacyContent(contentId:string){if(contentId.startsWith("this-is-life-"))return BACKEND_PRODUCT_IDS.thisIsLife;if(contentId.startsWith("a-better-life-"))return BACKEND_PRODUCT_IDS.aBetterLife;return null}
+export function productForLegacyContent(contentId:string){const key=String(contentId||"").toLowerCase();if(key==="this-is-life"||key.startsWith("this-is-life-"))return BACKEND_PRODUCT_IDS.thisIsLife;if(key==="a-better-life"||key.startsWith("a-better-life-"))return BACKEND_PRODUCT_IDS.aBetterLife;return BACKEND_PRODUCT_IDS.allAccess}
+export function productForTitleSlug(slug:string){return productForLegacyContent(slug)}
