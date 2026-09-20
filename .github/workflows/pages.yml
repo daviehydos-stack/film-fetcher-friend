@@ -31,8 +31,8 @@ jobs:
         env:
           VITE_BUILD_SHA: ${{ github.sha }}
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          # The preview is currently the public crawl target. Change this one value when the custom domain launches.
-          VITE_PUBLIC_SITE_URL: https://daviehydos-stack.github.io/film-fetcher-friend
+          # GitHub Pages is a preview mirror, not a second search-index target.
+          VITE_PUBLIC_SITE_URL: https://avantmovies.vercel.app
         run: bun run build
       - name: Prepare Pages artifact
         shell: bash
@@ -40,7 +40,7 @@ jobs:
           set -e
           test -f .output/public/index.html
           cat > .output/public/404.html <<'EOF'
-          <!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><script>(function(){var base="/film-fetcher-friend";var p=location.pathname.startsWith(base)?location.pathname.slice(base.length):location.pathname;location.replace(base+"/?__spa="+encodeURIComponent(p+location.search+location.hash))})();</script></head><body></body></html>
+          <!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><script>(function(){var base="/film-fetcher-friend";var p=location.pathname.startsWith(base)?location.pathname.slice(base.length):location.pathname;location.replace(base+"/?__spa="+encodeURIComponent(p+location.search+location.hash))})();</script></head><body></body></html>
           EOF
           touch .output/public/.nojekyll
       - name: Configure Pages
