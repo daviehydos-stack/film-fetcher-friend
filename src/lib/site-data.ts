@@ -49,9 +49,11 @@ export type CatalogueTitle = {
   countries?: string[];
   releaseAt?: string;
   episodes?: Episode[];
-  storyWorld?: { 
-    gallery: { url: string; caption: string }[]; 
-    characters: { name: string; actor: string; image: string }[]; 
+  storyWorld?: {
+    gallery: { url: string; caption: string }[];
+    characters: { name: string; actor: string; image: string }[];
+    extras?: { title: string; url: string; kind?: string; thumbnail?: string; description?: string }[];
+    behindTheScenes?: { title: string; url: string; kind?: string; thumbnail?: string; description?: string }[];
   };
 };
 
