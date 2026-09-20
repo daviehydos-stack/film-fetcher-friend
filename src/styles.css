@@ -513,3 +513,15 @@ main,header,footer,section,nav{max-width:100%}
 @keyframes avantSheetOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,14px,0) scale(.985)}}
 @media(max-width:639px){.avant-checkout-sheet{animation-name:avantSheetInMobile}.avant-checkout-sheet.is-closing{animation-name:avantSheetOutMobile}@keyframes avantSheetInMobile{from{transform:translate3d(0,5%,0)}to{transform:translate3d(0,0,0)}}@keyframes avantSheetOutMobile{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,5%,0)}}}
 @media(prefers-reduced-motion:reduce){.avant-route-surface,.avant-filter-results,.avant-tab-panel,.avant-mobile-menu,.avant-checkout-overlay,.avant-checkout-sheet{animation:none!important;transition:none!important}}
+
+/* Cinema mode keeps artwork visible until playback is ready, then dissolves once. */
+@media(prefers-reduced-motion:no-preference){
+  .avant-cinema-stage{animation:avantCinemaEnter 420ms cubic-bezier(.22,1,.36,1) both}
+  .avant-cinema-poster{transition:opacity 520ms ease}
+  @keyframes avantCinemaEnter{from{opacity:.45;transform:scale(.992)}to{opacity:1;transform:scale(1)}}
+}
+.avant-player-chrome{opacity:0;transition:opacity 180ms ease}
+.avant-player-shell[data-controls="visible"] .avant-player-chrome,
+.avant-player-shell:focus-within .avant-player-chrome{opacity:1}
+.avant-player-skip{animation:avantSkipIn 180ms ease-out both}
+@keyframes avantSkipIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
