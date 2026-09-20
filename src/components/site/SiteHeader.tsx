@@ -107,9 +107,6 @@ export function SiteHeader() {
           )}
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
-          {travelMode ? <button onClick={() => void clearTravelCache()} className="flex min-h-10 w-full items-center justify-between rounded-md px-3 text-left text-xs font-semibold text-white/55 hover:bg-white/5 hover:text-white">
-            <span>Clear cached pages</span><span className="text-[10px] uppercase text-muted-foreground">{cacheCleared ? "Cleared" : "Device only"}</span>
-          </button> : null}
           {[
             ...navLinks,
             ...cmsNav
