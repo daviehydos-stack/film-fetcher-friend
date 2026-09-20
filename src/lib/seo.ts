@@ -44,6 +44,7 @@ export function titleSchema(item: CatalogueTitle) {
     image: [item.artwork, item.backdrop].filter(Boolean),
     genre: item.genres,
     ...(item.year ? { dateCreated: item.year } : {}),
+    ...(item.shortDescription ? { abstract: item.shortDescription } : {}),
     ...(item.directors?.length ? { director: item.directors.map((name) => ({ "@type": "Person", name })) } : {}),
     ...(item.cast?.length ? { actor: item.cast.map((name) => ({ "@type": "Person", name })) } : {}),
     ...(item.creators?.length ? { creator: item.creators.map((name) => ({ "@type": "Person", name })) } : {}),
@@ -53,7 +54,7 @@ export function titleSchema(item: CatalogueTitle) {
     ...(absoluteUrl(`/title/${item.slug}`) ? { url: absoluteUrl(`/title/${item.slug}`) } : {}),
     publisher: { "@type": "Organization", name: SEO_SITE_NAME },
     ...(item.previewYoutubeId ? {
-      subjectOf: videoObjectSchema({
+      trailer: videoObjectSchema({
         name: `${item.title} ${item.trailerEmbedUrl ? "trailer" : "preview"}`,
         description: item.shortDescription,
         youtubeId: item.previewYoutubeId,
