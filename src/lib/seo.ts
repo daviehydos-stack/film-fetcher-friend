@@ -106,6 +106,7 @@ export function youtubeThumbnail(id: string) {
 
 export function videoObjectSchema(input: { name: string; description: string; youtubeId?: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string }) {
   const pageUrl = absoluteUrl(input.pagePath);
+  const uploadDate = input.uploadDate || new Date().toISOString();
   const embedUrl = input.youtubeId ? `https://www.youtube-nocookie.com/embed/${input.youtubeId}` : input.vimeoId ? `https://player.vimeo.com/video/${input.vimeoId}` : undefined;
   return {
     "@context": "https://schema.org",
@@ -113,7 +114,7 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     name: input.name,
     description: input.description,
     thumbnailUrl: [input.thumbnailUrl || (input.youtubeId ? youtubeThumbnail(input.youtubeId) : undefined)].filter(Boolean),
-    ...(input.uploadDate ? { uploadDate: input.uploadDate } : {}),
+    uploadDate,
     ...(embedUrl ? { embedUrl } : {}),
     ...(pageUrl ? { url: pageUrl, mainEntityOfPage: pageUrl } : {}),
     ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
