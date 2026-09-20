@@ -5,6 +5,7 @@ on:
     workflows:
       - Avant Movies CI
       - Deploy GitHub Pages Preview
+      - Auto Retry Failed Workflows
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -26,7 +27,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Compile failed logs into one file
+      - name: Compile normalized diagnostic report
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
@@ -36,26 +37,40 @@ jobs:
         run: |
           set -uo pipefail
           RUN_ID="${MANUAL_RUN_ID:-$EVENT_RUN_ID}"
+          mkdir -p diagnostics
+          gh run view "$RUN_ID" --repo "$REPOSITORY" --json databaseId,name,displayTitle,headSha,status,conclusion,attempt,createdAt,updatedAt,url,jobs > diagnostics/run.json || echo '{}' > diagnostics/run.json
+          gh run view "$RUN_ID" --repo "$REPOSITORY" --log-failed > diagnostics/failed.log 2>&1 || true
+
           {
-            echo "# Avant Movies Workflow Error Report"
+            echo "# Avant Movies — Consolidated Workflow Diagnostic"
             echo
-            echo "- Repository: $REPOSITORY"
-            echo "- Workflow run: $RUN_ID"
-            echo "- Generated: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "This is the single file to share when a workflow still fails after retries."
             echo
-            echo "## Run summary"
-            gh run view "$RUN_ID" --repo "$REPOSITORY" || true
+            echo "## Run metadata"
+            echo '~~~json'
+            cat diagnostics/run.json
             echo
-            echo "## Failed job logs"
-            echo '~~~text'
-            gh run view "$RUN_ID" --repo "$REPOSITORY" --log-failed || true
             echo '~~~'
+            echo
+            echo "## Primary errors"
+            echo '~~~text'
+            grep -Ei '(^|[^a-z])(error|fatal|syntaxerror|typeerror|referenceerror|failed|exit code|unexpected token)([^a-z]|$)' diagnostics/failed.log | awk '!seen[$0]++' | head -n 250 || true
+            echo '~~~'
+            echo
+            echo "## Full failed-step log"
+            echo '~~~text'
+            cat diagnostics/failed.log
+            echo '~~~'
+            echo
+            echo "## Retry / recovery interpretation"
+            echo "- If a later retry succeeds, treat this failure as recovered and do not fix it again."
+            echo "- If all retry attempts fail, use the final attempt's Primary errors as the correction target."
+            echo "- A downstream Pages failure should not be treated as a source-code failure when CI for the same commit passed."
           } > workflow-error-report.md
 
-          # Also place the report in the GitHub Actions step summary for quick viewing.
           cat workflow-error-report.md >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload single diagnostic file
+      - name: Upload the single diagnostic file
         uses: actions/upload-artifact@v4
         with:
           name: workflow-error-report-${{ github.run_id }}
