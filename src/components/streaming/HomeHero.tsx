@@ -30,6 +30,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [accessVersion, setAccessVersion] = useState(0);
   const [heroInView, setHeroInView] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
   const heroRef = useRef<HTMLElement | null>(null);
   const trailerFrameRef = useRef<HTMLIFrameElement | null>(null);
   const firstEpisode = item.episodes?.[0];
@@ -37,6 +38,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const playableContentId = freeContentId(item);
   const watchContentId = playableContentId ?? firstEpisode?.legacyKey ?? (item.type === "movie" ? item.slug : `${item.slug}-1`);
   useEffect(() => subscribeAccessChanged(() => setAccessVersion((v) => v + 1)), []);
+  useEffect(() => { const sync=(e:any)=>setTravelMode(Boolean(e.detail?.active)); window.addEventListener("avant:travel-mode-changed" as any,sync); return()=>window.removeEventListener("avant:travel-mode-changed" as any,sync); }, []);
   useEffect(() => {
     let live = true;
     const key = firstEpisode?.legacyKey ?? (item.type === "movie" ? item.slug : `${item.slug}-1`);
@@ -107,7 +109,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+    if (travelMode || media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Keep the artwork visible for two seconds, then begin the cinematic autoplay preview.
     const timer = window.setTimeout(() => setTrailerReady(true), 2000);
@@ -115,7 +117,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
       window.clearTimeout(timer);
       screen.removeEventListener?.("change", syncScreen);
     };
-  }, [item.id, item.trailerEmbedUrl, item.heroAutoplay]);
+  }, [item.id, item.trailerEmbedUrl, item.heroAutoplay, travelMode]);
 
   return (
     <section
@@ -132,6 +134,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
       {item.heroAutoplay !== false &&
       item.trailerEmbedUrl &&
+      !travelMode &&
       trailerReady &&
       !trailerFailed &&
       !reducedMotion &&
