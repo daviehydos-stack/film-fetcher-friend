@@ -1,4 +1,5 @@
 export type EmbedOptions = { autoplay?: boolean; muted?: boolean; controls?: boolean; loop?: boolean; start?: number; end?: number; jsApi?: boolean };
+import { claimMedia, releaseMedia } from "./media-session";
 
 export function youtubeEmbedUrl(id:string,options:EmbedOptions={}){
  const params=new URLSearchParams({rel:"0",playsinline:"1",modestbranding:"1",iv_load_policy:"3",disablekb:"1",fs:"0",controls:options.controls===false?"0":"1"});
@@ -13,8 +14,8 @@ export function heroTrailerUrl(embedUrl:string,muted=true,controls=false){
  return url.toString()}catch{return embedUrl}
 }
 
-export function pauseEmbeddedPlayer(frame:HTMLIFrameElement|null){if(!frame)return;frame.contentWindow?.postMessage(JSON.stringify({event:"command",func:"pauseVideo",args:[]}),"*");frame.contentWindow?.postMessage({method:"pause"},"*")}
-export function playEmbeddedPlayer(frame:HTMLIFrameElement|null){if(!frame)return;frame.contentWindow?.postMessage(JSON.stringify({event:"command",func:"playVideo",args:[]}),"*");frame.contentWindow?.postMessage({method:"play"},"*")}
+export function pauseEmbeddedPlayer(frame:HTMLIFrameElement|null){releaseMedia(frame)}
+export function playEmbeddedPlayer(frame:HTMLIFrameElement|null){if(!frame)return;claimMedia(frame);frame.contentWindow?.postMessage(JSON.stringify({event:"command",func:"playVideo",args:[]}),"*");frame.contentWindow?.postMessage({method:"play"},"*")}
 
 
 export function vimeoEmbedUrl(id:string,options:EmbedOptions={}){const p=new URLSearchParams({playsinline:"1",autoplay:options.autoplay?"1":"0",muted:options.muted?"1":"0",controls:options.controls===false?"0":"1",autopause:"1"});if(options.loop)p.set("loop","1");if(options.start&&options.start>0)p.set("#t",String(Math.floor(options.start))+"s");return `https://player.vimeo.com/video/${encodeURIComponent(id)}?${p.toString()}`}

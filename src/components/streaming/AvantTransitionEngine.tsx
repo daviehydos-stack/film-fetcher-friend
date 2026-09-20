@@ -1,29 +1,6 @@
 import { useLocation } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-
-function pauseAllPlayers(except?: HTMLIFrameElement | HTMLMediaElement | null) {
-  document.querySelectorAll<HTMLMediaElement>("video, audio").forEach((media) => {
-    if (media === except) return;
-    try {
-      media.pause();
-    } catch {
-      /* The player may already have been removed. */
-    }
-  });
-
-  document.querySelectorAll<HTMLIFrameElement>("iframe").forEach((frame) => {
-    if (frame === except) return;
-    try {
-      frame.contentWindow?.postMessage({ method: "pause" }, "*");
-      frame.contentWindow?.postMessage(
-        JSON.stringify({ event: "command", func: "pauseVideo", args: [] }),
-        "*",
-      );
-    } catch {
-      /* Cross-origin players may reject commands while unloading. */
-    }
-  });
-}
+import { claimMedia, stopAllMedia } from "@/lib/media-session";
 
 /**
  * Keeps only cross-player coordination. Navigation itself remains native to
@@ -38,11 +15,11 @@ export function AvantTransitionEngine() {
       const detail = (
         event as CustomEvent<{ player?: HTMLIFrameElement | HTMLMediaElement | null }>
       ).detail;
-      pauseAllPlayers(detail?.player ?? null);
+      claimMedia(detail?.player ?? null);
     };
     const onMediaPlay = (event: Event) => {
       const media = event.target instanceof HTMLMediaElement ? event.target : null;
-      if (media) pauseAllPlayers(media);
+      if (media) claimMedia(media);
     };
 
     window.addEventListener("avant:player-started", onPlayerStarted);
@@ -57,7 +34,7 @@ export function AvantTransitionEngine() {
     if (previousPath.current === location.pathname) return;
     previousPath.current = location.pathname;
     window.dispatchEvent(new CustomEvent("avant:transition-start"));
-    pauseAllPlayers();
+    stopAllMedia();
   }, [location.pathname]);
 
   return null;

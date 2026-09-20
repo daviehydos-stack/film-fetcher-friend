@@ -9,6 +9,7 @@ import { publicCatalogue } from "@/lib/avant-backend";
 import { readMyList } from "@/lib/my-list";
 import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 import { isFreeTitle, mapPublicTitle } from "@/lib/catalogue";
+import { readProgress } from "@/lib/watch-progress";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,6 +38,11 @@ function Index() {
   const moviePreview=withoutHero(movies).slice(0,4);
   const seriesPreview=withoutHero(series).slice(0,4);
   const freePreview=withoutHero(freeTitles).slice(0,4);
+  const watchedIds = typeof window === "undefined" ? [] : readProgress().map((entry) => entry.contentId);
+  const lastWatched = liveCatalogue.find((title) => watchedIds.some((id) => id === title.slug || id.startsWith(`${title.slug}-`)));
+  const moreForYou = lastWatched
+    ? withoutHero(liveCatalogue).filter((title) => title.id !== lastWatched.id && title.genres.some((genre) => lastWatched.genres.includes(genre))).slice(0,4)
+    : [];
 
   return (
     <StreamingShell>
@@ -45,6 +51,7 @@ function Index() {
 
         <div className="relative z-20 pb-10 pt-3 sm:pt-5 lg:pt-6">
           <ContinueWatching />
+          {moreForYou.length>0?<ContentRail eyebrow="Selected from your viewing" title={`More ${lastWatched?.genres[0] ?? "stories"}`} description="A simple recommendation from what you have watched — only from Avant's current catalogue." items={moreForYou}/>:null}
           {availableNow.length>0?<ContentRail eyebrow="Curated on Avant" title="Available Now" description="Stories ready to watch, selected from the current Avant catalogue." items={availableNow}/>:null}
           {moviePreview.length>0?<ContentRail eyebrow="Feature films & shorts" title="Movies" description="Independent films with a distinct Kenyan point of view." items={moviePreview} href="/movies" linkLabel="All movies"/>:null}
           {seriesPreview.length>0?<ContentRail eyebrow="Stories in chapters" title="TV Shows" description="Series built around characters, choices and everyday life." items={seriesPreview} href="/tv-shows" linkLabel="All shows"/>:null}

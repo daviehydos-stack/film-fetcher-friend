@@ -13,3 +13,4 @@
 - [x] Complete combined Phase 4–5 customer access, payment, My Avant, consistency, accessibility, and final QA
 - [x] Unify page, tab, preview, menu, checkout, player, and browser-back motion
 - [x] Remove delayed navigation and overlapping page animations; use one fast dissolve
+- [x] Add Avant cinema entry, one-site media control, player markers, living previews, and viewing-based discovery

@@ -35,6 +35,11 @@ export function mapPublicEpisode(value: unknown): Episode | null {
   const previewYoutubeId = text(raw["preview_youtube_id"]);
   const previewVimeoVideoId = text(raw["preview_vimeo_video_id"]);
   const previewEmbedUrl = text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"]);
+  const introStart = numberValue(raw["intro_start_seconds"]);
+  const introEnd = numberValue(raw["intro_end_seconds"]);
+  const recapStart = numberValue(raw["recap_start_seconds"]);
+  const recapEnd = numberValue(raw["recap_end_seconds"]);
+  const creditsStart = numberValue(raw["credits_start_seconds"]);
   return {
     title,
     duration: text(raw["duration"]) || (durationSeconds ? `${Math.floor(durationSeconds / 60)}:${String(durationSeconds % 60).padStart(2, "0")}` : ""),
@@ -52,6 +57,11 @@ export function mapPublicEpisode(value: unknown): Episode | null {
     ...(previewYoutubeId ? { previewYoutubeId } : {}),
     ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
     ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
+    ...(introStart !== undefined ? { introStart } : {}),
+    ...(introEnd !== undefined ? { introEnd } : {}),
+    ...(recapStart !== undefined ? { recapStart } : {}),
+    ...(recapEnd !== undefined ? { recapEnd } : {}),
+    ...(creditsStart !== undefined ? { creditsStart } : {}),
   };
 }
 

@@ -162,6 +162,11 @@ export type Episode = {
   previewYoutubeId?: string;
   previewVimeoVideoId?: string;
   previewEmbedUrl?: string;
+  introStart?: number;
+  introEnd?: number;
+  recapStart?: number;
+  recapEnd?: number;
+  creditsStart?: number;
 };
 
 export const thisIsLifeFree: Episode[] = [
