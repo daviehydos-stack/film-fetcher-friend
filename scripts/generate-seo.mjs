@@ -28,6 +28,7 @@ const dateOnly = (value) => {
 };
 
 const entries = new Map();
+const videoEntries = new Map();
 const addEntry = (path, lastmod) => {
   if (!path || !path.startsWith("/")) return;
   const current = entries.get(path);
@@ -45,7 +46,21 @@ try {
     );
 
     for (const title of titles) {
-      addEntry(`/title/${title.slug}`, title.updated_at || title.published_at || title.created_at);
+      const path = `/title/${title.slug}`;
+      addEntry(path, title.updated_at || title.published_at || title.created_at);
+      const player = title.trailer_youtube_id
+        ? `https://www.youtube-nocookie.com/embed/${title.trailer_youtube_id}`
+        : title.trailer_vimeo_id
+          ? `https://player.vimeo.com/video/${title.trailer_vimeo_id}`
+          : undefined;
+      const thumb = title.backdrop_url || title.poster_url || (title.trailer_youtube_id ? `https://i.ytimg.com/vi/${title.trailer_youtube_id}/hqdefault.jpg` : undefined);
+      if (player && thumb) videoEntries.set(path, {
+        title: `${title.title} — Official Trailer | Avant Movies`,
+        description: title.short_description || title.synopsis || `Watch the official trailer for ${title.title} on Avant Movies.`,
+        thumbnail: thumb,
+        player,
+        publicationDate: title.published_at || title.created_at,
+      });
     }
 
     const episodeLists = await Promise.all(
@@ -104,6 +119,7 @@ const robots = [
   `Allow: ${prefixed("/")}`,
   "",
   `Sitemap: ${productionOrigin}/sitemap.xml`,
+  `Sitemap: ${productionOrigin}/video-sitemap.xml`,
   "",
 ].join("\n");
 writeFileSync("public/robots.txt", robots);
@@ -125,9 +141,17 @@ const urls = [...entries.entries()]
   })
   .join("\n");
 
+
+const videoUrls = [...videoEntries.entries()].map(([path, video]) => {
+  const loc = escapeXml(`${productionOrigin}${path}`);
+  const published = video.publicationDate ? `<video:publication_date>${escapeXml(new Date(video.publicationDate).toISOString())}</video:publication_date>` : "";
+  return `  <url><loc>${loc}</loc><video:video><video:thumbnail_loc>${escapeXml(video.thumbnail)}</video:thumbnail_loc><video:title>${escapeXml(video.title)}</video:title><video:description>${escapeXml(video.description.slice(0, 2048))}</video:description><video:player_loc>${escapeXml(video.player)}</video:player_loc>${published}</video:video></url>`;
+}).join("\n");
+writeFileSync("public/video-sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n${videoUrls}\n</urlset>\n`);
+
 writeFileSync(
   "public/sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
 );
 
-console.log(`SEO: generated robots.txt and sitemap.xml for ${productionOrigin} (${entries.size} URLs).`);
+console.log(`SEO: generated robots.txt, sitemap.xml and video-sitemap.xml for ${productionOrigin} (${entries.size} URLs, ${videoEntries.size} videos).`);
