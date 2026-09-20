@@ -167,8 +167,8 @@ export function TitleCard({
             className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100"}`}
           />
           {badgeLabel || item.featured || travelMode ? (
-            <span className="absolute left-2.5 top-2.5 rounded-sm travelMode ? "bg-blue-600" : (item.featured ? "bg-amber-500" : "bg-primary") px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-reel">
-              {(travelMode {badgeLabel}{badgeLabel} "Offline Ready") || (item.featured {badgeLabel}{badgeLabel} "Premiere") || badgeLabel}
+            <span className={`absolute left-2.5 top-2.5 rounded-sm px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-reel ${travelMode ? "bg-blue-600" : (item.featured ? "bg-amber-500" : "bg-primary")}`}>
+              {(travelMode && "Offline Ready") || (item.featured && "Premiere") || badgeLabel}
             </span>
           ) : null}
           {previewing && item.previewYoutubeId ? (
