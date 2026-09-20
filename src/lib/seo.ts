@@ -18,6 +18,7 @@ export function publicPageLinks(path: string) {
 
 export function publicPageMeta(path: string, title: string, description: string, image?: string, type = "website") {
   const url = absoluteUrl(path);
+  const socialImage = image ? (image.startsWith("http://") || image.startsWith("https://") ? image : absoluteUrl(image)) : undefined;
   return [
     { title },
     { name: "description", content: description },
@@ -27,11 +28,11 @@ export function publicPageMeta(path: string, title: string, description: string,
     { property: "og:type", content: type },
     { property: "og:site_name", content: SEO_SITE_NAME },
     ...(url ? [{ property: "og:url", content: url }] : []),
-    ...(image ? [{ property: "og:image", content: image }, { property: "og:image:alt", content: `${title} artwork` }, { property: "og:image:width", content: "1200" }, { property: "og:image:height", content: "630" }] : []),
+    ...(socialImage ? [{ property: "og:image", content: socialImage }, { property: "og:image:alt", content: `${title} artwork` }] : []),
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
-    ...(image ? [{ name: "twitter:image", content: image }, { name: "twitter:image:alt", content: `${title} artwork` }] : []),
+    ...(socialImage ? [{ name: "twitter:image", content: socialImage }, { name: "twitter:image:alt", content: `${title} artwork` }] : []),
   ];
 }
 
