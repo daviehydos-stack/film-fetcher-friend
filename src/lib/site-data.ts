@@ -371,6 +371,9 @@ export const catalogue: CatalogueTitle[] = [
   },
 ];
 
+export function getTitles(): CatalogueTitle[] { return catalogue; }
+
+
 export const avantVideoLibrary = [
   { id: "bLuedvH9yX8", title: "June 10, 2026", duration: "01:09", kind: "promo" },
   { id: "EvskdA-sao0", title: "April 1, 2026", duration: "01:33", kind: "promo" },
