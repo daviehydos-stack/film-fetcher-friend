@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 
 const configuredOrigin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
-const productionOrigin = configuredOrigin || "https://www.avantcinema.com";
+const productionOrigin = configuredOrigin || "https://avantmovies.vercel.app";
 const siteUrl = new URL(productionOrigin);
 const basePath = siteUrl.pathname.replace(/\/$/, "");
 const supabaseUrl = "https://bnuyhrsezkepsaebwlmu.supabase.co";
