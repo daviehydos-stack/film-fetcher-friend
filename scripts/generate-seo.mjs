@@ -1,8 +1,13 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const origin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
-const productionOrigin = origin || "https://www.avantcinema.com";
+const configuredOrigin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
+const productionOrigin = configuredOrigin || "https://www.avantcinema.com";
+const siteUrl = new URL(productionOrigin);
+const basePath = siteUrl.pathname.replace(/\/$/, "");
 const supabaseUrl = "https://bnuyhrsezkepsaebwlmu.supabase.co";
+
+// Only canonical, indexable landing pages belong here. Legacy title routes are
+// intentionally omitted: they declare noindex and canonicalize to /title/:slug.
 const staticPaths = [
   "/",
   "/movies",
@@ -13,45 +18,60 @@ const staticPaths = [
   "/terms",
   "/betterlife-episodes",
   "/this-is-life-episodes",
-  "/a-better-life",
-  "/back-to-us",
-  "/better-days",
-  "/nairobby",
-  "/this-is-life",
   "/watch-them-all",
   "/write-like-a-master",
 ];
 
 mkdirSync("public", { recursive: true });
 
-let liveSlugs = [];
-let livePages = [];
-let liveEpisodes = [];
+const dateOnly = (value) => {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString().slice(0, 10);
+};
+
+const entries = new Map();
+const addEntry = (path, lastmod) => {
+  if (!path || !path.startsWith("/")) return;
+  const current = entries.get(path);
+  const next = dateOnly(lastmod);
+  if (!current || (next && next > current)) entries.set(path, next);
+};
+staticPaths.forEach((path) => addEntry(path));
+
 try {
   const response = await fetch(`${supabaseUrl}/functions/v1/catalogue-public`);
   if (response.ok) {
     const body = await response.json();
-    liveSlugs = (body?.titles || [])
-      .filter((title) => title?.status === "published" && title?.slug)
-      .map((title) => title.slug);
+    const titles = (body?.titles || []).filter(
+      (title) => title?.status === "published" && title?.slug,
+    );
+
+    for (const title of titles) {
+      addEntry(`/title/${title.slug}`, title.updated_at || title.published_at || title.created_at);
+    }
+
     const episodeLists = await Promise.all(
-      liveSlugs.map(async (slug) => {
+      titles.map(async (title) => {
         try {
           const r = await fetch(
-            `${supabaseUrl}/functions/v1/catalogue-public?key=${encodeURIComponent(slug)}`,
+            `${supabaseUrl}/functions/v1/catalogue-public?key=${encodeURIComponent(title.slug)}`,
           );
           if (!r.ok) return [];
           const d = await r.json();
           return (d?.episodes || [])
-            .filter((e) => e?.status === "published")
+            .filter((episode) => episode?.status === "published")
             .sort((a, b) => (a.episode_number || 0) - (b.episode_number || 0))
-            .map((e, i) => `/episode/${slug}/${i + 1}`);
+            .map((episode, index) => ({
+              path: `/episode/${title.slug}/${index + 1}`,
+              lastmod: episode.updated_at || episode.visible_from || episode.created_at || title.updated_at,
+            }));
         } catch {
           return [];
         }
       }),
     );
-    liveEpisodes = episodeLists.flat();
+    episodeLists.flat().forEach(({ path, lastmod }) => addEntry(path, lastmod));
   }
 } catch (error) {
   console.warn(
@@ -59,13 +79,16 @@ try {
     error?.message || error,
   );
 }
+
 try {
   const response = await fetch(`${supabaseUrl}/functions/v1/public-pages`);
   if (response.ok) {
     const body = await response.json();
-    livePages = (body?.pages || [])
-      .filter((p) => p?.status === "published" && p?.indexable !== false && p?.slug)
-      .map((p) => `/${p.slug}`);
+    (body?.pages || [])
+      .filter((page) => page?.status === "published" && page?.indexable !== false && page?.slug)
+      .forEach((page) =>
+        addEntry(`/${page.slug}`, page.updated_at || page.published_at || page.created_at),
+      );
   }
 } catch (error) {
   console.warn(
@@ -74,46 +97,47 @@ try {
   );
 }
 
-const paths = [
-  ...new Set([
-    ...staticPaths,
-    ...liveSlugs.map((slug) => `/title/${slug}`),
-    ...liveEpisodes,
-    ...livePages,
-  ]),
-];
+const prefixed = (path) => `${basePath}${path === "/" ? "/" : path}`;
+const blocked = [
+  "/admin",
+  "/account",
+  "/checkout/",
+  "/payment/",
+  "/watch/",
+  "/my-list",
+  "/search",
+].map(prefixed);
 
 const robots = [
   "User-agent: *",
-  "Allow: /",
-  "Disallow: /admin",
-  "Disallow: /account",
-  "Disallow: /checkout/",
-  "Disallow: /payment/",
-  "Disallow: /watch/",
-  "Disallow: /my-list",
-  "Disallow: /search",
+  `Allow: ${prefixed("/")}`,
+  ...blocked.map((path) => `Disallow: ${path}`),
   "",
   `Sitemap: ${productionOrigin}/sitemap.xml`,
   "",
-].join("\\n");
+].join("\n");
 writeFileSync("public/robots.txt", robots);
 
 const escapeXml = (value) =>
-  value
+  String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
-const today = new Date().toISOString().slice(0, 10);
-const urls = paths
-  .map(
-    (path) =>
-      `  <url><loc>${escapeXml(productionOrigin + path)}</loc><lastmod>${today}</lastmod></url>`,
-  )
-  .join("\\n");
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+
+const urls = [...entries.entries()]
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, lastmod]) => {
+    const loc = escapeXml(`${productionOrigin}${path === "/" ? "/" : path}`);
+    const modified = lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : "";
+    return `  <url><loc>${loc}</loc>${modified}</url>`;
+  })
+  .join("\n");
 
 writeFileSync(
   "public/sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
 );
+
+console.log(`SEO: generated robots.txt and sitemap.xml for ${productionOrigin} (${entries.size} URLs).`);
