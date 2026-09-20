@@ -16,6 +16,7 @@ import { absoluteUrl, SEO_BRAND, SEO_DEFAULT_DESCRIPTION, SEO_DEFAULT_TITLE, SEO
 import { accountAccess, publicCatalogue, rememberSubscriber, subscribeAccessChanged } from "../lib/avant-backend";
 import { customerToken } from "../lib/google-auth";
 import { AvantTransitionEngine } from "../components/streaming/AvantTransitionEngine";
+import { claimMedia, stopAllMedia } from "../lib/media-session";
 
 function NotFoundComponent() {
   return (
@@ -167,6 +168,17 @@ function RootComponent() {
     window.dispatchEvent(new PopStateEvent("popstate"));
   }, []);
   useEffect(() => { let dead=false; const sync=async()=>{const token=await customerToken(false);if(dead)return;if(!token){rememberSubscriber(false);return}try{const a=await accountAccess(token);if(!dead)rememberSubscriber(Boolean(a.subscriber))}catch{}};void sync();const off=subscribeAccessChanged(()=>void sync());return()=>{dead=true;off()}; }, []);
+  useEffect(() => {
+    const onPlayerStarted = (event: Event) => {
+      const player = (event as CustomEvent<{ player?: HTMLIFrameElement | HTMLMediaElement }>).detail?.player;
+      if (player) claimMedia(player);
+    };
+    window.addEventListener("avant:player-started", onPlayerStarted);
+    return () => {
+      window.removeEventListener("avant:player-started", onPlayerStarted);
+      stopAllMedia();
+    };
+  }, []);
   useEffect(() => { let dead=false; void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{});return()=>{dead=true}; }, []);
   useEffect(() => {
     const buildSha = import.meta.env["VITE_BUILD_SHA"]?.trim();
