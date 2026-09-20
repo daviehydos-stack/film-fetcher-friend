@@ -57,7 +57,7 @@ export function SiteHeader() {
     void navigator.serviceWorker.ready.then((registration) => {
       if (!travelMode) return;
       const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-      const urls = [base + "/", base + "/movies", base + "/tv-shows", base + "/watch-free", base + "/my-list"];
+      const urls = [base + "/", base + "/movies", base + "/tv-shows", base + "/watch-free"];
       registration.active?.postMessage({ type: "AVANT_WARM_URLS", urls });
     }).catch(() => undefined);
   }, [travelMode]);
