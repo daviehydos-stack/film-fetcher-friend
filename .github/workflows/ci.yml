@@ -10,9 +10,9 @@ on:
 permissions:
   contents: read
 
-# Queue commits instead of cancelling an in-progress validation run.
+# One Avant pipeline at a time. Deployment uses the same group.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: avant-main-pipeline
   cancel-in-progress: false
 
 jobs:
@@ -23,14 +23,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-
       - name: Install dependencies
         run: bun install --frozen-lockfile
-
       - name: Production build
         run: bun run build
