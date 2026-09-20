@@ -37,12 +37,18 @@ export function publicPageMeta(path: string, title: string, description: string,
 }
 
 export function titleSchema(item: CatalogueTitle) {
-  return {
-    "@context": "https://schema.org",
+  const pageUrl = absoluteUrl(`/title/${item.slug}`);
+  const images = [item.artwork, item.backdrop].filter(Boolean).map((url) =>
+    url.startsWith("http://") || url.startsWith("https://") ? url : absoluteUrl(url)
+  ).filter(Boolean);
+  const base: any = {
     "@type": item.type === "movie" ? "Movie" : "TVSeries",
+    "@id": pageUrl ? `${pageUrl}#title` : undefined,
+    url: pageUrl,
     name: item.title,
-    description: item.synopsis,
-    image: [item.artwork, item.backdrop].filter(Boolean),
+    headline: item.title,
+    description: item.synopsis || item.shortDescription,
+    image: images,
     genre: item.genres,
     ...(item.year ? { dateCreated: item.year } : {}),
     ...(item.countries?.length ? { countryOfOrigin: item.countries.map((name) => ({ "@type": "Country", name })) } : {}),
@@ -52,6 +58,7 @@ export function titleSchema(item: CatalogueTitle) {
     ...(item.creators?.length ? { creator: item.creators.map((name) => ({ "@type": "Person", name })) } : {}),
     ...(item.maturityRating ? { contentRating: item.maturityRating } : {}),
     ...(item.languages?.length ? { inLanguage: item.languages } : {}),
+    publisher: { "@type": "Organization", name: SEO_SITE_NAME, ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}) },
     ...(item.type === "series" && item.episodes?.length ? {
       numberOfEpisodes: item.episodes.length,
       episode: item.episodes.map((episode, index) => ({
@@ -62,21 +69,19 @@ export function titleSchema(item: CatalogueTitle) {
         ...(absoluteUrl(`/episode/${item.slug}/${index + 1}`) ? { url: absoluteUrl(`/episode/${item.slug}/${index + 1}`) } : {}),
       })),
     } : {}),
-    ...(absoluteUrl(`/title/${item.slug}`) ? { url: absoluteUrl(`/title/${item.slug}`) } : {}),
-    publisher: { "@type": "Organization", name: SEO_SITE_NAME, ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}) },
-    ...(item.previewYoutubeId ? {
-      trailer: videoObjectSchema({
-        name: `${item.title} ${item.trailerEmbedUrl ? "trailer" : "preview"}`,
-        description: item.shortDescription,
-        youtubeId: item.previewYoutubeId,
-        duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
-        pagePath: `/title/${item.slug}`,
-        alreadyIsoDuration: true,
-      }),
-    } : {}),
   };
+  const previewId = item.previewYoutubeId;
+  if (previewId) base.trailer = videoObjectSchema({
+    name: `${item.title} trailer`,
+    description: item.shortDescription || item.synopsis || `Watch the ${item.title} trailer on Avant Movies.`,
+    youtubeId: previewId,
+    duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
+    pagePath: `/title/${item.slug}`,
+    alreadyIsoDuration: true,
+    thumbnailUrl: item.backdrop || item.artwork,
+  });
+  return base;
 }
-
 function secondsToIso(seconds: number) {
   const value = Math.max(0, Math.round(seconds));
   const hours = Math.floor(value / 3600);
