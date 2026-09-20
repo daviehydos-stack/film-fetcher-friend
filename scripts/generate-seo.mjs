@@ -14,12 +14,9 @@ const staticPaths = [
   "/tv-shows",
   "/about",
   "/contact",
-  "/privacy",
-  "/terms",
   "/betterlife-episodes",
   "/this-is-life-episodes",
-  "/watch-them-all",
-  "/write-like-a-master",
+  "/watch-free",
 ];
 
 mkdirSync("public", { recursive: true });
