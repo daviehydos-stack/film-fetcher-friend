@@ -63,7 +63,7 @@ export function titleSchema(item: CatalogueTitle) {
       })),
     } : {}),
     ...(absoluteUrl(`/title/${item.slug}`) ? { url: absoluteUrl(`/title/${item.slug}`) } : {}),
-    publisher: { "@type": "Organization", name: SEO_SITE_NAME },
+    publisher: { "@type": "Organization", name: SEO_SITE_NAME, ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}) },
     ...(item.previewYoutubeId ? {
       trailer: videoObjectSchema({
         name: `${item.title} ${item.trailerEmbedUrl ? "trailer" : "preview"}`,
@@ -107,7 +107,7 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     "@type": "VideoObject",
     name: input.name,
     description: input.description,
-    thumbnailUrl: [input.thumbnailUrl || youtubeThumbnail(input.youtubeId)],
+    thumbnailUrl: [input.thumbnailUrl || (input.youtubeId ? youtubeThumbnail(input.youtubeId) : undefined)].filter(Boolean),
     ...(input.uploadDate ? { uploadDate: input.uploadDate } : {}),
     ...(embedUrl ? { embedUrl } : {}),
     ...(pageUrl ? { url: pageUrl } : {}),
