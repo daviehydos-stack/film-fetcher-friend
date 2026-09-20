@@ -112,3 +112,22 @@ jobs:
           path: diagnostics/workflow-error-report.md
           if-no-files-found: error
           retention-days: 30
+
+      - name: Keep latest diagnostic in repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p diagnostics
+          cp workflow-error-report.md diagnostics/workflow-error-report.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add diagnostics/workflow-error-report.md
+          if git diff --cached --quiet; then
+            echo "Diagnostic report unchanged."
+            exit 0
+          fi
+          git commit -m "Update workflow diagnostic report [skip ci]"
+          git push
+
+
+# The report is also committed to diagnostics/workflow-error-report.md for direct repository visibility.
