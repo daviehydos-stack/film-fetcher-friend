@@ -236,6 +236,7 @@ export function SiteHeader() {
             <span className="flex items-center gap-3"><span className={cn("size-2 rounded-full", travelMode ? "bg-primary animate-pulse" : "bg-white/20")} />Travel Mode</span>
             <span className="text-[10px] uppercase text-muted-foreground">{!online ? "Cached pages" : travelMode ? "Active" : "Off"}</span>
           </button>
+          {travelMode ? <button onClick={() => void clearTravelCache()} className="flex min-h-12 w-full items-center justify-between rounded-md px-3 text-left text-sm font-semibold text-white/60 hover:bg-white/5 hover:text-white"><span>Clear cached pages</span><span className="text-[10px] uppercase text-muted-foreground">{cacheCleared ? "Cleared" : "Device only"}</span></button> : null}
           {[
             ...navLinks,
             ...cmsNav
