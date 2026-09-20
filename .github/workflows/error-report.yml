@@ -1,0 +1,64 @@
+name: Compile Workflow Error Report
+
+on:
+  workflow_run:
+    workflows:
+      - Avant Movies CI
+      - Deploy GitHub Pages Preview
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Optional workflow run ID to diagnose"
+        required: false
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: workflow-error-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compile failed logs into one file
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EVENT_RUN_ID: ${{ github.event.workflow_run.id }}
+          MANUAL_RUN_ID: ${{ inputs.run_id }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          RUN_ID="${MANUAL_RUN_ID:-$EVENT_RUN_ID}"
+          {
+            echo "# Avant Movies Workflow Error Report"
+            echo
+            echo "- Repository: $REPOSITORY"
+            echo "- Workflow run: $RUN_ID"
+            echo "- Generated: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo
+            echo "## Run summary"
+            gh run view "$RUN_ID" --repo "$REPOSITORY" || true
+            echo
+            echo "## Failed job logs"
+            echo '~~~text'
+            gh run view "$RUN_ID" --repo "$REPOSITORY" --log-failed || true
+            echo '~~~'
+          } > workflow-error-report.md
+
+          # Also place the report in the GitHub Actions step summary for quick viewing.
+          cat workflow-error-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload single diagnostic file
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow-error-report-${{ github.run_id }}
+          path: workflow-error-report.md
+          if-no-files-found: error
+          retention-days: 30
