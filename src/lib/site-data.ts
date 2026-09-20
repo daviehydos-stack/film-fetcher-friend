@@ -33,6 +33,7 @@ export type CatalogueTitle = {
   accessRequired?: boolean;
   trailerEmbedUrl?: string;
   previewYoutubeId?: string;
+  previewVimeoId?: string;
   previewStart?: number;
   previewDuration?: number;
   heroAutoplay?: boolean;
