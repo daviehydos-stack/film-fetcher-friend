@@ -143,30 +143,51 @@ export function freeContentId(item: CatalogueTitle) {
   return item.episodes?.[index]?.legacyKey ?? `${item.slug}-${index + 1}`;
 }
 
+const CATALOGUE_CACHE_KEY = "avant_catalogue_cache_v1";
+const CATALOGUE_CACHE_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
+
+function readCatalogueCache() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(CATALOGUE_CACHE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as { savedAt?: number; payload?: unknown };
+    if (!saved.savedAt || Date.now() - saved.savedAt > CATALOGUE_CACHE_MAX_AGE) {
+      localStorage.removeItem(CATALOGUE_CACHE_KEY);
+      return null;
+    }
+    return { items: mergePublicCatalogue(saved.payload), savedAt: saved.savedAt };
+  } catch { return null; }
+}
+
 export function useCatalogue() {
-  const [items, setItems] = useState<CatalogueTitle[]>(catalogue);
-  // Render the bundled catalogue immediately, then refresh it quietly.
+  const cached = typeof window !== "undefined" ? readCatalogueCache() : null;
+  const [items, setItems] = useState<CatalogueTitle[]>(cached?.items || catalogue);
   const [loading, setLoading] = useState(false);
-  const [usingFallback, setUsingFallback] = useState(true);
+  const [usingFallback, setUsingFallback] = useState(!cached);
+  const [offline, setOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
 
   useEffect(() => {
     let active = true;
-    publicCatalogue()
-      .then((payload) => {
-        if (!active) return;
-        setItems(mergePublicCatalogue(payload));
-        setUsingFallback(false);
-      })
-      .catch(() => {
-        if (active) setUsingFallback(true);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
+    const refresh = () => {
+      if (!navigator.onLine) { setOffline(true); return; }
+      setOffline(false);
+      publicCatalogue()
+        .then((payload) => {
+          if (!active) return;
+          setItems(mergePublicCatalogue(payload));
+          setUsingFallback(false);
+          try { localStorage.setItem(CATALOGUE_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), payload })); } catch {}
+        })
+        .catch(() => { if (active) setUsingFallback(!readCatalogueCache()); })
+        .finally(() => { if (active) setLoading(false); });
     };
+    refresh();
+    window.addEventListener("online", refresh);
+    const onOffline = () => setOffline(true);
+    window.addEventListener("offline", onOffline);
+    return () => { active = false; window.removeEventListener("online", refresh); window.removeEventListener("offline", onOffline); };
   }, []);
 
-  return { items, loading, usingFallback };
+  return { items, loading, usingFallback, offline };
 }
