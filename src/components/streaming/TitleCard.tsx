@@ -4,7 +4,8 @@ import type { CatalogueTitle } from "@/lib/site-data";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { youtubeEmbedUrl } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
-import { customerToken, requireCustomerToken } from "@/lib/google-auth";
+import { customerToken } from "@/lib/google-auth";
+import { useAvantAuth } from "@/lib/avant-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 import {
   accountAccess,
@@ -22,6 +23,7 @@ export function TitleCard({
   layout?: "rail" | "grid";
   badgeLabel?: string;
 }) {
+  const {user:authUser,remembered,signIn}=useAvantAuth();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [previewFailed, setPreviewFailed] = useState(false);
@@ -123,12 +125,8 @@ export function TitleCard({
   const toggleSaved = async (event: React.MouseEvent) => {
     event.stopPropagation();
     const token = await customerToken(false);
-    if (!token) {
-      try {
-        await requireCustomerToken();
-      } catch {
-        return;
-      }
+    if (!token && !authUser) {
+      try { await signIn(remembered?.email); } catch { return; }
     }
     setSaved(toggleMyList(item.id).includes(item.id));
   };
