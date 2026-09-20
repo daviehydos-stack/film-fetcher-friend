@@ -115,7 +115,7 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     thumbnailUrl: [input.thumbnailUrl || (input.youtubeId ? youtubeThumbnail(input.youtubeId) : undefined)].filter(Boolean),
     ...(input.uploadDate ? { uploadDate: input.uploadDate } : {}),
     ...(embedUrl ? { embedUrl } : {}),
-    ...(pageUrl ? { url: pageUrl } : {}),
+    ...(pageUrl ? { url: pageUrl, mainEntityOfPage: pageUrl } : {}),
     ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
     ...(input.episodeNumber ? { episodeNumber: input.episodeNumber } : {}),
     ...(input.seriesName ? { partOfSeries: { "@type": "TVSeries", name: input.seriesName, ...(input.seriesPath && absoluteUrl(input.seriesPath) ? { url: absoluteUrl(input.seriesPath) } : {}) } } : {}),
