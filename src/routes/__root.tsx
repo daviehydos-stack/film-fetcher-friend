@@ -17,6 +17,7 @@ import { accountAccess, publicCatalogue, rememberSubscriber, subscribeAccessChan
 import { customerToken } from "../lib/google-auth";
 import { AvantTransitionEngine } from "../components/streaming/AvantTransitionEngine";
 import { claimMedia, stopAllMedia } from "../lib/media-session";
+import { AvantAuthProvider } from "../lib/avant-auth";
 
 function NotFoundComponent() {
   return (
@@ -218,8 +219,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AvantAuthProvider>
       <AvantTransitionEngine />
       <div key={location.pathname} className="avant-route-surface"><Outlet /></div>
+      </AvantAuthProvider>
     </QueryClientProvider>
   );
 }
