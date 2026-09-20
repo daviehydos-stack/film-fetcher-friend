@@ -5,21 +5,12 @@ import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 import { ADMIN_EMAIL, publicCatalogue, publicPages } from "@/lib/avant-backend";
-import {
-  customerSession,
-  rememberedCustomer,
-  signInCustomer,
-  signOutCustomer,
-  watchCustomerSession,
-} from "@/lib/google-auth";
+import { useAvantAuth } from "@/lib/avant-auth";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [admin, setAdmin] = useState(false),
-    [customer, setCustomer] = useState<any>(null),
-    [authReady, setAuthReady] = useState(false),
-    [authBusy, setAuthBusy] = useState(false),
     [cmsNav, setCmsNav] = useState<any[]>([]),
     [appearance, setAppearance] = useState<any>({}),
     [langs, setLangs] = useState<any>(null),
@@ -29,6 +20,8 @@ export function SiteHeader() {
     [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false),
     [online, setOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine),
     [cacheCleared, setCacheCleared] = useState(false);
+  const {user:customer,ready:authReady,busy:authBusy,signIn,signOut}=useAvantAuth();
+  useEffect(()=>setAdmin(String(customer?.email||"").toLowerCase()===ADMIN_EMAIL),[customer]);
   useEffect(() => {
     void publicPages()
       .then((x) => setCmsNav(x?.pages || []))
@@ -63,25 +56,6 @@ export function SiteHeader() {
     }).catch(() => undefined);
   }, [travelMode]);
   useEffect(() => {
-    let live = true;
-    const sync = async () => {
-      try {
-        const user = await customerSession();
-        if (!live) return;
-        setCustomer(user);
-        setAdmin(String(user?.email || "").toLowerCase() === ADMIN_EMAIL);
-      } finally {
-        if (live) setAuthReady(true);
-      }
-    };
-    void sync();
-    const unwatch = watchCustomerSession(() => void sync());
-    return () => {
-      live = false;
-      unwatch();
-    };
-  }, []);
-  useEffect(() => {
     if (!open) return;
     const p = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -109,26 +83,8 @@ export function SiteHeader() {
     setCacheCleared(true);
     window.setTimeout(() => setCacheCleared(false), 2200);
   }
-  async function login() {
-    setAuthBusy(true);
-    try {
-      const user = await signInCustomer(rememberedCustomer()?.email);
-      setCustomer(user);
-      setAdmin(String(user?.email || "").toLowerCase() === ADMIN_EMAIL);
-    } finally {
-      setAuthBusy(false);
-    }
-  }
-  async function logout() {
-    setAuthBusy(true);
-    try {
-      await signOutCustomer();
-      setCustomer(null);
-      setAdmin(false);
-    } finally {
-      setAuthBusy(false);
-    }
-  }
+  async function login() { try { await signIn(); } catch {} }
+  async function logout() { await signOut(); }
   return (
     <><a href="#main-content" className="fixed left-3 top-3 z-[60] -translate-y-20 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition focus:translate-y-0">Skip to content</a><header
       className={cn(
