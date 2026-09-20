@@ -180,6 +180,18 @@ function RootComponent() {
   }, []);
   useEffect(() => { let dead=false; void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{});return()=>{dead=true}; }, []);
   useEffect(() => {
+    if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
+    const register = () => navigator.serviceWorker.register(import.meta.env.BASE_URL + "sw.js", { scope: import.meta.env.BASE_URL }).catch(() => undefined);
+    if (document.readyState === "complete") void register();
+    else window.addEventListener("load", register, { once: true });
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sync = () => document.documentElement.toggleAttribute("data-avant-offline", !navigator.onLine);
+    sync(); window.addEventListener("online", sync); window.addEventListener("offline", sync);
+    return () => { window.removeEventListener("online", sync); window.removeEventListener("offline", sync); };
+  }, []);
+  useEffect(() => {
     const buildSha = import.meta.env["VITE_BUILD_SHA"]?.trim();
     if (!buildSha || typeof window === "undefined") return;
 
