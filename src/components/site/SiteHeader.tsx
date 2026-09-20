@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LogIn, LogOut, Menu, Search, Sparkles, UserRound, X } from "lucide-react";
+import { LogIn, LogOut, Menu, Search, UserRound, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
@@ -139,9 +139,6 @@ export function SiteHeader() {
           )}
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
-          <Link to="/search" search={{ q: "", type: "all", sort: "curated" }} onClick={() => setOpen(false)} className="mb-1 flex min-h-12 items-center gap-3 rounded-xl border border-primary/20 bg-primary/[.07] px-3 text-base font-semibold text-white">
-            <Sparkles className="size-5 text-primary" /> Ask Avant Concierge
-          </Link>
           {[
             ...navLinks,
             ...cmsNav
@@ -185,14 +182,6 @@ export function SiteHeader() {
             {!online ? "Offline" : "Travel Mode"}
           </button>
           {appearance?.header?.showSearch !== false ? (<>
-            <Link
-              to="/search"
-              search={{ q: "", type: "all", sort: "curated" }}
-              className="hidden min-h-10 items-center gap-2 rounded-full border border-white/10 bg-white/[.04] px-3 text-xs font-bold text-white/70 transition hover:bg-white/[.09] hover:text-white lg:inline-flex"
-              aria-label="Ask Avant Concierge"
-            >
-              <Sparkles className="size-4 text-primary" /> Ask Avant
-            </Link>
             <Link
               to="/search"
               search={{ q: "", type: "all", sort: "curated" }}
