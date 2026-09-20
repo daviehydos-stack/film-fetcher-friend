@@ -1,24 +1,3 @@
-# Avant Movies — Workflow Error Monitor
-
-This repository file keeps previous and current workflow failures together.
-
-## Current failure
-
-Run ID: 35493764079
-
-Generated: 2026-09-20T06:23:21Z
-
-### Current primary errors
-~~~text
-Lint and production build	Production build	2026-09-20T06:16:54.8923028Z ^[[31m✗^[[39m Build failed in 1.58s
-Lint and production build	Production build	2026-09-20T06:16:54.8928789Z ^[[31mBuild failed with 4 errors:
-Lint and production build	Production build	2026-09-20T06:16:54.8941783Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-20T06:16:54.8942359Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-20T06:16:54.9765623Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-20T06:16:54.9778809Z ##[error]Process completed with exit code 1.
-~~~
-
-## Previous + current error history
 
 ---
 
