@@ -25,7 +25,7 @@ export function CataloguePage({
   const [query, setQuery] = useState(""),
     [genre, setGenre] = useState("All"),
     [sort, setSort] = useState<SortMode>("curated");
-  const { items, loading, usingFallback } = useCatalogue();
+  const { items, loading, usingFallback, offline } = useCatalogue();
   const pool = useMemo(
     () => items.filter((item) => mode === "free" ? isFreeTitle(item) : item.type === (mode === "movies" ? "movie" : "series")),
     [items, mode],
@@ -97,7 +97,7 @@ export function CataloguePage({
         <section className="mx-auto max-w-[1600px] px-5 py-8 sm:px-10 sm:py-12 lg:px-14">
           {!query && genre === "All" && quickGenres.length ? <div className="mb-8 flex flex-wrap items-center gap-2"><span className="mr-1 text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground">Browse by mood</span>{quickGenres.map((value) => <Button key={value} type="button" size="sm" variant="outline" onClick={() => setGenre(value)}>{value}</Button>)}</div> : null}
           <div className="mb-6 flex items-end justify-between gap-4 border-b border-border/60 pb-4">
-            <div><p className="flex items-center gap-2 text-sm font-bold">{icon}{visible.length} {visible.length === 1 ? label.replace(/s$/, "") : label}</p>{usingFallback ? <p className="mt-1 text-xs text-muted-foreground">Showing the available Avant selection while live updates reconnect.</p> : null}</div>
+            <div><p className="flex items-center gap-2 text-sm font-bold">{icon}{visible.length} {visible.length === 1 ? label.replace(/s$/, "") : label}</p>{offline ? <p className="mt-1 text-xs text-amber-200/75">Offline · showing the most recent Avant catalogue saved on this device.</p> : usingFallback ? <p className="mt-1 text-xs text-muted-foreground">Showing the available Avant selection while live updates reconnect.</p> : null}</div>
             {(query || genre !== "All") ? <Button variant="ghost" size="sm" onClick={() => { setQuery(""); setGenre("All"); }}>Clear filters</Button> : null}
           </div>
           <div key={`${query}-${genre}-${sort}`} className="avant-filter-results">{loading ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">{Array.from({ length: 5 }, (_, index) => <div key={index} className="aspect-video animate-pulse rounded-md bg-surface" />)}</div> : visible.length ? <DiscoveryGrid items={visible} {...(mode === "free" ? { badgeLabel: "Free to watch" } : {})} /> : <div className="border-y border-border py-20 text-center"><h2 className="text-2xl font-bold">No matching stories</h2><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">Try another title or genre, or clear the filters to return to the full catalogue.</p><Button className="mt-5" onClick={() => { setQuery(""); setGenre("All"); }}>Show all {label}</Button></div>}</div>
