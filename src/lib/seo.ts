@@ -3,7 +3,7 @@ import type { CatalogueTitle } from "./site-data";
 export const SEO_SITE_NAME = "Avant Cinema";
 export const SEO_BRAND = "Avant Movies";
 export const SEO_DEFAULT_TITLE = "Avant Movies — It’s time to feel again";
-export const SEO_DEFAULT_DESCRIPTION = "Stream independent Kenyan films and series from Avant Movies.";
+export const SEO_DEFAULT_DESCRIPTION = "Watch independent Kenyan films, short films and original series on Avant Movies — stories made in Kenya for audiences everywhere.";
 export const SEO_ORIGIN = (import.meta.env["VITE_PUBLIC_SITE_URL"] || "https://www.avantcinema.com").replace(/\/$/, "");
 
 export function absoluteUrl(path: string) {
@@ -44,6 +44,11 @@ export function titleSchema(item: CatalogueTitle) {
     image: [item.artwork, item.backdrop].filter(Boolean),
     genre: item.genres,
     ...(item.year ? { dateCreated: item.year } : {}),
+    ...(item.directors?.length ? { director: item.directors.map((name) => ({ "@type": "Person", name })) } : {}),
+    ...(item.cast?.length ? { actor: item.cast.map((name) => ({ "@type": "Person", name })) } : {}),
+    ...(item.creators?.length ? { creator: item.creators.map((name) => ({ "@type": "Person", name })) } : {}),
+    ...(item.maturityRating ? { contentRating: item.maturityRating } : {}),
+    ...(item.languages?.length ? { inLanguage: item.languages } : {}),
     ...(item.type === "series" && item.episodes?.length ? { numberOfEpisodes: item.episodes.length } : {}),
     ...(absoluteUrl(`/title/${item.slug}`) ? { url: absoluteUrl(`/title/${item.slug}`) } : {}),
     publisher: { "@type": "Organization", name: SEO_SITE_NAME },
