@@ -34,6 +34,7 @@ export function TitleCard({
     cachedSubscriber() ? "authorized" : "loading",
   );
   const [accessVersion, setAccessVersion] = useState(0);
+  const [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
   const cardRef = useRef<HTMLElement | null>(null);
   const detailsButtonRef = useRef<HTMLButtonElement | null>(null);
   const previewTimer = useRef<number | null>(null);
@@ -49,6 +50,11 @@ export function TitleCard({
           ? "Access required"
           : "Coming soon";
 
+  useEffect(() => {
+    const sync = (e: any) => setTravelMode(e.detail.active);
+    window.addEventListener("avant:travel-mode-changed" as any, sync);
+    return () => window.removeEventListener("avant:travel-mode-changed" as any, sync);
+  }, []);
   useEffect(() => subscribeAccessChanged(() => setAccessVersion((v) => v + 1)), []);
   useEffect(() => {
     let live = true;
@@ -160,9 +166,9 @@ export function TitleCard({
             }}
             className={`size-full object-cover transition duration-500 ${previewing && previewLoaded ? "opacity-0" : "opacity-100"}`}
           />
-          {badgeLabel ? (
-            <span className="absolute left-2.5 top-2.5 rounded-sm bg-primary px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-reel">
-              {badgeLabel}
+          {badgeLabel || item.featured || travelMode ? (
+            <span className={`absolute left-2.5 top-2.5 rounded-sm px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-reel ${travelMode ? "bg-blue-600" : (item.featured ? "bg-amber-500" : "bg-primary")}`}>
+              {(travelMode && "Offline Ready") || (item.featured && "Premiere") || badgeLabel}
             </span>
           ) : null}
           {previewing && item.previewYoutubeId ? (

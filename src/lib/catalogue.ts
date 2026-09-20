@@ -98,8 +98,15 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     backdrop: text(raw["backdrop_url"]) || fallback?.backdrop || text(raw["poster_url"]) || "",
     legacyPath: fallback?.legacyPath || `/${slug}`,
     featured: Boolean(raw["featured"]),
-    available: raw["published"] !== false,
+    available: raw["published"] !== false && (!text(raw["scheduled_publish_at"]) || new Date(text(raw["scheduled_publish_at"]) ?? 0).getTime() <= Date.now()),
     accessRequired,
+    ...(textList(raw["cast_names"]).length ? { cast: textList(raw["cast_names"]) } : fallback?.cast ? { cast: fallback.cast } : {}),
+    ...(textList(raw["creator_names"]).length ? { creators: textList(raw["creator_names"]) } : fallback?.creators ? { creators: fallback.creators } : {}),
+    ...(textList(raw["director_names"]).length ? { directors: textList(raw["director_names"]) } : fallback?.directors ? { directors: fallback.directors } : {}),
+    ...(textList(raw["languages"]).length ? { languages: textList(raw["languages"]) } : fallback?.languages ? { languages: fallback.languages } : {}),
+    ...(textList(raw["countries"]).length ? { countries: textList(raw["countries"]) } : {}),
+    ...(text(raw["scheduled_publish_at"]) ? { releaseAt: text(raw["scheduled_publish_at"]) } : {}),
+    ...(raw["story_world"] && typeof raw["story_world"] === "object" ? { storyWorld: raw["story_world"] as CatalogueTitle["storyWorld"] } : fallback?.storyWorld ? { storyWorld: fallback.storyWorld } : {}),
     ...(text(raw["trailer_youtube_id"])
       ? { trailerEmbedUrl: `https://www.youtube-nocookie.com/embed/${text(raw["trailer_youtube_id"])}?rel=0`, previewYoutubeId: text(raw["trailer_youtube_id"]) }
       : fallback?.trailerEmbedUrl

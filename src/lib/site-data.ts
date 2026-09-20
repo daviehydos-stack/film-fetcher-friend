@@ -46,7 +46,13 @@ export type CatalogueTitle = {
   maturityReasons?: string[];
   quality?: string;
   languages?: string[];
+  countries?: string[];
+  releaseAt?: string;
   episodes?: Episode[];
+  storyWorld?: { 
+    gallery: { url: string; caption: string }[]; 
+    characters: { name: string; actor: string; image: string }[]; 
+  };
 };
 
 export type Trailer = {
