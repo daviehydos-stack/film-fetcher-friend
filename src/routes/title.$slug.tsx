@@ -12,8 +12,8 @@ export const Route = createFileRoute("/title/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const path = `/title/${loaderData.slug}`;
-    const title = (loaderData as any).seoTitle || `${loaderData.title} | Kenyan ${loaderData.type === "movie" ? "Film" : "Series"} | Avant Movies`;
-    const fallbackDescription = `Watch ${loaderData.title} on Avant Movies, an independent Kenyan ${loaderData.type === "movie" ? "film" : "series"}${loaderData.genres?.length ? ` in ${loaderData.genres.slice(0, 2).join(" and ")}` : ""}.`;
+    const title = (loaderData as any).seoTitle || `${loaderData.title} — Kenyan ${loaderData.type === "movie" ? "Film" : "TV Series"} | Avant Movies`;
+    const fallbackDescription = `Watch ${loaderData.title} on Avant Movies — an independent Kenyan ${loaderData.type === "movie" ? "film" : "series"}${loaderData.genres?.length ? ` in ${loaderData.genres.slice(0, 2).join(" and ")}` : ""}. Explore the story, cast, trailer and streaming details.`;
     const rawDescription = (loaderData as any).metaDescription || loaderData.shortDescription || loaderData.synopsis || fallbackDescription;
     const cleanDescription = String(rawDescription).replace(/\s+/g, " ").trim();
     const description = cleanDescription.length >= 70 ? cleanDescription.slice(0, 157).replace(/\s+\S*$/, "") + (cleanDescription.length > 157 ? "…" : "") : `${cleanDescription.replace(/[. ]+$/, "")}. ${fallbackDescription}`.slice(0, 160);
