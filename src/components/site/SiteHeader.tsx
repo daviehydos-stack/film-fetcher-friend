@@ -26,6 +26,7 @@ export function SiteHeader() {
     [lang, setLang] = useState(() =>
       typeof window !== "undefined" ? localStorage.getItem("avant-language") || "en" : "en",
     );
+    [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
   useEffect(() => {
     void publicPages()
       .then((x) => setCmsNav(x?.pages || []))
@@ -46,6 +47,10 @@ export function SiteHeader() {
   useEffect(() => {
     document.documentElement.lang = lang;
     localStorage.setItem("avant-language", lang);
+  useEffect(() => {
+    localStorage.setItem("avant-travel-mode", String(travelMode));
+    window.dispatchEvent(new CustomEvent("avant:travel-mode-changed", { detail: { active: travelMode } }));
+  }, [travelMode]);
   }, [lang]);
   useEffect(() => {
     let live = true;
@@ -158,6 +163,10 @@ export function SiteHeader() {
                       ? "Kiswahili"
                       : id === "fr"
                         ? "Français"
+          <button onClick={() => setTravelMode(!travelMode)} className={cn("hidden items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-all md:flex", travelMode ? "border-primary bg-primary text-primary-foreground shadow-reel" : "border-white/20 bg-white/5 text-white/60 hover:border-white/40")} title="Travel Mode: Optimize for offline & low data">
+            <span className={cn("size-2 rounded-full", travelMode ? "bg-white animate-pulse" : "bg-white/20")} />
+            Travel Mode
+          </button>
                         : id.toUpperCase()}
                 </option>
               ))}
@@ -241,6 +250,10 @@ export function SiteHeader() {
               .filter((p: any) => !navLinks.some((n) => n.to === "/" + p.slug))
               .map((p: any) => ({ to: "/" + p.slug, label: p.navigation_label || p.title })),
           ].map((l) => (
+          <button onClick={() => { setTravelMode(!travelMode); setOpen(false); }} className="flex min-h-12 w-full items-center justify-between rounded-xl px-3 font-semibold hover:bg-white/5">
+            <span className="flex items-center gap-3"><span className={cn("size-2 rounded-full", travelMode ? "bg-primary animate-pulse" : "bg-white/20")} />Travel Mode</span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{travelMode ? "Active" : "Off"}</span>
+          </button>
             <Link
               key={l.to}
               to={l.to}
