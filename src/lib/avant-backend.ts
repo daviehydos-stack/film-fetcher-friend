@@ -9,7 +9,7 @@ let publicCatalogueCache:any=null,publicCataloguePending:Promise<any>|null=null,
 export const resolveCatalogueKey=(key:string)=>request<any>(`catalogue-public?key=${encodeURIComponent(key)}`).catch((e:any)=>{if(e?.status===404)return e?.body??null;throw e});
 let publicPagesCache:any=null,publicPagesAt=0;export const publicPages=()=>{const now=Date.now();if(publicPagesCache&&now-publicPagesAt<60000)return Promise.resolve(publicPagesCache);return request<any>("public-pages?navigation=1").then(x=>{publicPagesCache=x;publicPagesAt=Date.now();return x})};
 export const publicPage=(slug:string)=>request<any>(`public-pages?slug=${encodeURIComponent(slug)}`);
-export type ConciergeResult={answer:string;slugs:string[];suggestions:string[];mode:"ai-grounded"|"catalogue-fallback"|"grounded"};
+export type ConciergeResult={answer:string;slugs:string[];reasons?:Record<string,string>;suggestions:string[];mode:"ai-grounded"|"catalogue-fallback"|"grounded"};
 export const avantConcierge=(query:string)=>request<ConciergeResult>("avant-concierge",null,{method:"POST",body:JSON.stringify({query})});
 export const startPalplussPayment=(token:string,input:{productId:string;phone:string;idempotencyKey:string})=>request<any>("palpluss-checkout",token,{method:"POST",body:JSON.stringify(input)});
 export const paymentStatus=(token:string,reference:string)=>request<any>("payment-status",token,{method:"POST",body:JSON.stringify({reference})});
