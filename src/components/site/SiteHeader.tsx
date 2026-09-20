@@ -26,7 +26,8 @@ export function SiteHeader() {
     [lang, setLang] = useState(() =>
       typeof window !== "undefined" ? localStorage.getItem("avant-language") || "en" : "en",
     ),
-    [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
+    [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false),
+    [online, setOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   useEffect(() => {
     void publicPages()
       .then((x) => setCmsNav(x?.pages || []))
@@ -48,6 +49,7 @@ export function SiteHeader() {
     document.documentElement.lang = lang;
     localStorage.setItem("avant-language", lang);
   }, [lang]);
+  useEffect(() => { const sync=()=>setOnline(navigator.onLine); window.addEventListener("online",sync); window.addEventListener("offline",sync); return()=>{window.removeEventListener("online",sync);window.removeEventListener("offline",sync)}; }, []);
   useEffect(() => {
     localStorage.setItem("avant-travel-mode", String(travelMode));
     window.dispatchEvent(new CustomEvent("avant:travel-mode-changed", { detail: { active: travelMode } }));
@@ -172,8 +174,8 @@ export function SiteHeader() {
             </select>
           ) : null}
           <button onClick={() => setTravelMode(!travelMode)} className={cn("hidden items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase transition-all md:flex", travelMode ? "border-primary bg-primary text-primary-foreground shadow-reel" : "border-white/20 bg-white/5 text-white/60 hover:border-white/40")} title="Use less data while browsing">
-            <span className={cn("size-2 rounded-full", travelMode ? "bg-primary-foreground animate-pulse" : "bg-white/20")} />
-            Travel Mode
+            <span className={cn("size-2 rounded-full", !online ? "bg-amber-300" : travelMode ? "bg-primary-foreground animate-pulse" : "bg-white/20")} />
+            {!online ? "Offline" : "Travel Mode"}
           </button>
           {appearance?.header?.showSearch !== false ? (<>
             <Link
@@ -257,7 +259,7 @@ export function SiteHeader() {
       <nav aria-hidden={!open} className={cn("avant-mobile-menu max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-border bg-background px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 shadow-2xl md:hidden sm:px-5 sm:py-4",open?"is-open":"pointer-events-none")}>
           <button onClick={() => { setTravelMode(!travelMode); setOpen(false); }} className="flex min-h-12 w-full items-center justify-between rounded-md px-3 font-semibold hover:bg-white/5">
             <span className="flex items-center gap-3"><span className={cn("size-2 rounded-full", travelMode ? "bg-primary animate-pulse" : "bg-white/20")} />Travel Mode</span>
-            <span className="text-[10px] uppercase text-muted-foreground">{travelMode ? "Active" : "Off"}</span>
+            <span className="text-[10px] uppercase text-muted-foreground">{!online ? "Cached pages" : travelMode ? "Active" : "Off"}</span>
           </button>
           {[
             ...navLinks,
