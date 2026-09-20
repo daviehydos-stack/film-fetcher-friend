@@ -95,20 +95,13 @@ try {
 }
 
 const prefixed = (path) => `${basePath}${path === "/" ? "/" : path}`;
-const blocked = [
-  "/admin",
-  "/account",
-  "/checkout/",
-  "/payment/",
-  "/watch/",
-  "/my-list",
-  "/search",
-].map(prefixed);
 
+// Keep private/utility pages out of the sitemap and mark them noindex in their
+// route metadata. Do not disallow them here: Google must be able to crawl a URL
+// in order to see its noindex directive.
 const robots = [
   "User-agent: *",
   `Allow: ${prefixed("/")}`,
-  ...blocked.map((path) => `Disallow: ${path}`),
   "",
   `Sitemap: ${productionOrigin}/sitemap.xml`,
   "",
