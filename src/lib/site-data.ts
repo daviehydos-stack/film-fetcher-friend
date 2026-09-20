@@ -47,6 +47,10 @@ export type CatalogueTitle = {
   quality?: string;
   languages?: string[];
   episodes?: Episode[];
+  storyWorld?: { 
+    gallery: { url: string; caption: string }[]; 
+    characters: { name: string; actor: string; image: string }[]; 
+  };
 };
 
 export type Trailer = {
