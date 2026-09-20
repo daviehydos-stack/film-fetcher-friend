@@ -46,6 +46,11 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
       const previewEmbedUrl = stringValue(raw["preview_embed_url"]) || stringValue(raw["trailer_embed_url"]);
       const previewStart = numberValue(raw["preview_start_seconds"]);
       const previewDuration = numberValue(raw["preview_duration_seconds"]);
+      const introStart = numberValue(raw["intro_start_seconds"]);
+      const introEnd = numberValue(raw["intro_end_seconds"]);
+      const recapStart = numberValue(raw["recap_start_seconds"]);
+      const recapEnd = numberValue(raw["recap_end_seconds"]);
+      const creditsStart = numberValue(raw["credits_start_seconds"]);
       return {
         ...(id ? { id } : {}),
         title: stringValue(raw["title"]) || `Episode ${sourceIndex + 1}`,
@@ -63,6 +68,11 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
         ...(previewYoutubeId ? { previewYoutubeId } : {}),
         ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
         ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
+        ...(introStart !== undefined ? { introStart } : {}),
+        ...(introEnd !== undefined ? { introEnd } : {}),
+        ...(recapStart !== undefined ? { recapStart } : {}),
+        ...(recapEnd !== undefined ? { recapEnd } : {}),
+        ...(creditsStart !== undefined ? { creditsStart } : {}),
       } satisfies Episode;
     })
     .sort((a, b) => (a.season ?? 1) - (b.season ?? 1) || (a.episodeNumber ?? 0) - (b.episodeNumber ?? 0));
