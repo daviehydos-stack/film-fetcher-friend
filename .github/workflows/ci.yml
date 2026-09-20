@@ -10,9 +10,10 @@ on:
 permissions:
   contents: read
 
+# Queue commits instead of cancelling an in-progress validation run.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   quality:
