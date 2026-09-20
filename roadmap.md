@@ -14,3 +14,4 @@
 - [x] Unify page, tab, preview, menu, checkout, player, and browser-back motion
 - [x] Remove delayed navigation and overlapping page animations; use one fast dissolve
 - [x] Add Avant cinema entry, one-site media control, player markers, living previews, and viewing-based discovery
+- [x] Connect Story World, scheduled premiere countdowns, reminders, Travel Mode data saving, and catalogue-grounded discovery
