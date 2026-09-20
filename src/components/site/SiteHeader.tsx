@@ -139,9 +139,6 @@ export function SiteHeader() {
           )}
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
-          <Link to="/search" search={{ q: "", type: "all", sort: "curated" }} onClick={() => setOpen(false)} className="mb-1 flex min-h-12 items-center gap-3 rounded-xl border border-primary/20 bg-primary/[.07] px-3 text-base font-semibold text-white">
-            <Sparkles className="size-5 text-primary" /> Ask Avant Concierge
-          </Link>
           {[
             ...navLinks,
             ...cmsNav
