@@ -29,6 +29,7 @@ const dateOnly = (value) => {
 
 const entries = new Map();
 const videoEntries = new Map();
+const imageEntries = new Map();
 const addEntry = (path, lastmod) => {
   if (!path || !path.startsWith("/")) return;
   const current = entries.get(path);
@@ -48,6 +49,8 @@ try {
     for (const title of titles) {
       const path = `/title/${title.slug}`;
       addEntry(path, title.updated_at || title.published_at || title.created_at);
+      const images = [title.poster_url, title.backdrop_url].filter(Boolean);
+      if (images.length) imageEntries.set(path, [...new Set(images)]);
       const player = title.trailer_youtube_id
         ? `https://www.youtube-nocookie.com/embed/${title.trailer_youtube_id}`
         : title.trailer_vimeo_id
@@ -120,6 +123,7 @@ const robots = [
   "",
   `Sitemap: ${productionOrigin}/sitemap.xml`,
   `Sitemap: ${productionOrigin}/video-sitemap.xml`,
+  `Sitemap: ${productionOrigin}/image-sitemap.xml`,
   "",
 ].join("\n");
 writeFileSync("public/robots.txt", robots);
@@ -142,6 +146,13 @@ const urls = [...entries.entries()]
   .join("\n");
 
 
+const imageUrls = [...imageEntries.entries()].map(([path, images]) => {
+  const loc = escapeXml(`${productionOrigin}${path}`);
+  const imageXml = images.map((image) => `<image:image><image:loc>${escapeXml(image)}</image:loc></image:image>`).join("");
+  return `  <url><loc>${loc}</loc>${imageXml}</url>`;
+}).join("\n");
+writeFileSync("public/image-sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${imageUrls}\n</urlset>\n`);
+
 const videoUrls = [...videoEntries.entries()].map(([path, video]) => {
   const loc = escapeXml(`${productionOrigin}${path}`);
   const published = video.publicationDate ? `<video:publication_date>${escapeXml(new Date(video.publicationDate).toISOString())}</video:publication_date>` : "";
@@ -154,4 +165,4 @@ writeFileSync(
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
 );
 
-console.log(`SEO: generated robots.txt, sitemap.xml and video-sitemap.xml for ${productionOrigin} (${entries.size} URLs, ${videoEntries.size} videos).`);
+console.log(`SEO: generated robots.txt, sitemap.xml, video-sitemap.xml and image-sitemap.xml for ${productionOrigin} (${entries.size} URLs, ${videoEntries.size} videos, ${imageEntries.size} image pages).`);
