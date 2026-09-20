@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { broadcastAccessChanged, paymentStatus, publicCatalogue, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
 import { productForLegacyContent } from '@/lib/backend-catalogue-map'
-import { customerSession, rememberedCustomer, requireCustomerToken, signInCustomer, watchCustomerSession } from '@/lib/google-auth'
+import { requireCustomerToken } from '@/lib/google-auth'
+import { useAvantAuth } from '@/lib/avant-auth'
 import { normalizePaymentState, paymentStateMessage, type PaymentUiState } from '@/lib/payments/status'
 
 export const Route = createFileRoute('/checkout/$productId')({
@@ -35,12 +36,10 @@ function CheckoutRoute() {
   const [error, setError] = useState('')
   const [product, setProduct] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [customer, setCustomer] = useState<any>(null)
-  const [authBusy, setAuthBusy] = useState(false)
+  const { user: customer, busy: authBusy, remembered, signIn } = useAvantAuth()
   const [stage, setStage] = useState<PaymentUiState>('ready')
   const [reference, setReference] = useState('')
 
-  useEffect(() => { void customerSession().then(setCustomer); return watchCustomerSession(() => void customerSession().then(setCustomer)) }, [])
   useEffect(() => { try { setReference(sessionStorage.getItem(`avant_payment_${productId}`) || '') } catch { /* unavailable */ } }, [productId])
   useEffect(() => {
     let active = true
@@ -72,7 +71,7 @@ function CheckoutRoute() {
     else await router.navigate({ to: '/payment/success', search: { reference: referenceValue, returnTo: returnTo || origin, origin, originScroll: String(originScroll) } })
   }
   function handleTerminal(state: PaymentUiState) { setBusy(false); setStage(state); setError(paymentStateMessage(state)) }
-  async function loginFirst() { setAuthBusy(true); setError(''); try { setCustomer(await signInCustomer(rememberedCustomer()?.email)) } catch { setError('Sign-in could not be completed. Please try again.') } finally { setAuthBusy(false) } }
+  async function loginFirst() { setError(''); try { await signIn(remembered?.email) } catch (e:any) { if(e?.name!=='AbortError') setError('Sign-in could not be completed. Please try again.') } }
   async function start() {
     if (!customer) { setError('Sign in first to continue to M-PESA.'); return }
     setStage('sending'); setBusy(true); setError('')
