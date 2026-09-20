@@ -12,7 +12,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { absoluteUrl, SEO_DEFAULT_DESCRIPTION, SEO_DEFAULT_TITLE, SEO_SITE_NAME } from "../lib/seo";
+import { absoluteUrl, SEO_BRAND, SEO_DEFAULT_DESCRIPTION, SEO_DEFAULT_TITLE, SEO_SITE_NAME } from "../lib/seo";
 import { accountAccess, publicCatalogue, rememberSubscriber, subscribeAccessChanged } from "../lib/avant-backend";
 import { customerToken } from "../lib/google-auth";
 import { AvantTransitionEngine } from "../components/streaming/AvantTransitionEngine";
@@ -113,10 +113,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       type: "application/ld+json",
       children: JSON.stringify({
         "@context": "https://schema.org",
-        "@type": "Organization",
-        name: SEO_SITE_NAME,
-        description: SEO_DEFAULT_DESCRIPTION,
-        ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}),
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": absoluteUrl("/#organization"),
+            name: SEO_SITE_NAME,
+            description: SEO_DEFAULT_DESCRIPTION,
+            ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}),
+          },
+          {
+            "@type": "WebSite",
+            "@id": absoluteUrl("/#website"),
+            name: SEO_BRAND,
+            description: SEO_DEFAULT_DESCRIPTION,
+            ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}),
+            publisher: { "@id": absoluteUrl("/#organization") },
+            inLanguage: "en",
+          },
+        ],
       }),
     }],
   }),
