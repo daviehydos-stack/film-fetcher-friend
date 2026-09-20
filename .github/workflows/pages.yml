@@ -1,28 +1,34 @@
 name: Deploy GitHub Pages Preview
+
 on:
-  push:
+  # Deploy only after CI for the same main-branch commit has completed successfully.
+  workflow_run:
+    workflows: ["Avant Movies CI"]
+    types: [completed]
     branches: ["main"]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Do not cancel a deployment just because another commit arrives.
-# GitHub will serialize Pages deployments and process the queue.
 concurrency:
-  group: pages
+  group: avant-main-pipeline
   cancel-in-progress: false
 
 jobs:
   build:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       GITHUB_PAGES: "true"
     steps:
-      - name: Checkout
+      - name: Checkout validated commit
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -30,12 +36,11 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
       - name: Stamp preview build
-        run: printf '{"sha":"%s"}\n' "$GITHUB_SHA" > public/version.json
+        run: printf '{"sha":"%s"}\n' "$(git rev-parse HEAD)" > public/version.json
       - name: Build static TanStack preview
         env:
-          VITE_BUILD_SHA: ${{ github.sha }}
+          VITE_BUILD_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          # GitHub Pages is a preview mirror, not a second search-index target.
           VITE_PUBLIC_SITE_URL: https://avantmovies.vercel.app
         run: bun run build
       - name: Prepare Pages artifact
@@ -53,12 +58,13 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: .output/public
+
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy
         id: deployment
