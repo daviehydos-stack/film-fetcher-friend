@@ -53,6 +53,13 @@ export function SiteHeader() {
   useEffect(() => {
     localStorage.setItem("avant-travel-mode", String(travelMode));
     window.dispatchEvent(new CustomEvent("avant:travel-mode-changed", { detail: { active: travelMode } }));
+    if (!("serviceWorker" in navigator)) return;
+    void navigator.serviceWorker.ready.then((registration) => {
+      if (!travelMode) return;
+      const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+      const urls = [base + "/", base + "/movies", base + "/tv-shows", base + "/watch-free", base + "/my-list"];
+      registration.active?.postMessage({ type: "AVANT_WARM_URLS", urls });
+    }).catch(() => undefined);
   }, [travelMode]);
   useEffect(() => {
     let live = true;
