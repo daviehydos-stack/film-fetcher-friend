@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CataloguePage } from "@/components/streaming/CataloguePage";
-import { publicPageLinks, publicPageMeta } from "@/lib/seo";
-export const Route = createFileRoute("/movies")({ head: () => ({ meta: publicPageMeta("/movies", "Kenyan Movies — Avant Movies", "Discover Kenyan feature films and independent cinema from Avant Movies.", "https://static.wixstatic.com/media/57086b_c12a5a80a97149a4a067d9857681e3e3~mv2.jpg/v1/fill/w_980,h_531,enc_auto/file.jpeg"), links: publicPageLinks("/movies") }), component: Page });
+import { absoluteUrl, publicPageLinks, publicPageMeta } from "@/lib/seo";
+import { getTitles } from "@/lib/site-data";
+export const Route = createFileRoute("/movies")({ head: () => { const movies=getTitles().filter(x=>x.type==="movie"&&x.available!==false); return ({ meta: publicPageMeta("/movies", "Kenyan Movies & Short Films — Watch on Avant Movies", "Discover Kenyan movies, independent films and short films on Avant Movies. Explore every story, trailer and film page.", "https://static.wixstatic.com/media/57086b_c12a5a80a97149a4a067d9857681e3e3~mv2.jpg/v1/fill/w_980,h_531,enc_auto/file.jpeg"), links: publicPageLinks("/movies"), scripts:[{type:"application/ld+json",children:JSON.stringify({"@context":"https://schema.org","@type":"ItemList",name:"Kenyan Movies on Avant Movies",itemListElement:movies.map((m,i)=>({"@type":"ListItem",position:i+1,url:absoluteUrl(`/title/${m.slug}`),item:{"@type":"Movie",name:m.title,url:absoluteUrl(`/title/${m.slug}`),image:m.artwork||m.backdrop}}))})}] }); }, component: Page });
 function Page() { return <CataloguePage mode="movies" title="Movies" intro="Feature films and short-form stories from Avant — Kenyan cinema made to stay with you." />; }
