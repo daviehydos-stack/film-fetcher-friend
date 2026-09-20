@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { TitleDetail } from "@/components/streaming/TitleDetail";
 import { getTitle, type CatalogueTitle } from "@/lib/site-data";
 import { resolveCatalogueKey } from "@/lib/avant-backend";
-import { publicPageLinks, publicPageMeta, titleSchema } from "@/lib/seo";
+import { absoluteUrl, publicPageLinks, publicPageMeta, titleSchema } from "@/lib/seo";
 import { restoreRememberedScroll } from "@/lib/navigation-memory";
 import { useEffect } from "react";
 import { mapResolvedEpisodes } from "@/lib/episodes";
@@ -20,7 +20,20 @@ export const Route = createFileRoute("/title/$slug")({
     return {
       meta: publicPageMeta(path, title, description, loaderData.backdrop, loaderData.type === "movie" ? "video.movie" : "video.tv_show"),
       links: publicPageLinks(path),
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(titleSchema(loaderData)) }],
+      scripts: [{ type: "application/ld+json", children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          titleSchema(loaderData),
+          {
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Avant Movies", item: absoluteUrl("/") },
+              { "@type": "ListItem", position: 2, name: loaderData.type === "movie" ? "Movies" : "TV Shows", item: absoluteUrl(loaderData.type === "movie" ? "/movies" : "/tv-shows") },
+              { "@type": "ListItem", position: 3, name: loaderData.title, item: absoluteUrl(path) },
+            ],
+          },
+        ],
+      }) }],
     };
   },
   component: TitleRoute,
