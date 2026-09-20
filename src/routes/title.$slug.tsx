@@ -12,8 +12,10 @@ export const Route = createFileRoute("/title/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const path = `/title/${loaderData.slug}`;
-    const title = (loaderData as any).seoTitle || `${loaderData.title} — Avant Movies`;
-    const description = (loaderData as any).metaDescription || loaderData.shortDescription;
+    const title = (loaderData as any).seoTitle || `${loaderData.title} | Kenyan ${loaderData.type === "movie" ? "Film" : "Series"} | Avant Movies`;
+    const fallbackDescription = `Watch ${loaderData.title} on Avant Movies, an independent Kenyan ${loaderData.type === "movie" ? "film" : "series"}${loaderData.genres?.length ? ` in ${loaderData.genres.slice(0, 2).join(" and ")}` : ""}.`;
+    const rawDescription = (loaderData as any).metaDescription || loaderData.shortDescription || loaderData.synopsis || fallbackDescription;
+    const description = rawDescription.length >= 70 ? rawDescription.slice(0, 160) : `${rawDescription.replace(/[. ]+$/, "")}. ${fallbackDescription}`.slice(0, 160);
     return {
       meta: publicPageMeta(path, title, description, loaderData.backdrop, loaderData.type === "movie" ? "video.movie" : "video.tv_show"),
       links: publicPageLinks(path),
