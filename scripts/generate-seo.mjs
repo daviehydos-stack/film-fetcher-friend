@@ -77,10 +77,28 @@ try {
           return (d?.episodes || [])
             .filter((episode) => episode?.status === "published")
             .sort((a, b) => (a.episode_number || 0) - (b.episode_number || 0))
-            .map((episode, index) => ({
-              path: `/episode/${title.slug}/${index + 1}`,
-              lastmod: episode.updated_at || episode.visible_from || episode.created_at || title.updated_at,
-            }));
+            .map((episode, index) => {
+              const episodePath = `/episode/${title.slug}/${index + 1}`;
+              const episodeThumb = episode.thumbnail_url || title.backdrop_url || title.poster_url || (episode.youtube_video_id ? `https://i.ytimg.com/vi/${episode.youtube_video_id}/hqdefault.jpg` : undefined);
+              const episodePlayer = episode.youtube_video_id
+                ? `https://www.youtube-nocookie.com/embed/${episode.youtube_video_id}`
+                : episode.vimeo_video_id
+                  ? `https://player.vimeo.com/video/${episode.vimeo_video_id}`
+                  : undefined;
+              if (episodeThumb) imageEntries.set(episodePath, [episodeThumb]);
+              if (episodePlayer && episodeThumb) videoEntries.set(episodePath, {
+                title: `${episode.title} — ${title.title} | Avant Movies`,
+                description: episode.description || `Watch ${episode.title} from ${title.title} on Avant Movies.`,
+                thumbnail: episodeThumb,
+                player: episodePlayer,
+                publicationDate: episode.visible_from || episode.created_at || title.published_at || title.created_at,
+                duration: Number(episode.duration_seconds) > 0 ? Number(episode.duration_seconds) : undefined,
+              });
+              return {
+                path: episodePath,
+                lastmod: episode.updated_at || episode.visible_from || episode.created_at || title.updated_at,
+              };
+            });
         } catch {
           return [];
         }
@@ -155,8 +173,9 @@ writeFileSync("public/image-sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?
 
 const videoUrls = [...videoEntries.entries()].map(([path, video]) => {
   const loc = escapeXml(`${productionOrigin}${path}`);
-  const published = video.publicationDate ? `<video:publication_date>${escapeXml(new Date(video.publicationDate).toISOString())}</video:publication_date>` : "";
-  return `  <url><loc>${loc}</loc><video:video><video:thumbnail_loc>${escapeXml(video.thumbnail)}</video:thumbnail_loc><video:title>${escapeXml(video.title)}</video:title><video:description>${escapeXml(video.description.slice(0, 2048))}</video:description><video:player_loc>${escapeXml(video.player)}</video:player_loc>${published}</video:video></url>`;
+  const published = video.publicationDate && !Number.isNaN(new Date(video.publicationDate).getTime()) ? `<video:publication_date>${escapeXml(new Date(video.publicationDate).toISOString())}</video:publication_date>` : "";
+  const duration = video.duration ? `<video:duration>${Math.min(28800, Math.max(1, Math.round(video.duration)))}</video:duration>` : "";
+  return `  <url><loc>${loc}</loc><video:video><video:thumbnail_loc>${escapeXml(video.thumbnail)}</video:thumbnail_loc><video:title>${escapeXml(video.title)}</video:title><video:description>${escapeXml(video.description.slice(0, 2048))}</video:description><video:player_loc>${escapeXml(video.player)}</video:player_loc>${duration}${published}</video:video></url>`;
 }).join("\n");
 writeFileSync("public/video-sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n${videoUrls}\n</urlset>\n`);
 
