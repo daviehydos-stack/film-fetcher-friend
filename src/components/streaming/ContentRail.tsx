@@ -24,8 +24,25 @@ export function ContentRail({
   badgeLabel?: string;
 }) {
   const rail = useRef<HTMLDivElement>(null);
-  const resetRail = () => { const node=rail.current;if(node)node.scrollTo({left:0,behavior:"auto"}); };
-  useEffect(()=>{resetRail();const onPageShow=()=>resetRail();const onVisibility=()=>{if(document.visibilityState==="visible")resetRail()};window.addEventListener("pageshow",onPageShow);document.addEventListener("visibilitychange",onVisibility);return()=>{window.removeEventListener("pageshow",onPageShow);document.removeEventListener("visibilitychange",onVisibility)}},[title,items.map(item=>item.id).join("|")]);
+  const section = useRef<HTMLElement>(null);
+  const resetRail = () => { const node=rail.current;if(node&&node.scrollLeft!==0)node.scrollTo({left:0,behavior:"auto"}); };
+  useEffect(()=>{
+    resetRail();
+    let wasVisible=false;
+    const onPageShow=()=>resetRail();
+    const onVisibility=()=>{if(document.visibilityState==="visible")resetRail()};
+    const onPopState=()=>window.requestAnimationFrame(resetRail);
+    const observer=section.current?new IntersectionObserver(([entry])=>{
+      const visible=Boolean(entry?.isIntersecting&&entry.intersectionRatio>=.12);
+      if(visible&&!wasVisible)resetRail();
+      wasVisible=visible;
+    },{threshold:[0,.12,.5]}):null;
+    if(section.current)observer?.observe(section.current);
+    window.addEventListener("pageshow",onPageShow);
+    window.addEventListener("popstate",onPopState);
+    document.addEventListener("visibilitychange",onVisibility);
+    return()=>{observer?.disconnect();window.removeEventListener("pageshow",onPageShow);window.removeEventListener("popstate",onPopState);document.removeEventListener("visibilitychange",onVisibility)}
+  },[title,items.map(item=>item.id).join("|")]);
   const move = (direction: number) => {
     const viewport = rail.current?.clientWidth ?? 680;
     const card = rail.current?.querySelector<HTMLElement>("[data-title-card]")?.offsetWidth ?? 288;
@@ -35,7 +52,7 @@ export function ContentRail({
     });
   };
   return (
-    <section className="avant-home-section min-w-0 overflow-hidden py-6 sm:py-8" aria-label={title} role="region">
+    <section ref={section} className="avant-home-section min-w-0 overflow-hidden py-6 sm:py-8" aria-label={title} role="region">
       <div className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 px-5 sm:px-10 lg:px-14">
         <div className="min-w-0">
           {eyebrow ? <p className="eyebrow mb-1.5">{eyebrow}</p> : null}
