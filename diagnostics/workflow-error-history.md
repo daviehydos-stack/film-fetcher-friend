@@ -456,3 +456,57 @@ run 35593196008 is still in progress; logs will be available when it is complete
 ~~~text
 run 35593196008 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-21T11:17:54Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"failure","createdAt":"2026-09-21T11:16:38Z","databaseId":35593196008,"displayTitle":"Add cinematic auto-hide preview controls","headSha":"a2848fdcc356230389aa4634426861bef6e0ce04","jobs":[{"completedAt":"2026-09-21T11:17:45Z","conclusion":"failure","databaseId":106312223447,"name":"Lint and production build","startedAt":"2026-09-21T11:17:30Z","status":"completed","steps":[{"completedAt":"2026-09-21T11:17:31Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-21T11:17:30Z","status":"completed"},{"completedAt":"2026-09-21T11:17:32Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-21T11:17:31Z","status":"completed"},{"completedAt":"2026-09-21T11:17:34Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-21T11:17:32Z","status":"completed"},{"completedAt":"2026-09-21T11:17:35Z","conclusion":"success","name":"Install dependencies","number":4,"startedAt":"2026-09-21T11:17:34Z","status":"completed"},{"completedAt":"2026-09-21T11:17:43Z","conclusion":"failure","name":"Production build","number":5,"startedAt":"2026-09-21T11:17:35Z","status":"completed"},{"completedAt":"2026-09-21T11:17:43Z","conclusion":"skipped","name":"Post Setup Bun","number":9,"startedAt":"2026-09-21T11:17:43Z","status":"completed"},{"completedAt":"2026-09-21T11:17:43Z","conclusion":"success","name":"Post Checkout","number":10,"startedAt":"2026-09-21T11:17:43Z","status":"completed"},{"completedAt":"2026-09-21T11:17:43Z","conclusion":"success","name":"Complete job","number":11,"startedAt":"2026-09-21T11:17:43Z","status":"completed"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35593196008/job/106312223447"}],"name":"Avant Movies CI","status":"completed","updatedAt":"2026-09-21T11:17:46Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35593196008"}
+
+~~~
+
+### Primary errors
+~~~text
+Lint and production build	Production build	2026-09-21T11:17:43.2572789Z ^[[31m✗^[[39m Build failed in 2.43s
+Lint and production build	Production build	2026-09-21T11:17:43.2577663Z ^[[31mBuild failed with 1 error:
+Lint and production build	Production build	2026-09-21T11:17:43.2579505Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
+Lint and production build	Production build	2026-09-21T11:17:43.2580536Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
+Lint and production build	Production build	2026-09-21T11:17:43.3136297Z error: script "build" exited with code 1
+Lint and production build	Production build	2026-09-21T11:17:43.3152269Z ##[error]Process completed with exit code 1.
+~~~
+
+### Full failed-step log
+~~~text
+Lint and production build	Production build	﻿2026-09-21T11:17:35.5323492Z ##[group]Run bun run build
+Lint and production build	Production build	2026-09-21T11:17:35.5323848Z ^[[36;1mbun run build^[[0m
+Lint and production build	Production build	2026-09-21T11:17:35.5345646Z shell: /usr/bin/bash -e {0}
+Lint and production build	Production build	2026-09-21T11:17:35.5345945Z ##[endgroup]
+Lint and production build	Production build	2026-09-21T11:17:35.5449124Z $ node scripts/generate-seo.mjs && vite build
+Lint and production build	Production build	2026-09-21T11:17:39.2343124Z SEO: generated robots.txt, sitemap.xml, video-sitemap.xml and image-sitemap.xml for https://avantmovies.vercel.app (21 URLs, 0 videos, 13 image pages).
+Lint and production build	Production build	2026-09-21T11:17:40.3905340Z ^[[33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the ^[[1mresolve.tsconfigPaths^[[22m option. You can remove the plugin and set ^[[1mresolve.tsconfigPaths: true^[[22m in your Vite config instead.^[[39m
+Lint and production build	Production build	2026-09-21T11:17:40.8250746Z ^[[36mvite v8.1.5 ^[[32mbuilding client environment for production...^[[36m^[[39m
+Lint and production build	Production build	2026-09-21T11:17:40.8414412Z ^[[2K
+Lint and production build	Production build	2026-09-21T11:17:43.2561891Z transforming...✓ 1988 modules transformed.
+Lint and production build	Production build	2026-09-21T11:17:43.2572789Z ^[[31m✗^[[39m Build failed in 2.43s
+Lint and production build	Production build	2026-09-21T11:17:43.2576908Z ^[[31merror during build:
+Lint and production build	Production build	2026-09-21T11:17:43.2577663Z ^[[31mBuild failed with 1 error:
+Lint and production build	Production build	2026-09-21T11:17:43.2577840Z 
+Lint and production build	Production build	2026-09-21T11:17:43.2578046Z ^[[31m[builtin:vite-transform] ^[[0mUnexpected token
+Lint and production build	Production build	2026-09-21T11:17:43.2578465Z  -  in src/components/streaming/TitlePreviewModal.tsx at 10125..10126
+Lint and production build	Production build	2026-09-21T11:17:43.2578861Z ^[[31m
+Lint and production build	Production build	2026-09-21T11:17:43.2579505Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
+Lint and production build	Production build	2026-09-21T11:17:43.2580536Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
+Lint and production build	Production build	2026-09-21T11:17:43.2581467Z     at #build (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/rolldown-DP_p9pd3.mjs:132:34)
+Lint and production build	Production build	2026-09-21T11:17:43.2582389Z     at async buildEnvironment (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33061:66)
+Lint and production build	Production build	2026-09-21T11:17:43.2583298Z     at async Object.build (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33483:19)
+Lint and production build	Production build	2026-09-21T11:17:43.2584297Z     at async buildStartViteEnvironments (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/@tanstack/start-plugin-core/dist/esm/vite/planning.js:95:23)
+Lint and production build	Production build	2026-09-21T11:17:43.2585381Z     at async Object.buildApp (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/@tanstack/start-plugin-core/dist/esm/vite/plugin.js:113:8)
+Lint and production build	Production build	2026-09-21T11:17:43.2586332Z     at async Object.buildApp (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33475:6)
+Lint and production build	Production build	2026-09-21T11:17:43.2587756Z     at async CAC.<anonymous> (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/cli.js:776:3) {
+Lint and production build	Production build	2026-09-21T11:17:43.2588319Z   errors: [Getter/Setter]
+Lint and production build	Production build	2026-09-21T11:17:43.2588829Z }^[[39m
+Lint and production build	Production build	2026-09-21T11:17:43.3136297Z error: script "build" exited with code 1
+Lint and production build	Production build	2026-09-21T11:17:43.3152269Z ##[error]Process completed with exit code 1.
+~~~
