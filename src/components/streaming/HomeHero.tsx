@@ -14,6 +14,7 @@ import {
 } from "@/lib/avant-backend";
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
+import { beginAvantWatchTransition } from "./AvantTransitionEngine";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [muted, setMuted] = useState(false);
@@ -180,7 +181,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           <div className="mt-5 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
             {playableContentId || accessState === "authorized" ? (
               <Button asChild size="lg" className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
-                 <Link to="/watch/$contentId" params={{ contentId: watchContentId }}><Play className="fill-current" />{freeFullTitle ? "Watch Free" : "Watch"}</Link>
+                 <Link to="/watch/$contentId" params={{ contentId: watchContentId }} onClick={beginAvantWatchTransition}><Play className="fill-current" />{freeFullTitle ? "Watch Free" : "Watch"}</Link>
               </Button>
             ) : item.trailerEmbedUrl ? (
               <Button type="button" size="lg" onClick={() => { if (largeScreen && !reducedMotion) { setMuted(false); setTrailerReady(true); } else { setDetailsOpen(true); } }} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
