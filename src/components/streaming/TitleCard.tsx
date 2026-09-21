@@ -30,7 +30,13 @@ export function TitleCard({
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [hoverCapable, setHoverCapable] = useState(false);
   const [nearViewport, setNearViewport] = useState(false);
-  const [saved, setSaved] = useState(() => readMyList().includes(item.id));
+  const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    const sync = () => setSaved(readMyList().includes(item.id));
+    sync();
+    window.addEventListener("avant-my-list", sync);
+    return () => window.removeEventListener("avant-my-list", sync);
+  }, [item.id]);
   const [muted, setMuted] = useState(true);
   const [accessState, setAccessState] = useState<AccessState>(() =>
     cachedSubscriber() ? "authorized" : "loading",
