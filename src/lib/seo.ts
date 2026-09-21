@@ -75,8 +75,8 @@ export function titleSchema(item: CatalogueTitle) {
   if (previewId || previewVimeoId) base.trailer = videoObjectSchema({
     name: `${item.title} trailer`,
     description: item.shortDescription || item.synopsis || `Watch the ${item.title} trailer on Avant Movies.`,
-    youtubeId: previewId,
-    vimeoId: previewVimeoId,
+    ...(previewId ? { youtubeId: previewId } : {}),
+    ...(previewVimeoId ? { vimeoId: previewVimeoId } : {}),
     duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
     pagePath: `/title/${item.slug}`,
     alreadyIsoDuration: true,
