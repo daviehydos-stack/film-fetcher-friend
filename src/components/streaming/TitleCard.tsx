@@ -30,7 +30,7 @@ export function TitleCard({
   const [previewLoaded, setPreviewLoaded] = useState(false);
   const [hoverCapable, setHoverCapable] = useState(false);
   const [nearViewport, setNearViewport] = useState(false);
-  const [saved, setSaved] = useState(() => readMyList().includes(item.id));
+  const [saved, setSaved] = useState(false);
   const [muted, setMuted] = useState(true);
   const [accessState, setAccessState] = useState<AccessState>(() =>
     cachedSubscriber() ? "authorized" : "loading",
