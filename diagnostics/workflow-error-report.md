@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35596244137
 
-Generated: 2026-09-21T11:51:32Z
+Generated: 2026-09-21T11:51:54Z
 
 ### Current primary errors
 ~~~text
@@ -533,6 +533,25 @@ Lint and production build	Production build	2026-09-21T11:17:43.3152269Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-21T11:50:59Z","databaseId":35596244137,"displayTitle":"Make Avant controls authoritative across playback providers","headSha":"4c2db1a1b38452f01e173924a18c089f967b2405","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":106321725474,"name":"Lint and production build","startedAt":"2026-09-21T11:51:29Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35596244137/job/106321725474"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-21T11:51:29Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35596244137"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35596244137 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-21T11:51:54Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-21T11:50:59Z","databaseId":35596244137,"displayTitle":"Make Avant controls authoritative across playback providers","headSha":"4c2db1a1b38452f01e173924a18c089f967b2405","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":106321828102,"name":"Lint and production build","startedAt":"2026-09-21T11:51:51Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35596244137/job/106321828102"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-21T11:51:50Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35596244137"}
 
 ~~~
 
