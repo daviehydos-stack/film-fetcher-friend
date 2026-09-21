@@ -1,6 +1,8 @@
 import { Check, Star } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { plans, WHATSAPP_TEL, type Plan } from "@/lib/site-data";
+import { publicCommerceSettings } from "@/lib/avant-backend";
 
 export function PlanCard({ plan }: { plan: Plan }) {
   return (
@@ -47,7 +49,7 @@ export function PricingSection({
   title?: string;
   only?: string[];
 }) {
-  const list = only ? plans.filter((p) => only.includes(p.name)) : plans;
+  const [commerce,setCommerce]=useState<any>(null);useEffect(()=>{let live=true;publicCommerceSettings().then(x=>{if(live)setCommerce(x)});return()=>{live=false}},[]);const dynamic:Plan[]=(commerce?.products||[]).map((p:any)=>({name:p.name,price:`${p.currency||"KES"} ${(Number(p.price_minor||0)/100).toLocaleString()}`,blurb:p.description||((p.product_type==="subscription")?"Avant subscription access":p.product_type==="bundle"?"Bundle access":"One-time viewing access"),perks:[p.product_type==="subscription"?"Subscription access":p.product_type==="bundle"?"Multiple titles included":p.product_type==="season_access"?"Full season access":"Title access"],validity:p.duration_days?`${p.duration_days} days access`:(p.billing_type==="recurring"?"Recurring until cancelled":"Access as configured"),productId:p.id,best:p.featured===true}));const source=dynamic.length?dynamic:plans;const list = only ? source.filter((p) => only.includes(p.name)) : source;
   return (
     <section className="mx-auto max-w-7xl px-6 py-16">
       <p className="eyebrow text-center">Support independent film</p>
@@ -73,9 +75,7 @@ export function PaymentHelp() {
         <p className="eyebrow">Secure checkout</p>
         <h3 className="headline mt-2 text-3xl text-ink-foreground">Pay with M-PESA</h3>
         <p className="mt-3 text-sm leading-6 text-ink-foreground/75">
-          Select an access plan above. Avant will ask you to sign in with Google, then enter your
-          M-PESA number. Approve the STK prompt on your phone; access is activated only after the
-          backend verifies the payment.
+          Select an access option above, enter your M-PESA number and approve the STK prompt on your phone. Sign-in is not required for guest checkout; access is activated only after the backend verifies the payment.
         </p>
         <a
           href={WHATSAPP_TEL}
