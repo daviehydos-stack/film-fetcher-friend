@@ -22,6 +22,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [largeScreen, setLargeScreen] = useState(false);
   const [trailerLoaded, setTrailerLoaded] = useState(false);
   const [trailerVisible, setTrailerVisible] = useState(false);
+  const [heroUiVisible, setHeroUiVisible] = useState(true);
+  const heroUiTimer = useRef<number | null>(null);
   const [trailerFailed, setTrailerFailed] = useState(false);
   const [saved, setSaved] = useState(false);
   const [accessState, setAccessState] = useState<AccessState>(() =>
@@ -85,6 +87,9 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     return () => observer.disconnect();
   }, [item.id]);
 
+  const showHeroUi=()=>{setHeroUiVisible(true);if(heroUiTimer.current)window.clearTimeout(heroUiTimer.current);if(trailerVisible)heroUiTimer.current=window.setTimeout(()=>setHeroUiVisible(false),3500)};
+  useEffect(()=>{if(!trailerVisible){setHeroUiVisible(true);if(heroUiTimer.current)window.clearTimeout(heroUiTimer.current);return}showHeroUi();return()=>{if(heroUiTimer.current)window.clearTimeout(heroUiTimer.current)}},[trailerVisible,item.id]);
+
   async function toggleSaved() {
     const token = await customerToken(false);
     if (!token) {
@@ -122,6 +127,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   return (
     <section
       ref={heroRef}
+      onPointerDown={showHeroUi}
+      onPointerMove={(e)=>{if(e.pointerType==="mouse")showHeroUi()}}
       className="relative min-h-[70svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
     >
       <img
@@ -157,9 +164,9 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         />
       ) : null}
 
-      <div className="absolute inset-0 hero-shade" />
+      <div className={`absolute inset-0 hero-shade transition-opacity duration-500 ${trailerVisible&&!heroUiVisible?"opacity-0":"opacity-100"}`} />
 
-      <div className="relative z-10 mx-auto flex min-h-[72svh] max-w-[1800px] items-end px-5 pb-[max(3rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20">
+      <div className={`relative z-10 mx-auto flex min-h-[72svh] max-w-[1800px] items-end px-5 pb-[max(3rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20 transition-all duration-500 ${trailerVisible&&!heroUiVisible?"pointer-events-none translate-y-3 opacity-0":"translate-y-0 opacity-100"}`}>
         <div className="max-w-[42rem]">
           <div className="mb-3 inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-primary backdrop-blur">Featured on Avant</div>
           <h1 className="max-w-xl text-[clamp(2.65rem,11vw,4.8rem)] font-black uppercase leading-[.9] text-foreground sm:text-7xl lg:text-[5rem]">
@@ -229,7 +236,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           type="button"
           onClick={() => setMuted((value) => !value)}
           aria-label={muted ? "Turn hero sound on" : "Mute hero"}
-          className="absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14"
+          className={`absolute bottom-8 right-5 z-20 grid size-11 place-items-center rounded-full border border-white/60 bg-black/25 text-white backdrop-blur transition hover:bg-white/15 sm:right-10 lg:right-14 ${heroUiVisible?"opacity-100":"pointer-events-none opacity-0"}`}
         >
           {muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
         </button>
