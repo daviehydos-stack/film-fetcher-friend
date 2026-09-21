@@ -113,7 +113,7 @@ function CheckoutRoute() {
         else { setBusy(false); setStage('pending'); setError('Confirmation is delayed. Do not pay again—verify this payment below.') }
       }
       void poll()
-    } catch { setStage('ready'); setBusy(false); setError('We could not send the M-PESA request. Check the number and try again.') }
+    } catch (e: any) { const message=String(e?.body?.error||e?.body?.message||e?.message||'').trim(); setStage('ready'); setBusy(false); setError(message || 'We could not send the M-PESA request. Please try again.') }
   }
   async function checkPayment(referenceValue = reference) {
     if (!online) { setError('You are offline. Reconnect to verify this payment.'); return }
