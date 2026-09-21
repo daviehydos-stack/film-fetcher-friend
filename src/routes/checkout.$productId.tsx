@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { broadcastAccessChanged, paymentStatus, publicCatalogue, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
 import { productForLegacyContent } from '@/lib/backend-catalogue-map'
-import { customerToken, requireCustomerToken } from '@/lib/google-auth'
+import { customerToken } from '@/lib/google-auth'
 import { normalizePaymentState, paymentStateMessage, type PaymentUiState } from '@/lib/payments/status'
 
 export const Route = createFileRoute('/checkout/$productId')({
@@ -88,8 +88,7 @@ function CheckoutRoute() {
     setStage('sending'); setBusy(true); setError('')
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
     try {
-      let token = await customerToken(false)
-      if (!token) token = await requireCustomerToken()
+      const token = await customerToken(false)
       const resolved = product?.id || productForLegacyContent(productId) || productId
       let key = ''
       try { key = sessionStorage.getItem(`avant_payment_key_${productId}`) || '' } catch { /* unavailable */ }
