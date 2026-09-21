@@ -537,3 +537,36 @@ main,header,footer,section,nav{max-width:100%}
 .avant-player-shell:focus-within .avant-player-chrome{opacity:1}
 .avant-player-skip{animation:avantSkipIn 180ms ease-out both}
 @keyframes avantSkipIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+
+/* Task 3 — final rail QA. Preserve native swipe/momentum; stabilize rendering at the edges. */
+.avant-horizontal-rail{
+  max-width:100%;
+  min-width:0;
+  contain:layout paint;
+  -webkit-overflow-scrolling:touch;
+}
+.avant-horizontal-rail > *{
+  backface-visibility:hidden;
+  transform:translateZ(0);
+}
+@media(max-width:767px),(hover:none),(pointer:coarse){
+  .avant-horizontal-rail{
+    /* proximity keeps the existing gentle settle without forcing a card jump */
+    scroll-snap-type:x proximity!important;
+    scroll-snap-stop:normal;
+    scroll-behavior:auto;
+    touch-action:pan-x pan-y;
+  }
+  .avant-horizontal-rail [data-title-card]{
+    transition:none;
+    filter:none;
+  }
+  .avant-horizontal-rail [data-title-card]:hover{
+    transform:none;
+    filter:none;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .avant-rail-fade{-webkit-mask-image:none!important;mask-image:none!important}
+}
