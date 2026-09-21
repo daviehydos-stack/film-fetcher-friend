@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { broadcastAccessChanged, paymentStatus, publicCatalogue, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
 import { productForLegacyContent } from '@/lib/backend-catalogue-map'
-import { customerToken } from '@/lib/google-auth'
+import { customerToken, requireCustomerToken } from '@/lib/google-auth'
 import { normalizePaymentState, paymentStateMessage, type PaymentUiState } from '@/lib/payments/status'
 
 export const Route = createFileRoute('/checkout/$productId')({
@@ -88,7 +88,8 @@ function CheckoutRoute() {
     setStage('sending'); setBusy(true); setError('')
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
     try {
-      const token = await customerToken(false)
+      let token = await customerToken(false)
+      if (!token) token = await requireCustomerToken()
       const resolved = product?.id || productForLegacyContent(productId) || productId
       let key = ''
       try { key = sessionStorage.getItem(`avant_payment_key_${productId}`) || '' } catch { /* unavailable */ }
@@ -113,7 +114,7 @@ function CheckoutRoute() {
         else { setBusy(false); setStage('pending'); setError('Confirmation is delayed. Do not pay again—verify this payment below.') }
       }
       void poll()
-    } catch (e: any) { const message=String(e?.body?.error||e?.body?.message||e?.message||'').trim(); setStage('ready'); setBusy(false); setError(message || 'We could not send the M-PESA request. Please try again.') }
+    } catch (e: any) { const raw=String(e?.body?.error||e?.body?.message||e?.message||'').trim(); const authError=/invalid or expired customer session|customer session|401/i.test(raw); setStage('ready'); setBusy(false); setError(authError?'Your Avant session expired. Sign in again, then retry the payment.':(raw||'We could not send the M-PESA request. Please try again.')) }
   }
   async function checkPayment(referenceValue = reference) {
     if (!online) { setError('You are offline. Reconnect to verify this payment.'); return }
