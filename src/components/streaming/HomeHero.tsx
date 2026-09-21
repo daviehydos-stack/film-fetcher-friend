@@ -113,8 +113,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     setReducedMotion(media.matches);
     if (travelMode || media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
-    // Keep the artwork visible for two seconds, then begin the cinematic autoplay preview.
-    const timer = window.setTimeout(() => setTrailerReady(true), 2000);
+    // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
+    const timer = window.setTimeout(() => setTrailerReady(true), 180);
     return () => {
       window.clearTimeout(timer);
       screen.removeEventListener?.("change", syncScreen);
@@ -147,6 +147,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           src={heroTrailerUrl(item.trailerEmbedUrl, muted, false)}
           title={`${item.title} trailer`}
           allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+          loading="eager"
           onLoad={(event) => {
             window.dispatchEvent(
               new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } }),
