@@ -219,11 +219,7 @@ export const betterLifeFree: Episode[] = [
     duration: "26:30",
     youtubeId: "nNwHjdy-EAc",
   },
-  {
-    title: "A Better Life Episode 4 — A taste of the good life",
-    duration: "26:12",
-    youtubeId: "OQMWsYOOF8o",
-  },
+
 ];
 
 export const betterLifePaid: Episode[] = [];
