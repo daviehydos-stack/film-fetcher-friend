@@ -145,7 +145,7 @@ export function TitleCard({
       className={
         layout === "grid"
           ? "group relative z-0 w-full min-w-0 md:hover:z-30"
-          : "group relative z-0 w-[72vw] max-w-[18rem] shrink-0 min-[420px]:w-[64vw] sm:w-[18rem] md:hover:z-30 lg:w-[21rem] lg:max-w-none"
+          : "group relative z-0 w-[82vw] max-w-[22rem] shrink-0 min-[420px]:w-[78vw] sm:w-[18rem] md:hover:z-30 lg:w-[21rem] lg:max-w-none"
       }
     >
       <div className="relative overflow-hidden rounded-lg border border-white/[.055] bg-surface shadow-[0_10px_28px_rgba(0,0,0,.22)] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:origin-center md:group-hover:scale-[1.045] md:group-hover:border-white/[.12] md:group-hover:shadow-[0_24px_60px_rgba(0,0,0,.78)]">

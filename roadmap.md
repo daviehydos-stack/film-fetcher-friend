@@ -15,3 +15,4 @@
 - [x] Remove delayed navigation and overlapping page animations; use one fast dissolve
 - [x] Add Avant cinema entry, one-site media control, player markers, living previews, and viewing-based discovery
 - [x] Connect Story World, scheduled premiere countdowns, reminders, Travel Mode data saving, and catalogue-grounded discovery
+- [x] Remove the watch-to-payment sign-in gate, enlarge mobile catalogue cards, and repair free Vimeo playback

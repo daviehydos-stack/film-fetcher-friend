@@ -3,7 +3,7 @@ import { TitleCard } from "./TitleCard";
 
 export function DiscoveryGrid({ items, badgeLabel }: { items: CatalogueTitle[]; badgeLabel?: string }) {
   return (
-    <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 sm:gap-y-9 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid grid-cols-1 gap-x-3 gap-y-7 min-[520px]:grid-cols-2 sm:grid-cols-3 sm:gap-x-5 sm:gap-y-9 lg:grid-cols-4 xl:grid-cols-5">
       {items.map((item) => (
         <div key={item.id} className="min-w-0">
           <TitleCard item={item} layout="grid" {...(badgeLabel ? { badgeLabel } : {})} />

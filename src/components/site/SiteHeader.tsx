@@ -17,8 +17,8 @@ export function SiteHeader() {
     [lang, setLang] = useState(() =>
       typeof window !== "undefined" ? localStorage.getItem("avant-language") || "en" : "en",
     ),
-    [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false),
-    [online, setOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine),
+    [travelMode, setTravelMode] = useState(false),
+    [online, setOnline] = useState(true),
     [cacheCleared, setCacheCleared] = useState(false);
   const {user:customer,ready:authReady,busy:authBusy,signIn,signOut}=useAvantAuth();
   useEffect(()=>setAdmin(String(customer?.email||"").toLowerCase()===ADMIN_EMAIL),[customer]);
@@ -43,7 +43,7 @@ export function SiteHeader() {
     document.documentElement.lang = lang;
     localStorage.setItem("avant-language", lang);
   }, [lang]);
-  useEffect(() => { const sync=()=>setOnline(navigator.onLine); window.addEventListener("online",sync); window.addEventListener("offline",sync); return()=>{window.removeEventListener("online",sync);window.removeEventListener("offline",sync)}; }, []);
+  useEffect(() => { setTravelMode(localStorage.getItem("avant-travel-mode") === "true"); const sync=()=>setOnline(navigator.onLine); window.addEventListener("online",sync); window.addEventListener("offline",sync); return()=>{window.removeEventListener("online",sync);window.removeEventListener("offline",sync)}; }, []);
   useEffect(() => {
     localStorage.setItem("avant-travel-mode", String(travelMode));
     window.dispatchEvent(new CustomEvent("avant:travel-mode-changed", { detail: { active: travelMode } }));
