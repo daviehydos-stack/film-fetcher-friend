@@ -1,5 +1,5 @@
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
@@ -24,6 +24,8 @@ export function ContentRail({
   badgeLabel?: string;
 }) {
   const rail = useRef<HTMLDivElement>(null);
+  const resetRail = () => { const node=rail.current;if(node)node.scrollTo({left:0,behavior:"auto"}); };
+  useEffect(()=>{resetRail();const onPageShow=()=>resetRail();const onVisibility=()=>{if(document.visibilityState==="visible")resetRail()};window.addEventListener("pageshow",onPageShow);document.addEventListener("visibilitychange",onVisibility);return()=>{window.removeEventListener("pageshow",onPageShow);document.removeEventListener("visibilitychange",onVisibility)}},[title,items.map(item=>item.id).join("|")]);
   const move = (direction: number) => {
     const viewport = rail.current?.clientWidth ?? 680;
     const card = rail.current?.querySelector<HTMLElement>("[data-title-card]")?.offsetWidth ?? 288;
