@@ -418,3 +418,22 @@ Lint and production build	Production build	2026-09-20T06:25:17.2911017Z }^[[39m
 Lint and production build	Production build	2026-09-20T06:25:17.3960094Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-20T06:25:17.3975360Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-21T11:17:07Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-21T11:16:38Z","databaseId":35593196008,"displayTitle":"Add cinematic auto-hide preview controls","headSha":"a2848fdcc356230389aa4634426861bef6e0ce04","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":106312112593,"name":"Lint and production build","startedAt":"2026-09-21T11:17:04Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35593196008/job/106312112593"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-21T11:17:04Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35593196008"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35593196008 is still in progress; logs will be available when it is complete
+~~~
