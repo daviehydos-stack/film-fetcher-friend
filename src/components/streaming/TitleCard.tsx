@@ -31,7 +31,7 @@ export function TitleCard({
   const [hoverCapable, setHoverCapable] = useState(false);
   const [nearViewport, setNearViewport] = useState(false);
   const [saved, setSaved] = useState(() => readMyList().includes(item.id));
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [accessState, setAccessState] = useState<AccessState>(() =>
     cachedSubscriber() ? "authorized" : "loading",
   );
@@ -120,7 +120,7 @@ export function TitleCard({
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     )
       return;
-    previewTimer.current = window.setTimeout(() => setPreviewing(true), 350);
+    previewTimer.current = window.setTimeout(() => setPreviewing(true), 180);
   };
   const toggleSaved = async (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -184,6 +184,7 @@ export function TitleCard({
               allow="autoplay; encrypted-media; picture-in-picture"
               tabIndex={-1}
               aria-hidden="true"
+              loading="lazy"
               onLoad={(event) => {
                 window.dispatchEvent(
                   new CustomEvent("avant:player-started", {
