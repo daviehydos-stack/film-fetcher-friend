@@ -33,8 +33,10 @@ import { Route as WatchThemAllRouteImport } from './routes/watch-them-all'
 import { Route as WriteLikeAMasterRouteImport } from './routes/write-like-a-master'
 import { Route as AdminSectionRouteImport } from './routes/admin_.$section'
 import { Route as CheckoutProductIdRouteImport } from './routes/checkout.$productId'
+import { Route as GenreGenreRouteImport } from './routes/genre.$genre'
 import { Route as PaymentFailedRouteImport } from './routes/payment.failed'
 import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
+import { Route as PersonPersonRouteImport } from './routes/person.$person'
 import { Route as TitleSlugRouteImport } from './routes/title.$slug'
 import { Route as WatchContentIdRouteImport } from './routes/watch.$contentId'
 import { Route as EpisodeSlugEpisodeNumberRouteImport } from './routes/episode.$slug.$episodeNumber'
@@ -159,6 +161,11 @@ const CheckoutProductIdRoute = CheckoutProductIdRouteImport.update({
   path: '/checkout/$productId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GenreGenreRoute = GenreGenreRouteImport.update({
+  id: '/genre/$genre',
+  path: '/genre/$genre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaymentFailedRoute = PaymentFailedRouteImport.update({
   id: '/payment/failed',
   path: '/payment/failed',
@@ -167,6 +174,11 @@ const PaymentFailedRoute = PaymentFailedRouteImport.update({
 const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
   id: '/payment/success',
   path: '/payment/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PersonPersonRoute = PersonPersonRouteImport.update({
+  id: '/person/$person',
+  path: '/person/$person',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TitleSlugRoute = TitleSlugRouteImport.update({
@@ -211,8 +223,10 @@ export interface FileRoutesByFullPath {
   '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin/$section': typeof AdminSectionRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/genre/$genre': typeof GenreGenreRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
+  '/person/$person': typeof PersonPersonRoute
   '/title/$slug': typeof TitleSlugRoute
   '/watch/$contentId': typeof WatchContentIdRoute
   '/episode/$slug/$episodeNumber': typeof EpisodeSlugEpisodeNumberRoute
@@ -242,8 +256,10 @@ export interface FileRoutesByTo {
   '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin/$section': typeof AdminSectionRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/genre/$genre': typeof GenreGenreRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
+  '/person/$person': typeof PersonPersonRoute
   '/title/$slug': typeof TitleSlugRoute
   '/watch/$contentId': typeof WatchContentIdRoute
   '/episode/$slug/$episodeNumber': typeof EpisodeSlugEpisodeNumberRoute
@@ -274,8 +290,10 @@ export interface FileRoutesById {
   '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin_/$section': typeof AdminSectionRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
+  '/genre/$genre': typeof GenreGenreRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
+  '/person/$person': typeof PersonPersonRoute
   '/title/$slug': typeof TitleSlugRoute
   '/watch/$contentId': typeof WatchContentIdRoute
   '/episode/$slug/$episodeNumber': typeof EpisodeSlugEpisodeNumberRoute
@@ -307,8 +325,10 @@ export interface FileRouteTypes {
     | '/write-like-a-master'
     | '/admin/$section'
     | '/checkout/$productId'
+    | '/genre/$genre'
     | '/payment/failed'
     | '/payment/success'
+    | '/person/$person'
     | '/title/$slug'
     | '/watch/$contentId'
     | '/episode/$slug/$episodeNumber'
@@ -338,8 +358,10 @@ export interface FileRouteTypes {
     | '/write-like-a-master'
     | '/admin/$section'
     | '/checkout/$productId'
+    | '/genre/$genre'
     | '/payment/failed'
     | '/payment/success'
+    | '/person/$person'
     | '/title/$slug'
     | '/watch/$contentId'
     | '/episode/$slug/$episodeNumber'
@@ -369,8 +391,10 @@ export interface FileRouteTypes {
     | '/write-like-a-master'
     | '/admin_/$section'
     | '/checkout/$productId'
+    | '/genre/$genre'
     | '/payment/failed'
     | '/payment/success'
+    | '/person/$person'
     | '/title/$slug'
     | '/watch/$contentId'
     | '/episode/$slug/$episodeNumber'
@@ -401,8 +425,10 @@ export interface RootRouteChildren {
   WriteLikeAMasterRoute: typeof WriteLikeAMasterRoute
   AdminSectionRoute: typeof AdminSectionRoute
   CheckoutProductIdRoute: typeof CheckoutProductIdRoute
+  GenreGenreRoute: typeof GenreGenreRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
+  PersonPersonRoute: typeof PersonPersonRoute
   TitleSlugRoute: typeof TitleSlugRoute
   WatchContentIdRoute: typeof WatchContentIdRoute
   EpisodeSlugEpisodeNumberRoute: typeof EpisodeSlugEpisodeNumberRoute
@@ -578,6 +604,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/genre/$genre': {
+      id: '/genre/$genre'
+      path: '/genre/$genre'
+      fullPath: '/genre/$genre'
+      preLoaderRoute: typeof GenreGenreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payment/failed': {
       id: '/payment/failed'
       path: '/payment/failed'
@@ -590,6 +623,13 @@ declare module '@tanstack/react-router' {
       path: '/payment/success'
       fullPath: '/payment/success'
       preLoaderRoute: typeof PaymentSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/person/$person': {
+      id: '/person/$person'
+      path: '/person/$person'
+      fullPath: '/person/$person'
+      preLoaderRoute: typeof PersonPersonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/title/$slug': {
@@ -641,8 +681,10 @@ const rootRouteChildren: RootRouteChildren = {
   WriteLikeAMasterRoute: WriteLikeAMasterRoute,
   AdminSectionRoute: AdminSectionRoute,
   CheckoutProductIdRoute: CheckoutProductIdRoute,
+  GenreGenreRoute: GenreGenreRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
+  PersonPersonRoute: PersonPersonRoute,
   TitleSlugRoute: TitleSlugRoute,
   WatchContentIdRoute: WatchContentIdRoute,
   EpisodeSlugEpisodeNumberRoute: EpisodeSlugEpisodeNumberRoute,
