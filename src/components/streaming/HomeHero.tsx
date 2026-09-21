@@ -109,10 +109,10 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (travelMode || media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+    if (travelMode || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
-    // Keep the artwork visible for two seconds, then begin the cinematic autoplay preview.
-    const timer = window.setTimeout(() => setTrailerReady(true), 2000);
+    // Brief artwork beat, then the cinematic autoplay preview starts on every device.
+    const timer = window.setTimeout(() => setTrailerReady(true), 600);
     return () => {
       window.clearTimeout(timer);
       screen.removeEventListener?.("change", syncScreen);
