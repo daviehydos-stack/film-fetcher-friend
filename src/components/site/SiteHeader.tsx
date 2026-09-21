@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
-import { ADMIN_EMAIL, publicCatalogue, publicPages } from "@/lib/avant-backend";
+import { isAdminEmail, publicCatalogue, publicPages } from "@/lib/avant-backend";
 import { useAvantAuth } from "@/lib/avant-auth";
 
 export function SiteHeader() {
@@ -21,7 +21,7 @@ export function SiteHeader() {
     [online, setOnline] = useState(true),
     [cacheCleared, setCacheCleared] = useState(false);
   const {user:customer,ready:authReady,busy:authBusy,signIn,signOut}=useAvantAuth();
-  useEffect(()=>setAdmin(String(customer?.email||"").toLowerCase()===ADMIN_EMAIL),[customer]);
+  useEffect(()=>setAdmin(isAdminEmail(customer?.email)),[customer]);
   useEffect(() => {
     void publicPages()
       .then((x) => setCmsNav(x?.pages || []))
