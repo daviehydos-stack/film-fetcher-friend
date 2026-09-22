@@ -921,3 +921,22 @@ Lint and production build	Production build	2026-09-22T06:33:58.2796127Z }^[[39m
 Lint and production build	Production build	2026-09-22T06:33:58.3903424Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-22T06:33:58.3923196Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-22T20:51:06Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-22T20:50:31Z","databaseId":35782881076,"displayTitle":"Sync Lovable payment recovery and admin access","headSha":"4f5ab3ebe3ffec83c2c73276d47eb75af91f3099","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":106932658312,"name":"Lint and production build","startedAt":"2026-09-22T20:51:04Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35782881076/job/106932658312"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-22T20:51:04Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35782881076"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35782881076 is still in progress; logs will be available when it is complete
+~~~
