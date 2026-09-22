@@ -805,3 +805,22 @@ Lint and production build	Production build	2026-09-22T06:31:37.4329695Z }^[[39m
 Lint and production build	Production build	2026-09-22T06:31:37.4830685Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-22T06:31:37.4845406Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-22T06:32:19Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-22T06:31:17Z","databaseId":35695202626,"displayTitle":"Use title-specific entitlements on streaming cards","headSha":"37f5bb26f77a6abc801a39f0f7dd36765cb412d5","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":106640670668,"name":"Lint and production build","startedAt":"2026-09-22T06:32:16Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35695202626/job/106640670668"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-22T06:32:16Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35695202626"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35695202626 is still in progress; logs will be available when it is complete
+~~~
