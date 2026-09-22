@@ -8,7 +8,7 @@ import { customerToken } from "@/lib/google-auth";
 import { useAvantAuth } from "@/lib/avant-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 import {
-  accountAccess,
+  accessForContent,
   cachedSubscriber,
   subscribeAccessChanged,
   type AccessState,
@@ -75,8 +75,7 @@ export function TitleCard({
         return;
       }
       try {
-        const a = await accountAccess(token);
-        if (live) setAccessState(a.subscriber ? "authorized" : "locked");
+        const a = await accessForContent(key);\n        if (live) setAccessState(a.state);
       } catch {
         if (live) setAccessState("error");
       }
