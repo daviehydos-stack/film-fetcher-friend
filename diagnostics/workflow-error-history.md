@@ -824,3 +824,22 @@ Lint and production build	Production build	2026-09-22T06:31:37.4845406Z ##[error
 ~~~text
 run 35695202626 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-22T06:33:10Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-22T06:32:41Z","databaseId":35695307402,"displayTitle":"Fix entitlement UI source formatting","headSha":"8e3c09a71f35eaaecdc6c57125e3d6741c5b9348","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-22T06:33:09Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35695307402"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35695307402 is still in progress; logs will be available when it is complete
+~~~
