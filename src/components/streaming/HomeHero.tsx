@@ -7,7 +7,7 @@ import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import {
-  accountAccess,
+  accessForContent,
   cachedSubscriber,
   subscribeAccessChanged,
   type AccessState,
@@ -58,8 +58,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         return;
       }
       try {
-        const a = await accountAccess(token);
-        if (live) setAccessState(a.subscriber ? "authorized" : "locked");
+        const a = await accessForContent(key);\n        if (live) setAccessState(a.state);
       } catch {
         if (live) setAccessState("error");
       }
