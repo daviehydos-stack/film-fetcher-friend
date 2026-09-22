@@ -52,11 +52,11 @@ function Index() {
 
         <div className="relative z-20 pb-10 pt-3 sm:pt-5 lg:pt-6">
           <ContinueWatching />
-          {moreForYou.length>0?<ContentRail eyebrow="Selected from your viewing" title={`More ${lastWatched?.genres[0] ?? "stories"}`} description="A simple recommendation from what you have watched — only from Avant's current catalogue." items={moreForYou} href={lastWatched?.type === "series" ? "/tv-shows" : "/movies"} linkLabel="View more"/ >:null}
-          {availableNow.length>0?<ContentRail eyebrow="Curated on Avant" title="Available Now" description="Stories ready to watch, selected from the current Avant catalogue." items={availableNow} href="/movies" linkLabel="View more"/ >:null}
-          {moviePreview.length>0?<ContentRail eyebrow="Feature films & shorts" title="Movies" description="Independent films with a distinct Kenyan point of view." items={moviePreview} href="/movies" linkLabel="All movies"/>:null}
+          {availableNow.length>0?<ContentRail eyebrow="Featured on Avant" title="Available Now" description="Stories ready to watch from the current Avant catalogue." items={availableNow} href="/movies" linkLabel="View all"/>:null}
           {seriesPreview.length>0?<ContentRail eyebrow="Stories in chapters" title="TV Shows" description="Series built around characters, choices and everyday life." items={seriesPreview} href="/tv-shows" linkLabel="All shows"/>:null}
-          {freePreview.length>0?<ContentRail eyebrow="Open access" title="Watch for Free" description="Short films and selected episodes, available without purchase." items={freePreview} badgeLabel="Free to watch" href="/watch-free" linkLabel="Explore free"/>:null}
+          {moviePreview.length>0?<ContentRail eyebrow="Feature films & shorts" title="Movies" description="Independent films with a distinct Kenyan point of view." items={moviePreview} href="/movies" linkLabel="All movies"/>:null}
+          {moreForYou.length>0?<ContentRail eyebrow="Because you watched" title={`More ${lastWatched?.genres[0] ?? "stories"}`} description="Selected from what you have watched on Avant." items={moreForYou} href={lastWatched?.type === "series" ? "/tv-shows" : "/movies"} linkLabel="View more"/ >:null}
+          {freePreview.length>0?<ContentRail eyebrow="Open access" title="Watch for Free" description="Short films and selected episodes available without purchase." items={freePreview} badgeLabel="Free to watch" href="/watch-free" linkLabel="Explore free"/>:null}
           {myList.length>0?<ContentRail title="My List" items={myList}/>:null}
         </div>
       </main>
