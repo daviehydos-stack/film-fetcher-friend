@@ -75,7 +75,8 @@ export function TitleCard({
         return;
       }
       try {
-        const a = await accessForContent(key);\n        if (live) setAccessState(a.state);
+        const a = await accessForContent(key);
+        if (live) setAccessState(a.state);
       } catch {
         if (live) setAccessState("error");
       }
