@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
-import { publicCatalogue, accountAccess, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { publicCatalogue, resolvePlayback, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken } from "@/lib/google-auth";
 import { heroTrailerUrl, youtubeEmbedUrl, pauseEmbeddedPlayer } from "@/lib/video-embeds";
 import { productForTitleSlug } from "@/lib/backend-catalogue-map";
@@ -61,7 +61,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const premiereParts={days:Math.floor(premiereRemaining/86400000),hours:Math.floor(premiereRemaining/3600000)%24,minutes:Math.floor(premiereRemaining/60000)%60,seconds:Math.floor(premiereRemaining/1000)%60};
   useEffect(()=>{try{const ids=JSON.parse(localStorage.getItem("avant-premiere-reminders")??"[]") as string[];setReminded(ids.includes(item.id))}catch{setReminded(false)}},[item.id]);
   useEffect(()=>{if(!upcoming)return;const timer=window.setInterval(()=>setNow(Date.now()),1000);return()=>window.clearInterval(timer)},[upcoming,item.releaseAt]);
-  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); let live=true; if(freeFullTitle){setAccessState("authorized");return()=>{live=false}} setAccessState("loading"); customerToken(false).then(async token=>{if(!live)return;if(!token){setAccessState("signed_out");return}try{const a=await accountAccess(token);if(live)setAccessState(a.subscriber?"authorized":"locked")}catch{if(live)setAccessState("error")}}); return()=>{live=false}}, [item.id,item.slug,freeFullTitle,accessVersion]);
+  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); setSeason(seasons[0] ?? 1); let live=true; if(freeFullTitle){setAccessState("authorized");return()=>{live=false}} setAccessState("loading"); customerToken(false).then(async token=>{if(!live)return;try{const target=item.type==="movie"?item.slug:(primary?.contentId??`${item.slug}-1`);const a=await resolvePlayback(token,target);if(live)setAccessState(a?.authorized?"authorized":"locked")}catch(e:any){if(live)setAccessState(e?.status===403?"locked":"error")}}); return()=>{live=false}}, [item.id,item.slug,freeFullTitle,accessVersion]);
   useEffect(() => {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
