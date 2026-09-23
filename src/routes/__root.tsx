@@ -112,6 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://player.vimeo.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://i.vimeocdn.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://f.vimeocdn.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://cdn.jsdelivr.net", crossOrigin: "anonymous" },
       { rel: "dns-prefetch", href: "//i.vimeocdn.com" },
       { rel: "dns-prefetch", href: "//f.vimeocdn.com" },
       { rel: "preconnect", href: "https://bnuyhrsezkepsaebwlmu.supabase.co" },
