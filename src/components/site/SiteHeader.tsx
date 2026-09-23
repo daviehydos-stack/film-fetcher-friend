@@ -91,15 +91,16 @@ export function SiteHeader() {
           : "bg-black/80 backdrop-blur-xl",
       )}
     >
-      <div className="mx-auto flex h-[64px] w-full min-w-0 max-w-[1800px] items-center gap-2 px-3 sm:h-[72px] sm:gap-7 sm:px-10 lg:px-14">
-        <Link to="/" aria-label="Avant Cinema home" className="min-w-0 shrink">
+      <div className="mx-auto flex h-[64px] w-full min-w-0 max-w-[1800px] items-center gap-5 px-4 sm:h-[72px] sm:gap-8 sm:px-8 lg:px-12">
+        <Link to="/" aria-label="Avant Cinema home" className="flex shrink-0 items-center gap-3">
           <img
             src={appearance?.branding?.logoUrl || `${import.meta.env.BASE_URL}avant-movies-logo.png`}
             alt={appearance.siteName || "Avant Cinema"}
-            className="max-h-9 w-auto max-w-[9rem] object-contain sm:max-h-10 sm:max-w-44"
+            className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
           />
+          <span className="hidden whitespace-nowrap text-base font-black tracking-tight text-white sm:inline">Avant Cinema</span>
         </Link>
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {[
             ...navLinks,
             ...cmsNav
@@ -109,7 +110,7 @@ export function SiteHeader() {
             <Link
               key={l.to}
               to={l.to}
-              className="rounded-md px-3 py-2 text-sm font-medium text-white/68 transition hover:bg-white/[.06] hover:text-white"
+              className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-white/68 transition hover:bg-white/[.06] hover:text-white"
               activeProps={{ className: "bg-white/[.09] text-white hover:bg-white/[.13]" }}
               activeOptions={{ exact: l.to === "/" }}
             >
@@ -138,7 +139,7 @@ export function SiteHeader() {
               ))}
             </select>
           ) : null}
-          <button onClick={() => setTravelMode(!travelMode)} className={cn("hidden items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase transition-all md:flex", travelMode ? "border-primary bg-primary text-primary-foreground shadow-reel" : "border-white/20 bg-white/5 text-white/60 hover:border-white/40")} title="Use less data while browsing">
+          <button onClick={() => setTravelMode(!travelMode)} className={cn("hidden items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase transition-all xl:flex", travelMode ? "border-primary bg-primary text-primary-foreground shadow-reel" : "border-white/20 bg-white/5 text-white/60 hover:border-white/40")} title="Use less data while browsing">
             <span className={cn("size-2 rounded-full", !online ? "bg-amber-300" : travelMode ? "bg-primary-foreground animate-pulse" : "bg-white/20")} />
             {!online ? "Offline" : "Travel Mode"}
           </button>
@@ -154,7 +155,7 @@ export function SiteHeader() {
             <Link
               to="/search"
               search={{ q: "", type: "all", sort: "curated" }}
-              className="grid size-10 shrink-0 place-items-center rounded-full border border-transparent transition hover:border-white/10 hover:bg-white/10"
+              className="hidden size-10 shrink-0 place-items-center rounded-full border border-transparent transition hover:border-white/10 hover:bg-white/10 sm:grid"
               aria-label="Search Avant Cinema"
             >
               <Search className="size-5" />
@@ -213,7 +214,7 @@ export function SiteHeader() {
             </button>
           )}
           <button
-            className="grid size-10 shrink-0 place-items-center rounded-full hover:bg-white/10 md:hidden"
+            className="grid size-10 shrink-0 place-items-center rounded-full hover:bg-white/10 lg:hidden"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
           >
@@ -221,7 +222,7 @@ export function SiteHeader() {
           </button>
         </div>
       </div>
-      <nav aria-hidden={!open} className={cn("avant-mobile-menu max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-border bg-background px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 shadow-2xl md:hidden sm:px-5 sm:py-4",open?"is-open":"pointer-events-none")}>
+      <nav aria-hidden={!open} className={cn("avant-mobile-menu max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-border bg-background px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 shadow-2xl lg:hidden sm:px-5 sm:py-4",open?"is-open":"pointer-events-none")}>
           <button onClick={() => { setTravelMode(!travelMode); setOpen(false); }} className="flex min-h-12 w-full items-center justify-between rounded-md px-3 font-semibold hover:bg-white/5">
             <span className="flex items-center gap-3"><span className={cn("size-2 rounded-full", travelMode ? "bg-primary animate-pulse" : "bg-white/20")} />Travel Mode</span>
             <span className="text-[10px] uppercase text-muted-foreground">{!online ? "Cached pages" : travelMode ? "Active" : "Off"}</span>
