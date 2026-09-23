@@ -36,12 +36,10 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
     .map((raw, sourceIndex) => {
       const seconds = numberValue(raw["duration_seconds"]);
       const id = stringValue(raw["id"]);
-      const youtubeId = stringValue(raw["youtube_video_id"]);
       const vimeoVideoId = stringValue(raw["vimeo_video_id"]);
       const poster = stringValue(raw["thumbnail_url"]);
       const description = stringValue(raw["description"]);
       const legacyKey = stringValue(raw["legacy_key"]);
-      const previewYoutubeId = stringValue(raw["preview_youtube_id"]);
       const previewVimeoVideoId = stringValue(raw["preview_vimeo_video_id"]);
       const previewEmbedUrl = stringValue(raw["preview_embed_url"]) || stringValue(raw["trailer_embed_url"]);
       const previewStart = numberValue(raw["preview_start_seconds"]);
@@ -57,7 +55,6 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
         season: numberValue(raw["season_number"]) ?? seasonNumber(raw["season_id"]),
         episodeNumber: numberValue(raw["episode_number"]) ?? sourceIndex + 1,
         duration: stringValue(raw["duration"]) || (seconds ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}` : ""),
-        ...(youtubeId ? { youtubeId } : {}),
         ...(vimeoVideoId ? { vimeoVideoId } : {}),
         ...(poster ? { poster } : {}),
         locked: typeof raw["access_required"] === "boolean" ? raw["access_required"] : true,
@@ -65,7 +62,6 @@ export function mapResolvedEpisodes(rawEpisodes: unknown[], rawSeasons: unknown[
         ...(legacyKey ? { legacyKey } : {}),
         ...(previewStart !== undefined ? { previewStart } : {}),
         ...(previewDuration !== undefined ? { previewDuration } : {}),
-        ...(previewYoutubeId ? { previewYoutubeId } : {}),
         ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
         ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
         ...(introStart !== undefined ? { introStart } : {}),
