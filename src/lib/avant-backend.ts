@@ -8,7 +8,26 @@ export function getAdminToken(){return typeof window==="undefined"?null:window.l
 export function setAdminToken(token:string|null){if(typeof window==="undefined")return;token?window.localStorage.setItem("avant_admin_token",token):window.localStorage.removeItem("avant_admin_token")}
 async function request<T>(name:string,token?:string|null,init:RequestInit={}){const adminProof=typeof window!=="undefined"&&name.startsWith("admin-")?sessionStorage.getItem("avant_admin_mfa_proof"):null;const headers={...(SUPABASE_ANON_KEY?{apikey:SUPABASE_ANON_KEY}:{}),...(token?{Authorization:`Bearer ${token}`} :{}),...(adminProof?{"x-admin-mfa":adminProof}:{}),"Content-Type":"application/json",...(init.headers||{})};const method=String(init.method||"GET").toUpperCase();const safeRetry=method==="GET"||method==="HEAD"||name==="payment-status"||name==="account-access"||name==="my-library";let last:any;for(let attempt=0;attempt<(safeRetry?2:1);attempt++){const controller=new AbortController();const timer=typeof window!=="undefined"?window.setTimeout(()=>controller.abort(),30000):null;try{const r=await fetch(`${SUPABASE_URL}/functions/v1/${name}`,{...init,signal:init.signal||controller.signal,headers});const body=await r.json().catch(()=>({}));if(!r.ok){const e:any=new Error(body.error||body.detail||`${name} failed (${r.status})`);e.status=r.status;e.body=body;throw e}return body as T}catch(e:any){last=e;if(e?.status||!safeRetry||attempt===1)break;if(typeof window!=="undefined")await new Promise(x=>window.setTimeout(x,900))}finally{if(timer)window.clearTimeout(timer)}}if(last?.name==="AbortError")throw new Error("Avant services took too long to respond. Please retry.");throw last||new Error("Unable to reach Avant services. Check your connection and retry.")}
 let publicCatalogueCache:any=null,publicCataloguePending:Promise<any>|null=null,publicCatalogueAt=0;export const publicCatalogue=()=>{const now=Date.now();if(publicCatalogueCache&&now-publicCatalogueAt<300000)return Promise.resolve(publicCatalogueCache);if(publicCataloguePending)return publicCataloguePending;publicCataloguePending=request<any>("catalogue-public").then(x=>{publicCatalogueCache=x;publicCatalogueAt=Date.now();return x}).catch(error=>{if(publicCatalogueCache)return publicCatalogueCache;throw error}).finally(()=>{publicCataloguePending=null});return publicCataloguePending};
-export const resolveCatalogueKey=(key:string)=>request<any>(`catalogue-public?key=${encodeURIComponent(key)}`).catch((e:any)=>{if(e?.status===404)return e?.body??null;throw e});
+export const resolveCatalogueKey=async(key:string)=>{
+  try{return await request<any>(`catalogue-public?key=${encodeURIComponent(key)}`)}
+  catch(e:any){
+    if(/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(key)){
+      const headers={apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`};
+      const er=await fetch(`${SUPABASE_URL}/rest/v1/episodes?id=eq.${encodeURIComponent(key)}&status=eq.published&select=id,legacy_key,season_id,episode_number,title,description,duration_seconds,thumbnail_url,status,access_required,vimeo_video_id,preview_vimeo_video_id,preview_embed_url,preview_start_seconds,preview_duration_seconds`,{headers});
+      const episode=er.ok?(await er.json())?.[0]:null;
+      if(episode?.vimeo_video_id){
+        const sr=await fetch(`${SUPABASE_URL}/rest/v1/seasons?id=eq.${encodeURIComponent(episode.season_id)}&select=id,series_id,season_number,title,status`,{headers});
+        const season=sr.ok?(await sr.json())?.[0]:null;
+        if(season?.series_id){
+          const tr=await fetch(`${SUPABASE_URL}/rest/v1/catalogue_titles?id=eq.${encodeURIComponent(season.series_id)}&select=*`,{headers});
+          const title=tr.ok?(await tr.json())?.[0]:null;
+          if(title)return {title,episode,seasons:[season],episodes:[episode],product:null};
+        }
+      }
+    }
+    if(e?.status===404)return e?.body??null;throw e
+  }
+};
 export const publicCommerceSettings=()=>request<any>("catalogue-public?view=commerce").catch(()=>publicCatalogue().then((x:any)=>({products:x?.products||[]})));
 let publicPagesCache:any=null,publicPagesAt=0;export const publicPages=()=>{const now=Date.now();if(publicPagesCache&&now-publicPagesAt<60000)return Promise.resolve(publicPagesCache);return request<any>("public-pages?navigation=1").then(x=>{publicPagesCache=x;publicPagesAt=Date.now();return x})};
 export const publicPage=(slug:string)=>request<any>(`public-pages?slug=${encodeURIComponent(slug)}`);
