@@ -1402,3 +1402,22 @@ Lint and production build	Production build	2026-09-23T10:13:23.1301442Z ##[error
 ~~~text
 run 35847538238 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:14:28Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:13:25Z","databaseId":35847538238,"displayTitle":"Remove YouTube from admin and content management","headSha":"576ff9224633252840a132c94523706e5868613c","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-23T10:14:22Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35847538238"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35847538238 is still in progress; logs will be available when it is complete
+~~~
