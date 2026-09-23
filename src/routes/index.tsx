@@ -31,14 +31,15 @@ function Index() {
   }, []);
   useEffect(() => { const sync = () => setMyListIds(readMyList()); sync(); window.addEventListener("avant-my-list", sync); return () => window.removeEventListener("avant-my-list", sync); }, []);
   useEffect(() => { const sync = () => setWatchedIds(readProgress().map((entry) => entry.contentId)); sync(); window.addEventListener("avant-progress", sync); return () => window.removeEventListener("avant-progress", sync); }, []);
-  const dbTitles: CatalogueTitle[]=(home?.titles||[]).map((t:any)=>mapPublicTitle(t)).filter((item:any):item is CatalogueTitle=>Boolean(item));const liveCatalogue=dbTitles;const heroId=home?.featuredHero?.titleId;const featured=liveCatalogue.find((x:any)=>home?.titles?.find((t:any)=>t.id===heroId)?.slug===x.slug)||liveCatalogue.find(x=>x.featured)||liveCatalogue[0];const series=liveCatalogue.filter(x=>x.type==="series"),movies=liveCatalogue.filter(x=>x.type==="movie"),available=liveCatalogue.filter(x=>x.available);const adminRails=(home?.collections||[]).map((c:any)=>({name:c.name,items:(home?.collectionTitles||[]).filter((x:any)=>x.collection_id===c.id).sort((x:any,y:any)=>x.display_order-y.display_order).map((x:any)=>liveCatalogue.find(t=>home.titles?.find((dt:any)=>dt.id===x.title_id)?.slug===t.slug)).filter(Boolean)})).filter((x:any)=>x.items.length);
+  const dbTitles: CatalogueTitle[]=(home?.titles||[]).map((t:any)=>mapPublicTitle(t)).filter((item:any):item is CatalogueTitle=>Boolean(item));const liveCatalogue=dbTitles;const heroId=home?.featuredHero?.titleId;const featured=liveCatalogue.find((x:any)=>home?.titles?.find((t:any)=>t.id===heroId)?.slug===x.slug)||liveCatalogue.find(x=>x.featured)||liveCatalogue[0];const masterclasses=liveCatalogue.filter(x=>x.slug.includes("masterclass")||x.genres.some(g=>/masterclass|education/i.test(g))),series=liveCatalogue.filter(x=>x.type==="series"&&!masterclasses.some(m=>m.id===x.id)),movies=liveCatalogue.filter(x=>x.type==="movie"),available=liveCatalogue.filter(x=>x.available);const adminRails=(home?.collections||[]).map((c:any)=>({name:c.name,items:(home?.collectionTitles||[]).filter((x:any)=>x.collection_id===c.id).sort((x:any,y:any)=>x.display_order-y.display_order).map((x:any)=>liveCatalogue.find(t=>home.titles?.find((dt:any)=>dt.id===x.title_id)?.slug===t.slug)).filter(Boolean)})).filter((x:any)=>x.items.length);
   const myList = useMemo(() => myListIds.map((id) => liveCatalogue.find((item) => item.id === id)).filter((item): item is CatalogueTitle => Boolean(item)), [myListIds, liveCatalogue]);
   const freeTitles=liveCatalogue.filter(isFreeTitle);
   const withoutHero=(items:CatalogueTitle[])=>items.filter(item=>item.id!==featured?.id);
   const configuredAvailable=adminRails.flatMap((rail:any)=>rail.items).filter((item:CatalogueTitle,index:number,all:CatalogueTitle[])=>all.findIndex(other=>other.id===item.id)===index);
   const availableNow=withoutHero(configuredAvailable.length?configuredAvailable:available).slice(0,4);
   const moviePreview=withoutHero(movies).slice(0,4);
-  const seriesPreview=withoutHero(series).slice(0,4);
+  const seriesPreview=series.slice(0,4);
+  const masterclassPreview=masterclasses.slice(0,4);
   const freePreview=withoutHero(freeTitles).slice(0,4);
   const lastWatched = liveCatalogue.find((title) => watchedIds.some((id) => id === title.slug || id.startsWith(`${title.slug}-`)));
   const moreForYou = lastWatched
@@ -52,9 +53,9 @@ function Index() {
 
         <div className="relative z-20 pb-10 pt-3 sm:pt-5 lg:pt-6">
           <ContinueWatching />
-          {availableNow.length>0?<ContentRail eyebrow="Featured on Avant" title="Available Now" description="Stories ready to watch from the current Avant catalogue." items={availableNow} href="/movies" linkLabel="View all"/>:null}
-          {seriesPreview.length>0?<ContentRail eyebrow="Stories in chapters" title="TV Shows" description="Series built around characters, choices and everyday life." items={seriesPreview} href="/tv-shows" linkLabel="All shows"/>:null}
-          {moviePreview.length>0?<ContentRail eyebrow="Feature films & shorts" title="Movies" description="Independent films with a distinct Kenyan point of view." items={moviePreview} href="/movies" linkLabel="All movies"/>:null}
+          {moviePreview.length>0?<ContentRail eyebrow="Avant Cinema" title="Movies" description="Feature films available on Avant Cinema." items={moviePreview} href="/movies" linkLabel="All movies"/>:null}
+          {seriesPreview.length>0?<ContentRail eyebrow="Watch by season" title="Series" description="Open a series, choose a season, then select an episode." items={seriesPreview} href="/tv-shows" linkLabel="All series"/>:null}
+          {masterclassPreview.length>0?<ContentRail eyebrow="Learn with Avant" title="Masterclass" description="Premium classes available separately from movies and series." items={masterclassPreview} linkLabel="View masterclass"/>:null}
           {moreForYou.length>0?<ContentRail eyebrow="Because you watched" title={`More ${lastWatched?.genres[0] ?? "stories"}`} description="Selected from what you have watched on Avant." items={moreForYou} href={lastWatched?.type === "series" ? "/tv-shows" : "/movies"} linkLabel="View more"/ >:null}
           {freePreview.length>0?<ContentRail eyebrow="Open access" title="Watch for Free" description="Short films and selected episodes available without purchase." items={freePreview} badgeLabel="Free to watch" href="/watch-free" linkLabel="Explore free"/>:null}
           {myList.length>0?<ContentRail title="My List" items={myList}/>:null}
