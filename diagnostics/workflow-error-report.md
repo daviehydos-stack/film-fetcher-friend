@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35901266413
 
-Generated: 2026-09-23T18:16:45Z
+Generated: 2026-09-23T18:17:12Z
 
 ### Current primary errors
 ~~~text
@@ -4243,6 +4243,25 @@ Lint and production build	Production build	2026-09-23T18:15:43.2365179Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-23T18:16:01Z","databaseId":35901266413,"displayTitle":"Start authorized playback after loader and prevent endless buffering","headSha":"12f4489662d9332d18bc2805dec1ff063c0138b3","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107318050004,"name":"Lint and production build","startedAt":"2026-09-23T18:16:43Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901266413/job/107318050004"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:16:42Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901266413"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35901266413 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T18:17:12Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T18:16:01Z","databaseId":35901266413,"displayTitle":"Start authorized playback after loader and prevent endless buffering","headSha":"12f4489662d9332d18bc2805dec1ff063c0138b3","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107318214235,"name":"Lint and production build","startedAt":"2026-09-23T18:17:10Z","status":"in_progress","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901266413/job/107318214235"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:17:08Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901266413"}
 
 ~~~
 
