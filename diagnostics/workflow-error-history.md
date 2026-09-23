@@ -2635,3 +2635,22 @@ Lint and production build	Production build	2026-09-23T10:32:28.7106890Z }^[[39m
 Lint and production build	Production build	2026-09-23T10:32:28.8047482Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T10:32:28.8064700Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:35:36Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T10:35:06Z","databaseId":35849637662,"displayTitle":"fix: keep preview title controls visible for 8 seconds after playback…","headSha":"428b814950fd7d9a1692081f419d1d1c534aaa1f","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107144128854,"name":"Lint and production build","startedAt":"2026-09-23T10:35:34Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35849637662/job/107144128854"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:35:34Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35849637662"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35849637662 is still in progress; logs will be available when it is complete
+~~~
