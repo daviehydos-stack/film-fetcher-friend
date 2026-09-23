@@ -115,9 +115,13 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     if (travelMode || media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
-    const timer = window.setTimeout(() => setTrailerReady(true), 4000);
+    const startTrailer = () => setTrailerReady(true);
+    const idle = (window as any).requestIdleCallback
+      ? (window as any).requestIdleCallback(startTrailer, { timeout: 5000 })
+      : window.setTimeout(startTrailer, 4500);
     return () => {
-      window.clearTimeout(timer);
+      if ((window as any).cancelIdleCallback && typeof idle === "number") (window as any).cancelIdleCallback(idle);
+      else window.clearTimeout(idle as number);
       screen.removeEventListener?.("change", syncScreen);
     };
   }, [item.id, item.trailerEmbedUrl, item.heroAutoplay, travelMode]);
