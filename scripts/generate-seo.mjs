@@ -51,12 +51,12 @@ try {
       addEntry(path, title.updated_at || title.published_at || title.created_at);
       const images = [title.poster_url, title.backdrop_url].filter(Boolean);
       if (images.length) imageEntries.set(path, [...new Set(images)]);
-      const player = title.trailer_youtube_id
-        ? `https://www.youtube-nocookie.com/embed/${title.trailer_youtube_id}`
-        : title.trailer_vimeo_id
-          ? `https://player.vimeo.com/video/${title.trailer_vimeo_id}`
+      const player = title.trailer_vimeo_id
+        ? `https://player.vimeo.com/video/${title.trailer_vimeo_id}`
+        : title.vimeo_video_id
+          ? `https://player.vimeo.com/video/${title.vimeo_video_id}`
           : undefined;
-      const thumb = title.backdrop_url || title.poster_url || (title.trailer_youtube_id ? `https://i.ytimg.com/vi/${title.trailer_youtube_id}/hqdefault.jpg` : undefined);
+      const thumb = title.backdrop_url || title.poster_url;
       if (player && thumb) videoEntries.set(path, {
         title: `${title.title} — Official Trailer | Avant Movies`,
         description: title.short_description || title.synopsis || `Watch the official trailer for ${title.title} on Avant Movies.`,
@@ -78,13 +78,12 @@ try {
             .filter((episode) => episode?.status === "published")
             .sort((a, b) => (a.episode_number || 0) - (b.episode_number || 0))
             .map((episode, index) => {
-              const episodePath = `/episode/${title.slug}/${index + 1}`;
-              const episodeThumb = episode.thumbnail_url || title.backdrop_url || title.poster_url || (episode.youtube_video_id ? `https://i.ytimg.com/vi/${episode.youtube_video_id}/hqdefault.jpg` : undefined);
-              const episodePlayer = episode.youtube_video_id
-                ? `https://www.youtube-nocookie.com/embed/${episode.youtube_video_id}`
-                : episode.vimeo_video_id
-                  ? `https://player.vimeo.com/video/${episode.vimeo_video_id}`
-                  : undefined;
+              const episodeKey = episode.legacy_key || episode.id || `${title.slug}-${index + 1}`;
+              const episodePath = `/watch/${episodeKey}`;
+              const episodeThumb = episode.thumbnail_url || title.backdrop_url || title.poster_url;
+              const episodePlayer = episode.vimeo_video_id
+                ? `https://player.vimeo.com/video/${episode.vimeo_video_id}`
+                : undefined;
               if (episodeThumb) imageEntries.set(episodePath, [episodeThumb]);
               if (episodePlayer && episodeThumb) videoEntries.set(episodePath, {
                 title: `${episode.title} — ${title.title} | Avant Movies`,
