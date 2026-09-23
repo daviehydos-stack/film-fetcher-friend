@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 35848328610
+Run ID: 35848402754
 
-Generated: 2026-09-23T10:22:26Z
+Generated: 2026-09-23T10:22:52Z
 
 ### Current primary errors
 ~~~text
@@ -1791,4 +1791,23 @@ run 35848328610 is still in progress; logs will be available when it is complete
 ### Full failed-step log
 ~~~text
 run 35848328610 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T10:22:52Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-23T10:22:19Z","databaseId":35848402754,"displayTitle":"fix: make service worker cache failures non-fatal","headSha":"b5b3c90fefa054777e650c93177b94d508fec34e","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:22:50Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848402754"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848402754 is still in progress; logs will be available when it is complete
 ~~~
