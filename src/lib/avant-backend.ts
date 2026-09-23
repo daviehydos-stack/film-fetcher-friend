@@ -63,7 +63,7 @@ export async function hasAdminSession(){const token=getAdminToken();if(!token)re
 export const getCloudMyList=(token:string)=>request<{ids:string[]}>("my-list",token,{method:"GET"});
 export const setCloudMyList=(token:string,key:string,saved:boolean)=>request<any>("my-list",token,{method:"POST",body:JSON.stringify({key,saved})});
 
-export const myLibrary=(token:string)=>request<any>("my-library",token,{method:"GET"});
+export const myLibrary=(token:string|null)=>request<any>("my-library",token,{method:"GET"});
 export type AccountAccess={authenticated:boolean;subscriber:boolean;email?:string;customerId?:string;subscription?:{active:boolean;plan:string;productType:string;expiresAt:string|null}|null;reason?:string};
 let accountAccessCache:{token:string;at:number;value:AccountAccess}|null=null,accountAccessPending:Promise<AccountAccess>|null=null;
 export const accountAccess=(token:string)=>{const now=Date.now();if(accountAccessCache?.token===token&&now-accountAccessCache.at<60000)return Promise.resolve(accountAccessCache.value);if(accountAccessPending)return accountAccessPending;accountAccessPending=request<AccountAccess>("account-access",token,{method:"GET"}).then(x=>{accountAccessCache={token,at:Date.now(),value:x};rememberSubscriber(Boolean(x.subscriber));return x}).finally(()=>{accountAccessPending=null});return accountAccessPending};
