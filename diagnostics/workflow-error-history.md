@@ -3257,3 +3257,63 @@ Lint and production build	Production build	2026-09-23T17:24:15.7197042Z }^[[39m
 Lint and production build	Production build	2026-09-23T17:24:15.8178670Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T17:24:15.8195260Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T17:24:45Z
+
+### Run metadata
+~~~json
+{"attempt":4,"conclusion":"failure","createdAt":"2026-09-22T20:50:31Z","databaseId":35782881076,"displayTitle":"Sync Lovable payment recovery and admin access","headSha":"4f5ab3ebe3ffec83c2c73276d47eb75af91f3099","jobs":[{"completedAt":"2026-09-23T17:24:35Z","conclusion":"failure","databaseId":107297816181,"name":"Lint and production build","startedAt":"2026-09-23T17:24:20Z","status":"completed","steps":[{"completedAt":"2026-09-23T17:24:22Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-23T17:24:20Z","status":"completed"},{"completedAt":"2026-09-23T17:24:23Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-23T17:24:22Z","status":"completed"},{"completedAt":"2026-09-23T17:24:24Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-23T17:24:23Z","status":"completed"},{"completedAt":"2026-09-23T17:24:26Z","conclusion":"success","name":"Install dependencies","number":4,"startedAt":"2026-09-23T17:24:24Z","status":"completed"},{"completedAt":"2026-09-23T17:24:33Z","conclusion":"failure","name":"Production build","number":5,"startedAt":"2026-09-23T17:24:26Z","status":"completed"},{"completedAt":"2026-09-23T17:24:33Z","conclusion":"skipped","name":"Post Setup Bun","number":9,"startedAt":"2026-09-23T17:24:33Z","status":"completed"},{"completedAt":"2026-09-23T17:24:33Z","conclusion":"success","name":"Post Checkout","number":10,"startedAt":"2026-09-23T17:24:33Z","status":"completed"},{"completedAt":"2026-09-23T17:24:33Z","conclusion":"success","name":"Complete job","number":11,"startedAt":"2026-09-23T17:24:33Z","status":"completed"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35782881076/job/107297816181"}],"name":"Avant Movies CI","status":"completed","updatedAt":"2026-09-23T17:24:36Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35782881076"}
+
+~~~
+
+### Primary errors
+~~~text
+Lint and production build	Production build	2026-09-23T17:24:33.3390351Z ^[[31m✗^[[39m Build failed in 1.43s
+Lint and production build	Production build	2026-09-23T17:24:33.3398059Z ^[[31mBuild failed with 1 error:
+Lint and production build	Production build	2026-09-23T17:24:33.3404306Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
+Lint and production build	Production build	2026-09-23T17:24:33.3405289Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
+Lint and production build	Production build	2026-09-23T17:24:33.4199707Z error: script "build" exited with code 1
+Lint and production build	Production build	2026-09-23T17:24:33.4214174Z ##[error]Process completed with exit code 1.
+~~~
+
+### Full failed-step log
+~~~text
+Lint and production build	Production build	﻿2026-09-23T17:24:26.0850192Z ##[group]Run bun run build
+Lint and production build	Production build	2026-09-23T17:24:26.0850365Z ^[[36;1mbun run build^[[0m
+Lint and production build	Production build	2026-09-23T17:24:26.0901063Z shell: /usr/bin/bash -e {0}
+Lint and production build	Production build	2026-09-23T17:24:26.0901266Z ##[endgroup]
+Lint and production build	Production build	2026-09-23T17:24:26.0987232Z $ node scripts/generate-seo.mjs && vite build
+Lint and production build	Production build	2026-09-23T17:24:31.0361415Z SEO: generated robots.txt, sitemap.xml, video-sitemap.xml and image-sitemap.xml for https://avantmovies.vercel.app (65 URLs, 48 videos, 57 image pages).
+Lint and production build	Production build	2026-09-23T17:24:31.6846230Z ^[[33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the ^[[1mresolve.tsconfigPaths^[[22m option. You can remove the plugin and set ^[[1mresolve.tsconfigPaths: true^[[22m in your Vite config instead.^[[39m
+Lint and production build	Production build	2026-09-23T17:24:31.9091240Z ^[[36mvite v8.1.5 ^[[32mbuilding client environment for production...^[[36m^[[39m
+Lint and production build	Production build	2026-09-23T17:24:31.9173731Z ^[[2K
+Lint and production build	Production build	2026-09-23T17:24:33.2490765Z transforming...✓ 1989 modules transformed.
+Lint and production build	Production build	2026-09-23T17:24:33.2995296Z rendering chunks...
+Lint and production build	Production build	2026-09-23T17:24:33.3390351Z ^[[31m✗^[[39m Build failed in 1.43s
+Lint and production build	Production build	2026-09-23T17:24:33.3397241Z ^[[31merror during build:
+Lint and production build	Production build	2026-09-23T17:24:33.3398059Z ^[[31mBuild failed with 1 error:
+Lint and production build	Production build	2026-09-23T17:24:33.3398236Z 
+Lint and production build	Production build	2026-09-23T17:24:33.3398551Z ^[[31m[MISSING_EXPORT] ^[[0m"publicCommerceSettings" is not exported by "src/lib/avant-backend.ts".
+Lint and production build	Production build	2026-09-23T17:24:33.3399200Z    ^[[38;5;246m╭^[[0m^[[38;5;246m─^[[0m^[[38;5;246m[^[[0m src/components/site/Pricing.tsx:5:10 ^[[38;5;246m]^[[0m
+Lint and production build	Production build	2026-09-23T17:24:33.3399595Z    ^[[38;5;246m│^[[0m
+Lint and production build	Production build	2026-09-23T17:24:33.3401360Z  ^[[38;5;246m5 │^[[0m ^[[38;5;249mi^[[0m^[[38;5;249mm^[[0m^[[38;5;249mp^[[0m^[[38;5;249mo^[[0m^[[38;5;249mr^[[0m^[[38;5;249mt^[[0m^[[38;5;249m ^[[0m^[[38;5;249m{^[[0m^[[38;5;249m ^[[0mpublicCommerceSettings^[[38;5;249m ^[[0m^[[38;5;249m}^[[0m^[[38;5;249m ^[[0m^[[38;5;249mf^[[0m^[[38;5;249mr^[[0m^[[38;5;249mo^[[0m^[[38;5;249mm^[[0m^[[38;5;249m ^[[0m^[[38;5;249m"^[[0m^[[38;5;249m@^[[0m^[[38;5;249m/^[[0m^[[38;5;249ml^[[0m^[[38;5;249mi^[[0m^[[38;5;249mb^[[0m^[[38;5;249m/^[[0m^[[38;5;249ma^[[0m^[[38;5;249mv^[[0m^[[38;5;249ma^[[0m^[[38;5;249mn^[[0m^[[38;5;249mt^[[0m^[[38;5;249m-^[[0m^[[38;5;249mb^[[0m^[[38;5;249ma^[[0m^[[38;5;249mc^[[0m^[[38;5;249mk^[[0m^[[38;5;249me^[[0m^[[38;5;249mn^[[0m^[[38;5;249md^[[0m^[[38;5;249m"^[[0m^[[38;5;249m;^[[0m
+Lint and production build	Production build	2026-09-23T17:24:33.3402889Z  ^[[38;5;240m  │^[[0m          ───────────┬──────────  
+Lint and production build	Production build	2026-09-23T17:24:33.3403229Z  ^[[38;5;240m  │^[[0m                     ╰──────────── Missing export
+Lint and production build	Production build	2026-09-23T17:24:33.3403515Z ^[[38;5;246m───╯^[[0m
+Lint and production build	Production build	2026-09-23T17:24:33.3403700Z ^[[31m
+Lint and production build	Production build	2026-09-23T17:24:33.3404306Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
+Lint and production build	Production build	2026-09-23T17:24:33.3405289Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
+Lint and production build	Production build	2026-09-23T17:24:33.3406174Z     at #build (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/rolldown-DP_p9pd3.mjs:132:34)
+Lint and production build	Production build	2026-09-23T17:24:33.3407161Z     at async buildEnvironment (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33061:66)
+Lint and production build	Production build	2026-09-23T17:24:33.3408043Z     at async Object.build (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33483:19)
+Lint and production build	Production build	2026-09-23T17:24:33.3408997Z     at async buildStartViteEnvironments (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/@tanstack/start-plugin-core/dist/esm/vite/planning.js:95:23)
+Lint and production build	Production build	2026-09-23T17:24:33.3410300Z     at async Object.buildApp (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/@tanstack/start-plugin-core/dist/esm/vite/plugin.js:113:8)
+Lint and production build	Production build	2026-09-23T17:24:33.3411214Z     at async Object.buildApp (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33475:6)
+Lint and production build	Production build	2026-09-23T17:24:33.3412124Z     at async CAC.<anonymous> (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/cli.js:776:3) {
+Lint and production build	Production build	2026-09-23T17:24:33.3412853Z   errors: [Getter/Setter]
+Lint and production build	Production build	2026-09-23T17:24:33.3413085Z }^[[39m
+Lint and production build	Production build	2026-09-23T17:24:33.4199707Z error: script "build" exited with code 1
+Lint and production build	Production build	2026-09-23T17:24:33.4214174Z ##[error]Process completed with exit code 1.
+~~~
