@@ -5251,3 +5251,33 @@ run 35902768689 is still in progress; logs will be available when it is complete
 ~~~text
 run 35902768689 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:29:55Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"failure","createdAt":"2026-09-23T18:28:59Z","databaseId":35902768689,"displayTitle":"Fix production build by installing esbuild","headSha":"1e8d298cdde17e5f59613f2d36f79edcd37dde38","jobs":[{"completedAt":"2026-09-23T18:29:45Z","conclusion":"failure","databaseId":107323081725,"name":"Lint and production build","startedAt":"2026-09-23T18:29:40Z","status":"completed","steps":[{"completedAt":"2026-09-23T18:29:41Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-23T18:29:40Z","status":"completed"},{"completedAt":"2026-09-23T18:29:42Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-23T18:29:41Z","status":"completed"},{"completedAt":"2026-09-23T18:29:43Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-23T18:29:42Z","status":"completed"},{"completedAt":"2026-09-23T18:29:43Z","conclusion":"failure","name":"Install dependencies","number":4,"startedAt":"2026-09-23T18:29:43Z","status":"completed"},{"completedAt":"2026-09-23T18:29:43Z","conclusion":"skipped","name":"Production build","number":5,"startedAt":"2026-09-23T18:29:43Z","status":"completed"},{"completedAt":"2026-09-23T18:29:43Z","conclusion":"skipped","name":"Post Setup Bun","number":9,"startedAt":"2026-09-23T18:29:43Z","status":"completed"},{"completedAt":"2026-09-23T18:29:44Z","conclusion":"success","name":"Post Checkout","number":10,"startedAt":"2026-09-23T18:29:43Z","status":"completed"},{"completedAt":"2026-09-23T18:29:44Z","conclusion":"success","name":"Complete job","number":11,"startedAt":"2026-09-23T18:29:44Z","status":"completed"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35902768689/job/107323081725"}],"name":"Avant Movies CI","status":"completed","updatedAt":"2026-09-23T18:29:46Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35902768689"}
+
+~~~
+
+### Primary errors
+~~~text
+Lint and production build	Install dependencies	2026-09-23T18:29:43.7771569Z error: lockfile had changes, but lockfile is frozen
+Lint and production build	Install dependencies	2026-09-23T18:29:43.7809581Z ##[error]Process completed with exit code 1.
+~~~
+
+### Full failed-step log
+~~~text
+Lint and production build	Install dependencies	﻿2026-09-23T18:29:43.4508347Z ##[group]Run bun install --frozen-lockfile
+Lint and production build	Install dependencies	2026-09-23T18:29:43.4508853Z ^[[36;1mbun install --frozen-lockfile^[[0m
+Lint and production build	Install dependencies	2026-09-23T18:29:43.4552700Z shell: /usr/bin/bash -e {0}
+Lint and production build	Install dependencies	2026-09-23T18:29:43.4553050Z ##[endgroup]
+Lint and production build	Install dependencies	2026-09-23T18:29:43.4651644Z bun install v1.4.2 (744846f84)
+Lint and production build	Install dependencies	2026-09-23T18:29:43.4691380Z Resolving dependencies
+Lint and production build	Install dependencies	2026-09-23T18:29:43.7758506Z Resolved, downloaded and extracted [57]
+Lint and production build	Install dependencies	2026-09-23T18:29:43.7771569Z error: lockfile had changes, but lockfile is frozen
+Lint and production build	Install dependencies	2026-09-23T18:29:43.7772837Z note: try re-running without --frozen-lockfile and commit the updated lockfile
+Lint and production build	Install dependencies	2026-09-23T18:29:43.7809581Z ##[error]Process completed with exit code 1.
+~~~
