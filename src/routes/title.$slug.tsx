@@ -3,7 +3,6 @@ import { TitleDetail } from "@/components/streaming/TitleDetail";
 import { getTitle, type CatalogueTitle } from "@/lib/site-data";
 import { resolveCatalogueKey } from "@/lib/avant-backend";
 import { absoluteUrl, publicPageLinks, publicPageMeta, titleSchema } from "@/lib/seo";
-import { restoreRememberedScroll } from "@/lib/navigation-memory";
 import { useEffect } from "react";
 import { mapResolvedEpisodes } from "@/lib/episodes";
 
@@ -51,6 +50,9 @@ export const Route = createFileRoute("/title/$slug")({
 
 function TitleRoute() {
   const item=Route.useLoaderData();
-  useEffect(()=>()=>{restoreRememberedScroll()},[]);
+  useEffect(()=>{
+    // Every newly opened title starts at its hero, regardless of the previous page scroll position.
+    window.scrollTo({top:0,left:0,behavior:"auto"});
+  },[item.slug]);
   return <TitleDetail item={item} />;
 }
