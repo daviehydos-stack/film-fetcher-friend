@@ -191,6 +191,11 @@ function RootComponent() {
     window.history.replaceState({}, "", import.meta.env.BASE_URL.replace(/\/$/, "") + safePath);
     window.dispatchEvent(new PopStateEvent("popstate"));
   }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // New route = new page: always begin at the top. Browser back/forward may restore naturally.
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname]);
   useEffect(() => { let dead=false; const sync=async()=>{const token=await customerToken(false);if(dead)return;if(!token){rememberSubscriber(false);return}try{const a=await accountAccess(token);if(!dead)rememberSubscriber(Boolean(a.subscriber))}catch{}};void sync();const off=subscribeAccessChanged(()=>void sync());return()=>{dead=true;off()}; }, []);
   useEffect(() => {
     const onPlayerStarted = (event: Event) => {
