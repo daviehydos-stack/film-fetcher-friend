@@ -212,6 +212,9 @@ function RootComponent() {
     const register = () => navigator.serviceWorker.register(import.meta.env.BASE_URL + "sw.js", { scope: import.meta.env.BASE_URL }).catch(() => undefined);
     if (document.readyState === "complete") void register();
     else window.addEventListener("load", register, { once: true });
+    const warm = () => navigator.serviceWorker.ready.then(reg => reg.active?.postMessage({ type: "AVANT_WARM_URLS", urls: ["/","/movies","/tv-shows","/watch-free"].map(p => import.meta.env.BASE_URL.replace(/\/$/,"") + p) })).catch(() => undefined);
+    const id = window.setTimeout(warm, 1200);
+    return () => window.clearTimeout(id);
   }, []);
   useEffect(() => {
     if (typeof window === "undefined") return;
