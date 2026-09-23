@@ -16,7 +16,7 @@ export const resolveCatalogueKey=async(key:string)=>{
   catch(e:any){
     if(/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(key)){
       const headers={apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`};
-      const er=await fetch(`${SUPABASE_URL}/rest/v1/episodes?id=eq.${encodeURIComponent(key)}&status=eq.published&select=id,legacy_key,season_id,episode_number,title,description,duration_seconds,thumbnail_url,status,access_required,vimeo_video_id,preview_vimeo_video_id,preview_embed_url,preview_start_seconds,preview_duration_seconds`,{headers});
+      const er=await fetch(`${SUPABASE_URL}/rest/v1/episodes?id=eq.${encodeURIComponent(key)}&status=eq.published&select=id,legacy_key,season_id,episode_number,title,description,duration_seconds,thumbnail_url,status,access_required,vimeo_video_id,preview_start_seconds,preview_duration_seconds`,{headers});
       const episode=er.ok?(await er.json())?.[0]:null;
       if(episode?.vimeo_video_id){
         const sr=await fetch(`${SUPABASE_URL}/rest/v1/seasons?id=eq.${encodeURIComponent(episode.season_id)}&select=id,series_id,season_number,title,status`,{headers});
