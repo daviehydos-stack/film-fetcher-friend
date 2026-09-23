@@ -3,6 +3,7 @@ const GIS_URL="https://accounts.google.com/gsi/client";
 const TOKEN_KEY="avant_google_id_token";
 const GOOGLE_ORIGIN="https://daviehydos-stack.github.io";
 const REMEMBERED_KEY="avant_google_account";
+const REMEMBERED_TTL_MS=365*24*60*60*1000;
 let loading:Promise<void>|null=null;
 let signInFlight:Promise<string>|null=null;
 let sessionVersion=0;
@@ -18,8 +19,8 @@ function loadGoogle(){if(typeof window==="undefined")return Promise.reject(new E
 function payload(token:string){try{const part=token.split(".")[1];if(!part)return null;const json=decodeURIComponent(atob(part.replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join(""));return JSON.parse(json)}catch{return null}}
 function validToken(){if(typeof window==="undefined")return null;const token=localStorage.getItem(TOKEN_KEY);if(!token)return null;const p=payload(token);if(!p?.sub||p.aud!==INTERNAL_GOOGLE_CLIENT_ID||Number(p.exp||0)*1000<=Date.now()+30000){localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem("avant_subscriber");return null}return token}
 
-export function rememberedCustomer(){if(typeof window==="undefined")return null;try{const raw=localStorage.getItem(REMEMBERED_KEY);if(!raw)return null;const v=JSON.parse(raw);return v?.email?{email:String(v.email),name:String(v.name||""),photoURL:String(v.photoURL||"")}:null}catch{return null}}
-function rememberCredential(token:string){const p=payload(token);if(!p?.email)return;localStorage.setItem(REMEMBERED_KEY,JSON.stringify({email:p.email,name:p.name||"",photoURL:p.picture||""}))}
+export function rememberedCustomer(){if(typeof window==="undefined")return null;try{const raw=localStorage.getItem(REMEMBERED_KEY);if(!raw)return null;const v=JSON.parse(raw);if(!v?.email)return null;const rememberedAt=Number(v.rememberedAt||0);if(rememberedAt&&Date.now()-rememberedAt>REMEMBERED_TTL_MS){localStorage.removeItem(REMEMBERED_KEY);return null}return {email:String(v.email),name:String(v.name||""),photoURL:String(v.photoURL||"")}}catch{return null}}
+function rememberCredential(token:string){const p=payload(token);if(!p?.email)return;localStorage.setItem(REMEMBERED_KEY,JSON.stringify({email:p.email,name:p.name||"",photoURL:p.picture||"",rememberedAt:Date.now()}))}
 
 async function googleCredential(loginHint?:string){if(signInFlight)return signInFlight;signInFlight=(async()=>{await loadGoogle();return new Promise<string>((resolve,reject)=>{let settled=false;const done=(token?:string,error?:Error)=>{if(settled)return;settled=true;if(token)resolve(token);else reject(error||new Error("Google Sign-In could not complete."))};window.google.accounts.id.initialize({client_id:INTERNAL_GOOGLE_CLIENT_ID,ux_mode:"popup",context:"signin",itp_support:true,login_hint:loginHint||undefined,auto_select:Boolean(loginHint),button_auto_select:Boolean(loginHint),use_fedcm_for_prompt:true,use_fedcm_for_button:true,cancel_on_tap_outside:false,callback:(r:any)=>{if(!r?.credential){done(undefined,new Error("Google did not return a credential."));return}localStorage.setItem(TOKEN_KEY,r.credential);rememberCredential(r.credential);emitSession();window.dispatchEvent(new CustomEvent("avant:access-changed",{detail:{source:"sign-in"}}));done(r.credential)}});window.google.accounts.id.prompt((n:any)=>{if(n?.isNotDisplayed?.()||n?.isSkippedMoment?.())done(undefined,new Error("Google could not sign this account in automatically."))})});})().finally(()=>{signInFlight=null});return signInFlight}
 
