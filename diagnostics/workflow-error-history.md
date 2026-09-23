@@ -1421,3 +1421,22 @@ run 35847538238 is still in progress; logs will be available when it is complete
 ~~~text
 run 35847538238 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:14:53Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:13:05Z","databaseId":35847505085,"displayTitle":"Remove all YouTube catalogue references","headSha":"380344cbb3aa2f2b651a3c9d827b668649567e53","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-23T10:14:49Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35847505085"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35847505085 is still in progress; logs will be available when it is complete
+~~~
