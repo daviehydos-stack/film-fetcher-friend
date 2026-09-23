@@ -3887,3 +3887,22 @@ Lint and production build	Production build	2026-09-23T18:01:47.7518985Z }^[[39m
 Lint and production build	Production build	2026-09-23T18:01:47.8557735Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T18:01:47.8577879Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:05:24Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T18:04:54Z","databaseId":35900007887,"displayTitle":"Enforce server-side playback authorization","headSha":"914046a909b59aee350b5b7c556b02e5e7be4762","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107313630348,"name":"Lint and production build","startedAt":"2026-09-23T18:05:22Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35900007887/job/107313630348"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:05:22Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35900007887"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35900007887 is still in progress; logs will be available when it is complete
+~~~
