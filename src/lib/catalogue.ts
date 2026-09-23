@@ -124,7 +124,7 @@ export function mergePublicCatalogue(payload: unknown) {
   const titles = payload && typeof payload === "object" && Array.isArray((payload as { titles?: unknown[] }).titles)
     ? (payload as { titles: PublicTitle[] }).titles.map(mapPublicTitle).filter((item): item is CatalogueTitle => Boolean(item))
     : [];
-  return titles.length ? titles : catalogue;
+  return titles;
 }
 
 export function isFreeTitle(item: CatalogueTitle) {
@@ -162,7 +162,7 @@ function readCatalogueCache() {
 
 export function useCatalogue() {
   const cached = typeof window !== "undefined" ? readCatalogueCache() : null;
-  const [items, setItems] = useState<CatalogueTitle[]>(cached?.items || catalogue);
+  const [items, setItems] = useState<CatalogueTitle[]>(cached?.items || []);
   const [loading, setLoading] = useState(false);
   const [usingFallback, setUsingFallback] = useState(!cached);
   const [offline, setOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
