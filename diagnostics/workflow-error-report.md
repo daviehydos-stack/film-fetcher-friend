@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35901067572
 
-Generated: 2026-09-23T18:14:50Z
+Generated: 2026-09-23T18:15:25Z
 
 ### Current primary errors
 ~~~text
@@ -4132,6 +4132,25 @@ Lint and production build	Production build	2026-09-23T18:10:30.1997268Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":1,"conclusion":"","createdAt":"2026-09-23T18:14:19Z","databaseId":35901067572,"displayTitle":"Fix authorized Vimeo playback embed loading","headSha":"040897bd024ae10493242b01303d1e603f95c876","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:14:48Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901067572"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35901067572 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T18:15:25Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T18:14:19Z","databaseId":35901067572,"displayTitle":"Fix authorized Vimeo playback embed loading","headSha":"040897bd024ae10493242b01303d1e603f95c876","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107317525544,"name":"Lint and production build","startedAt":"2026-09-23T18:15:23Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901067572/job/107317525544"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:15:23Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901067572"}
 
 ~~~
 
