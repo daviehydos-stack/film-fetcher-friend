@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
+import { claimMedia, stopAllMedia } from "@/lib/media-session";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import {
   accessForContent,
@@ -152,6 +153,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
             window.dispatchEvent(
               new CustomEvent("avant:player-started", { detail: { player: event.currentTarget } }),
             );
+            claimMedia(event.currentTarget);
             setTrailerLoaded(true);
             window.setTimeout(() => setTrailerVisible(true), 120);
           }}
@@ -237,7 +239,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
           {muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
         </button>
       ) : null}
-      {detailsOpen ? <TitlePreviewModal item={item} onClose={() => setDetailsOpen(false)} /> : null}
+      {detailsOpen ? <TitlePreviewModal item={item} onClose={() => { stopAllMedia(); setDetailsOpen(false); }} /> : null}
     </section>
   );
 }
