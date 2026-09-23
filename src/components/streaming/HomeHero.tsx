@@ -21,7 +21,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [muted, setMuted] = useState(false);
   const [trailerReady, setTrailerReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [largeScreen, setLargeScreen] = useState(false);
+  const [largeScreen, setLargeScreen] = useState(true);
   const [trailerLoaded, setTrailerLoaded] = useState(false);
   const [trailerVisible, setTrailerVisible] = useState(false);
 
@@ -112,13 +112,13 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (travelMode || media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+    if (travelMode || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
     const startTrailer = () => setTrailerReady(true);
     const idle = (window as any).requestIdleCallback
-      ? (window as any).requestIdleCallback(startTrailer, { timeout: 5000 })
-      : window.setTimeout(startTrailer, 4500);
+      ? (window as any).requestIdleCallback(startTrailer, { timeout: 900 })
+      : window.setTimeout(startTrailer, 500);
     return () => {
       if ((window as any).cancelIdleCallback && typeof idle === "number") (window as any).cancelIdleCallback(idle);
       else window.clearTimeout(idle as number);
@@ -146,11 +146,10 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
       trailerReady &&
       !trailerFailed &&
       !reducedMotion &&
-      largeScreen &&
       heroInView ? (
         <iframe
           ref={trailerFrameRef}
-          src={heroTrailerUrl(item.trailerEmbedUrl, muted, false)}
+          src={heroTrailerUrl(item.trailerEmbedUrl, true, false)}
           title={`${item.title} trailer`}
           allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
           loading="eager"
@@ -233,7 +232,6 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
       trailerVisible &&
       !trailerFailed &&
       !reducedMotion &&
-      largeScreen &&
       heroInView ? (
         <button
           type="button"
