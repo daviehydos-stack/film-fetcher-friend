@@ -510,6 +510,17 @@ main,header,footer,section,nav{max-width:100%}
   @keyframes avantContentSwap{from{opacity:.65}to{opacity:1}}
 }
 .avant-mobile-menu{position:absolute;inset-inline:0;top:100%}
+.avant-menu-trigger{transition:background-color 180ms ease,transform 280ms cubic-bezier(.22,1,.36,1)}
+.avant-menu-trigger:active{transform:scale(.88)}
+.avant-menu-icon{transition:transform 420ms cubic-bezier(.22,1,.36,1)}
+.avant-menu-bars,.avant-menu-x{transition:opacity 220ms ease,transform 420ms cubic-bezier(.22,1,.36,1)}
+.avant-menu-bars{opacity:1;transform:rotate(0deg) scale(1)}
+.avant-menu-x{opacity:0;transform:rotate(-90deg) scale(.7)}
+.avant-menu-trigger.is-open .avant-menu-icon{transform:rotate(180deg)}
+.avant-menu-trigger.is-open .avant-menu-bars{opacity:0;transform:rotate(90deg) scale(.7)}
+.avant-menu-trigger.is-open .avant-menu-x{opacity:1;transform:rotate(0deg) scale(1)}
+.avant-menu-trigger.is-open{background:rgba(255,255,255,.08)}
+
 [data-title-card] article>div{transition-duration:220ms!important}
 @media(min-width:768px){[data-title-card] article:hover>div{transform:scale(1.025)!important}}
 @media(max-width:767px){.avant-horizontal-rail{scroll-snap-type:x proximity!important;scroll-behavior:auto!important}}
