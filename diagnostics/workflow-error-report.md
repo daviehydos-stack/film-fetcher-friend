@@ -4,21 +4,12 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 35900458416
+Run ID: 35901067572
 
-Generated: 2026-09-23T18:11:20Z
+Generated: 2026-09-23T18:14:50Z
 
 ### Current primary errors
 ~~~text
-Lint and production build	Production build	2026-09-23T18:10:30.0956619Z ^[[31m✗^[[39m Build failed in 2.36s
-Lint and production build	Production build	2026-09-23T18:10:30.0967270Z ^[[31mBuild failed with 1 error:
-Lint and production build	Production build	2026-09-23T18:10:30.0969339Z Error: Failed to load `transformWithEsbuild`. It is deprecated and it now requires esbuild to be installed separately. If you are a package author, please migrate to `transformWithOxc` instead.
-Lint and production build	Production build	2026-09-23T18:10:30.0976046Z   Error: Cannot find package 'esbuild' imported from /home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js
-Lint and production build	Production build	2026-09-23T18:10:30.0977148Z   Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'esbuild' imported from /home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js
-Lint and production build	Production build	2026-09-23T18:10:30.0983974Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-23T18:10:30.0985079Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-23T18:10:30.1980162Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-23T18:10:30.1997268Z ##[error]Process completed with exit code 1.
 ~~~
 
 ## Previous + current error history
@@ -4132,4 +4123,23 @@ Lint and production build	Production build	2026-09-23T18:10:30.0993399Z   errors
 Lint and production build	Production build	2026-09-23T18:10:30.0993656Z }^[[39m
 Lint and production build	Production build	2026-09-23T18:10:30.1980162Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T18:10:30.1997268Z ##[error]Process completed with exit code 1.
+~~~
+
+---
+
+## Failure recorded 2026-09-23T18:14:50Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-23T18:14:19Z","databaseId":35901067572,"displayTitle":"Fix authorized Vimeo playback embed loading","headSha":"040897bd024ae10493242b01303d1e603f95c876","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:14:48Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901067572"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35901067572 is still in progress; logs will be available when it is complete
 ~~~

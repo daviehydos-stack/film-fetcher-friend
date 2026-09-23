@@ -4109,3 +4109,22 @@ Lint and production build	Production build	2026-09-23T18:10:30.0993656Z }^[[39m
 Lint and production build	Production build	2026-09-23T18:10:30.1980162Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T18:10:30.1997268Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:14:50Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-23T18:14:19Z","databaseId":35901067572,"displayTitle":"Fix authorized Vimeo playback embed loading","headSha":"040897bd024ae10493242b01303d1e603f95c876","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:14:48Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35901067572"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35901067572 is still in progress; logs will be available when it is complete
+~~~
