@@ -9,6 +9,20 @@ export default defineConfig({
     // GitHub project Pages is served below /film-fetcher-friend/.
     // Production server deployments continue to use the normal root base.
     base: isGitHubPages ? "/film-fetcher-friend/" : "/",
+    build: {
+      cssCodeSplit: true,
+      sourcemap: false,
+      target: "es2020",
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (id.includes("node_modules/@tanstack")) return "tanstack";
+            if (id.includes("node_modules/lucide-react")) return "icons";
+            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) return "react-vendor";
+          },
+        },
+      },
+    },
   },
   tanstackStart: {
     // Keep the real application SSR/server capable.
