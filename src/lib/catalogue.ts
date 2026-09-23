@@ -26,13 +26,11 @@ export function mapPublicEpisode(value: unknown): Episode | null {
   const episodeNumber = numberValue(raw["episode_number"]);
   const previewStart = numberValue(raw["preview_start_seconds"]);
   const previewDuration = numberValue(raw["preview_duration_seconds"]);
-  const youtubeId = text(raw["youtube_video_id"]) || text(raw["youtubeId"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]) || text(raw["vimeoVideoId"]);
   const poster = text(raw["thumbnail_url"]);
   const description = text(raw["description"]);
   const episodeLegacyKey = text(raw["legacy_key"]);
   const episodeId = text(raw["id"]);
-  const previewYoutubeId = text(raw["preview_youtube_id"]);
   const previewVimeoVideoId = text(raw["preview_vimeo_video_id"]);
   const previewEmbedUrl = text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"]);
   const introStart = numberValue(raw["intro_start_seconds"]);
@@ -46,7 +44,6 @@ export function mapPublicEpisode(value: unknown): Episode | null {
     ...(season !== undefined ? { season } : {}),
     ...(episodeNumber !== undefined ? { episodeNumber } : {}),
     ...(episodeId ? { id: episodeId } : {}),
-    ...(youtubeId ? { youtubeId } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
     ...(poster ? { poster } : {}),
     locked: typeof raw["access_required"] === "boolean" ? raw["access_required"] : true,
@@ -54,7 +51,6 @@ export function mapPublicEpisode(value: unknown): Episode | null {
     ...(episodeLegacyKey ? { legacyKey: episodeLegacyKey } : {}),
     ...(previewStart !== undefined ? { previewStart } : {}),
     ...(previewDuration !== undefined ? { previewDuration } : {}),
-    ...(previewYoutubeId ? { previewYoutubeId } : {}),
     ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
     ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
     ...(introStart !== undefined ? { introStart } : {}),
@@ -73,15 +69,13 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
 
   const legacyKey = text(raw["legacy_key"]);
   const fallback = catalogue.find((item) => item.slug === slug || item.id === legacyKey);
-  const youtubeVideoId = text(raw["youtube_video_id"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]);
   const liveEpisodes = Array.isArray(raw["episodes"])
     ? raw["episodes"].map(mapPublicEpisode).filter((episode): episode is Episode => Boolean(episode))
     : undefined;
   const accessRequired = typeof raw["access_required"] === "boolean" ? raw["access_required"] : true;
   const movieEpisode: Episode[] | undefined =
-    contentType === "movie" && (youtubeVideoId || vimeoVideoId)
-      ? [{ title, duration: "", ...(youtubeVideoId ? { youtubeId: youtubeVideoId } : {}), ...(vimeoVideoId ? { vimeoVideoId } : {}), locked: accessRequired, legacyKey: slug }]
+    contentType === "movie" && vimeoVideoId\n      ? [{ title, duration: "", vimeoVideoId, locked: accessRequired, legacyKey: slug }]
       : undefined;
 
   return {
@@ -107,7 +101,6 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     ...(textList(raw["countries"]).length ? { countries: textList(raw["countries"]) } : {}),
     ...(text(raw["scheduled_publish_at"]) ? { releaseAt: text(raw["scheduled_publish_at"]) } : {}),
     ...(raw["story_world"] && typeof raw["story_world"] === "object" ? { storyWorld: raw["story_world"] as CatalogueTitle["storyWorld"] } : fallback?.storyWorld ? { storyWorld: fallback.storyWorld } : {}),
-    ...(youtubeVideoId ? { youtubeVideoId } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
     ...(text(raw["quality_label"]) ? { quality: text(raw["quality_label"]) } : fallback?.quality ? { quality: fallback.quality } : {}),
     ...(text(raw["maturity_rating"]) ? { maturityRating: text(raw["maturity_rating"]) } : fallback?.maturityRating ? { maturityRating: fallback.maturityRating } : {}),
