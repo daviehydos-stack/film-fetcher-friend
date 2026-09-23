@@ -98,7 +98,7 @@ export function SiteHeader() {
             alt={appearance.siteName || "Avant Cinema"}
             className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
           />
-          <span className="hidden whitespace-nowrap text-base font-black tracking-tight text-white sm:inline">Avant Cinema</span>
+          <span className="whitespace-nowrap text-sm font-black tracking-tight text-white sm:text-base">Avant Cinema</span>
         </Link>
         <nav className="hidden items-center gap-1 lg:flex">
           {[
