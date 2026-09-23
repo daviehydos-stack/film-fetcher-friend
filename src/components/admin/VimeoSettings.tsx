@@ -107,7 +107,7 @@ export default function VimeoSettings() {
     setNote("");
     try {
       const r = await adminVimeoVideos(t, "");
-      setVideos((r.videos || []).slice(0, 6));
+      setVideos(r.videos || []);
       setNote(
         `✓ Vimeo library is ready — ${r.total ?? r.videos?.length ?? 0} video${(r.total ?? r.videos?.length ?? 0) === 1 ? "" : "s"} available.`,
       );
@@ -252,11 +252,15 @@ export default function VimeoSettings() {
                     <p
                       className={`mt-1 text-[11px] font-semibold ${v.recommendedForPremium ? "text-emerald-300" : v.playable ? "text-amber-200" : "text-red-300"}`}
                     >
-                      {v.recommendedForPremium
-                        ? "Ready for premium use"
-                        : v.playable
-                          ? "Playable · review privacy"
-                          : "Not ready for playback"}
+                      {v.embedHealth==="ready"
+                        ? "Ready on Avant production site"
+                        : v.embedHealth==="domain_restricted"
+                          ? "Embed blocked · allow daviehydos-stack.github.io in Vimeo"
+                          : v.recommendedForPremium
+                            ? "Playable · verify embed domain"
+                            : v.playable
+                              ? "Playable · review privacy"
+                              : "Not ready for playback"}
                     </p>
                   </div>
                 </div>
