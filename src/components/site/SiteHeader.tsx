@@ -214,11 +214,11 @@ export function SiteHeader() {
             </button>
           )}
           <button
-            className="grid size-10 shrink-0 place-items-center rounded-full hover:bg-white/10 lg:hidden"
+            className={cn("avant-menu-trigger grid size-10 shrink-0 place-items-center rounded-full hover:bg-white/10 lg:hidden",open&&"is-open")}
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X /> : <Menu />}
+            <span className="avant-menu-icon relative block size-6" aria-hidden="true"><Menu className="avant-menu-bars absolute inset-0 size-6"/><X className="avant-menu-x absolute inset-0 size-6"/></span>
           </button>
         </div>
       </div>
