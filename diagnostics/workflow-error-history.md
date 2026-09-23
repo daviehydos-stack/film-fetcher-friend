@@ -5351,3 +5351,22 @@ build	Install dependencies	2026-09-23T18:31:49.8581980Z error: lockfile had chan
 build	Install dependencies	2026-09-23T18:31:49.8583213Z note: try re-running without --frozen-lockfile and commit the updated lockfile
 build	Install dependencies	2026-09-23T18:31:49.8616681Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:33:48Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T18:33:25Z","databaseId":35903290457,"displayTitle":"Deploy GitHub Pages Preview","headSha":"09e79d81a386807e4c4665bf18e3eb5ee4508439","jobs":[],"name":"Deploy GitHub Pages Preview","status":"queued","updatedAt":"2026-09-23T18:33:47Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35903290457"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35903290457 is still in progress; logs will be available when it is complete
+~~~
