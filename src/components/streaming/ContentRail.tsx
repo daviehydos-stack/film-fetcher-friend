@@ -52,8 +52,8 @@ export function ContentRail({
     });
   };
   return (
-    <section ref={section} className="avant-home-section min-w-0 overflow-hidden py-6 sm:py-8" aria-label={title} role="region">
-      <div className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 px-5 sm:px-10 lg:px-14">
+    <section ref={section} className="avant-home-section min-w-0 overflow-hidden py-4 sm:py-7" aria-label={title} role="region">
+      <div className="mb-3 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 px-4 sm:px-10 lg:px-14">
         <div className="min-w-0">
           {eyebrow ? <p className="eyebrow mb-1.5">{eyebrow}</p> : null}
           <h2 className="truncate text-xl font-bold sm:text-2xl">{title}</h2>
@@ -87,7 +87,7 @@ export function ContentRail({
       </div>
       <div
         ref={rail}
-        className="hide-scrollbar avant-horizontal-rail avant-rail-fade flex snap-x snap-mandatory items-start gap-3 overflow-x-auto overflow-y-hidden scroll-smooth scroll-px-5 overscroll-x-contain px-5 pb-5 touch-pan-x sm:gap-4 sm:scroll-px-10 sm:px-10 lg:scroll-px-14 lg:px-14"
+        className="hide-scrollbar avant-horizontal-rail avant-rail-fade flex snap-x snap-mandatory items-start gap-3 overflow-x-auto overflow-y-hidden scroll-smooth scroll-px-4 overscroll-x-contain px-4 pb-4 touch-pan-x sm:gap-4 sm:scroll-px-10 sm:px-10 lg:scroll-px-14 lg:px-14"
       >
         {items.map((item) => (
           <div key={item.id} data-title-card className="shrink-0 snap-start">
