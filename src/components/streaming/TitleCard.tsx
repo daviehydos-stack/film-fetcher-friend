@@ -79,7 +79,8 @@ export function TitleCard({
           <img
             src={item.artwork}
             alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`}
-            loading="lazy"
+            loading={nearViewport ? "eager" : "lazy"}
+            fetchPriority={nearViewport ? "high" : "auto"}
             decoding="async"
             onError={(event) => { event.currentTarget.src="/avant-movies-logo.png"; event.currentTarget.classList.add("object-contain","p-12","opacity-60"); }}
             className="size-full object-cover transition duration-500"
