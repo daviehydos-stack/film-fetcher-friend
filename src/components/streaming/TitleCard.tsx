@@ -24,7 +24,6 @@ export function TitleCard({
 }) {
   const {user:authUser,remembered,signIn}=useAvantAuth();
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [nearViewport, setNearViewport] = useState(false);
   const [saved, setSaved] = useState(() => readMyList().includes(item.id));
   const [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
   const cardRef = useRef<HTMLElement | null>(null);
@@ -38,17 +37,6 @@ export function TitleCard({
     const sync = (e: any) => setTravelMode(e.detail.active);
     window.addEventListener("avant:travel-mode-changed" as any, sync);
     return () => window.removeEventListener("avant:travel-mode-changed" as any, sync);
-  }, []);
-  useEffect(() => {
-    if (!cardRef.current || !("IntersectionObserver" in window)) {
-      setNearViewport(true);
-      return;
-    }
-    const observer = new IntersectionObserver(([entry]) => setNearViewport(entry?.isIntersecting ?? false), {
-      rootMargin: "240px",
-    });
-    observer.observe(cardRef.current);
-    return () => observer.disconnect();
   }, []);
 
   const toggleSaved = async (event: React.MouseEvent) => {
@@ -79,8 +67,8 @@ export function TitleCard({
           <img
             src={item.artwork}
             alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`}
-            loading={nearViewport ? "eager" : "lazy"}
-            fetchPriority={nearViewport ? "high" : "auto"}
+            loading="lazy"
+            fetchPriority="low"
             decoding="async"
             onError={(event) => { event.currentTarget.src="/avant-movies-logo.png"; event.currentTarget.classList.add("object-contain","p-12","opacity-60"); }}
             className="size-full object-cover transition duration-500"
