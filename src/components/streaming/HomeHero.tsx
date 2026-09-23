@@ -117,8 +117,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
     const startTrailer = () => setTrailerReady(true);
     const idle = (window as any).requestIdleCallback
-      ? (window as any).requestIdleCallback(startTrailer, { timeout: 900 })
-      : window.setTimeout(startTrailer, 500);
+      ? (window as any).requestIdleCallback(startTrailer, { timeout: 250 })
+      : window.setTimeout(startTrailer, 120);
     return () => {
       if ((window as any).cancelIdleCallback && typeof idle === "number") (window as any).cancelIdleCallback(idle);
       else window.clearTimeout(idle as number);
