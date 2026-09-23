@@ -18,7 +18,7 @@ import { rankedRelatedTitles } from "@/lib/discovery";
 
 export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()=>void}){
  const frameRef=useRef<HTMLIFrameElement|null>(null); const controlsTimer=useRef<number|null>(null); const [controlsVisible,setControlsVisible]=useState(true); const [videoStarted,setVideoStarted]=useState(false); const [travelMode,setTravelMode]=useState(()=>typeof window!=="undefined"&&localStorage.getItem("avant-travel-mode")==="true"); const [previewInView,setPreviewInView]=useState(true); const heroRef=useRef<HTMLElement|null>(null); const [elapsed,setElapsed]=useState(0); const [saved,setSaved]=useState(()=>readMyList().includes(item.id)); const [muted,setMuted]=useState(false); const [season,setSeason]=useState(item.episodes?.[0]?.season??1); const [closing,setClosing]=useState(false); const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
- const showControls=()=>{setControlsVisible(true);if(controlsTimer.current)window.clearTimeout(controlsTimer.current);controlsTimer.current=window.setTimeout(()=>setControlsVisible(false),videoStarted?8000:3200)};
+ const showControls=()=>{setControlsVisible(true);if(controlsTimer.current)window.clearTimeout(controlsTimer.current);if(videoStarted)controlsTimer.current=window.setTimeout(()=>setControlsVisible(false),8000)};
  useEffect(()=>{setVideoStarted(false);showControls();return()=>{if(controlsTimer.current)window.clearTimeout(controlsTimer.current)}},[item.id]);
  const freeFullTitle=true; // temporary playback QA: bypass checkout for every title
  const freeId=item.type==="movie"?item.slug:(item.episodes?.[0]?.legacyKey??`${item.slug}-1`);
