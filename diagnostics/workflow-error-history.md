@@ -3906,3 +3906,22 @@ Lint and production build	Production build	2026-09-23T18:01:47.8577879Z ##[error
 ~~~text
 run 35900007887 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:06:29Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T18:04:54Z","databaseId":35900007887,"displayTitle":"Enforce server-side playback authorization","headSha":"914046a909b59aee350b5b7c556b02e5e7be4762","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T18:06:27Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35900007887"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35900007887 is still in progress; logs will be available when it is complete
+~~~
