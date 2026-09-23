@@ -114,7 +114,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     if (travelMode || media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
-    const timer = window.setTimeout(() => setTrailerReady(true), 180);
+    const timer = window.setTimeout(() => setTrailerReady(true), 900);
     return () => {
       window.clearTimeout(timer);
       screen.removeEventListener?.("change", syncScreen);
