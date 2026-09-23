@@ -3,7 +3,7 @@ export const WHATSAPP_TEL = "tel:+254720814693";
 
 export const socials = {
   facebook: "https://www.facebook.com/AvantFilms/",
-  youtube: "https://www.youtube.com/@avantcinemas",
+
   instagram: "https://www.instagram.com/jgatero/?hl=en",
 };
 
@@ -32,14 +32,14 @@ export type CatalogueTitle = {
   available?: boolean;
   accessRequired?: boolean;
   trailerEmbedUrl?: string;
-  previewYoutubeId?: string;
+
   previewVimeoId?: string;
   previewStart?: number;
   previewDuration?: number;
   heroAutoplay?: boolean;
-  youtubeVideoId?: string;
+
   vimeoVideoId?: string;
-  videoSource?: "youtube" | "vimeo" | "none";
+  videoSource?: "vimeo" | "none";
   cast?: string[];
   creators?: string[];
   directors?: string[];
@@ -160,7 +160,7 @@ export type Episode = {
   season?: number;
   episodeNumber?: number;
   duration: string;
-  youtubeId?: string;
+
   vimeoVideoId?: string;
   poster?: string;
   locked?: boolean;
@@ -168,7 +168,7 @@ export type Episode = {
   legacyKey?: string;
   previewStart?: number;
   previewDuration?: number;
-  previewYoutubeId?: string;
+
   previewVimeoVideoId?: string;
   previewEmbedUrl?: string;
   introStart?: number;
@@ -182,22 +182,18 @@ export const thisIsLifeFree: Episode[] = [
   {
     title: "This is Life Episode 1 — Why would the bride look so sad?",
     duration: "26:01",
-    youtubeId: "JyqgBodtgbY",
   },
   {
     title: "This is Life Episode 2 — Life is tough, is it?",
     duration: "27:14",
-    youtubeId: "6MRmTVPsM9w",
   },
   {
     title: "This is Life Episode 3 — The truth hurts",
     duration: "24:02",
-    youtubeId: "yjoGHIaG6-Y",
   },
   {
     title: "This is Life Episode 4 — When your rich boss wants your girlfriend",
     duration: "23:51",
-    youtubeId: "PPERGODKEs8",
   },
 ];
 
@@ -207,17 +203,14 @@ export const betterLifeFree: Episode[] = [
   {
     title: "A Better Life Episode 1 — The Governor and a girl from the slum",
     duration: "27:45",
-    youtubeId: "jkSCPUwvPnY",
   },
   {
     title: "A Better Life Episode 2 — Poor Boychild (Ken Ambani, Nyakundi Isaboke)",
     duration: "27:11",
-    youtubeId: "A5YHj6IXUOc",
   },
   {
     title: "A Better Life Episode 3 — Breaking out of the friendzone",
     duration: "26:30",
-    youtubeId: "nNwHjdy-EAc",
   },
 
 ];
@@ -293,7 +286,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "A governor's son and a girl from the slum meet in a city that never lets anyone forget where they come from.",
     artwork: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_930,h_523,enc_auto/file.png",
     backdrop: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
-    legacyPath: "/a-better-life", previewYoutubeId: "p_PpjXPlaG8", previewDuration: 26, trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/p_PpjXPlaG8?rel=0", episodes: [...betterLifeFree, ...betterLifePaid],
+    legacyPath: "/a-better-life", previewDuration: 26, episodes: [...betterLifeFree, ...betterLifePaid],
   },
   {
     id: "this-is-life", slug: "this-is-life", title: "This is Life", type: "series",
@@ -302,7 +295,7 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "An intimate series about love, work, difficult choices and the lives built in between.",
     artwork: "https://static.wixstatic.com/media/57086b_899d3183eb3c450e96b8ae328886165b~mv2.png/v1/fill/w_900,h_506,enc_auto/file.png",
     backdrop: "https://static.wixstatic.com/media/57086b_46bd84f76e9e40a0bfad5e2852bf6b09~mv2.png/v1/fill/w_1834,h_1032,enc_auto/file.png",
-    legacyPath: "/this-is-life", previewYoutubeId: "xnYieNZ3kHQ", previewDuration: 65, trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/xnYieNZ3kHQ?rel=0", episodes: [...thisIsLifeFree, ...thisIsLifePaid],
+    legacyPath: "/this-is-life", previewDuration: 65, episodes: [...thisIsLifeFree, ...thisIsLifePaid],
   },
   {
     id: "another-way", slug: "another-way", title: "Another Way", type: "movie",
@@ -311,8 +304,8 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Another Way is an Avant Cinema short film from the studio archive.",
     artwork: "https://i.ytimg.com/vi/7krnA3G5qrI/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/7krnA3G5qrI/hqdefault.jpg",
-    legacyPath: "/another-way", previewYoutubeId: "7krnA3G5qrI", previewDuration: 120,
-    episodes: [{ title: "Another Way", duration: "05:11", youtubeId: "7krnA3G5qrI" }],
+    legacyPath: "/another-way", previewDuration: 120,
+    episodes: [{ title: "Another Way", duration: "05:11", }],
   },
   {
     id: "adui", slug: "adui", title: "ADUI", type: "movie",
@@ -321,8 +314,8 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "ADUI is an Avant Cinema short film available from the studio video archive.",
     artwork: "https://i.ytimg.com/vi/bUx3YibMvGI/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/bUx3YibMvGI/hqdefault.jpg",
-    legacyPath: "/adui", previewYoutubeId: "bUx3YibMvGI", previewDuration: 120,
-    episodes: [{ title: "ADUI", duration: "07:27", youtubeId: "bUx3YibMvGI" }],
+    legacyPath: "/adui", previewDuration: 120,
+    episodes: [{ title: "ADUI", duration: "07:27", }],
   },
   {
     id: "relationship-goals", slug: "relationship-goals", title: "Relationship Goals", type: "movie",
@@ -331,8 +324,8 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Relationship Goals is a short film from the Avant Cinema video archive.",
     artwork: "https://i.ytimg.com/vi/ciUCZ3yIKv0/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/ciUCZ3yIKv0/hqdefault.jpg",
-    legacyPath: "/relationship-goals", previewYoutubeId: "ciUCZ3yIKv0", previewDuration: 120,
-    episodes: [{ title: "Relationship Goals", duration: "06:22", youtubeId: "ciUCZ3yIKv0" }],
+    legacyPath: "/relationship-goals", previewDuration: 120,
+    episodes: [{ title: "Relationship Goals", duration: "06:22", }],
   },
   {
     id: "granted", slug: "granted", title: "Granted", type: "movie",
@@ -341,8 +334,8 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Granted is an Avant Cinema short film from the studio video archive.",
     artwork: "https://i.ytimg.com/vi/xdR3xLwcWdQ/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/xdR3xLwcWdQ/hqdefault.jpg",
-    legacyPath: "/granted", previewYoutubeId: "xdR3xLwcWdQ", previewDuration: 120,
-    episodes: [{ title: "Granted", duration: "08:53", youtubeId: "xdR3xLwcWdQ" }],
+    legacyPath: "/granted", previewDuration: 120,
+    episodes: [{ title: "Granted", duration: "08:53", }],
   },
   {
     id: "best-friends-forever", slug: "best-friends-forever", title: "Best Friends Forever", type: "series",
@@ -351,9 +344,8 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Best Friends Forever is an episodic Avant Cinema story from the studio archive.",
     artwork: "https://i.ytimg.com/vi/dPaiBP_yfOI/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/R8kIX3ITyDs/hqdefault.jpg",
-    legacyPath: "/best-friends-forever", previewYoutubeId: "dPaiBP_yfOI", previewDuration: 54,
-    trailerEmbedUrl: "https://www.youtube-nocookie.com/embed/dPaiBP_yfOI?rel=0",
-    episodes: [{ title: "Best Friends Forever Episode 1", duration: "07:33", youtubeId: "R8kIX3ITyDs" }, { title: "Best Friends Forever Episode 2", duration: "11:59", youtubeId: "x0TkWZMV2qc" }],
+    legacyPath: "/best-friends-forever", previewDuration: 54,
+    episodes: [{ title: "Best Friends Forever Episode 1", duration: "07:33", }, { title: "Best Friends Forever Episode 2", duration: "11:59", }],
   },
   {
     id: "isabella", slug: "isabella", title: "Isabella", type: "series",
@@ -362,8 +354,8 @@ export const catalogue: CatalogueTitle[] = [
     synopsis: "Isabella is a classic episodic title preserved in the Avant Cinema video archive.",
     artwork: "https://i.ytimg.com/vi/3fdhXgENfJk/hqdefault.jpg",
     backdrop: "https://i.ytimg.com/vi/3fdhXgENfJk/hqdefault.jpg",
-    legacyPath: "/isabella", previewYoutubeId: "3fdhXgENfJk", previewDuration: 120,
-    episodes: [{ title: "Isabella Series K24 classic", duration: "21:43", youtubeId: "3fdhXgENfJk" }],
+    legacyPath: "/isabella", previewDuration: 120,
+    episodes: [{ title: "Isabella Series K24 classic", duration: "21:43", }],
   },
 ];
 
