@@ -1,53 +1,5 @@
-import { useState } from "react";
 import { Play, Lock } from "lucide-react";
 import type { Episode } from "@/lib/site-data";
-
-export function YoutubeCard({ episode }: { episode: Episode }) {
-  const [playing, setPlaying] = useState(false);
-  const poster =
-    episode.poster ??
-    `https://i.ytimg.com/vi/${episode.youtubeId}/hqdefault.jpg`;
-
-  return (
-    <div className="panel overflow-hidden rounded-xl">
-      <div className="relative aspect-video w-full bg-black">
-        {playing && episode.youtubeId ? (
-          <iframe
-            className="absolute inset-0 size-full"
-            src={`https://www.youtube.com/embed/${episode.youtubeId}?autoplay=1`}
-            title={episode.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setPlaying(true)}
-            className="group absolute inset-0 size-full"
-            aria-label={`Play ${episode.title}`}
-          >
-            <img
-              src={poster}
-              alt={`${episode.title} video thumbnail`}
-              loading="lazy"
-              decoding="async"
-              className="size-full object-cover opacity-90 transition group-hover:opacity-100"
-            />
-            <span className="absolute inset-0 grid place-items-center">
-              <span className="grid size-16 place-items-center rounded-full bg-flame text-flame-foreground shadow-glow transition group-hover:scale-110">
-                <Play className="size-7 translate-x-0.5 fill-current" />
-              </span>
-            </span>
-          </button>
-        )}
-      </div>
-      <div className="flex items-center justify-between gap-3 px-4 py-3">
-        <p className="text-sm font-semibold text-ink-foreground">{episode.title}</p>
-        <span className="shrink-0 text-xs text-muted-foreground">{episode.duration}</span>
-      </div>
-    </div>
-  );
-}
 
 export function LockedCard({
   episode,
