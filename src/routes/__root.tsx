@@ -23,17 +23,17 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-[100svh] items-center justify-center bg-background px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))]">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+        <img src={`${import.meta.env.BASE_URL}avant-movies-logo.png`} alt="Avant Cinema" className="mx-auto h-16 w-auto object-contain" />
+        <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground">Content unavailable</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          This link may be old, or the title may have moved. Browse the current Avant Cinema catalogue instead.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Browse Avant Cinema
           </Link>
         </div>
       </div>
@@ -51,11 +51,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-[100svh] items-center justify-center bg-background px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))]">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+        <img src={`${import.meta.env.BASE_URL}avant-movies-logo.png`} alt="Avant Cinema" className="mx-auto h-14 w-auto object-contain" />
+        <h1 className="mt-6 text-xl font-semibold tracking-tight text-foreground">
+          We couldn't open this page
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Your account and purchases are safe. Retry the page, or return to the Avant Cinema catalogue.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -71,7 +72,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             to="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Browse catalogue
           </Link>
         </div>
       </div>
