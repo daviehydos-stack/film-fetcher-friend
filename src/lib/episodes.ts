@@ -5,6 +5,14 @@ type RawRecord = Record<string, unknown>;
 const stringValue = (value: unknown) => typeof value === "string" && value.trim() ? value : undefined;
 const numberValue = (value: unknown) => typeof value === "number" && Number.isFinite(value) ? value : undefined;
 
+export function optimizedArtwork(url?: string, width = 640) {
+  if (!url) return url;
+  if (url.includes("res.cloudinary.com/")) return url.replace("/upload/", `/upload/f_auto,q_auto:eco,c_fill,w_${width},dpr_auto/`);
+  if (url.includes("i.vimeocdn.com/")) return url.replace(/d_\d+x\d+/, `d_${Math.max(640,width)}x${Math.round(Math.max(640,width)*9/16)}`);
+  if (url.includes("drive.google.com/thumbnail")) return url.replace(/([?&])sz=w\d+/, `$1sz=w${Math.min(800,Math.max(400,width))}`);
+  return url;
+}
+
 export function episodeContentId(item: Pick<CatalogueTitle, "slug">, episode: Episode, absoluteIndex: number) {
   return episode.legacyKey || episode.id || `${item.slug}-${absoluteIndex + 1}`;
 }
