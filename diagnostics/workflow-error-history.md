@@ -1038,3 +1038,22 @@ Lint and production build	Production build	2026-09-22T20:51:53.2865018Z ##[error
 ~~~text
 run 35825424383 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T06:09:45Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T06:08:50Z","databaseId":35825424383,"displayTitle":"Fix admin navigation when customer session expires","headSha":"5c3fa928b55c996bcf43b7bed15b6c9c8526a022","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T06:09:42Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35825424383"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35825424383 is still in progress; logs will be available when it is complete
+~~~
