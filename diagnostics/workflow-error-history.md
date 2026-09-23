@@ -2527,3 +2527,22 @@ Lint and production build	Production build	2026-09-23T10:30:57.4791217Z }^[[39m
 Lint and production build	Production build	2026-09-23T10:30:57.5547876Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T10:30:57.5563464Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:31:37Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-23T10:31:06Z","databaseId":35849251361,"displayTitle":"refactor: use Vimeo default player configuration globally","headSha":"aefa73621ab4a0a119b7ed5cc408a182a4e1806d","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:31:35Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35849251361"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35849251361 is still in progress; logs will be available when it is complete
+~~~
