@@ -3538,3 +3538,22 @@ Lint and production build	Production build	2026-09-23T17:25:33.6763191Z ##[error
 ~~~text
 run 35899031924 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T17:57:52Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T17:56:38Z","databaseId":35899063707,"displayTitle":"Tighten mobile streaming rail spacing","headSha":"a565a796ffbae1ec61d1052386071d323eaefa15","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107310640070,"name":"Lint and production build","startedAt":"2026-09-23T17:57:41Z","status":"in_progress","steps":[{"completedAt":"2026-09-23T17:57:43Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-23T17:57:42Z","status":"completed"},{"completedAt":"2026-09-23T17:57:44Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-23T17:57:43Z","status":"completed"},{"completedAt":"2026-09-23T17:57:46Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-23T17:57:44Z","status":"completed"},{"completedAt":"2026-09-23T17:57:48Z","conclusion":"success","name":"Install dependencies","number":4,"startedAt":"2026-09-23T17:57:46Z","status":"completed"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Production build","number":5,"startedAt":"2026-09-23T17:57:48Z","status":"in_progress"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Setup Bun","number":9,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Checkout","number":10,"startedAt":"0001-01-01T00:00:00Z","status":"pending"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35899063707/job/107310640070"}],"name":"Avant Movies CI","status":"in_progress","updatedAt":"2026-09-23T17:57:42Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35899063707"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35899063707 is still in progress; logs will be available when it is complete
+~~~
