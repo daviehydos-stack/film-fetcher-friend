@@ -1650,3 +1650,22 @@ Lint and production build	Production build	2026-09-23T10:20:36.1502753Z }^[[39m
 Lint and production build	Production build	2026-09-23T10:20:36.2411746Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T10:20:36.2428690Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:21:12Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T10:20:17Z","databaseId":35848208732,"displayTitle":"refactor: remove YouTube from catalogue mapping","headSha":"356c192ca9bf3391e56129aad5d6a6d33fb58b6b","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:21:11Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848208732"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848208732 is still in progress; logs will be available when it is complete
+~~~

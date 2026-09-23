@@ -6,16 +6,10 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35848208732
 
-Generated: 2026-09-23T10:20:47Z
+Generated: 2026-09-23T10:21:12Z
 
 ### Current primary errors
 ~~~text
-Lint and production build	Production build	2026-09-23T10:20:36.1361206Z ^[[31m✗^[[39m Build failed in 2.34s
-Lint and production build	Production build	2026-09-23T10:20:36.1367955Z ^[[31mBuild failed with 2 errors:
-Lint and production build	Production build	2026-09-23T10:20:36.1485152Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-23T10:20:36.1487427Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-23T10:20:36.2411746Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-23T10:20:36.2428690Z ##[error]Process completed with exit code 1.
 ~~~
 
 ## Previous + current error history
@@ -1670,4 +1664,23 @@ Lint and production build	Production build	2026-09-23T10:20:36.1502294Z   errors
 Lint and production build	Production build	2026-09-23T10:20:36.1502753Z }^[[39m
 Lint and production build	Production build	2026-09-23T10:20:36.2411746Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T10:20:36.2428690Z ##[error]Process completed with exit code 1.
+~~~
+
+---
+
+## Failure recorded 2026-09-23T10:21:12Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T10:20:17Z","databaseId":35848208732,"displayTitle":"refactor: remove YouTube from catalogue mapping","headSha":"356c192ca9bf3391e56129aad5d6a6d33fb58b6b","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:21:11Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848208732"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848208732 is still in progress; logs will be available when it is complete
 ~~~
