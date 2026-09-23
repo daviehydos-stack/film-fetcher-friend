@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
-import { isAdminEmail, publicCatalogue, publicPages } from "@/lib/avant-backend";
+import { publicCatalogue, publicPages } from "@/lib/avant-backend";
 import { useAvantAuth } from "@/lib/avant-auth";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false),
     [scrolled, setScrolled] = useState(false),
-    [admin, setAdmin] = useState(false),
     [cmsNav, setCmsNav] = useState<any[]>([]),
     [appearance, setAppearance] = useState<any>({}),
     [langs, setLangs] = useState<any>(null),
@@ -21,7 +20,6 @@ export function SiteHeader() {
     [online, setOnline] = useState(true),
     [cacheCleared, setCacheCleared] = useState(false);
   const {user:customer,ready:authReady,busy:authBusy,signIn,signOut}=useAvantAuth();
-  useEffect(()=>setAdmin(isAdminEmail(customer?.email)),[customer]);
   useEffect(() => {
     void publicPages()
       .then((x) => setCmsNav(x?.pages || []))
@@ -167,7 +165,7 @@ export function SiteHeader() {
               <Search className="size-5" />
             </Link>
           </>) : null}
-          {admin ? <Link
+          {customer ? <Link
               to="/admin"
               className="hidden rounded-full border border-primary/25 bg-primary/10 px-3 py-2 text-xs font-black text-primary hover:bg-primary/20 lg:block"
             >
@@ -268,7 +266,7 @@ export function SiteHeader() {
               Sign in with Google
             </button>
           )}
-          {admin ? <Link
+          {customer ? <Link
               to="/admin"
               onClick={() => setOpen(false)}
               className="mt-2 flex min-h-12 items-center rounded-md border border-primary/20 bg-primary/10 px-3 font-black text-primary"
