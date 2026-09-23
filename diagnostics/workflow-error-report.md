@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35903290457
 
-Generated: 2026-09-23T18:33:48Z
+Generated: 2026-09-23T18:34:12Z
 
 ### Current primary errors
 ~~~text
@@ -5374,6 +5374,25 @@ build	Install dependencies	2026-09-23T18:31:49.8616681Z ##[error]Process complet
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-23T18:33:25Z","databaseId":35903290457,"displayTitle":"Deploy GitHub Pages Preview","headSha":"09e79d81a386807e4c4665bf18e3eb5ee4508439","jobs":[],"name":"Deploy GitHub Pages Preview","status":"queued","updatedAt":"2026-09-23T18:33:47Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35903290457"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35903290457 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T18:34:12Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T18:33:25Z","databaseId":35903290457,"displayTitle":"Deploy GitHub Pages Preview","headSha":"09e79d81a386807e4c4665bf18e3eb5ee4508439","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107324843699,"name":"build","startedAt":"2026-09-23T18:34:09Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35903290457/job/107324843699"}],"name":"Deploy GitHub Pages Preview","status":"queued","updatedAt":"2026-09-23T18:34:08Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35903290457"}
 
 ~~~
 
