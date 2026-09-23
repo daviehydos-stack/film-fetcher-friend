@@ -108,8 +108,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: `${import.meta.env.BASE_URL}avant-movies-logo.png`, type: "image/png", sizes: "16x16" },
       { rel: "apple-touch-icon", href: `${import.meta.env.BASE_URL}avant-movies-logo.png`, sizes: "180x180" },
       { rel: "manifest", href: `${import.meta.env.BASE_URL}site.webmanifest` },
-      { rel: "preconnect", href: "https://www.youtube.com" },
-      { rel: "preconnect", href: "https://i.ytimg.com" },
       { rel: "preconnect", href: "https://player.vimeo.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://i.vimeocdn.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://f.vimeocdn.com", crossOrigin: "anonymous" },
@@ -117,8 +115,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "dns-prefetch", href: "//i.vimeocdn.com" },
       { rel: "dns-prefetch", href: "//f.vimeocdn.com" },
       { rel: "preconnect", href: "https://bnuyhrsezkepsaebwlmu.supabase.co" },
-      { rel: "dns-prefetch", href: "//www.youtube.com" },
-      { rel: "dns-prefetch", href: "//i.ytimg.com" },
       { rel: "dns-prefetch", href: "//player.vimeo.com" },
       { rel: "shortcut icon", href: `${import.meta.env.BASE_URL}avant-movies-logo.png`, type: "image/png" },
       ...(absoluteUrl("/") ? [{ rel: "home", href: absoluteUrl("/")! }] : []),
@@ -196,7 +192,7 @@ function RootComponent() {
     // New route = new page: always begin at the top. Browser back/forward may restore naturally.
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [location.pathname]);
-  useEffect(() => { let dead=false; const sync=async()=>{const token=await customerToken(false);if(dead)return;if(!token){rememberSubscriber(false);return}try{const a=await accountAccess(token);if(!dead)rememberSubscriber(Boolean(a.subscriber))}catch{}};void sync();const off=subscribeAccessChanged(()=>void sync());return()=>{dead=true;off()}; }, []);
+  useEffect(() => { let dead=false; let timer:number|undefined; const sync=async()=>{const token=await customerToken(false);if(dead)return;if(!token){rememberSubscriber(false);return}try{const a=await accountAccess(token);if(!dead)rememberSubscriber(Boolean(a.subscriber))}catch{}};timer=window.setTimeout(()=>void sync(),1800);const off=subscribeAccessChanged(()=>void sync());return()=>{dead=true;if(timer)window.clearTimeout(timer);off()}; }, []);
   useEffect(() => {
     const onPlayerStarted = (event: Event) => {
       const player = (event as CustomEvent<{ player?: HTMLIFrameElement | HTMLMediaElement }>).detail?.player;
@@ -208,7 +204,7 @@ function RootComponent() {
       stopAllMedia();
     };
   }, []);
-  useEffect(() => { let dead=false; void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{});return()=>{dead=true}; }, []);
+  useEffect(() => { let dead=false; const timer=window.setTimeout(()=>void publicCatalogue().then((x:any)=>{if(dead)return;const favicon=x?.appearance?.branding?.faviconUrl;if(!favicon)return;document.querySelectorAll<HTMLLinkElement>('link[rel="icon"],link[rel="shortcut icon"]').forEach(el=>{el.href=favicon});}).catch(()=>{}),2200);return()=>{dead=true;window.clearTimeout(timer)}; }, []);
   useEffect(() => {
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
     const register = () => navigator.serviceWorker.register(import.meta.env.BASE_URL + "sw.js", { scope: import.meta.env.BASE_URL }).catch(() => undefined);
