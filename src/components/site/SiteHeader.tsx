@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { LogIn, LogOut, Menu, Search, Sparkles, UserRound, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { BrandMark } from "@/components/streaming/BrandMark";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 import { publicCatalogue, publicPages } from "@/lib/avant-backend";
@@ -94,15 +93,11 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-[64px] w-full min-w-0 max-w-[1800px] items-center gap-2 px-3 sm:h-[72px] sm:gap-7 sm:px-10 lg:px-14">
         <Link to="/" aria-label="Avant Movies home" className="min-w-0 shrink">
-          {appearance?.branding?.logoUrl ? (
-            <img
-              src={appearance.branding.logoUrl}
-              alt={appearance.siteName || "Avant Movies"}
-              className="max-h-9 w-auto max-w-[9rem] object-contain sm:max-h-10 sm:max-w-44"
-            />
-          ) : (
-            <BrandMark />
-          )}
+          <img
+            src={appearance?.branding?.logoUrl || `${import.meta.env.BASE_URL}avant-movies-logo.png`}
+            alt={appearance.siteName || "Avant Movies"}
+            className="max-h-9 w-auto max-w-[9rem] object-contain sm:max-h-10 sm:max-w-44"
+          />
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {[
