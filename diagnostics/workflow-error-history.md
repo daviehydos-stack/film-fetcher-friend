@@ -3557,3 +3557,76 @@ run 35899031924 is still in progress; logs will be available when it is complete
 ~~~text
 run 35899063707 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T17:58:12Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"failure","createdAt":"2026-09-23T17:56:38Z","databaseId":35899063707,"displayTitle":"Tighten mobile streaming rail spacing","headSha":"a565a796ffbae1ec61d1052386071d323eaefa15","jobs":[{"completedAt":"2026-09-23T17:58:01Z","conclusion":"failure","databaseId":107310640070,"name":"Lint and production build","startedAt":"2026-09-23T17:57:41Z","status":"completed","steps":[{"completedAt":"2026-09-23T17:57:43Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-23T17:57:42Z","status":"completed"},{"completedAt":"2026-09-23T17:57:44Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-23T17:57:43Z","status":"completed"},{"completedAt":"2026-09-23T17:57:46Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-23T17:57:44Z","status":"completed"},{"completedAt":"2026-09-23T17:57:48Z","conclusion":"success","name":"Install dependencies","number":4,"startedAt":"2026-09-23T17:57:46Z","status":"completed"},{"completedAt":"2026-09-23T17:57:59Z","conclusion":"failure","name":"Production build","number":5,"startedAt":"2026-09-23T17:57:48Z","status":"completed"},{"completedAt":"2026-09-23T17:57:59Z","conclusion":"skipped","name":"Post Setup Bun","number":9,"startedAt":"2026-09-23T17:57:59Z","status":"completed"},{"completedAt":"2026-09-23T17:57:59Z","conclusion":"success","name":"Post Checkout","number":10,"startedAt":"2026-09-23T17:57:59Z","status":"completed"},{"completedAt":"2026-09-23T17:58:00Z","conclusion":"success","name":"Complete job","number":11,"startedAt":"2026-09-23T17:57:59Z","status":"completed"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35899063707/job/107310640070"}],"name":"Avant Movies CI","status":"completed","updatedAt":"2026-09-23T17:58:01Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35899063707"}
+
+~~~
+
+### Primary errors
+~~~text
+Lint and production build	Production build	2026-09-23T17:57:59.6258706Z ^[[31m✗^[[39m Build failed in 2.34s
+Lint and production build	Production build	2026-09-23T17:57:59.6270997Z ^[[31mBuild failed with 1 error:
+Lint and production build	Production build	2026-09-23T17:57:59.6272754Z Error: Failed to load `transformWithEsbuild`. It is deprecated and it now requires esbuild to be installed separately. If you are a package author, please migrate to `transformWithOxc` instead.
+Lint and production build	Production build	2026-09-23T17:57:59.6279000Z   Error: Cannot find package 'esbuild' imported from /home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js
+Lint and production build	Production build	2026-09-23T17:57:59.6280185Z   Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'esbuild' imported from /home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js
+Lint and production build	Production build	2026-09-23T17:57:59.6287872Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
+Lint and production build	Production build	2026-09-23T17:57:59.6289022Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
+Lint and production build	Production build	2026-09-23T17:57:59.6837227Z error: script "build" exited with code 1
+Lint and production build	Production build	2026-09-23T17:57:59.6853639Z ##[error]Process completed with exit code 1.
+~~~
+
+### Full failed-step log
+~~~text
+Lint and production build	Production build	﻿2026-09-23T17:57:48.2552644Z ##[group]Run bun run build
+Lint and production build	Production build	2026-09-23T17:57:48.2553071Z ^[[36;1mbun run build^[[0m
+Lint and production build	Production build	2026-09-23T17:57:48.2597085Z shell: /usr/bin/bash -e {0}
+Lint and production build	Production build	2026-09-23T17:57:48.2597628Z ##[endgroup]
+Lint and production build	Production build	2026-09-23T17:57:48.4538752Z $ node scripts/generate-seo.mjs && vite build
+Lint and production build	Production build	2026-09-23T17:57:55.3144672Z SEO: generated robots.txt, sitemap.xml, video-sitemap.xml and image-sitemap.xml for https://avantmovies.vercel.app (65 URLs, 54 videos, 57 image pages).
+Lint and production build	Production build	2026-09-23T17:57:56.8154017Z ^[[33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the ^[[1mresolve.tsconfigPaths^[[22m option. You can remove the plugin and set ^[[1mresolve.tsconfigPaths: true^[[22m in your Vite config instead.^[[39m
+Lint and production build	Production build	2026-09-23T17:57:57.2791496Z ^[[36mvite v8.1.5 ^[[32mbuilding client environment for production...^[[36m^[[39m
+Lint and production build	Production build	2026-09-23T17:57:57.2956818Z ^[[2K
+Lint and production build	Production build	2026-09-23T17:57:59.5144570Z transforming...✓ 1963 modules transformed.
+Lint and production build	Production build	2026-09-23T17:57:59.6258706Z ^[[31m✗^[[39m Build failed in 2.34s
+Lint and production build	Production build	2026-09-23T17:57:59.6270348Z ^[[31merror during build:
+Lint and production build	Production build	2026-09-23T17:57:59.6270997Z ^[[31mBuild failed with 1 error:
+Lint and production build	Production build	2026-09-23T17:57:59.6271437Z 
+Lint and production build	Production build	2026-09-23T17:57:59.6271641Z [plugin vite:esbuild-transpile]
+Lint and production build	Production build	2026-09-23T17:57:59.6272754Z Error: Failed to load `transformWithEsbuild`. It is deprecated and it now requires esbuild to be installed separately. If you are a package author, please migrate to `transformWithOxc` instead.
+Lint and production build	Production build	2026-09-23T17:57:59.6273979Z     at transformWithEsbuild (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:3348:9)
+Lint and production build	Production build	2026-09-23T17:57:59.6275027Z     at async PluginContextImpl.renderChunk (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:3400:16)
+Lint and production build	Production build	2026-09-23T17:57:59.6276370Z     at async plugin (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/bindingify-input-options-EnUlEF0T.mjs:1624:16)
+Lint and production build	Production build	2026-09-23T17:57:59.6277564Z     at async plugin.<computed> (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/bindingify-input-options-EnUlEF0T.mjs:1906:12)
+Lint and production build	Production build	2026-09-23T17:57:59.6278381Z Caused by:
+Lint and production build	Production build	2026-09-23T17:57:59.6279000Z   Error: Cannot find package 'esbuild' imported from /home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js
+Lint and production build	Production build	2026-09-23T17:57:59.6280185Z   Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'esbuild' imported from /home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js
+Lint and production build	Production build	2026-09-23T17:57:59.6281061Z       at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+Lint and production build	Production build	2026-09-23T17:57:59.6281653Z       at packageResolve (node:internal/modules/esm/resolve:768:81)
+Lint and production build	Production build	2026-09-23T17:57:59.6282163Z       at moduleResolve (node:internal/modules/esm/resolve:855:18)
+Lint and production build	Production build	2026-09-23T17:57:59.6282617Z       at defaultResolve (node:internal/modules/esm/resolve:985:11)
+Lint and production build	Production build	2026-09-23T17:57:59.6283142Z       at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)
+Lint and production build	Production build	2026-09-23T17:57:59.6283719Z       at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)
+Lint and production build	Production build	2026-09-23T17:57:59.6284328Z       at nextStep (node:internal/modules/customization_hooks:189:26)
+Lint and production build	Production build	2026-09-23T17:57:59.6285034Z       at Ie (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/@tailwindcss/node/dist/index.mjs:1:539)
+Lint and production build	Production build	2026-09-23T17:57:59.6286296Z       at nextStep (node:internal/modules/customization_hooks:189:26)
+Lint and production build	Production build	2026-09-23T17:57:59.6286973Z       at resolveWithHooks (node:internal/modules/customization_hooks:417:10)^[[31m
+Lint and production build	Production build	2026-09-23T17:57:59.6287872Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
+Lint and production build	Production build	2026-09-23T17:57:59.6289022Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
+Lint and production build	Production build	2026-09-23T17:57:59.6290243Z     at #build (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/rolldown-DP_p9pd3.mjs:132:34)
+Lint and production build	Production build	2026-09-23T17:57:59.6291185Z     at async buildEnvironment (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33061:66)
+Lint and production build	Production build	2026-09-23T17:57:59.6292180Z     at async Object.build (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33483:19)
+Lint and production build	Production build	2026-09-23T17:57:59.6293246Z     at async buildStartViteEnvironments (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/@tanstack/start-plugin-core/dist/esm/vite/planning.js:95:23)
+Lint and production build	Production build	2026-09-23T17:57:59.6294412Z     at async Object.buildApp (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/@tanstack/start-plugin-core/dist/esm/vite/plugin.js:113:8)
+Lint and production build	Production build	2026-09-23T17:57:59.6295778Z     at async Object.buildApp (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/chunks/node.js:33475:6)
+Lint and production build	Production build	2026-09-23T17:57:59.6296791Z     at async CAC.<anonymous> (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/vite/dist/node/cli.js:776:3) {
+Lint and production build	Production build	2026-09-23T17:57:59.6297539Z   errors: [Getter/Setter]
+Lint and production build	Production build	2026-09-23T17:57:59.6297928Z }^[[39m
+Lint and production build	Production build	2026-09-23T17:57:59.6837227Z error: script "build" exited with code 1
+Lint and production build	Production build	2026-09-23T17:57:59.6853639Z ##[error]Process completed with exit code 1.
+~~~
