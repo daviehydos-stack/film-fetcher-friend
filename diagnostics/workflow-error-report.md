@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35848624740
 
-Generated: 2026-09-23T10:25:04Z
+Generated: 2026-09-23T10:25:36Z
 
 ### Current primary errors
 ~~~text
@@ -1978,6 +1978,25 @@ Lint and production build	Production build	2026-09-23T10:23:48.1446970Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":1,"conclusion":"","createdAt":"2026-09-23T10:24:37Z","databaseId":35848624740,"displayTitle":"refactor: use native Vimeo player without custom playback chrome","headSha":"70c9055bf3ccee50868429eaca7d66d1e2bddaf6","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:25:01Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848624740"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848624740 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T10:25:36Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:24:37Z","databaseId":35848624740,"displayTitle":"refactor: use native Vimeo player without custom playback chrome","headSha":"70c9055bf3ccee50868429eaca7d66d1e2bddaf6","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-23T10:25:31Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848624740"}
 
 ~~~
 
