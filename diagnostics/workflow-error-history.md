@@ -5232,3 +5232,22 @@ Lint and production build	Production build	2026-09-23T18:27:50.9268450Z ##[error
 ~~~text
 run 35902768689 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:29:42Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T18:28:59Z","databaseId":35902768689,"displayTitle":"Fix production build by installing esbuild","headSha":"1e8d298cdde17e5f59613f2d36f79edcd37dde38","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107323081725,"name":"Lint and production build","startedAt":"2026-09-23T18:29:40Z","status":"in_progress","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35902768689/job/107323081725"}],"name":"Avant Movies CI","status":"in_progress","updatedAt":"2026-09-23T18:29:40Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35902768689"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35902768689 is still in progress; logs will be available when it is complete
+~~~
