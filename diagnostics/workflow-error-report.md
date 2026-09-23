@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 35868222861
+Run ID: 35868255917
 
-Generated: 2026-09-23T13:37:27Z
+Generated: 2026-09-23T13:37:54Z
 
 ### Current primary errors
 ~~~text
@@ -3012,4 +3012,23 @@ run 35868255917 is still in progress; logs will be available when it is complete
 ### Full failed-step log
 ~~~text
 run 35868222861 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T13:37:54Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T13:36:33Z","databaseId":35868255917,"displayTitle":"refactor: remove stale YouTube fields from title loader","headSha":"de3b1fe2f88c1eb75b14775096c373fb5ae36ea3","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-23T13:37:51Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35868255917"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35868255917 is still in progress; logs will be available when it is complete
 ~~~
