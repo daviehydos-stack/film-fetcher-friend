@@ -1136,3 +1136,22 @@ Lint and production build	Production build	2026-09-23T06:09:59.1656216Z ##[error
 ~~~text
 run 35825630266 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T06:12:33Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T06:11:34Z","databaseId":35825630266,"displayTitle":"Show Admin link for all signed-in screen sizes","headSha":"cb5eb52960a3efa0691104cac23a3fe66d011eb9","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107066813446,"name":"Lint and production build","startedAt":"2026-09-23T06:12:31Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35825630266/job/107066813446"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T06:12:31Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35825630266"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35825630266 is still in progress; logs will be available when it is complete
+~~~

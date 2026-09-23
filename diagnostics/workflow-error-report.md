@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35825630266
 
-Generated: 2026-09-23T06:12:06Z
+Generated: 2026-09-23T06:12:33Z
 
 ### Current primary errors
 ~~~text
@@ -1140,6 +1140,25 @@ Lint and production build	Production build	2026-09-23T06:09:59.1656216Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-23T06:11:34Z","databaseId":35825630266,"displayTitle":"Show Admin link for all signed-in screen sizes","headSha":"cb5eb52960a3efa0691104cac23a3fe66d011eb9","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107066682901,"name":"Lint and production build","startedAt":"2026-09-23T06:12:00Z","status":"in_progress","steps":[{"completedAt":"2026-09-23T06:12:02Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-23T06:12:01Z","status":"completed"},{"completedAt":"2026-09-23T06:12:03Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-23T06:12:02Z","status":"completed"},{"completedAt":"2026-09-23T06:12:04Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-23T06:12:03Z","status":"completed"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Install dependencies","number":4,"startedAt":"2026-09-23T06:12:04Z","status":"in_progress"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Production build","number":5,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Setup Bun","number":9,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Checkout","number":10,"startedAt":"0001-01-01T00:00:00Z","status":"pending"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35825630266/job/107066682901"}],"name":"Avant Movies CI","status":"in_progress","updatedAt":"2026-09-23T06:12:01Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35825630266"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35825630266 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T06:12:33Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T06:11:34Z","databaseId":35825630266,"displayTitle":"Show Admin link for all signed-in screen sizes","headSha":"cb5eb52960a3efa0691104cac23a3fe66d011eb9","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107066813446,"name":"Lint and production build","startedAt":"2026-09-23T06:12:31Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35825630266/job/107066813446"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T06:12:31Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35825630266"}
 
 ~~~
 
