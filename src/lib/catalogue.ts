@@ -157,7 +157,7 @@ function readCatalogueCache() {
 export function useCatalogue() {
   const cached = typeof window !== "undefined" ? readCatalogueCache() : null;
   const [items, setItems] = useState<CatalogueTitle[]>(cached?.items || []);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(!cached);
   const [usingFallback, setUsingFallback] = useState(!cached);
   const [offline, setOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
 
@@ -166,6 +166,7 @@ export function useCatalogue() {
     const refresh = () => {
       if (!navigator.onLine) { setOffline(true); return; }
       setOffline(false);
+      setLoading((value)=>value||!readCatalogueCache());
       publicCatalogue()
         .then((payload) => {
           if (!active) return;
