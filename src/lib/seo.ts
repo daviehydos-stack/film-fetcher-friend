@@ -66,7 +66,8 @@ export function titleSchema(item: CatalogueTitle) {
         name: episode.title,
         episodeNumber: index + 1,
         ...(episode.duration ? { duration: isoDuration(episode.duration) } : {}),
-        ...(absoluteUrl(`/episode/${item.slug}/${index + 1}`) ? { url: absoluteUrl(`/episode/${item.slug}/${index + 1}`) } : {}),
+        ...(absoluteUrl(`/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`) ? { url: absoluteUrl(`/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`) } : {}),
+        ...(episode.vimeoVideoId ? { video: videoObjectSchema({ name: `${item.title}: ${episode.title}`, description: episode.description || item.synopsis || item.shortDescription || `Watch ${episode.title} from ${item.title} on Avant Cinema.`, vimeoId: episode.vimeoVideoId, duration: episode.duration, pagePath: `/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`, episodeNumber: episode.episodeNumber || index + 1, seriesName: item.title, seriesPath: `/title/${item.slug}`, thumbnailUrl: episode.thumbnailUrl || item.backdrop || item.artwork }) } : {}),
       })),
     } : {}),
   };
@@ -108,7 +109,7 @@ export function youtubeThumbnail(id: string) {
 
 export function videoObjectSchema(input: { name: string; description: string; youtubeId?: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string }) {
   const pageUrl = absoluteUrl(input.pagePath);
-  const uploadDate = input.uploadDate || new Date().toISOString();
+  const uploadDate = input.uploadDate;
   const embedUrl = input.youtubeId ? `https://www.youtube-nocookie.com/embed/${input.youtubeId}` : input.vimeoId ? `https://player.vimeo.com/video/${input.vimeoId}` : undefined;
   return {
     "@context": "https://schema.org",
@@ -116,7 +117,7 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     name: input.name,
     description: input.description,
     thumbnailUrl: [input.thumbnailUrl || (input.youtubeId ? youtubeThumbnail(input.youtubeId) : undefined)].filter(Boolean),
-    uploadDate,
+    ...(uploadDate ? { uploadDate } : {}),
     ...(embedUrl ? { embedUrl } : {}),
     ...(pageUrl ? { url: pageUrl, mainEntityOfPage: pageUrl } : {}),
     ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
