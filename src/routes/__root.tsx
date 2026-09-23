@@ -221,30 +221,9 @@ function RootComponent() {
     sync(); window.addEventListener("online", sync); window.addEventListener("offline", sync);
     return () => { window.removeEventListener("online", sync); window.removeEventListener("offline", sync); };
   }, []);
-  useEffect(() => {
-    const buildSha = import.meta.env["VITE_BUILD_SHA"]?.trim();
-    if (!buildSha || typeof window === "undefined") return;
-
-    let cancelled = false;
-
-    fetch(import.meta.env.BASE_URL + "version.json", {
-      cache: "no-store",
-      headers: { "cache-control": "no-cache" },
-    })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((payload: { sha?: string } | null) => {
-        if (!cancelled && payload?.sha && payload.sha !== buildSha) {
-          window.location.reload();
-        }
-      })
-      .catch(() => {
-        // A version check must never break the application.
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // Do not auto-reload the SPA when a newer deployment is detected.
+  // On GitHub Pages a deep-link reload is handled by 404.html via ?__spa=.
+  // Reloading here created an endless direct-URL <-> ?__spa redirect loop.
 
   return (
     <QueryClientProvider client={queryClient}>
