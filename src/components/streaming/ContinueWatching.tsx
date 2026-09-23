@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Play, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { catalogue, type CatalogueTitle, type Episode } from "@/lib/site-data";
+import type { CatalogueTitle, Episode } from "@/lib/site-data";
+import { useCatalogue } from "@/lib/catalogue";
 import {
   clearProgress,
   formatWatchTime,
@@ -19,6 +20,7 @@ type ProgressRow = {
 };
 
 export function ContinueWatching() {
+  const { items } = useCatalogue();
   const [progress, setProgress] = useState<WatchProgress[]>([]);
   const [serverProgress, setServerProgress] = useState<WatchProgress[]>([]);
   useEffect(() => {
@@ -57,7 +59,7 @@ export function ContinueWatching() {
       if (!previous || entry.updatedAt >= previous.updatedAt) merged.set(entry.contentId, entry);
     });
     const combined = [...merged.values()];
-    const episodes = catalogue.flatMap((item) =>
+    const episodes = items.flatMap((item) =>
       (item.episodes ?? []).map((episode, index) => ({ item, episode, index })),
     );
     return combined
@@ -70,7 +72,7 @@ export function ContinueWatching() {
         );
         return match ? [{ ...match, progress: entry }] : [];
       });
-  }, [progress, serverProgress]);
+  }, [progress, serverProgress, items]);
 
   if (!rows.length) return null;
 
