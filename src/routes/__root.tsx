@@ -115,6 +115,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "dns-prefetch", href: "//i.vimeocdn.com" },
       { rel: "dns-prefetch", href: "//f.vimeocdn.com" },
       { rel: "preconnect", href: "https://bnuyhrsezkepsaebwlmu.supabase.co" },
+      { rel: "preconnect", href: "https://res.cloudinary.com", crossOrigin: "anonymous" },
+      { rel: "dns-prefetch", href: "//res.cloudinary.com" },
       { rel: "dns-prefetch", href: "//player.vimeo.com" },
       { rel: "shortcut icon", href: `${import.meta.env.BASE_URL}avant-movies-logo.png`, type: "image/png" },
       ...(absoluteUrl("/") ? [{ rel: "home", href: absoluteUrl("/")! }] : []),
