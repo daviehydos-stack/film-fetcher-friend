@@ -349,7 +349,7 @@ export const catalogue: CatalogueTitle[] = [
   },
   {
     id: "isabella", slug: "isabella", title: "Isabella", type: "series",
-    genres: ["Drama", "Classic"], available: true,
+    genres: ["Drama", "Classic"], available: false,
     shortDescription: "A K24 classic from the Avant archive.",
     synopsis: "Isabella is a classic episodic title preserved in the Avant Cinema video archive.",
     artwork: "https://i.ytimg.com/vi/3fdhXgENfJk/hqdefault.jpg",
