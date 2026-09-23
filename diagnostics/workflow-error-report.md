@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 35850234513
+Run ID: 35850242645
 
-Generated: 2026-09-23T10:42:33Z
+Generated: 2026-09-23T10:42:51Z
 
 ### Current primary errors
 ~~~text
@@ -2814,4 +2814,23 @@ run 35850242645 is still in progress; logs will be available when it is complete
 ### Full failed-step log
 ~~~text
 run 35850234513 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T10:42:51Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T10:41:31Z","databaseId":35850242645,"displayTitle":"fix: repair Vimeo preview template syntax","headSha":"348f395a336a2e5081dd6ab326950b9f4bd1fc9d","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:42:49Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35850242645"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35850242645 is still in progress; logs will be available when it is complete
 ~~~
