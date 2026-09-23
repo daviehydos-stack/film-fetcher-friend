@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 35848328610
 
-Generated: 2026-09-23T10:22:02Z
+Generated: 2026-09-23T10:22:26Z
 
 ### Current primary errors
 ~~~text
@@ -1762,6 +1762,25 @@ Lint and production build	Production build	2026-09-23T10:21:27.3382555Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-23T10:21:32Z","databaseId":35848328610,"displayTitle":"fix: resolve UUID watch links from published Vimeo records","headSha":"f0701386113ba35d798cef3cc6b3535e2082d4eb","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107139910779,"name":"Lint and production build","startedAt":"2026-09-23T10:22:01Z","status":"queued","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848328610/job/107139910779"}],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:22:00Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848328610"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848328610 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T10:22:26Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:21:32Z","databaseId":35848328610,"displayTitle":"fix: resolve UUID watch links from published Vimeo records","headSha":"f0701386113ba35d798cef3cc6b3535e2082d4eb","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:22:24Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848328610"}
 
 ~~~
 

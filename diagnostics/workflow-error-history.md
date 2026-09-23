@@ -1758,3 +1758,22 @@ Lint and production build	Production build	2026-09-23T10:21:27.3382555Z ##[error
 ~~~text
 run 35848328610 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:22:26Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:21:32Z","databaseId":35848328610,"displayTitle":"fix: resolve UUID watch links from published Vimeo records","headSha":"f0701386113ba35d798cef3cc6b3535e2082d4eb","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:22:24Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848328610"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848328610 is still in progress; logs will be available when it is complete
+~~~
