@@ -36,7 +36,7 @@ let publicPagesCache:any=null,publicPagesAt=0;export const publicPages=()=>{cons
 export const publicPage=(slug:string)=>request<any>(`public-pages?slug=${encodeURIComponent(slug)}`);
 export type ConciergeResult={answer:string;slugs:string[];reasons?:Record<string,string>;suggestions:string[];mode:"ai-grounded"|"catalogue-fallback"|"grounded"};
 export const avantConcierge=(query:string,context:string[]=[])=>request<ConciergeResult>("avant-concierge",null,{method:"POST",body:JSON.stringify({query,context:context.slice(-4)})});
-export const startPalplussPayment=(token:string|null,input:{productId:string;phone:string;idempotencyKey:string})=>request<any>("palpluss-checkout",token,{method:"POST",body:JSON.stringify(input)});
+export const startPalplussPayment=(token:string|null,input:{productId:string;phone:string;email:string;idempotencyKey:string})=>request<any>("palpluss-checkout",token,{method:"POST",body:JSON.stringify(input)});
 export const paymentStatus=(token:string|null,reference:string)=>request<any>("payment-status",token,{method:"POST",body:JSON.stringify({reference})});
 export const reconcilePayments=(token?:string|null)=>request<any>("payment-reconcile",token,{method:"POST",body:"{}"});
 export const recoverPayment=(token:string|null,input:{phone?:string;mpesaCode?:string})=>request<any>("payment-recover",token,{method:"POST",body:JSON.stringify(input)});
