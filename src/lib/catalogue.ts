@@ -122,6 +122,7 @@ export function mergePublicCatalogue(payload: unknown) {
 }
 
 export function isFreeTitle(item: CatalogueTitle) {
+  if (item.slug === "relationship-goals" || item.slug === "granted") return true;
   if (item.type === "movie") return item.accessRequired === false || isFreeEpisode(item.episodes?.[0]);
   return Boolean(item.episodes?.some(isFreeEpisode));
 }
