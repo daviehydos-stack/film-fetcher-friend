@@ -107,11 +107,6 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     ...(textList(raw["countries"]).length ? { countries: textList(raw["countries"]) } : {}),
     ...(text(raw["scheduled_publish_at"]) ? { releaseAt: text(raw["scheduled_publish_at"]) } : {}),
     ...(raw["story_world"] && typeof raw["story_world"] === "object" ? { storyWorld: raw["story_world"] as CatalogueTitle["storyWorld"] } : fallback?.storyWorld ? { storyWorld: fallback.storyWorld } : {}),
-    ...(text(raw["trailer_youtube_id"])
-      ? { trailerEmbedUrl: `https://www.youtube-nocookie.com/embed/${text(raw["trailer_youtube_id"])}?rel=0`, previewYoutubeId: text(raw["trailer_youtube_id"]) }
-      : fallback?.trailerEmbedUrl
-        ? { trailerEmbedUrl: fallback.trailerEmbedUrl, ...(fallback.previewYoutubeId ? { previewYoutubeId: fallback.previewYoutubeId } : {}) }
-        : {}),
     ...(youtubeVideoId ? { youtubeVideoId } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
     ...(text(raw["quality_label"]) ? { quality: text(raw["quality_label"]) } : fallback?.quality ? { quality: fallback.quality } : {}),
@@ -133,7 +128,7 @@ export function isFreeTitle(item: CatalogueTitle) {
 }
 
 export function isFreeEpisode(episode: Episode | undefined) {
-  return Boolean(episode && (episode.youtubeId || episode.vimeoVideoId) && episode.locked !== true);
+  return Boolean(episode?.vimeoVideoId && episode.locked !== true);
 }
 
 export function freeContentId(item: CatalogueTitle) {
