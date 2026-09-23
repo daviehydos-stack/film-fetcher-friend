@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 35849016340
+Run ID: 35849119078
 
-Generated: 2026-09-23T10:30:07Z
+Generated: 2026-09-23T10:30:19Z
 
 ### Current primary errors
 ~~~text
@@ -2382,4 +2382,23 @@ Lint and production build	Production build	2026-09-23T10:29:31.7433994Z ##[error
 ### Full failed-step log
 ~~~text
 run 35849016340 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T10:30:19Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"failure","createdAt":"2026-09-23T10:29:48Z","databaseId":35849119078,"displayTitle":"fix: rebuild header branding spacing and responsive navigation","headSha":"3364c2f6f02d5ae5adad54b8769c8506d87cd737","jobs":[],"name":"Avant Movies CI","status":"completed","updatedAt":"2026-09-23T10:30:11Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35849119078"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35849119078 is still in progress; logs will be available when it is complete
 ~~~
