@@ -583,3 +583,9 @@ img{content-visibility:auto}
 @media(prefers-reduced-motion:reduce){
   .avant-rail-fade{-webkit-mask-image:none!important;mask-image:none!important}
 }
+
+/* Fast, stable media placeholders: reserve space and avoid white flashes while artwork/video initializes. */
+img{background-color:#090a0c}
+[data-title-card] img{transition:opacity 160ms ease,transform 220ms ease}
+iframe{background:#000}
+@media(prefers-reduced-motion:no-preference){.avant-route-surface{will-change:opacity}.avant-mobile-menu{will-change:transform,opacity}}
