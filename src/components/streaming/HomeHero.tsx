@@ -115,7 +115,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     if (travelMode || media.matches || !screen.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
-    const timer = window.setTimeout(() => setTrailerReady(true), 2500);
+    const timer = window.setTimeout(() => setTrailerReady(true), 4000);
     return () => {
       window.clearTimeout(timer);
       screen.removeEventListener?.("change", syncScreen);
@@ -131,6 +131,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         src={item.backdrop}
         alt={`${item.title} featured artwork`}
         fetchPriority="high"
+        loading="eager"
         decoding="async"
         className={`absolute inset-0 size-full object-cover object-[62%_center] sm:object-center transition-opacity duration-500 ${trailerVisible ? "opacity-0" : "opacity-100"}`}
       />
