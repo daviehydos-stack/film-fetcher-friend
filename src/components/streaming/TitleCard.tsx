@@ -1,5 +1,5 @@
 import { Check, ChevronDown, Play, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { readMyList, toggleMyList } from "@/lib/my-list";
@@ -32,6 +32,9 @@ export function TitleCard({
   const freeFullTitle = isFreeTitle(item);
   const playableContentId = freeContentId(item);
   const accessLabel = item.available ? "Watch now" : "Coming soon";
+  const imageCandidates = useMemo(() => Array.from(new Set([item.artwork, item.backdrop].filter(Boolean) as string[])), [item.artwork, item.backdrop]);
+  const [imageIndex, setImageIndex] = useState(0);
+  const activeImage = imageCandidates[imageIndex] || "";
 
   useEffect(() => {
     const sync = (e: any) => setTravelMode(e.detail.active);
@@ -64,15 +67,22 @@ export function TitleCard({
           onClick={() => setDetailsOpen(true)}
           className="relative block aspect-video w-full overflow-hidden text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
         >
-          <img
-            src={item.artwork}
+          {activeImage ? <img
+            key={activeImage}
+            src={activeImage}
             alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`}
             loading="lazy"
             fetchPriority="low"
             decoding="async"
-            onError={(event) => { event.currentTarget.src="/avant-movies-logo.png"; event.currentTarget.classList.add("object-contain","p-12","opacity-60"); }}
+            onError={() => setImageIndex((current) => current + 1)}
             className="size-full object-cover transition duration-500"
-          />
+          /> : <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,122,24,.24),transparent_32%),linear-gradient(135deg,#17191f_0%,#090a0d_62%,#030303_100%)] p-5">
+            <div className="max-w-[85%] text-left">
+              <span className="block text-[10px] font-black uppercase tracking-[.22em] text-orange-400">Avant Cinema</span>
+              <span className="mt-2 block text-xl font-black leading-[.95] tracking-[-.035em] text-white sm:text-2xl">{item.title}</span>
+              <span className="mt-3 block text-[10px] font-semibold uppercase tracking-[.16em] text-white/45">{item.type === "series" ? "Original Series" : "Original Film"}</span>
+            </div>
+          </div>}
           {badgeLabel || item.featured || travelMode ? (
             <span className={`absolute left-2.5 top-2.5 rounded-sm px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-reel ${travelMode ? "bg-blue-600" : (item.featured ? "bg-amber-500" : "bg-primary")}`}>
               {(travelMode && "Data Saver") || (item.featured && "Featured") || badgeLabel}
