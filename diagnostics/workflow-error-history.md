@@ -1993,3 +1993,22 @@ run 35848624740 is still in progress; logs will be available when it is complete
 ~~~text
 run 35848624740 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:25:57Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-23T10:25:28Z","databaseId":35848707463,"displayTitle":"refactor: use default Vimeo controls in preview modal","headSha":"6830a999165ac8be1cda4d77892c3b33dc07d217","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T10:25:55Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848707463"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848707463 is still in progress; logs will be available when it is complete
+~~~
