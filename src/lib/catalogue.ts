@@ -75,7 +75,8 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     : undefined;
   const accessRequired = typeof raw["access_required"] === "boolean" ? raw["access_required"] : true;
   const movieEpisode: Episode[] | undefined =
-    contentType === "movie" && vimeoVideoId\n      ? [{ title, duration: "", vimeoVideoId, locked: accessRequired, legacyKey: slug }]
+    contentType === "movie" && vimeoVideoId
+      ? [{ title, duration: "", vimeoVideoId, locked: accessRequired, legacyKey: slug }]
       : undefined;
 
   return {
