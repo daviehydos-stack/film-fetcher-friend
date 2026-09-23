@@ -1,6 +1,7 @@
 import { Check, ChevronDown, Play, Plus } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogueTitle } from "@/lib/site-data";
+import { optimizedArtwork } from "@/lib/episodes";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { customerToken } from "@/lib/google-auth";
@@ -69,10 +70,10 @@ export function TitleCard({
         >
           {activeImage ? <img
             key={activeImage}
-            src={activeImage}
+            src={optimizedArtwork(activeImage, layout === "grid" ? 720 : 640)}
             alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`}
             loading="lazy"
-            fetchPriority="low"
+            fetchPriority={item.featured ? "high" : "low"}
             decoding="async"
             onError={() => setImageIndex((current) => current + 1)}
             className="size-full object-cover transition duration-500"
