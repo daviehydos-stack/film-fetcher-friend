@@ -1,4 +1,4 @@
-const CACHE="avant-shell-v4";const RUNTIME="avant-runtime-v4";const SHELL=["./","./site.webmanifest","./favicon.ico"];const MAX_RUNTIME=80;const PRIVATE_PATHS=["/admin","/checkout","/payment","/account","/my-list"];const WATCH_PATH="/watch";const SAFE_WARM=["/","/movies","/tv-shows","/watch-free"];
+const CACHE="avant-shell-v5";const RUNTIME="avant-runtime-v5";const SHELL=["./","./site.webmanifest","./favicon.ico"];const MAX_RUNTIME=80;const PRIVATE_PATHS=["/admin","/checkout","/payment","/account","/my-list"];const WATCH_PATH="/watch";const SAFE_WARM=["/","/movies","/tv-shows","/watch-free"];
 function scopedPath(url){const u=typeof url==="string"?new URL(url,self.location.origin):url;const scope=new URL(self.registration.scope).pathname.replace(/\/$/,"");let p=u.pathname;if(scope&&scope!=="/"&&p.startsWith(scope))p=p.slice(scope.length)||"/";return p.startsWith("/")?p:"/"+p}
 function matches(path,prefix){return path===prefix||path.startsWith(prefix+"/")}
 function privatePath(path){return PRIVATE_PATHS.some(p=>matches(path,p))}
@@ -13,5 +13,5 @@ self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;c
 if(privatePath(path)){e.respondWith(fetch(r));return}
 if(watchPath(path)){e.respondWith(fetch(r).catch(()=>caches.match("./")));return}
 if(r.mode==="navigate"){e.respondWith(fetch(r).then(res=>{if(res.ok){const copy=res.clone();caches.open(RUNTIME).then(cache=>put(cache,r,copy)).catch(()=>{})}return res}).catch(async()=>{const exact=await caches.match(r);if(exact)return exact;const clean=new URL(r.url);clean.search="";return(await caches.match(clean.toString()))||caches.match("./")}));return}
-if(/\.(?:js|css|png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(path)){e.respondWith(caches.match(r).then(hit=>hit||fetch(r).then(res=>{if(res.ok){const copy=res.clone();caches.open(RUNTIME).then(cache=>put(cache,r,copy))}return res})))}
+if(/\.(?:js|css)$/i.test(path)){e.respondWith(fetch(r).catch(()=>caches.match(r)));return}\nif(/\.(?:png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(path)){e.respondWith(caches.match(r).then(hit=>hit||fetch(r).then(res=>{if(res.ok){const copy=res.clone();caches.open(RUNTIME).then(cache=>put(cache,r,copy))}return res})))}
 });
