@@ -5319,3 +5319,35 @@ run 35903006119 is still in progress; logs will be available when it is complete
 ~~~text
 run 35903006119 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:32:04Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"failure","createdAt":"2026-09-23T18:30:59Z","databaseId":35903006119,"displayTitle":"Deploy GitHub Pages Preview","headSha":"193f189c9aa1ffb0d5cf6edcb8de1ba11c63601a","jobs":[{"completedAt":"2026-09-23T18:31:51Z","conclusion":"failure","databaseId":107323902398,"name":"build","startedAt":"2026-09-23T18:31:45Z","status":"completed","steps":[{"completedAt":"2026-09-23T18:31:47Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-23T18:31:46Z","status":"completed"},{"completedAt":"2026-09-23T18:31:48Z","conclusion":"success","name":"Checkout validated commit","number":2,"startedAt":"2026-09-23T18:31:47Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-23T18:31:48Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"failure","name":"Install dependencies","number":4,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"skipped","name":"Stamp preview build","number":5,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"skipped","name":"Build static TanStack preview","number":6,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"skipped","name":"Prepare Pages artifact","number":7,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"skipped","name":"Configure Pages","number":8,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"skipped","name":"Upload Pages artifact","number":9,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:49Z","conclusion":"skipped","name":"Post Setup Bun","number":17,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:50Z","conclusion":"success","name":"Post Checkout validated commit","number":18,"startedAt":"2026-09-23T18:31:49Z","status":"completed"},{"completedAt":"2026-09-23T18:31:50Z","conclusion":"success","name":"Complete job","number":19,"startedAt":"2026-09-23T18:31:50Z","status":"completed"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35903006119/job/107323902398"},{"completedAt":"2026-09-23T18:31:51Z","conclusion":"skipped","databaseId":107323960270,"name":"deploy","startedAt":"2026-09-23T18:31:52Z","status":"completed","steps":[],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35903006119/job/107323960270"}],"name":"Deploy GitHub Pages Preview","status":"completed","updatedAt":"2026-09-23T18:31:52Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35903006119"}
+
+~~~
+
+### Primary errors
+~~~text
+build	Install dependencies	2026-09-23T18:31:49.8581980Z error: lockfile had changes, but lockfile is frozen
+build	Install dependencies	2026-09-23T18:31:49.8616681Z ##[error]Process completed with exit code 1.
+~~~
+
+### Full failed-step log
+~~~text
+build	Install dependencies	﻿2026-09-23T18:31:49.5614258Z ##[group]Run bun install --frozen-lockfile
+build	Install dependencies	2026-09-23T18:31:49.5614808Z ^[[36;1mbun install --frozen-lockfile^[[0m
+build	Install dependencies	2026-09-23T18:31:49.5892447Z shell: /usr/bin/bash -e {0}
+build	Install dependencies	2026-09-23T18:31:49.5892864Z env:
+build	Install dependencies	2026-09-23T18:31:49.5893152Z   GITHUB_PAGES: true
+build	Install dependencies	2026-09-23T18:31:49.5893464Z ##[endgroup]
+build	Install dependencies	2026-09-23T18:31:49.6025281Z bun install v1.4.2 (744846f84)
+build	Install dependencies	2026-09-23T18:31:49.6072632Z Resolving dependencies
+build	Install dependencies	2026-09-23T18:31:49.8569040Z Resolved, downloaded and extracted [57]
+build	Install dependencies	2026-09-23T18:31:49.8581980Z error: lockfile had changes, but lockfile is frozen
+build	Install dependencies	2026-09-23T18:31:49.8583213Z note: try re-running without --frozen-lockfile and commit the updated lockfile
+build	Install dependencies	2026-09-23T18:31:49.8616681Z ##[error]Process completed with exit code 1.
+~~~
