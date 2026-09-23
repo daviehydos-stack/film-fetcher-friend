@@ -4,7 +4,7 @@ import { ContentRail } from "@/components/streaming/ContentRail";
 import { HomeHero } from "@/components/streaming/HomeHero";
 import { ContinueWatching } from "@/components/streaming/ContinueWatching";
 import { StreamingShell } from "@/components/streaming/StreamingShell";
-import { catalogue, type CatalogueTitle } from "@/lib/site-data";
+import { type CatalogueTitle } from "@/lib/site-data";
 import { publicCatalogue } from "@/lib/avant-backend";
 import { readMyList } from "@/lib/my-list";
 import { publicPageLinks, publicPageMeta } from "@/lib/seo";
@@ -31,7 +31,7 @@ function Index() {
   }, []);
   useEffect(() => { const sync = () => setMyListIds(readMyList()); sync(); window.addEventListener("avant-my-list", sync); return () => window.removeEventListener("avant-my-list", sync); }, []);
   useEffect(() => { const sync = () => setWatchedIds(readProgress().map((entry) => entry.contentId)); sync(); window.addEventListener("avant-progress", sync); return () => window.removeEventListener("avant-progress", sync); }, []);
-  const dbTitles: CatalogueTitle[]=(home?.titles||[]).map((t:any)=>mapPublicTitle(t)).filter((item:any):item is CatalogueTitle=>Boolean(item));const liveCatalogue=dbTitles.length?dbTitles:catalogue;const heroId=home?.featuredHero?.titleId;const featured=liveCatalogue.find((x:any)=>home?.titles?.find((t:any)=>t.id===heroId)?.slug===x.slug)||liveCatalogue.find(x=>x.featured)||liveCatalogue[0];const series=liveCatalogue.filter(x=>x.type==="series"),movies=liveCatalogue.filter(x=>x.type==="movie"),available=liveCatalogue.filter(x=>x.available);const adminRails=(home?.collections||[]).map((c:any)=>({name:c.name,items:(home?.collectionTitles||[]).filter((x:any)=>x.collection_id===c.id).sort((x:any,y:any)=>x.display_order-y.display_order).map((x:any)=>liveCatalogue.find(t=>home.titles?.find((dt:any)=>dt.id===x.title_id)?.slug===t.slug)).filter(Boolean)})).filter((x:any)=>x.items.length);
+  const dbTitles: CatalogueTitle[]=(home?.titles||[]).map((t:any)=>mapPublicTitle(t)).filter((item:any):item is CatalogueTitle=>Boolean(item));const liveCatalogue=dbTitles;const heroId=home?.featuredHero?.titleId;const featured=liveCatalogue.find((x:any)=>home?.titles?.find((t:any)=>t.id===heroId)?.slug===x.slug)||liveCatalogue.find(x=>x.featured)||liveCatalogue[0];const series=liveCatalogue.filter(x=>x.type==="series"),movies=liveCatalogue.filter(x=>x.type==="movie"),available=liveCatalogue.filter(x=>x.available);const adminRails=(home?.collections||[]).map((c:any)=>({name:c.name,items:(home?.collectionTitles||[]).filter((x:any)=>x.collection_id===c.id).sort((x:any,y:any)=>x.display_order-y.display_order).map((x:any)=>liveCatalogue.find(t=>home.titles?.find((dt:any)=>dt.id===x.title_id)?.slug===t.slug)).filter(Boolean)})).filter((x:any)=>x.items.length);
   const myList = useMemo(() => myListIds.map((id) => liveCatalogue.find((item) => item.id === id)).filter((item): item is CatalogueTitle => Boolean(item)), [myListIds, liveCatalogue]);
   const freeTitles=liveCatalogue.filter(isFreeTitle);
   const withoutHero=(items:CatalogueTitle[])=>items.filter(item=>item.id!==featured?.id);
