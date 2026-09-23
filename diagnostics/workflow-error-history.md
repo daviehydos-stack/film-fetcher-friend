@@ -2349,3 +2349,22 @@ Lint and production build	Production build	2026-09-23T10:29:31.6620245Z }^[[39m
 Lint and production build	Production build	2026-09-23T10:29:31.7418974Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T10:29:31.7433994Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:30:07Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:28:43Z","databaseId":35849016340,"displayTitle":"fix: contain catalogue resolver failures on public discovery pages","headSha":"b93ed1150b57d42743918aea6bc8286c948abea5","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-23T10:30:05Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35849016340"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35849016340 is still in progress; logs will be available when it is complete
+~~~
