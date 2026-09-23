@@ -502,9 +502,9 @@ main,header,footer,section,nav{max-width:100%}
 
 /* One lightweight dissolve. Navigation is immediate; no outgoing layer delays or replays a click. */
 @media (prefers-reduced-motion:no-preference){
-  .avant-route-surface{animation:avantRouteSurfaceIn 140ms ease-out both}
-  .avant-filter-results,.avant-tab-panel[data-state="active"]{animation:avantContentSwap 110ms ease-out both}
-  .avant-mobile-menu{transform-origin:top;transition:opacity 180ms ease,transform 240ms cubic-bezier(.22,1,.36,1),visibility 240ms;opacity:0;transform:translateY(-10px) scaleY(.96);visibility:hidden}
+  .avant-route-surface{animation:avantRouteSurfaceIn 110ms ease-out both;content-visibility:auto;contain-intrinsic-size:1px 900px}
+  .avant-filter-results,.avant-tab-panel[data-state="active"]{animation:avantContentSwap 90ms ease-out both}
+  .avant-mobile-menu{transform-origin:top;transition:opacity 140ms ease,transform 180ms cubic-bezier(.22,1,.36,1),visibility 180ms;opacity:0;transform:translateY(-10px) scaleY(.96);visibility:hidden}
   .avant-mobile-menu.is-open{opacity:1;transform:translateY(0) scaleY(1);visibility:visible}
   @keyframes avantRouteSurfaceIn{from{opacity:.76}to{opacity:1}}
   @keyframes avantContentSwap{from{opacity:.65}to{opacity:1}}
@@ -522,6 +522,8 @@ main,header,footer,section,nav{max-width:100%}
 .avant-menu-trigger.is-open{background:rgba(255,255,255,.08)}
 
 [data-title-card] article>div{transition-duration:220ms!important}
+img{content-visibility:auto}
+@media(max-width:767px){.avant-preview-dialog,.avant-mobile-menu{backdrop-filter:none!important}.avant-preview-backdrop{backdrop-filter:blur(4px)!important}}
 @media(min-width:768px){[data-title-card] article:hover>div{transform:scale(1.025)!important}}
 @media(max-width:767px){.avant-horizontal-rail{scroll-snap-type:x proximity!important;scroll-behavior:auto!important}}
 
