@@ -2781,3 +2781,22 @@ run 35850234513 is still in progress; logs will be available when it is complete
 ~~~text
 run 35850242645 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T10:42:33Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:41:25Z","databaseId":35850234513,"displayTitle":"fix: repair catalogue syntax after Vimeo-only cleanup","headSha":"4a2310d1ffc8213ea541fdb14cfc6b9fde7ac9bc","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-23T10:42:31Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35850234513"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35850234513 is still in progress; logs will be available when it is complete
+~~~
