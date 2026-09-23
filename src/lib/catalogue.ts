@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { publicCatalogue } from "./avant-backend";
-import { catalogue, type CatalogueTitle, type Episode } from "./site-data";
+import type { CatalogueTitle, Episode } from "./site-data";
 
 type PublicTitle = Record<string, unknown>;
 
@@ -42,8 +42,6 @@ export function mapPublicEpisode(value: unknown): Episode | null {
   const description = text(raw["description"]);
   const episodeLegacyKey = text(raw["legacy_key"]);
   const episodeId = text(raw["id"]);
-  const previewVimeoVideoId = text(raw["preview_vimeo_video_id"]);
-  const previewEmbedUrl = text(raw["preview_embed_url"]) || text(raw["trailer_embed_url"]);
   const introStart = numberValue(raw["intro_start_seconds"]);
   const introEnd = numberValue(raw["intro_end_seconds"]);
   const recapStart = numberValue(raw["recap_start_seconds"]);
@@ -62,8 +60,6 @@ export function mapPublicEpisode(value: unknown): Episode | null {
     ...(episodeLegacyKey ? { legacyKey: episodeLegacyKey } : {}),
     ...(previewStart !== undefined ? { previewStart } : {}),
     ...(previewDuration !== undefined ? { previewDuration } : {}),
-    ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
-    ...(previewEmbedUrl ? { previewEmbedUrl } : {}),
     ...(introStart !== undefined ? { introStart } : {}),
     ...(introEnd !== undefined ? { introEnd } : {}),
     ...(recapStart !== undefined ? { recapStart } : {}),
@@ -79,7 +75,6 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
   if (!slug || !title || (contentType !== "movie" && contentType !== "series")) return null;
 
   const legacyKey = text(raw["legacy_key"]);
-  const fallback = catalogue.find((item) => item.slug === slug || item.id === legacyKey);
   const vimeoVideoId = text(raw["vimeo_video_id"]);
   const liveEpisodes = Array.isArray(raw["episodes"])
     ? raw["episodes"].map(mapPublicEpisode).filter((episode): episode is Episode => Boolean(episode))
@@ -91,32 +86,31 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
       : undefined;
 
   return {
-    ...fallback,
     id: legacyKey || slug,
     slug,
     title,
     type: contentType,
-    ...(raw["year"] ? { year: String(raw["year"]) } : fallback?.year ? { year: fallback.year } : {}),
-    genres: textList(raw["genres"]).length ? textList(raw["genres"]) : (fallback?.genres ?? []),
-    synopsis: text(raw["synopsis"]) || fallback?.synopsis || "",
-    shortDescription: text(raw["short_description"]) || fallback?.shortDescription || text(raw["synopsis"]) || "",
-    artwork: optimizedImage(raw["poster_url"], 720) || fallback?.artwork || "",
-    backdrop: optimizedImage(raw["backdrop_url"], 1440) || fallback?.backdrop || optimizedImage(raw["poster_url"], 1440) || "",
-    legacyPath: fallback?.legacyPath || `/${slug}`,
+    ...(raw["year"] ? { year: String(raw["year"]) } : undefined ? { year: fallback.year } : {}),
+    genres: textList(raw["genres"]).length ? textList(raw["genres"]) : (undefined ?? []),
+    synopsis: text(raw["synopsis"]) || undefined || "",
+    shortDescription: text(raw["short_description"]) || undefined || text(raw["synopsis"]) || "",
+    artwork: optimizedImage(raw["poster_url"], 720) || undefined || "",
+    backdrop: optimizedImage(raw["backdrop_url"], 1440) || undefined || optimizedImage(raw["poster_url"], 1440) || "",
+    legacyPath: `/${slug}`,
     featured: Boolean(raw["featured"]),
     available: raw["published"] !== false && (!text(raw["scheduled_publish_at"]) || new Date(text(raw["scheduled_publish_at"]) ?? 0).getTime() <= Date.now()),
     accessRequired,
-    ...(textList(raw["cast_names"]).length ? { cast: textList(raw["cast_names"]) } : fallback?.cast ? { cast: fallback.cast } : {}),
-    ...(textList(raw["creator_names"]).length ? { creators: textList(raw["creator_names"]) } : fallback?.creators ? { creators: fallback.creators } : {}),
-    ...(textList(raw["director_names"]).length ? { directors: textList(raw["director_names"]) } : fallback?.directors ? { directors: fallback.directors } : {}),
-    ...(textList(raw["languages"]).length ? { languages: textList(raw["languages"]) } : fallback?.languages ? { languages: fallback.languages } : {}),
+    ...(textList(raw["cast_names"]).length ? { cast: textList(raw["cast_names"]) } : undefined ? { cast: fallback.cast } : {}),
+    ...(textList(raw["creator_names"]).length ? { creators: textList(raw["creator_names"]) } : undefined ? { creators: fallback.creators } : {}),
+    ...(textList(raw["director_names"]).length ? { directors: textList(raw["director_names"]) } : undefined ? { directors: fallback.directors } : {}),
+    ...(textList(raw["languages"]).length ? { languages: textList(raw["languages"]) } : undefined ? { languages: fallback.languages } : {}),
     ...(textList(raw["countries"]).length ? { countries: textList(raw["countries"]) } : {}),
     ...(text(raw["scheduled_publish_at"]) ? { releaseAt: text(raw["scheduled_publish_at"]) } : {}),
-    ...(raw["story_world"] && typeof raw["story_world"] === "object" ? { storyWorld: raw["story_world"] as CatalogueTitle["storyWorld"] } : fallback?.storyWorld ? { storyWorld: fallback.storyWorld } : {}),
+    ...(raw["story_world"] && typeof raw["story_world"] === "object" ? { storyWorld: raw["story_world"] as CatalogueTitle["storyWorld"] } : undefined ? { storyWorld: fallback.storyWorld } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
-    ...(text(raw["quality_label"]) ? { quality: text(raw["quality_label"]) } : fallback?.quality ? { quality: fallback.quality } : {}),
-    ...(text(raw["maturity_rating"]) ? { maturityRating: text(raw["maturity_rating"]) } : fallback?.maturityRating ? { maturityRating: fallback.maturityRating } : {}),
-    ...(liveEpisodes?.length ? { episodes: liveEpisodes } : movieEpisode ? { episodes: movieEpisode } : fallback?.episodes ? { episodes: fallback.episodes } : {}),
+    ...(text(raw["quality_label"]) ? { quality: text(raw["quality_label"]) } : undefined ? { quality: fallback.quality } : {}),
+    ...(text(raw["maturity_rating"]) ? { maturityRating: text(raw["maturity_rating"]) } : undefined ? { maturityRating: fallback.maturityRating } : {}),
+    ...(liveEpisodes?.length ? { episodes: liveEpisodes } : movieEpisode ? { episodes: movieEpisode } : undefined ? { episodes: fallback.episodes } : {}),
   } as CatalogueTitle;
 }
 
