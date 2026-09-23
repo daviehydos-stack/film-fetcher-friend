@@ -83,7 +83,7 @@ export const trailers: Trailer[] = [
   {
     title: "A Better Life Trailer",
     duration: "01:12",
-    poster: "https://i.ytimg.com/vi/LzKnWnEIr1U/hqdefault.jpg",
+    poster: "https://static.wixstatic.com/media/57086b_a90ca602545d4841be33a5759cffc808~mv2.png/v1/fill/w_930,h_523,enc_auto/file.png",
     href: "/a-better-life",
   },
   {
