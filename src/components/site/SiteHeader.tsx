@@ -167,7 +167,7 @@ export function SiteHeader() {
           </>) : null}
           {customer ? <Link
               to="/admin"
-              className="hidden rounded-full border border-primary/25 bg-primary/10 px-3 py-2 text-xs font-black text-primary hover:bg-primary/20 lg:block"
+              className="inline-flex min-h-10 items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-2 text-xs font-black text-primary hover:bg-primary/20"
             >
               Admin
             </Link> : null}
