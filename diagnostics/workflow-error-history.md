@@ -1215,3 +1215,22 @@ Lint and production build	Production build	2026-09-23T06:12:54.4065497Z }^[[39m
 Lint and production build	Production build	2026-09-23T06:12:54.5110177Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T06:12:54.5127605Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T06:18:30Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-23T06:17:57Z","databaseId":35826106218,"displayTitle":"Make Admin navigation available to all signed-in users","headSha":"4532b821485c8bccadfab04c278fcc23b3d59cbe","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T06:18:28Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35826106218"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35826106218 is still in progress; logs will be available when it is complete
+~~~
