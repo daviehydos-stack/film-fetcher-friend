@@ -4,18 +4,12 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 35848328610
+Run ID: 35848402754
 
-Generated: 2026-09-23T10:23:13Z
+Generated: 2026-09-23T10:23:37Z
 
 ### Current primary errors
 ~~~text
-Lint and production build	Production build	2026-09-23T10:22:59.3460711Z ^[[31m✗^[[39m Build failed in 2.31s
-Lint and production build	Production build	2026-09-23T10:22:59.3468278Z ^[[31mBuild failed with 2 errors:
-Lint and production build	Production build	2026-09-23T10:22:59.3586526Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-23T10:22:59.3588550Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-23T10:22:59.4507275Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-23T10:22:59.4526207Z ##[error]Process completed with exit code 1.
 ~~~
 
 ## Previous + current error history
@@ -1886,4 +1880,23 @@ Lint and production build	Production build	2026-09-23T10:22:59.3603870Z   errors
 Lint and production build	Production build	2026-09-23T10:22:59.3604315Z }^[[39m
 Lint and production build	Production build	2026-09-23T10:22:59.4507275Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-23T10:22:59.4526207Z ##[error]Process completed with exit code 1.
+~~~
+
+---
+
+## Failure recorded 2026-09-23T10:23:37Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-23T10:22:19Z","databaseId":35848402754,"displayTitle":"fix: make service worker cache failures non-fatal","headSha":"b5b3c90fefa054777e650c93177b94d508fec34e","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107140373106,"name":"Lint and production build","startedAt":"2026-09-23T10:23:33Z","status":"in_progress","steps":[{"completedAt":"2026-09-23T10:23:34Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-23T10:23:34Z","status":"completed"},{"completedAt":"2026-09-23T10:23:35Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-23T10:23:34Z","status":"completed"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Setup Bun","number":3,"startedAt":"2026-09-23T10:23:35Z","status":"in_progress"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Install dependencies","number":4,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Production build","number":5,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Setup Bun","number":9,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Checkout","number":10,"startedAt":"0001-01-01T00:00:00Z","status":"pending"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848402754/job/107140373106"}],"name":"Avant Movies CI","status":"in_progress","updatedAt":"2026-09-23T10:23:34Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35848402754"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35848402754 is still in progress; logs will be available when it is complete
 ~~~
