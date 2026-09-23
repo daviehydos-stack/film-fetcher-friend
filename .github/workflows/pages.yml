@@ -34,7 +34,7 @@ jobs:
         with:
           bun-version: latest
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
       - name: Stamp preview build
         run: printf '{"sha":"%s"}\n' "$(git rev-parse HEAD)" > public/version.json
       - name: Build static TanStack preview
