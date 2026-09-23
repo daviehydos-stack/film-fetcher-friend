@@ -92,10 +92,10 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex h-[64px] w-full min-w-0 max-w-[1800px] items-center gap-2 px-3 sm:h-[72px] sm:gap-7 sm:px-10 lg:px-14">
-        <Link to="/" aria-label="Avant Movies home" className="min-w-0 shrink">
+        <Link to="/" aria-label="Avant Cinema home" className="min-w-0 shrink">
           <img
             src={appearance?.branding?.logoUrl || `${import.meta.env.BASE_URL}avant-movies-logo.png`}
-            alt={appearance.siteName || "Avant Movies"}
+            alt={appearance.siteName || "Avant Cinema"}
             className="max-h-9 w-auto max-w-[9rem] object-contain sm:max-h-10 sm:max-w-44"
           />
         </Link>
@@ -155,7 +155,7 @@ export function SiteHeader() {
               to="/search"
               search={{ q: "", type: "all", sort: "curated" }}
               className="grid size-10 shrink-0 place-items-center rounded-full border border-transparent transition hover:border-white/10 hover:bg-white/10"
-              aria-label="Search Avant Movies"
+              aria-label="Search Avant Cinema"
             >
               <Search className="size-5" />
             </Link>

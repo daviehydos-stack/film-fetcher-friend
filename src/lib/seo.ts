@@ -1,9 +1,9 @@
 import type { CatalogueTitle } from "./site-data";
 
-export const SEO_SITE_NAME = "Avant Movies";
-export const SEO_BRAND = "Avant Movies";
-export const SEO_DEFAULT_TITLE = "Avant Movies — It’s time to feel again";
-export const SEO_DEFAULT_DESCRIPTION = "Watch independent Kenyan films, short films and original series on Avant Movies — stories made in Kenya for audiences everywhere.";
+export const SEO_SITE_NAME = "Avant Cinema";
+export const SEO_BRAND = "Avant Cinema";
+export const SEO_DEFAULT_TITLE = "Avant Cinema — It’s time to feel again";
+export const SEO_DEFAULT_DESCRIPTION = "Watch independent Kenyan films, short films and original series on Avant Cinema — stories made in Kenya for audiences everywhere.";
 export const SEO_ORIGIN = (import.meta.env["VITE_PUBLIC_SITE_URL"] || "https://avantmovies.vercel.app").replace(/\/$/, "");
 
 export function absoluteUrl(path: string) {
@@ -74,7 +74,7 @@ export function titleSchema(item: CatalogueTitle) {
   const previewVimeoId = item.previewVimeoId;
   if (previewId || previewVimeoId) base.trailer = videoObjectSchema({
     name: `${item.title} trailer`,
-    description: item.shortDescription || item.synopsis || `Watch the ${item.title} trailer on Avant Movies.`,
+    description: item.shortDescription || item.synopsis || `Watch the ${item.title} trailer on Avant Cinema.`,
     youtubeId: previewId,
     vimeoId: previewVimeoId,
     duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
