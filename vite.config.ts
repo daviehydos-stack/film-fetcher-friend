@@ -12,13 +12,18 @@ export default defineConfig({
     build: {
       cssCodeSplit: true,
       sourcemap: false,
-      target: "es2020",
+      target: "es2022",
+      minify: "esbuild",
+      reportCompressedSize: false,
+      chunkSizeWarningLimit: 750,
       rollupOptions: {
         output: {
           manualChunks(id: string) {
             if (id.includes("node_modules/@tanstack")) return "tanstack";
             if (id.includes("node_modules/lucide-react")) return "icons";
             if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) return "react-vendor";
+            if (id.includes("node_modules/@radix-ui")) return "radix";
+            if (id.includes("node_modules/date-fns")) return "date";
           },
         },
       },
