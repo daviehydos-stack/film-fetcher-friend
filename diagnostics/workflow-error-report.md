@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 35868255917
+Run ID: 35868222861
 
-Generated: 2026-09-23T13:37:07Z
+Generated: 2026-09-23T13:37:27Z
 
 ### Current primary errors
 ~~~text
@@ -2993,4 +2993,23 @@ run 35868222861 is still in progress; logs will be available when it is complete
 ### Full failed-step log
 ~~~text
 run 35868255917 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-23T13:37:27Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T13:36:15Z","databaseId":35868222861,"displayTitle":"fix: remove stale previewId crash from title pages","headSha":"c465ab10c1f87f4e6354748f90ff4627d0641164","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-23T13:37:26Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35868222861"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35868222861 is still in progress; logs will be available when it is complete
 ~~~
