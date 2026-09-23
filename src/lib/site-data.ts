@@ -299,7 +299,7 @@ export const catalogue: CatalogueTitle[] = [
   },
   {
     id: "another-way", slug: "another-way", title: "Another Way", type: "movie",
-    genres: ["Short Film", "Drama"], available: true,
+    genres: ["Short Film", "Drama"], available: false,
     shortDescription: "A short Avant story, now streaming.",
     synopsis: "Another Way is an Avant Cinema short film from the studio archive.",
     artwork: "https://i.ytimg.com/vi/7krnA3G5qrI/hqdefault.jpg",
@@ -309,7 +309,7 @@ export const catalogue: CatalogueTitle[] = [
   },
   {
     id: "adui", slug: "adui", title: "ADUI", type: "movie",
-    genres: ["Short Film"], available: true,
+    genres: ["Short Film"], available: false,
     shortDescription: "A short film from the Avant Cinema archive.",
     synopsis: "ADUI is an Avant Cinema short film available from the studio video archive.",
     artwork: "https://i.ytimg.com/vi/bUx3YibMvGI/hqdefault.jpg",
@@ -319,7 +319,7 @@ export const catalogue: CatalogueTitle[] = [
   },
   {
     id: "relationship-goals", slug: "relationship-goals", title: "Relationship Goals", type: "movie",
-    genres: ["Short Film", "Drama"], available: true,
+    genres: ["Short Film", "Drama"], available: false,
     shortDescription: "An Avant Cinema short story about relationships.",
     synopsis: "Relationship Goals is a short film from the Avant Cinema video archive.",
     artwork: "https://i.ytimg.com/vi/ciUCZ3yIKv0/hqdefault.jpg",
@@ -329,7 +329,7 @@ export const catalogue: CatalogueTitle[] = [
   },
   {
     id: "granted", slug: "granted", title: "Granted", type: "movie",
-    genres: ["Short Film", "Drama"], available: true,
+    genres: ["Short Film", "Drama"], available: false,
     shortDescription: "A short film from Avant Cinema.",
     synopsis: "Granted is an Avant Cinema short film from the studio video archive.",
     artwork: "https://i.ytimg.com/vi/xdR3xLwcWdQ/hqdefault.jpg",
@@ -339,7 +339,7 @@ export const catalogue: CatalogueTitle[] = [
   },
   {
     id: "best-friends-forever", slug: "best-friends-forever", title: "Best Friends Forever", type: "series",
-    genres: ["Drama", "Series"], available: true,
+    genres: ["Drama", "Series"], available: false,
     shortDescription: "Friendship gets complicated.",
     synopsis: "Best Friends Forever is an episodic Avant Cinema story from the studio archive.",
     artwork: "https://i.ytimg.com/vi/dPaiBP_yfOI/hqdefault.jpg",
