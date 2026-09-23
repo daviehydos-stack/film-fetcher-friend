@@ -12,6 +12,17 @@ function textList(value: unknown) {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
+function optimizedImage(value: unknown, width = 720) {
+  const src = typeof value === "string" ? value : "";
+  if (!src) return undefined;
+  try {
+    const u = new URL(src);
+    if (u.hostname === "drive.google.com" && u.pathname === "/thumbnail") u.searchParams.set("sz", `w${width}`);
+    if (u.hostname === "i.vimeocdn.com") { u.searchParams.set("mw", String(width)); u.searchParams.set("q", "82"); }
+    return u.toString();
+  } catch { return src; }
+}
+
 function numberValue(value: unknown) {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
@@ -27,7 +38,7 @@ export function mapPublicEpisode(value: unknown): Episode | null {
   const previewStart = numberValue(raw["preview_start_seconds"]);
   const previewDuration = numberValue(raw["preview_duration_seconds"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]) || text(raw["vimeoVideoId"]);
-  const poster = text(raw["thumbnail_url"]);
+  const poster = optimizedImage(raw["thumbnail_url"], 640);
   const description = text(raw["description"]);
   const episodeLegacyKey = text(raw["legacy_key"]);
   const episodeId = text(raw["id"]);
@@ -89,8 +100,8 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     genres: textList(raw["genres"]).length ? textList(raw["genres"]) : (fallback?.genres ?? []),
     synopsis: text(raw["synopsis"]) || fallback?.synopsis || "",
     shortDescription: text(raw["short_description"]) || fallback?.shortDescription || text(raw["synopsis"]) || "",
-    artwork: text(raw["poster_url"]) || fallback?.artwork || "",
-    backdrop: text(raw["backdrop_url"]) || fallback?.backdrop || text(raw["poster_url"]) || "",
+    artwork: optimizedImage(raw["poster_url"], 720) || fallback?.artwork || "",
+    backdrop: optimizedImage(raw["backdrop_url"], 1440) || fallback?.backdrop || optimizedImage(raw["poster_url"], 1440) || "",
     legacyPath: fallback?.legacyPath || `/${slug}`,
     featured: Boolean(raw["featured"]),
     available: raw["published"] !== false && (!text(raw["scheduled_publish_at"]) || new Date(text(raw["scheduled_publish_at"]) ?? 0).getTime() <= Date.now()),
