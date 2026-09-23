@@ -4864,3 +4864,22 @@ Lint and production build	Production build	2026-09-23T18:24:21.6653193Z ##[error
 ~~~text
 run 35902143445 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-23T18:25:10Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-23T18:24:41Z","databaseId":35902264696,"displayTitle":"Add Resend email integration to admin settings","headSha":"b2833555f171fd6df2f2c5c275c456dd601e2933","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-23T18:25:08Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/35902264696"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 35902264696 is still in progress; logs will be available when it is complete
+~~~
