@@ -18,8 +18,10 @@ import {
 import { customerToken, requireCustomerToken } from "@/lib/google-auth";
 import { TitlePreviewModal } from "./TitlePreviewModal";
 import { beginAvantWatchTransition } from "./AvantTransitionEngine";
+import { useNetworkQuality, getAdaptiveImageWidth } from "@/lib/network";
 
 export function HomeHero({ item }: { item: CatalogueTitle }) {
+  const { isFast, tier } = useNetworkQuality();
   const [muted, setMuted] = useState(false);
   const [trailerReady, setTrailerReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -81,14 +83,14 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         if (!entry) return;
         const visible = entry.isIntersecting && entry.intersectionRatio >= 0.22;
         setHeroInView(visible);
-        if (!visible) pauseEmbeddedPlayer(trailerFrameRef.current);
+        if (!visible || !isFast || travelMode) pauseEmbeddedPlayer(trailerFrameRef.current);
         else if (trailerVisible) playEmbeddedPlayer(trailerFrameRef.current);
       },
       { threshold: [0, 0.22, 0.5] },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [item.id]);
+  }, [item.id, isFast, travelMode, trailerVisible]);
 
   async function toggleSaved() {
     const token = await customerToken(false);
@@ -114,7 +116,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (travelMode || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+    if (travelMode || !isFast || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
     const startTrailer = () => setTrailerReady(true);
@@ -126,7 +128,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
       else window.clearTimeout(idle as number);
       screen.removeEventListener?.("change", syncScreen);
     };
-  }, [item.id, item.trailerEmbedUrl, item.heroAutoplay, travelMode]);
+  }, [item.id, item.trailerEmbedUrl, item.heroAutoplay, travelMode, isFast]);
 
   return (
     <section
@@ -134,7 +136,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
       className="relative min-h-[70svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
     >
       <img
-        src={optimizedArtwork(item.backdrop || item.artwork, 1280)}
+        src={optimizedArtwork(item.backdrop || item.artwork, getAdaptiveImageWidth(1280, tier))}
         alt={`${item.title} featured artwork`}
         fetchPriority="high"
         loading="eager"
