@@ -15,7 +15,10 @@ export function StreamingShell({
     <div className="min-h-[100svh] bg-background text-foreground">
       <SiteHeader />
       <ConnectionNotice />
-      {children}
+      <div className="relative min-h-[72svh] bg-background">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-white/[.018] to-transparent" />
+        <div className="relative">{children}</div>
+      </div>
       {footer ? <SiteFooter /> : null}
     </div>
   );
