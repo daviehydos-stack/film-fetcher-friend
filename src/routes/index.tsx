@@ -56,7 +56,7 @@ function Index() {
           {moviePreview.length>0?<ContentRail eyebrow="Avant Cinema" title="Movies" description="Feature films available on Avant Cinema." items={moviePreview} href="/movies" linkLabel="All movies"/>:null}
           {seriesPreview.length>0?<ContentRail eyebrow="Watch by season" title="Series" description="Open a series, choose a season, then select an episode." items={seriesPreview} href="/tv-shows" linkLabel="All series"/>:null}
           {masterclassPreview.length>0?<ContentRail eyebrow="Learn with Avant" title="Masterclass" description="Premium classes available separately from movies and series." items={masterclassPreview} linkLabel="View masterclass"/>:null}
-          {moreForYou.length>0?<ContentRail eyebrow="Because you watched" title={`More ${lastWatched?.genres[0] ?? "stories"}`} description="Selected from what you have watched on Avant." items={moreForYou} href={lastWatched?.type === "series" ? "/tv-shows" : "/movies"} linkLabel="View more"/ >:null}
+          {moreForYou.length>0?<ContentRail eyebrow="Because you watched" title={`More ${lastWatched?.genres[0] ?? "stories"}`} description="Selected from what you have watched on Avant." items={moreForYou} href={lastWatched?.type === "series" ? "/tv-shows" : "/movies"} linkLabel="View more"/>:null}
           {freePreview.length>0?<ContentRail eyebrow="Open access" title="Watch for Free" description="Short films and selected episodes available without purchase." items={freePreview} badgeLabel="Free to watch" href="/watch-free" linkLabel="Explore free"/>:null}
           {myList.length>0?<ContentRail title="My List" items={myList}/>:null}
         </div>
