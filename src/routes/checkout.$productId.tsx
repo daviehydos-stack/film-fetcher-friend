@@ -193,6 +193,7 @@ function CheckoutRoute() {
       if (!host || !w.paypal?.Buttons) throw new Error('PayPal checkout unavailable.')
       host.innerHTML = ''
       await w.paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal', height: 44 },
         createOrder: () => created.orderId,
         onApprove: async (data: any) => {
           setBusy(true); setStage('confirming'); setError('')
