@@ -69,24 +69,24 @@ export function CataloguePage({
           </div>
         </header>
 
-        <section className="sticky top-16 z-30 mt-9 border-y border-border/60 bg-background/90 backdrop-blur-2xl sm:top-[72px]">
-          <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-2 px-5 py-3 sm:px-10 lg:px-14">
-            <label className="relative min-w-0 flex-[1_1_15rem] lg:max-w-sm">
+        <section className="relative z-30 mt-5 border-y border-border/60 bg-background sm:sticky sm:top-[72px] sm:mt-9 sm:bg-background/90 sm:backdrop-blur-xl">
+          <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-2 px-5 py-2.5 sm:flex sm:flex-wrap sm:items-center sm:px-10 sm:py-3 lg:px-14">
+            <label className="relative col-span-2 min-w-0 sm:flex-[1_1_15rem] lg:max-w-sm">
               <span className="sr-only">Search {label}</span>
               <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Search ${label}`} className="h-11 bg-surface pl-10 pr-10" />
+              <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Search ${label}`} className="h-10 sm:h-11 bg-surface pl-10 pr-10" />
               {query ? <Button size="icon" variant="ghost" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-0.5 top-0.5"><X className="size-4" /></Button> : null}
             </label>
             <div className="relative flex-1 sm:flex-none">
               <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <select aria-label="Filter by genre" value={genre} onChange={(event) => setGenre(event.target.value)} className="h-11 w-full appearance-none rounded-md border border-border bg-surface pl-9 pr-9 text-sm font-semibold outline-none sm:w-auto">
+              <select aria-label="Filter by genre" value={genre} onChange={(event) => setGenre(event.target.value)} className="h-10 sm:h-11 w-full appearance-none rounded-md border border-border bg-surface pl-9 pr-9 text-sm font-semibold outline-none sm:w-auto">
                 {genres.map((value) => <option key={value} value={value}>{value === "All" ? "All genres" : value}</option>)}
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2" />
             </div>
             <div className="relative flex-1 sm:flex-none">
               <ArrowDownAZ className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <select aria-label="Sort catalogue" value={sort} onChange={(event) => setSort(event.target.value as SortMode)} className="h-11 w-full appearance-none rounded-md border border-border bg-surface pl-9 pr-9 text-sm font-semibold outline-none sm:w-auto">
+              <select aria-label="Sort catalogue" value={sort} onChange={(event) => setSort(event.target.value as SortMode)} className="h-10 sm:h-11 w-full appearance-none rounded-md border border-border bg-surface pl-9 pr-9 text-sm font-semibold outline-none sm:w-auto">
                 <option value="curated">Curated</option><option value="az">A–Z</option><option value="newest">Newest year</option>
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2" />
@@ -94,9 +94,9 @@ export function CataloguePage({
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1600px] px-5 py-8 sm:px-10 sm:py-12 lg:px-14">
-          {!query && genre === "All" && quickGenres.length ? <div className="mb-8 flex flex-wrap items-center gap-2"><span className="mr-1 text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground">Browse by mood</span>{quickGenres.map((value) => <Button key={value} type="button" size="sm" variant="outline" onClick={() => setGenre(value)}>{value}</Button>)}</div> : null}
-          <div className="mb-6 flex items-end justify-between gap-4 border-b border-border/60 pb-4">
+        <section className="mx-auto max-w-[1600px] px-5 py-5 sm:px-10 sm:py-12 lg:px-14">
+          {!query && genre === "All" && quickGenres.length ? <div className="mb-4 hidden flex-wrap items-center gap-2 sm:flex sm:mb-8"><span className="mr-1 text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground">Browse by mood</span>{quickGenres.map((value) => <Button key={value} type="button" size="sm" variant="outline" onClick={() => setGenre(value)}>{value}</Button>)}</div> : null}
+          <div className="mb-4 flex items-end justify-between gap-4 border-b border-border/60 pb-3 sm:mb-6 sm:pb-4">
             <div><p className="flex items-center gap-2 text-sm font-bold">{icon}{visible.length} {visible.length === 1 ? label.replace(/s$/, "") : label}</p>{offline ? <p className="mt-1 text-xs text-amber-200/75">Offline · showing the most recent Avant catalogue saved on this device.</p> : usingFallback ? <p className="mt-1 text-xs text-muted-foreground">Showing the available Avant selection while live updates reconnect.</p> : null}</div>
             {(query || genre !== "All") ? <Button variant="ghost" size="sm" onClick={() => { setQuery(""); setGenre("All"); }}>Clear filters</Button> : null}
           </div>
