@@ -130,7 +130,8 @@ Deno.serve(async (r) => {
 
     const { data: variants, error: ve } = await vq;
 
-    const variant = variants?.[0] || null;
+    // Vimeo is the only supported playback provider. Ignore stale YouTube variants.
+    const variant = (variants || []).find((v: any) => v.provider === "vimeo") || null;
 
     if (ve)
       return Response.json(
@@ -175,19 +176,31 @@ Deno.serve(async (r) => {
         }
       : legacy;
 
-    if (!p || (!p.vimeo_video_id && !p.youtube_video_id))
+    // Episodes already carry the canonical Vimeo id. Use it when older
+    // content_playback/video_variants rows are empty or still contain legacy YouTube data.
+    if (episode?.vimeo_video_id && (!p?.vimeo_video_id || p?.video_source === "youtube")) {
+      p = {
+        ...(p || {}),
+        content_id: resolvedId,
+        season_id: p?.season_id || season?.id || null,
+        episode_id: episode.id,
+        title: p?.title || episode.title || title?.slug || "",
+        video_source: "vimeo",
+        vimeo_video_id: episode.vimeo_video_id,
+        youtube_video_id: null,
+      };
+    }
+
+    if (!p || !p.vimeo_video_id)
       return Response.json(
         { authorized: false, reason: "content_unavailable" },
         { status: 404, headers: H },
       );
 
-    const source =
-      p.video_source || (p.vimeo_video_id ? "vimeo" : "youtube");
+    const source = "vimeo";
 
     const makeEmbed = (start = 0) =>
-      source === "youtube"
-        ? `https://www.youtube-nocookie.com/embed/${p.youtube_video_id}?rel=0&modestbranding=1&controls=0&disablekb=1&playsinline=1&iv_load_policy=3&fs=0&enablejsapi=1&autoplay=1&start=${Math.floor(start)}`
-        : `https://player.vimeo.com/video/${p.vimeo_video_id}?dnt=1&title=0&byline=0&portrait=0&badge=0&controls=0&autoplay=1&playsinline=1#t=${start}s`;
+      `https://player.vimeo.com/video/${p.vimeo_video_id}?dnt=1&title=0&byline=0&portrait=0&badge=0&controls=0&autoplay=1&playsinline=1#t=${start}s`;
 
     const availableVariants = (variants || []).map((v: any) => ({
       id: v.id,
