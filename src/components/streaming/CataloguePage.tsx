@@ -1,4 +1,4 @@
-import { ArrowDownAZ, ChevronDown, Film, Play, Search, SlidersHorizontal, Tv, X } from "lucide-react";
+import { ChevronDown, Film, Play, Search, SlidersHorizontal, Tv, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
@@ -85,9 +85,8 @@ export function CataloguePage({
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2" />
             </div>
             <div className="relative flex-1 sm:flex-none">
-              <ArrowDownAZ className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <select aria-label="Sort catalogue" value={sort} onChange={(event) => setSort(event.target.value as SortMode)} className="h-10 sm:h-11 w-full appearance-none rounded-md border border-border bg-surface pl-9 pr-9 text-sm font-semibold outline-none sm:w-auto">
-                <option value="curated">Curated</option><option value="az">A–Z</option><option value="newest">Newest year</option>
+              <select aria-label="Sort catalogue" value={sort} onChange={(event) => setSort(event.target.value as SortMode)} className="h-10 sm:h-11 w-full appearance-none rounded-md border border-border bg-surface px-3 pr-9 text-sm font-semibold outline-none sm:w-auto">
+                <option value="curated">Curated</option><option value="az">A–Z</option><option value="newest">Newest</option>
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2" />
             </div>
