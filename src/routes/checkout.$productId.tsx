@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { ArrowLeft, Check, CheckCircle2, CircleAlert, Clapperboard, Clock3, LockKeyhole, Mail, Phone, RefreshCw, ShieldCheck, Smartphone, Zap } from 'lucide-react'
+import { ArrowLeft, Check, CircleAlert, Clock3, CreditCard, LockKeyhole, Mail, Phone, RefreshCw, ShieldCheck, Smartphone, Zap } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { broadcastAccessChanged, capturePayPalOrder, createPayPalOrder, paymentStatus, publicCatalogue, publicPaymentChannels, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
@@ -45,6 +45,7 @@ function CheckoutRoute() {
   const [online, setOnline] = useState(() => typeof navigator === 'undefined' ? true : navigator.onLine)
   const [leaving, setLeaving] = useState(false)
   const [method, setMethod] = useState<Method>('mpesa')
+  const [methodChosen, setMethodChosen] = useState(false)
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
   const paypalOn = paymentChannels?.paypal?.enabled === true
   const palplusOn = paymentChannels?.palpluss?.enabled !== false
@@ -70,12 +71,6 @@ function CheckoutRoute() {
   const payableMinor = product ? product.promotional_price_minor ?? product.price_minor : 0
   const amount = product ? `${product.currency || 'KES'} ${(payableMinor / 100).toLocaleString()}` : '—'
   const regularAmount = product?.promotional_price_minor != null ? `${product.currency || 'KES'} ${(product.price_minor / 100).toLocaleString()}` : ''
-  const steps = useMemo(() => [
-    { label: 'Your details', done: ['sending', 'phone', 'confirming', 'success'].includes(stage), active: stage === 'ready' },
-    { label: 'Approve payment', done: ['confirming', 'success'].includes(stage), active: ['sending', 'phone'].includes(stage) },
-    { label: 'Start watching', done: stage === 'success', active: stage === 'confirming' },
-  ], [stage])
-
   function clearSavedPayment() { try { sessionStorage.removeItem(`avant_payment_${productId}`); sessionStorage.removeItem(`avant_payment_key_${productId}`) } catch { /* unavailable */ } }
   async function finish(referenceValue: string) {
     clearSavedPayment(); setStage('success'); setBusy(false)
@@ -224,120 +219,115 @@ function CheckoutRoute() {
   const fieldWrap = 'flex min-h-14 items-center gap-3 rounded-xl border border-border bg-background/60 px-4 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15'
   const fieldInput = 'min-w-0 flex-1 bg-transparent text-base font-medium outline-none placeholder:text-muted-foreground/60'
 
-  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-background text-foreground transition-[opacity,filter,transform] duration-200 ease-out ${leaving ? 'pointer-events-none scale-[.992] opacity-0 blur-[3px]' : 'scale-100 opacity-100 blur-0'}`}>
-    {!embedded && <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-primary/15 blur-[120px]"/>}
-    <div className={`relative mx-auto w-full ${embedded ? 'max-w-xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6' : 'max-w-5xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8'}`}>
-      {!embedded && <header className="flex items-center justify-between pb-6">
-        <Button type="button" variant="ghost" onClick={goBack} className="-ml-2 min-h-11 gap-2 px-2 text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4"/>Back</Button>
-        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground backdrop-blur"><LockKeyhole className="size-3.5 text-primary"/>Encrypted checkout</span>
+  const titleArtwork = (() => {
+    const resolved = product?.title || product?.catalogue_title || product?.content
+    return resolved?.backdrop_url || resolved?.poster_url || product?.backdrop_url || product?.poster_url || ''
+  })()
+
+  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-200 ease-out ${leaving ? 'pointer-events-none scale-[.992] opacity-0 blur-[3px]' : 'scale-100 opacity-100 blur-0'}`}>
+    <div className={`relative mx-auto w-full ${embedded ? 'max-w-xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8'}`}>
+      {!embedded && <header className="flex items-center justify-between pb-5">
+        <Button type="button" variant="ghost" onClick={goBack} className="-ml-2 min-h-10 gap-2 px-2 text-white/60 hover:bg-white/5 hover:text-white"><ArrowLeft className="size-4"/>Back</Button>
+        <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.18em] text-white/45"><LockKeyhole className="size-3.5 text-primary"/>Secure checkout</span>
       </header>}
 
-      <div className={`grid gap-6 ${embedded ? '' : 'lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:gap-10'}`}>
-        <section className="order-2 min-w-0 lg:order-1">
-          {!embedded && <div className="mb-6">
-            <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Get your access pass</h1>
-            <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">Pay once, and your title unlocks right here. We also email you an access code so you can watch on any device.</p>
+      <div className={`overflow-hidden ${embedded ? '' : 'rounded-[1.75rem] border border-white/10 bg-[#0d0d0d] shadow-2xl shadow-black/60 lg:grid lg:min-h-[650px] lg:grid-cols-[.88fr_1.12fr]'}`}>
+        {!embedded && <CinematicPurchase product={product} loading={loading} amount={amount} artwork={titleArtwork}/>}
+
+        <section className={`${embedded ? '' : 'flex min-w-0 flex-col justify-center px-5 py-7 sm:px-9 sm:py-10 lg:px-12'}`}>
+          {!embedded && <div className="mb-8 border-b border-white/10 pb-6">
+            <p className="text-[10px] font-bold uppercase tracking-[.26em] text-primary">Your screening</p>
+            <div className="mt-3 flex items-end justify-between gap-5">
+              <div className="min-w-0"><h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl">{product?.name || 'Avant Cinema access'}</h1><p className="mt-1.5 text-sm text-white/45">{product?.duration_days ? `${product.duration_days} days of access` : 'Access confirmed before payment'}</p></div>
+              <div className="shrink-0 text-right">{regularAmount && <p className="text-xs text-white/35 line-through">{regularAmount}</p>}<strong className="text-xl font-semibold text-white sm:text-2xl">{amount}</strong></div>
+            </div>
           </div>}
 
-          <ol className="mb-5 grid grid-cols-3 gap-2" aria-label="Checkout progress">
-            {steps.map((step) => <li key={step.label} className="min-w-0">
-              <span className={`block h-1 rounded-full transition-colors duration-500 ${step.done ? 'bg-primary' : step.active ? 'bg-primary/50' : 'bg-border'}`}/>
-              <span className={`mt-2 flex items-center gap-1.5 truncate text-xs font-semibold ${step.active || step.done ? 'text-foreground' : 'text-muted-foreground'}`}>{step.done && <Check className="size-3 shrink-0 text-primary"/>}<span className="truncate">{step.label}</span></span>
-            </li>)}
-          </ol>
-
-          {processing ? <div className="rounded-2xl border border-border bg-card/70 px-6 py-12 text-center shadow-2xl backdrop-blur" role="status" aria-live="polite">
-            <div className="relative mx-auto grid size-16 place-items-center rounded-full bg-primary/10 text-primary">
-              <span className="absolute inset-0 rounded-full border-2 border-primary/30 motion-safe:animate-ping"/>
-              {stage === 'phone' ? <Phone className="size-6"/> : <Clock3 className="size-6 motion-safe:animate-pulse"/>}
-            </div>
-            <h2 className="mt-6 text-2xl font-bold tracking-tight">{stageCopy[0]}</h2>
-            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-muted-foreground">{stageCopy[1]}</p>
-            {stage === 'phone' && <div className="mx-auto mt-6 max-w-sm rounded-xl border border-border bg-background/60 px-4 py-3 text-left"><p className="text-sm font-semibold">Approve on your phone</p><p className="mt-1 text-xs leading-5 text-muted-foreground">Your PIN is entered on your phone only. We detect the confirmation for you.</p></div>}
-            {reference && <p className="mx-auto mt-6 max-w-full truncate font-mono text-[11px] text-muted-foreground/60">Ref {reference}</p>}
-            <p className="mt-6 inline-flex items-center gap-2 text-xs text-muted-foreground"><span className="size-1.5 rounded-full bg-primary motion-safe:animate-pulse"/>Keep this screen open and don’t pay twice</p>
-          </div> : <div className="overflow-hidden rounded-2xl border border-border bg-card/70 shadow-2xl backdrop-blur">
-            <div className="p-5 sm:p-7">
-              <label htmlFor="avant-email" className="text-sm font-semibold">Email for your access code</label>
-              <div className={`mt-2 ${fieldWrap}`}>
-                <Mail className="size-4 shrink-0 text-muted-foreground"/>
-                <input id="avant-email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" inputMode="email" autoComplete="email" className={fieldInput}/>
+          {processing ? <div className="py-12 text-center" role="status" aria-live="polite">
+            <div className="relative mx-auto grid size-14 place-items-center rounded-full border border-primary/30 text-primary"><span className="absolute inset-1 rounded-full border border-primary/20 motion-safe:animate-ping"/>{stage === 'phone' ? <Phone className="size-5"/> : <Clock3 className="size-5 motion-safe:animate-pulse"/>}</div>
+            <h2 className="mt-6 text-xl font-semibold text-white">{stageCopy[0]}</h2>
+            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-white/45">{stageCopy[1]}</p>
+            {reference && <p className="mt-5 truncate font-mono text-[10px] text-white/25">Ref {reference}</p>}
+            <p className="mt-5 text-xs text-white/35">Keep this screen open · don't pay twice</p>
+          </div> : <>
+            <div>
+              <label htmlFor="avant-email" className="text-[11px] font-bold uppercase tracking-[.16em] text-white/50">Email</label>
+              <div className="mt-2 flex min-h-12 items-center gap-3 border-b border-white/20 bg-transparent transition focus-within:border-primary">
+                <Mail className="size-4 shrink-0 text-white/35"/>
+                <input id="avant-email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" inputMode="email" autoComplete="email" className="min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/25"/>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">Your receipt and code are sent here and saved to your Avant account.</p>
-
-              <div className="mt-6 flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-secondary/30 px-4 py-3"><div><p className="text-sm font-bold">Payment methods</p><p className="mt-0.5 text-xs text-muted-foreground">Choose how you want to pay securely.</p></div>{palplusOn && <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary">Palplus · M-PESA</span>}</div>
-              {paypalOn && <div role="tablist" aria-label="Payment method" className="mt-3 grid grid-cols-2 gap-1 rounded-xl bg-secondary/60 p-1">
-                {([['paypal', 'PayPal'], ['mpesa', 'M-PESA']] as [Method, string][]).map(([id, label]) => <button key={id} type="button" role="tab" aria-selected={activeMethod === id} onClick={() => { setMethod(id); setError('') }} className={`min-h-11 rounded-lg text-sm font-bold transition ${activeMethod === id ? 'bg-background text-foreground shadow' : 'text-muted-foreground hover:text-foreground'}`}>{label}</button>)}
-              </div>}
-
-              {activeMethod === 'mpesa' && <div className={paypalOn ? 'mt-5' : 'mt-6'}>
-                {!paypalOn && <p className="mb-3 flex items-center gap-2 text-sm font-semibold"><Smartphone className="size-4 text-primary"/>Pay with M-PESA</p>}
-                <label htmlFor="mpesa-number" className="text-sm font-semibold">M-PESA phone number</label>
-                <div className={`mt-2 ${fieldWrap}`}>
-                  <span className="border-r border-border pr-3 text-sm font-semibold text-muted-foreground">KE +254</span>
-                  <input id="mpesa-number" value={mobile} onChange={(event) => setMobile(event.target.value)} placeholder="07XX XXX XXX or 01XX XXX XXX" inputMode="tel" autoComplete="tel" className={fieldInput}/>
-                </div>
-                <Button onClick={() => void start()} disabled={!online || !validEmail || !normalizeKenyanMobile(mobile) || loading} size="lg" className="mt-4 min-h-14 w-full gap-2 rounded-xl text-base font-black shadow-lg shadow-primary/20 transition hover:-translate-y-0.5"><Smartphone className="size-5"/>Pay {amount} with M-PESA</Button>
-                <p className="mt-3 text-center text-xs text-muted-foreground">{palplusOn ? 'Secure M-PESA checkout powered by Palplus. ' : ''}You’ll get a prompt on your phone. Your PIN never touches Avant.</p>
-              </div>}
-
-              {activeMethod === 'paypal' && <div className="mt-5">
-                <Button type="button" onClick={() => void startPayPal()} disabled={!online || loading || busy} className="min-h-14 w-full rounded-xl text-base font-black">Continue with PayPal · {amount}</Button>
-                {!validEmail && <p className="mt-2 text-center text-xs font-semibold text-primary">Enter your email above, then continue with PayPal.</p>}
-                <div id="avant-paypal-buttons" className="mt-4 min-h-0 w-full"/>
-                <p className="mt-3 text-center text-xs text-muted-foreground">Your title unlocks only after PayPal confirms the payment.</p>
-              </div>}
-
-              {paymentChannels?.paybill?.enabled === true && paymentChannels?.paybill?.number && <div className="mt-5 rounded-xl border border-dashed border-border bg-secondary/30 p-4 text-sm"><p className="font-bold">Prefer Paybill? Use {paymentChannels.paybill.number}</p>{paymentChannels.paybill.account && <p className="mt-1 text-xs text-muted-foreground">Account: {paymentChannels.paybill.account}</p>}</div>}
+              <p className="mt-2 text-xs text-white/35">Receipt and access code will be sent here.</p>
             </div>
 
-            {activeMethod === 'mpesa' && <div className="border-t border-border bg-background/30 px-5 py-3 sm:px-7">
-              <Button type="button" variant="ghost" onClick={() => setRecoveryOpen((value) => !value)} disabled={!online} className="min-h-11 w-full gap-2 rounded-xl text-muted-foreground hover:text-foreground"><RefreshCw className="size-4"/>Already paid? Verify your payment</Button>
-            </div>}
-          </div>}
+            {!methodChosen ? <div className="mt-8">
+              <p className="text-[11px] font-bold uppercase tracking-[.16em] text-white/50">Pay with</p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                {palplusOn && <button type="button" onClick={() => { setMethod('mpesa'); setMethodChosen(true); setError('') }} className="group flex h-[74px] w-[132px] flex-col items-center justify-center rounded-xl border border-white/15 bg-white/[.025] transition duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/[.04]">
+                  <Smartphone className="size-5 text-primary"/><span className="mt-1.5 text-sm font-bold text-white">M-PESA</span>
+                </button>}
+                {paypalOn && <button type="button" onClick={() => { setMethod('paypal'); setMethodChosen(true); setError('') }} className="group flex h-[74px] w-[132px] flex-col items-center justify-center rounded-xl border border-white/15 bg-white/[.025] transition duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/[.04]">
+                  <CreditCard className="size-5 text-primary"/><span className="mt-1.5 text-sm font-bold text-white">PayPal</span>
+                </button>}
+              </div>
+              <p className="mt-4 text-xs text-white/30">Choose a payment method to continue.</p>
+            </div> : <div className="mt-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              {paypalOn && <button type="button" onClick={() => { setMethodChosen(false); setError(''); const host=document.getElementById('avant-paypal-buttons'); if(host)host.innerHTML='' }} className="mb-5 inline-flex items-center gap-2 text-xs font-semibold text-white/45 transition hover:text-white"><ArrowLeft className="size-3.5"/>Change payment method</button>}
+              <div className="mb-5 flex items-center gap-3">
+                <div className="grid size-10 place-items-center rounded-lg border border-primary/30 bg-primary/[.06] text-primary">{activeMethod === 'mpesa' ? <Smartphone className="size-5"/> : <CreditCard className="size-5"/>}</div>
+                <div><p className="text-base font-semibold text-white">{activeMethod === 'mpesa' ? 'M-PESA' : 'PayPal'}</p><p className="text-xs text-white/35">{activeMethod === 'mpesa' ? 'Secure mobile payment' : 'Pay securely with PayPal or card'}</p></div>
+              </div>
 
-          {recoveryOpen && !busy && <section className="mt-3 rounded-2xl border border-border bg-card/70 p-5 backdrop-blur">
-            <p className="text-sm font-bold">Find a completed payment</p>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">Use the phone number above or your M-PESA transaction code. This never creates a second charge.</p>
-            <input value={mpesaCode} onChange={(event) => setMpesaCode(event.target.value.toUpperCase())} placeholder="M-PESA transaction code" autoCapitalize="characters" className="mt-3 min-h-12 w-full rounded-xl border border-border bg-background/60 px-4 text-sm font-medium outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"/>
-            <Button type="button" onClick={() => void recoverPaid()} disabled={!mobile.trim() && !mpesaCode.trim()} className="mt-3 min-h-12 w-full rounded-xl font-bold">Verify payment</Button>
+              {activeMethod === 'mpesa' && <div>
+                <label htmlFor="mpesa-number" className="text-[11px] font-bold uppercase tracking-[.16em] text-white/50">Mobile number</label>
+                <div className="mt-2 flex min-h-12 items-center gap-3 border-b border-white/20 transition focus-within:border-primary">
+                  <span className="border-r border-white/10 pr-3 text-sm font-semibold text-white/45">+254</span>
+                  <input id="mpesa-number" value={mobile} onChange={(event) => setMobile(event.target.value)} placeholder="07XX XXX XXX" inputMode="tel" autoComplete="tel" className="min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/25"/>
+                </div>
+                <Button onClick={() => void start()} disabled={!online || !validEmail || !normalizeKenyanMobile(mobile) || loading} size="lg" className="mt-6 min-h-12 w-full rounded-lg text-sm font-bold">Pay {amount}</Button>
+                <p className="mt-3 text-center text-xs text-white/30">We'll send an M-PESA prompt to your phone.</p>
+              </div>}
+
+              {activeMethod === 'paypal' && <div>
+                <Button type="button" onClick={() => void startPayPal()} disabled={!online || loading || busy} className="min-h-12 w-full rounded-lg text-sm font-bold">Continue with PayPal · {amount}</Button>
+                {!validEmail && <p className="mt-2 text-center text-xs font-semibold text-primary">Enter your email above first.</p>}
+                <div id="avant-paypal-buttons" className="mt-4 min-h-0 w-full"/>
+                <p className="mt-3 text-center text-xs text-white/30">Your title unlocks after PayPal confirms payment.</p>
+              </div>}
+            </div>}
+          </>}
+
+          {activeMethod === 'mpesa' && methodChosen && !processing && <button type="button" onClick={() => setRecoveryOpen((value) => !value)} disabled={!online} className="mt-6 text-center text-xs font-semibold text-white/35 transition hover:text-white">Already paid? Verify payment</button>}
+
+          {recoveryOpen && !busy && <section className="mt-4 border-t border-white/10 pt-4">
+            <p className="text-sm font-semibold text-white">Find a completed payment</p>
+            <input value={mpesaCode} onChange={(event) => setMpesaCode(event.target.value.toUpperCase())} placeholder="M-PESA transaction code" autoCapitalize="characters" className="mt-3 min-h-11 w-full border-b border-white/20 bg-transparent px-1 text-sm text-white outline-none focus:border-primary"/>
+            <Button type="button" onClick={() => void recoverPaid()} disabled={!mobile.trim() && !mpesaCode.trim()} variant="outline" className="mt-3 min-h-11 w-full rounded-lg font-semibold">Verify payment</Button>
           </section>}
 
-          {reference && !busy && <Button type="button" variant="outline" onClick={() => void checkPayment()} className="mt-3 min-h-12 w-full gap-2 rounded-xl"><RefreshCw className="size-4"/>Check saved payment</Button>}
-          {!online && <div className="mt-3 flex gap-3 rounded-xl border border-border bg-card p-4 text-sm" role="status"><CircleAlert className="mt-0.5 size-4 shrink-0"/><span>Checkout is paused while you’re offline. Reconnect to pay or verify a payment.</span></div>}
-          {error && <div className="mt-3 flex gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm" role="alert"><CircleAlert className="mt-0.5 size-4 shrink-0 text-destructive"/><span>{error}</span></div>}
+          {reference && !busy && <Button type="button" variant="ghost" onClick={() => void checkPayment()} className="mt-3 min-h-10 w-full gap-2 text-white/40"><RefreshCw className="size-4"/>Check saved payment</Button>}
+          {!online && <div className="mt-4 flex gap-3 border-t border-white/10 pt-4 text-sm text-white/60" role="status"><CircleAlert className="mt-0.5 size-4 shrink-0"/>Checkout is paused while you're offline.</div>}
+          {error && <div className="mt-4 flex gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm" role="alert"><CircleAlert className="mt-0.5 size-4 shrink-0 text-destructive"/><span>{error}</span></div>}
 
-          <ul className="mt-6 grid gap-3 text-xs text-muted-foreground sm:grid-cols-3">
-            <li className="flex items-center gap-2"><ShieldCheck className="size-4 shrink-0 text-primary"/>Verified before unlocking</li>
-            <li className="flex items-center gap-2"><Zap className="size-4 shrink-0 text-primary"/>Instant access on confirmation</li>
-            <li className="flex items-center gap-2"><Mail className="size-4 shrink-0 text-primary"/>Access code sent by email</li>
-          </ul>
+          {!embedded && <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-[11px] text-white/30">
+            <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-3.5 text-primary"/>Secure payment</span>
+            <span className="inline-flex items-center gap-1.5"><Zap className="size-3.5 text-primary"/>Instant access</span>
+            <span className="inline-flex items-center gap-1.5"><Mail className="size-3.5 text-primary"/>Code by email</span>
+          </div>}
         </section>
-
-        <AccessPass product={product} loading={loading} amount={amount} regularAmount={regularAmount} compact={embedded}/>
       </div>
     </div>
   </main>
 }
 
-function AccessPass({ product, loading, amount, regularAmount, compact }: { product: any; loading: boolean; amount: string; regularAmount: string; compact: boolean }) {
-  return <aside className={`relative order-1 h-fit overflow-hidden rounded-2xl border border-border bg-card shadow-2xl lg:order-2 ${compact ? '' : 'lg:sticky lg:top-8'}`}>
-    <div className="bg-gradient-to-br from-primary/25 via-primary/5 to-transparent p-5 sm:p-6">
-      <div className="flex items-center gap-2 text-sm font-semibold text-primary"><Clapperboard className="size-4"/>Avant Movies access pass</div>
-      {loading ? <div className="mt-5 h-16 animate-pulse rounded-lg bg-secondary"/> : <>
-        <h2 className={`mt-4 font-black leading-tight tracking-tight ${compact ? 'text-xl' : 'text-2xl'}`}>{product?.name || 'Avant Movies access'}</h2>
-        {!compact && product?.description && <p className="mt-2 line-clamp-4 text-sm leading-6 text-muted-foreground">{product.description}</p>}
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground"><CheckCircle2 className="size-3.5 text-primary"/>{product?.duration_days ? `${product.duration_days} days of access` : 'Access length confirmed before you pay'}</p>
-      </>}
-    </div>
-    <div className="relative">
-      <div aria-hidden className="absolute -left-3 -top-3 size-6 rounded-full border border-border bg-background"/>
-      <div aria-hidden className="absolute -right-3 -top-3 size-6 rounded-full border border-border bg-background"/>
-      <div className="mx-6 border-t-2 border-dashed border-border"/>
-    </div>
-    <div className="flex items-end justify-between gap-4 p-5 sm:p-6">
-      <div><p className="text-xs font-semibold text-muted-foreground">Total today</p>{regularAmount && <p className="mt-1 text-xs text-muted-foreground line-through">{regularAmount}</p>}</div>
-      <strong className="text-3xl font-black tracking-tight">{amount}</strong>
+function CinematicPurchase({ product, loading, amount, artwork }: { product: any; loading: boolean; amount: string; artwork: string }) {
+  return <aside className="relative min-h-[260px] overflow-hidden bg-[#111] sm:min-h-[330px] lg:min-h-full">
+    {artwork ? <img src={artwork} alt="" className="absolute inset-0 size-full object-cover" loading="eager" fetchPriority="high"/> : <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-[#161616] to-black"/>}
+    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/5"/>
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/35"/>
+    <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 lg:p-10">
+      <p className="text-[10px] font-bold uppercase tracking-[.25em] text-primary">You're unlocking</p>
+      {loading ? <div className="mt-3 h-9 w-2/3 animate-pulse rounded bg-white/10"/> : <h2 className="mt-2 max-w-md text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">{product?.name || 'Avant Cinema'}</h2>}
+      <div className="mt-4 flex items-center gap-3 text-xs text-white/55"><span>{product?.duration_days ? `${product.duration_days} days access` : 'Premium access'}</span><span className="size-1 rounded-full bg-primary"/><span>{amount}</span></div>
     </div>
   </aside>
 }
