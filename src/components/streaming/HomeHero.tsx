@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
+import { productForTitleSlug } from "@/lib/backend-catalogue-map";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
 import { claimMedia, stopAllMedia } from "@/lib/media-session";
 import { readMyList, toggleMyList } from "@/lib/my-list";
@@ -190,13 +191,9 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
               <Button asChild size="lg" className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
                  <Link to="/watch/$contentId" params={{ contentId: watchContentId }} onClick={beginAvantWatchTransition}><Play className="fill-current" />{freeFullTitle ? "Watch Free" : "Watch"}</Link>
               </Button>
-            ) : item.trailerEmbedUrl ? (
-              <Button type="button" size="lg" onClick={() => { if (largeScreen && !reducedMotion) { setMuted(false); setTrailerReady(true); } else { setDetailsOpen(true); } }} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
-                <Play className="fill-current" />Trailer
-              </Button>
             ) : (
-              <Button type="button" size="lg" onClick={() => setDetailsOpen(true)} className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
-                <Play className="fill-current" />Explore
+              <Button asChild size="lg" className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
+                <Link to="/checkout/$productId" params={{ productId: productForTitleSlug(item.slug) }} search={{ returnTo: `/title/${item.slug}`, origin: "/", originScroll: "0" }}><Play className="fill-current" />Get Access</Link>
               </Button>
             )}
             <Button
