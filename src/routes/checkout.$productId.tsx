@@ -252,12 +252,18 @@ function CheckoutRoute() {
         window.parent.postMessage({ type: 'avant-checkout-close' }, '*')
         return
       }
+      const target = (returnTo || origin || '').trim()
+      // Prefer the explicit origin passed by Avant links. Mobile/preview hosts can
+      // insert duplicate checkout entries, making history.back() land on checkout again.
+      if (target && target.startsWith('/') && !target.startsWith('//') && !target.startsWith('/checkout/')) {
+        void router.navigate({ to: target as any, replace: true })
+        return
+      }
       if (window.history.length > 1) {
         window.history.back()
         return
       }
-      const target = (returnTo || origin || '/').trim()
-      void router.navigate({ to: target.startsWith('/') && !target.startsWith('//') ? target as any : '/', replace: true })
+      void router.navigate({ to: '/', replace: true })
     }, 340)
   }
 
