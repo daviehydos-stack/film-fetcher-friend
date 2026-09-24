@@ -130,20 +130,6 @@ function CheckoutRoute() {
     } catch (e: any) { const raw=String(e?.body?.error||e?.body?.message||e?.message||'').trim(); const authError=/invalid or expired customer session|customer session|401/i.test(raw); setStage('ready'); setBusy(false); setError(authError?'Your Avant session expired. Sign in again, then retry the payment.':(raw||'We could not send the M-PESA request. Please try again.')) }
   }
   async function startPayPal() {
-    if (!online || !validEmail || loading) return
-    setBusy(true); setError(''); setStage('sending')
-    try {
-      const token=await customerToken(false); const resolved=product?.id||backendProductId||productForLegacyContent(productId)||productId
-      let key=''; try{key=sessionStorage.getItem(`avant_paypal_key_${productId}`)||''}catch{}; if(!key){key=crypto.randomUUID();try{sessionStorage.setItem(`avant_paypal_key_${productId}`,key)}catch{}}
-      const created=await createPayPalOrder(token,{productId:resolved,email:email.trim().toLowerCase(),idempotencyKey:key}); setReference(created.reference)
-      const clientId=paymentChannels?.paypal?.clientId; if(!clientId) throw new Error('PayPal client configuration is unavailable.')
-      const w=window as any; if(!w.paypal){await new Promise<void>((resolve,reject)=>{const s=document.createElement('script');s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(product?.currency||'KES')}&intent=capture`;s.onload=()=>resolve();s.onerror=()=>reject(new Error('Could not load PayPal'));document.head.appendChild(s)})}
-      setBusy(false); setStage('ready'); const host=document.getElementById('avant-paypal-buttons'); if(!host)throw new Error('PayPal checkout unavailable'); host.innerHTML=''
-      await w.paypal.Buttons({createOrder:()=>created.orderId,onApprove:async(data:any)=>{setBusy(true);setStage('confirming');const fresh=await customerToken(false);const done=await capturePayPalOrder(fresh,{orderId:data.orderID,reference:created.reference});if(done?.ok){try{sessionStorage.removeItem(`avant_paypal_key_${productId}`)}catch{};await finish(created.reference)}else throw new Error('PayPal capture failed')},onCancel:()=>{setBusy(false);setStage('ready');setError('PayPal checkout was cancelled. You were not charged.')},onError:(e:any)=>{setBusy(false);setStage('ready');setError(e?.message||'PayPal checkout failed.')}}).render('#avant-paypal-buttons')
-    } catch(e:any){setBusy(false);setStage('ready');setError(e?.body?.error||e?.message||'Unable to start PayPal checkout.')}
-  }
-
-  async function startPayPal() {
     if (!online) { setError('You are offline. Reconnect before starting a PayPal payment.'); return }
     if (!validEmail) { setError('Enter a valid email address. Your Avant access code will be sent there.'); return }
     if (loading) return
