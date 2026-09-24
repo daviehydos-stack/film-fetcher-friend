@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { broadcastAccessChanged, capturePayPalOrder, createPayPalOrder, paymentStatus, publicCatalogue, publicPaymentChannels, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
 import { productForLegacyContent } from '@/lib/backend-catalogue-map'
+import { optimizedArtwork } from '@/lib/episodes'
 import { customerToken } from '@/lib/google-auth'
 import { normalizePaymentState, paymentStateMessage, type PaymentUiState } from '@/lib/payments/status'
 
@@ -261,7 +262,7 @@ function CheckoutRoute() {
   const fieldWrap = 'flex min-h-14 items-center gap-3 rounded-xl border border-border bg-background/60 px-4 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15'
   const fieldInput = 'min-w-0 flex-1 bg-transparent text-base font-medium outline-none placeholder:text-muted-foreground/60'
 
-  const titleArtwork = purchaseTitle?.backdrop_url || purchaseTitle?.poster_url || purchaseTitle?.backdrop || purchaseTitle?.artwork || ''
+  const titleArtwork = optimizedArtwork(purchaseTitle?.backdrop_url || purchaseTitle?.poster_url || purchaseTitle?.backdrop || purchaseTitle?.artwork || '', embedded ? 640 : 960) || ''
   const displayTitle = purchaseTitle?.title || product?.name || 'Avant Cinema access'
 
   return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${leaving ? 'pointer-events-none scale-[.985] opacity-0 blur-[5px]' : 'scale-100 opacity-100 blur-0'}`}>
