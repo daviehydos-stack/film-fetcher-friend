@@ -4,20 +4,12 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36028845443
+Run ID: 36029018442
 
-Generated: 2026-09-24T16:40:08Z
+Generated: 2026-09-24T16:41:05Z
 
 ### Current primary errors
 ~~~text
-Lint and production build	Production build	2026-09-24T16:39:54.5273828Z Error: Error transforming route file /home/runner/work/film-fetcher-friend/film-fetcher-friend/src/routes/checkout.$productId.tsx: SyntaxError: Expecting Unicode escape sequence \uXXXX. (132:33)
-Lint and production build	Production build	2026-09-24T16:39:54.6489308Z ^[[31m✗^[[39m Build failed in 111ms
-Lint and production build	Production build	2026-09-24T16:39:54.6493457Z ^[[31mBuild failed with 1 error:
-Lint and production build	Production build	2026-09-24T16:39:54.6494524Z Error: Crawling result not available
-Lint and production build	Production build	2026-09-24T16:39:54.6500383Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-24T16:39:54.6501984Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-24T16:39:54.7188748Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-24T16:39:54.7203807Z ##[error]Process completed with exit code 1.
 ~~~
 
 ## Previous + current error history
@@ -5777,4 +5769,23 @@ Lint and production build	Production build	2026-09-24T16:39:54.6512326Z   errors
 Lint and production build	Production build	2026-09-24T16:39:54.6512652Z }^[[39m
 Lint and production build	Production build	2026-09-24T16:39:54.7188748Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-24T16:39:54.7203807Z ##[error]Process completed with exit code 1.
+~~~
+
+---
+
+## Failure recorded 2026-09-24T16:41:05Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-24T16:40:36Z","databaseId":36029018442,"displayTitle":"Fix PayPal checkout route syntax error","headSha":"f2e370c4d9a20b26f1acfbdbe7210222a9e6255f","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-24T16:41:03Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36029018442"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36029018442 is still in progress; logs will be available when it is complete
 ~~~

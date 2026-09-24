@@ -5755,3 +5755,22 @@ Lint and production build	Production build	2026-09-24T16:39:54.6512652Z }^[[39m
 Lint and production build	Production build	2026-09-24T16:39:54.7188748Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-24T16:39:54.7203807Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-24T16:41:05Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-24T16:40:36Z","databaseId":36029018442,"displayTitle":"Fix PayPal checkout route syntax error","headSha":"f2e370c4d9a20b26f1acfbdbe7210222a9e6255f","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-24T16:41:03Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36029018442"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36029018442 is still in progress; logs will be available when it is complete
+~~~
