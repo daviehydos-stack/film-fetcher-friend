@@ -135,7 +135,20 @@ function CheckoutRoute() {
         else { setBusy(false); setStage('pending'); setError('Confirmation is delayed. Do not pay again—verify this payment below.') }
       }
       void poll()
-    } catch (e: any) { const raw=String(e?.body?.error||e?.body?.message||e?.message||'').trim(); const authError=/invalid or expired customer session|customer session|401/i.test(raw); setStage('ready'); setBusy(false); setError(authError?'Your Avant session expired. Sign in again, then retry the payment.':(raw||'We could not send the M-PESA request. Please try again.')) }
+    } catch (e: any) {
+      const raw=String(e?.body?.error||e?.body?.message||e?.message||'').trim()
+      const authError=/invalid or expired customer session|customer session|401/i.test(raw)
+      const timeout=/took too long|abort|timeout/i.test(raw)
+      let saved=''
+      try { saved=sessionStorage.getItem(`avant_payment_${productId}`)||'' } catch { /* unavailable */ }
+      if (timeout && saved) {
+        setReference(saved); setStage('pending'); setBusy(false)
+        setError('M-PESA may still be processing. Do not pay again—use Check saved payment.')
+        return
+      }
+      setStage('ready'); setBusy(false)
+      setError(authError?'Your Avant session expired. Sign in again, then retry the payment.':timeout?'M-PESA is taking longer than expected. Check your phone first; if a prompt arrived, do not pay again.':(raw||'We could not send the M-PESA request. Please try again.'))
+    }
   }
   async function startPayPal() {
     if (!online) { setError('You are offline. Reconnect before starting a PayPal payment.'); return }
