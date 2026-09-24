@@ -3,7 +3,7 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { publicPage } from "@/lib/avant-backend";
 import { publicPageLinks, publicPageMeta } from "@/lib/seo";
 export const Route=createFileRoute("/$")({
- loader:async({params})=>{const slug=String((params as any)._splat||"").replace(/^\/+|\/+$/g,"");if(slug.startsWith("checkout/title/")){const legacy=slug.slice("checkout/title/".length).replace(/^\/+|\/+$/g,"");if(legacy)throw redirect({to:"/checkout/$productId",params:{productId:legacy},replace:true});}const x=await publicPage(slug).catch(()=>null);if(!x?.page)throw notFound();return x.page;},
+ loader:async({params})=>{const slug=String((params as any)._splat||"").replace(/^\/+|\/+$/g,"");if(slug.startsWith("checkout/title/")){const legacy=slug.slice("checkout/title/".length).replace(/^\/+|\/+$/g,"");if(legacy)throw redirect({to:"/checkout/$productId",params:{productId:legacy},replace:true});}if(slug==="checkout/movies"||slug==="checkout/tv-shows"||slug==="checkout/watch-free"){throw redirect({to:"/"+slug.slice("checkout/".length) as any,replace:true});}const x=await publicPage(slug).catch(()=>null);if(!x?.page)throw notFound();return x.page;},
  head:({loaderData})=>{if(!loaderData)return{};const p:any=loaderData,path="/"+p.slug,title=p.seo_title||p.title+" — Avant Movies",description=p.meta_description||"";return{meta:publicPageMeta(path,title,description,p.og_image_url).map((m:any)=>m.name==="robots"?{...m,content:p.indexable===false?"noindex, follow":m.content}:m),links:p.canonical_url?[{rel:"canonical",href:p.canonical_url}]:publicPageLinks(path)}},
  component:CmsPage
 });
