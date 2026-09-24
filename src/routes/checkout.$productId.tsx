@@ -166,7 +166,7 @@ function CheckoutRoute() {
           if (existing) { existing.addEventListener('load', () => resolve(), { once: true }); existing.addEventListener('error', () => reject(new Error('Could not load PayPal')), { once: true }); return }
           const script = document.createElement('script')
           script.dataset.avantPaypal = '1'
-          script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(product?.currency || 'KES')}&intent=capture`
+          script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(created?.currency || 'USD')}&intent=capture`
           script.onload = () => resolve()
           script.onerror = () => reject(new Error('Could not load PayPal'))
           document.head.appendChild(script)
