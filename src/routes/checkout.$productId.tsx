@@ -296,7 +296,8 @@ function CheckoutRoute() {
               </div>}
 
               {activeMethod === 'paypal' && <div className="mt-5">
-                <Button type="button" onClick={() => void startPayPal()} disabled={!online || !validEmail || loading || busy} className="min-h-14 w-full rounded-xl text-base font-black">Continue with PayPal · {amount}</Button>
+                <Button type="button" onClick={() => void startPayPal()} disabled={!online || loading || busy} className="min-h-14 w-full rounded-xl text-base font-black">Continue with PayPal · {amount}</Button>
+                {!validEmail && <p className="mt-2 text-center text-xs font-semibold text-primary">Enter your email above, then continue with PayPal.</p>}
                 <div id="avant-paypal-buttons" className="mt-4 min-h-0 w-full"/>
                 <p className="mt-3 text-center text-xs text-muted-foreground">Your title unlocks only after PayPal confirms the payment.</p>
               </div>}
