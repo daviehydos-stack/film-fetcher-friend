@@ -47,6 +47,7 @@ function CheckoutRoute() {
   const [leaving, setLeaving] = useState(false)
   const [method, setMethod] = useState<Method>('mpesa')
   const [methodChosen, setMethodChosen] = useState(false)
+  const [switchingMethod, setSwitchingMethod] = useState(false)
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
   const paypalOn = paymentChannels?.paypal?.enabled === true
   const palplusOn = paymentChannels?.palpluss?.enabled !== false
@@ -215,6 +216,12 @@ function CheckoutRoute() {
       setBusy(false); setStage('pending'); setError(response.message || 'No confirmed payment matches those details yet.')
     } catch { setBusy(false); setStage('pending'); setError('Payment verification is temporarily unavailable. Please try again shortly.') }
   }
+  function changePaymentMethod() {
+    if (switchingMethod) return
+    setSwitchingMethod(true); setError(''); setRecoveryOpen(false)
+    const host=document.getElementById('avant-paypal-buttons'); if(host)host.innerHTML=''
+    window.setTimeout(() => { setMethodChosen(false); setSwitchingMethod(false) }, 170)
+  }
   function goBack() {
     if (leaving) return
     setLeaving(true)
@@ -268,7 +275,7 @@ function CheckoutRoute() {
               <p className="mt-2 text-xs text-white/35">Receipt and access code will be sent here.</p>
             </div>
 
-            {!methodChosen ? <div className="mt-8">
+            {!methodChosen ? <div className="mt-8 animate-in fade-in duration-300">
               <p className="text-[11px] font-bold uppercase tracking-[.16em] text-white/50">Pay with</p>
               <div className="mt-3 flex flex-wrap gap-3">
                 {palplusOn && <button type="button" onClick={() => { setMethod('mpesa'); setMethodChosen(true); setError('') }} className="group flex h-[74px] w-[132px] flex-col items-center justify-center rounded-xl border border-white/15 bg-white/[.025] transition duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/[.04]">
@@ -279,8 +286,8 @@ function CheckoutRoute() {
                 </button>}
               </div>
               <p className="mt-4 text-xs text-white/30">Choose a payment method to continue.</p>
-            </div> : <div className="mt-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              {paypalOn && <button type="button" onClick={() => { setMethodChosen(false); setError(''); const host=document.getElementById('avant-paypal-buttons'); if(host)host.innerHTML='' }} className="mb-5 inline-flex items-center gap-2 text-xs font-semibold text-white/45 transition hover:text-white"><ArrowLeft className="size-3.5"/>Change payment method</button>}
+            </div> : <div className={`mt-8 transition-all duration-200 ${switchingMethod ? 'translate-y-1 opacity-0' : 'translate-y-0 opacity-100'}`}>
+              {paypalOn && <button type="button" onClick={changePaymentMethod} className="mb-5 inline-flex items-center gap-2 text-xs font-semibold text-white/45 transition hover:text-white"><ArrowLeft className="size-3.5"/>Change payment method</button>}
               <div className="mb-5 flex items-center gap-3">
                 <div className="grid size-10 place-items-center rounded-lg border border-primary/30 bg-primary/[.06] text-primary">{activeMethod === 'mpesa' ? <Smartphone className="size-5"/> : <CreditCard className="size-5"/>}</div>
                 <div><p className="text-base font-semibold text-white">{activeMethod === 'mpesa' ? 'M-PESA' : 'PayPal'}</p><p className="text-xs text-white/35">{activeMethod === 'mpesa' ? 'Secure mobile payment' : 'Pay securely with PayPal or card'}</p></div>
@@ -329,13 +336,13 @@ function CheckoutRoute() {
 }
 
 function CinematicPurchase({ product, displayTitle, loading, amount, artwork }: { product: any; displayTitle: string; loading: boolean; amount: string; artwork: string }) {
-  return <aside className="relative min-h-[260px] overflow-hidden bg-[#111] sm:min-h-[330px] lg:min-h-full">
+  return <aside className="relative aspect-[16/9] overflow-hidden bg-[#111] sm:min-h-[330px] lg:aspect-auto lg:min-h-full">
     {artwork ? <img src={artwork} alt="" className="absolute inset-0 size-full object-cover" loading="eager" fetchPriority="high"/> : <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-[#161616] to-black"/>}
     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/5"/>
     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/35"/>
-    <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 lg:p-10">
+    <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 lg:p-10">
       <p className="text-[10px] font-bold uppercase tracking-[.25em] text-primary">You're unlocking</p>
-      {loading ? <div className="mt-3 h-9 w-2/3 animate-pulse rounded bg-white/10"/> : <h2 className="mt-2 max-w-md text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">{displayTitle}</h2>}
+      {loading ? <div className="mt-3 h-9 w-2/3 animate-pulse rounded bg-white/10"/> : <h2 className="mt-2 max-w-md text-2xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">{displayTitle}</h2>}
       <div className="mt-4 flex items-center gap-3 text-xs text-white/55"><span>{product?.duration_days ? `${product.duration_days} days access` : 'Premium access'}</span><span className="size-1 rounded-full bg-primary"/><span>{amount}</span></div>
     </div>
   </aside>
