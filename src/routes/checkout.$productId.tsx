@@ -59,14 +59,15 @@ function CheckoutRoute() {
   useEffect(() => { let active=true; publicPaymentChannels().then((x:any)=>{if(active)setPaymentChannels(x)}).catch(()=>{}); return()=>{active=false} }, [])
   useEffect(() => {
     let active = true
-    const mapped = productForLegacyContent(productId) || productId
-    Promise.allSettled([resolveCatalogueKey(productId), publicCatalogue()]).then(([resolvedResult, catalogueResult]) => {
+    const routeKey = String(productId || '').replace(/^title\//, '').replace(/^\/+|\/+$/g, '')
+    const mapped = productForLegacyContent(routeKey) || routeKey
+    Promise.allSettled([resolveCatalogueKey(routeKey), publicCatalogue()]).then(([resolvedResult, catalogueResult]) => {
       if (!active) return
       const resolvedPayload = resolvedResult.status === 'fulfilled' ? resolvedResult.value : null
       const resolved = resolvedPayload?.product || null
       const payload = catalogueResult.status === 'fulfilled' ? catalogueResult.value : null
       const list = payload?.products || []
-      const selected = resolved || list.find((entry: any) => entry.id === mapped) || list.find((entry: any) => entry.id === productId) || null
+      const selected = resolved || list.find((entry: any) => entry.id === mapped) || list.find((entry: any) => entry.id === routeKey) || null
       const canonicalProductId = selected?.id || resolved?.id || mapped
       setBackendProductId(canonicalProductId)
       setProduct(selected)
