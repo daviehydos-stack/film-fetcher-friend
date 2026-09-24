@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { publicCatalogue } from "./avant-backend";
-import type { CatalogueTitle, Episode } from "./site-data";
+import { catalogue, type CatalogueTitle, type Episode } from "./site-data";
 
 type PublicTitle = Record<string, unknown>;
 
@@ -170,9 +170,11 @@ function readCatalogueCache() {
 
 export function useCatalogue() {
   const cached = typeof window !== "undefined" ? readCatalogueCache() : null;
-  const [items, setItems] = useState<CatalogueTitle[]>(cached?.items || []);
-  const [loading, setLoading] = useState(!cached);
-  const [usingFallback, setUsingFallback] = useState(!cached);
+  // Paint bundled catalogue immediately. Live data refreshes it in the background.
+  const initialItems = cached?.items?.length ? cached.items : catalogue;
+  const [items, setItems] = useState<CatalogueTitle[]>(initialItems);
+  const [loading, setLoading] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(!cached?.items?.length);
   const [offline, setOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
 
   useEffect(() => {
@@ -180,7 +182,6 @@ export function useCatalogue() {
     const refresh = () => {
       if (!navigator.onLine) { setOffline(true); return; }
       setOffline(false);
-      setLoading((value)=>value||!readCatalogueCache());
       publicCatalogue()
         .then((payload) => {
           if (!active) return;
@@ -188,8 +189,7 @@ export function useCatalogue() {
           setUsingFallback(false);
           try { localStorage.setItem(CATALOGUE_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), payload })); } catch {}
         })
-        .catch(() => { if (active) setUsingFallback(!readCatalogueCache()); })
-        .finally(() => { if (active) setLoading(false); });
+        .catch(() => { if (active) { setUsingFallback(true); setItems((current) => current.length ? current : catalogue); } });
     };
     refresh();
     window.addEventListener("online", refresh);
