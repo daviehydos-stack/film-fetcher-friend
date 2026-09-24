@@ -1,19 +1,421 @@
-const CACHE="avant-shell-v8";const RUNTIME="avant-runtime-v8";const MEDIA="avant-media-v1";const SHELL=["./","./movies","./tv-shows","./watch-free","./site.webmanifest","./favicon.ico","./avant-movies-logo.png"];const MAX_RUNTIME=160;const MAX_MEDIA=120;const PRIVATE_PATHS=["/admin","/checkout","/payment","/account","/my-list"];const WATCH_PATH="/watch";const SAFE_WARM=["/","/movies","/tv-shows","/watch-free"];
-function scopedPath(url){const u=typeof url==="string"?new URL(url,self.location.origin):url;const scope=new URL(self.registration.scope).pathname.replace(/\/$/,"");let p=u.pathname;if(scope&&scope!=="/"&&p.startsWith(scope))p=p.slice(scope.length)||"/";return p.startsWith("/")?p:"/"+p}
-function matches(path,prefix){return path===prefix||path.startsWith(prefix+"/")}
-function privatePath(path){return PRIVATE_PATHS.some(p=>matches(path,p))}
-function watchPath(path){return matches(path,WATCH_PATH)}
-function safeWarm(path){return SAFE_WARM.includes(path)}
-async function trim(cache,max=MAX_RUNTIME){const keys=await cache.keys();if(keys.length<=max)return;await Promise.all(keys.slice(0,keys.length-max).map(k=>cache.delete(k)))}
-async function put(cache,key,res){try{if(!res||!res.ok||res.type==="opaque")return;await cache.put(key,res);await trim(cache)}catch{}}
-self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
-self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>![CACHE,RUNTIME,MEDIA].includes(k)).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener("message",e=>{if(e.data?.type==="AVANT_CLEAR_RUNTIME")e.waitUntil(caches.delete(RUNTIME));if(e.data?.type==="AVANT_WARM_URLS"&&Array.isArray(e.data.urls))e.waitUntil(caches.open(RUNTIME).then(async cache=>{for(const raw of e.data.urls.slice(0,20)){try{const u=new URL(raw,self.location.origin),path=scopedPath(u);if(u.origin!==self.location.origin||!safeWarm(path))continue;const r=await fetch(u.toString(),{credentials:"same-origin",cache:"no-cache"});if(r.ok)await put(cache,u.toString(),r.clone())}catch{}}}))});
-self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);const sameOrigin=u.origin===location.origin;const mediaHost=/^(?:res\.cloudinary\.com|i\.vimeocdn\.com|f\.vimeocdn\.com)$/.test(u.hostname);if(!sameOrigin&&!mediaHost)return;const path=sameOrigin?scopedPath(u):u.pathname;
-if(mediaHost&&r.destination==="image"){e.respondWith(caches.open(MEDIA).then(async cache=>{const hit=await cache.match(r);if(hit){fetch(r).then(res=>put(cache,r,res.clone()).then(()=>trim(cache,MAX_MEDIA))).catch(()=>{});return hit}try{const res=await fetch(r);if(res.ok)await put(cache,r,res.clone());await trim(cache,MAX_MEDIA);return res}catch{return new Response("",{status:504})}}));return}
-if(privatePath(path)){e.respondWith(fetch(r,{cache:"no-store"}));return}
-if(watchPath(path)){e.respondWith(fetch(r).catch(()=>caches.match("./")));return}
-if(r.mode==="navigate"){e.respondWith((async()=>{const clean=new URL(r.url);clean.search="";const cached=await caches.match(r)||await caches.match(clean.toString());try{const res=await fetch(r,{cache:"no-cache"});if(res.ok){const copy=res.clone();caches.open(RUNTIME).then(cache=>put(cache,r,copy)).catch(()=>{})}return res}catch{return cached||caches.match("./")}})());return}
-if(/\.(?:js|css)$/i.test(path)){e.respondWith(caches.match(r).then(hit=>{const fresh=fetch(r).then(res=>{if(res.ok)caches.open(RUNTIME).then(cache=>put(cache,r,res.clone()));return res}).catch(()=>hit);return hit||fresh}));return}
-if(/\.(?:png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(path)){e.respondWith(caches.match(r).then(hit=>hit||fetch(r).then(res=>{if(res.ok){const copy=res.clone();caches.open(RUNTIME).then(cache=>put(cache,r,copy))}return res})))}
+const CACHE = "avant-shell-v8";
+const RUNTIME = "avant-runtime-v8";
+const MEDIA = "avant-media-v1";
+
+const SHELL = [
+  "./",
+  "./movies",
+  "./tv-shows",
+  "./watch-free",
+  "./site.webmanifest",
+  "./favicon.ico",
+  "./avant-movies-logo.png",
+];
+
+const MAX_RUNTIME = 160;
+const MAX_MEDIA = 120;
+
+const PRIVATE_PATHS = [
+  "/admin",
+  "/checkout",
+  "/payment",
+  "/account",
+  "/my-list",
+];
+
+const WATCH_PATH = "/watch";
+
+const SAFE_WARM = [
+  "/",
+  "/movies",
+  "/tv-shows",
+  "/watch-free",
+];
+
+function scopedPath(url) {
+  const u =
+    typeof url === "string"
+      ? new URL(url, self.location.origin)
+      : url;
+
+  const scope = new URL(self.registration.scope)
+    .pathname
+    .replace(/\/$/, "");
+
+  let p = u.pathname;
+
+  if (scope && scope !== "/" && p.startsWith(scope)) {
+    p = p.slice(scope.length) || "/";
+  }
+
+  return p.startsWith("/") ? p : "/" + p;
+}
+
+function matches(path, prefix) {
+  return path === prefix || path.startsWith(prefix + "/");
+}
+
+function privatePath(path) {
+  return PRIVATE_PATHS.some((p) => matches(path, p));
+}
+
+function watchPath(path) {
+  return matches(path, WATCH_PATH);
+}
+
+function safeWarm(path) {
+  return SAFE_WARM.includes(path);
+}
+
+async function trim(cache, max = MAX_RUNTIME) {
+  const keys = await cache.keys();
+
+  if (keys.length <= max) return;
+
+  await Promise.all(
+    keys
+      .slice(0, keys.length - max)
+      .map((key) => cache.delete(key))
+  );
+}
+
+async function put(cache, key, res) {
+  try {
+    if (!res || !res.ok || res.type === "opaque") return;
+
+    await cache.put(key, res);
+    await trim(cache);
+  } catch {
+    // Cache failure must never break the website.
+  }
+}
+
+/* -------------------------------------------------------
+   INSTALL
+------------------------------------------------------- */
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open(CACHE)
+      .then((cache) => cache.addAll(SHELL))
+      .then(() => self.skipWaiting())
+  );
+});
+
+/* -------------------------------------------------------
+   ACTIVATE
+------------------------------------------------------- */
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter(
+              (key) =>
+                ![CACHE, RUNTIME, MEDIA].includes(key)
+            )
+            .map((key) => caches.delete(key))
+        )
+      )
+      .then(() => self.clients.claim())
+  );
+});
+
+/* -------------------------------------------------------
+   MESSAGES
+------------------------------------------------------- */
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "AVANT_CLEAR_RUNTIME") {
+    event.waitUntil(caches.delete(RUNTIME));
+  }
+
+  if (
+    event.data?.type === "AVANT_WARM_URLS" &&
+    Array.isArray(event.data.urls)
+  ) {
+    event.waitUntil(
+      caches.open(RUNTIME).then(async (cache) => {
+        for (const raw of event.data.urls.slice(0, 20)) {
+          try {
+            const url = new URL(
+              raw,
+              self.location.origin
+            );
+
+            const path = scopedPath(url);
+
+            if (
+              url.origin !== self.location.origin ||
+              !safeWarm(path)
+            ) {
+              continue;
+            }
+
+            const response = await fetch(url.toString(), {
+              credentials: "same-origin",
+              cache: "no-cache",
+            });
+
+            if (response.ok) {
+              await put(
+                cache,
+                url.toString(),
+                response.clone()
+              );
+            }
+          } catch {
+            // Warming failure is non-fatal.
+          }
+        }
+      })
+    );
+  }
+});
+
+/* -------------------------------------------------------
+   FETCH
+------------------------------------------------------- */
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+
+  const sameOrigin =
+    url.origin === self.location.origin;
+
+  const mediaHost =
+    /^(?:res\.cloudinary\.com|i\.vimeocdn\.com|f\.vimeocdn\.com)$/.test(
+      url.hostname
+    );
+
+  if (!sameOrigin && !mediaHost) return;
+
+  const path = sameOrigin
+    ? scopedPath(url)
+    : url.pathname;
+
+  /* ---------------------------------------------------
+     MEDIA
+  --------------------------------------------------- */
+
+  if (
+    mediaHost &&
+    request.destination === "image"
+  ) {
+    event.respondWith(
+      caches.open(MEDIA).then(async (cache) => {
+        const cached = await cache.match(request);
+
+        if (cached) {
+          fetch(request)
+            .then((response) => {
+              const copy = response.clone();
+
+              return put(
+                cache,
+                request,
+                copy
+              ).then(() =>
+                trim(cache, MAX_MEDIA)
+              );
+            })
+            .catch(() => {});
+
+          return cached;
+        }
+
+        try {
+          const response = await fetch(request);
+
+          if (response.ok) {
+            await put(
+              cache,
+              request,
+              response.clone()
+            );
+          }
+
+          await trim(cache, MAX_MEDIA);
+
+          return response;
+        } catch {
+          return new Response("", {
+            status: 504,
+          });
+        }
+      })
+    );
+
+    return;
+  }
+
+  /* ---------------------------------------------------
+     PRIVATE / PAYMENT ROUTES
+
+     NEVER cache checkout, payments, account or admin.
+  --------------------------------------------------- */
+
+  if (privatePath(path)) {
+    event.respondWith(
+      fetch(request, {
+        cache: "no-store",
+      })
+    );
+
+    return;
+  }
+
+  /* ---------------------------------------------------
+     WATCH ROUTES
+
+     Always prefer the live network version.
+  --------------------------------------------------- */
+
+  if (watchPath(path)) {
+    event.respondWith(
+      fetch(request).catch(() =>
+        caches.match("./")
+      )
+    );
+
+    return;
+  }
+
+  /* ---------------------------------------------------
+     PAGE NAVIGATION
+
+     Network first.
+     Cache is only an offline fallback.
+
+     IMPORTANT:
+     Every response is cloned synchronously, before any
+     further async work (caches.open, etc.) and before the
+     response is returned to the browser. Cloning after an
+     await/.then() hop risks the body already being locked
+     by the browser's own consumption of the returned
+     response, which throws:
+     "Failed to execute 'clone' on 'Response':
+      Response body is already used"
+  --------------------------------------------------- */
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      (async () => {
+        const clean = new URL(request.url);
+        clean.search = "";
+
+        const cached =
+          (await caches.match(request)) ||
+          (await caches.match(clean.toString()));
+
+        try {
+          const response = await fetch(request, {
+            cache: "no-cache",
+          });
+
+          if (response.ok) {
+            const copy = response.clone();
+
+            caches
+              .open(RUNTIME)
+              .then((cache) =>
+                put(
+                  cache,
+                  request,
+                  copy
+                )
+              )
+              .catch(() => {});
+          }
+
+          return response;
+        } catch {
+          return (
+            cached ||
+            caches.match("./")
+          );
+        }
+      })()
+    );
+
+    return;
+  }
+
+  /* ---------------------------------------------------
+     JS / CSS
+  --------------------------------------------------- */
+
+  if (/\.(?:js|css)$/i.test(path)) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const fresh = fetch(request)
+          .then((response) => {
+            if (response.ok) {
+              const copy = response.clone();
+
+              caches
+                .open(RUNTIME)
+                .then((cache) =>
+                  put(
+                    cache,
+                    request,
+                    copy
+                  )
+                )
+                .catch(() => {});
+            }
+
+            return response;
+          })
+          .catch(() => cached);
+
+        return cached || fresh;
+      })
+    );
+
+    return;
+  }
+
+  /* ---------------------------------------------------
+     STATIC ASSETS
+  --------------------------------------------------- */
+
+  if (
+    /\.(?:png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(
+      path
+    )
+  ) {
+    event.respondWith(
+      caches.match(request).then(
+        (cached) =>
+          cached ||
+          fetch(request).then((response) => {
+            if (response.ok) {
+              const copy = response.clone();
+
+              caches
+                .open(RUNTIME)
+                .then((cache) =>
+                  put(
+                    cache,
+                    request,
+                    copy
+                  )
+                )
+                .catch(() => {});
+            }
+
+            return response;
+          })
+      )
+    );
+  }
 });
