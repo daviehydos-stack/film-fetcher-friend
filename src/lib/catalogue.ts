@@ -76,6 +76,10 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
 
   const legacyKey = text(raw["legacy_key"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]);
+  const previewVimeoVideoId = text(raw["preview_vimeo_video_id"]) || text(raw["previewVimeoVideoId"]) || text(raw["trailer_vimeo_video_id"]);
+  const trailerEmbedUrl = text(raw["trailer_embed_url"]) || text(raw["trailerEmbedUrl"]);
+  const previewStart = numberValue(raw["preview_start_seconds"]);
+  const previewDuration = numberValue(raw["preview_duration_seconds"]);
   const liveEpisodes = Array.isArray(raw["episodes"])
     ? raw["episodes"].map(mapPublicEpisode).filter((episode): episode is Episode => Boolean(episode))
     : undefined;
@@ -108,6 +112,10 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     ...(text(raw["scheduled_publish_at"]) ? { releaseAt: text(raw["scheduled_publish_at"]) } : {}),
     ...(raw["story_world"] && typeof raw["story_world"] === "object" ? { storyWorld: raw["story_world"] as CatalogueTitle["storyWorld"] } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
+    ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
+    ...(trailerEmbedUrl ? { trailerEmbedUrl } : {}),
+    ...(previewStart !== undefined ? { previewStart } : {}),
+    ...(previewDuration !== undefined ? { previewDuration } : {}),
     ...(text(raw["quality_label"]) ? { quality: text(raw["quality_label"]) } : {}),
     ...(text(raw["maturity_rating"]) ? { maturityRating: text(raw["maturity_rating"]) } : {}),
     ...(liveEpisodes?.length ? { episodes: liveEpisodes } : movieEpisode ? { episodes: movieEpisode } : {}),
