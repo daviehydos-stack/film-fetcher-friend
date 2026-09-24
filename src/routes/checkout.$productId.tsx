@@ -41,6 +41,7 @@ function CheckoutRoute() {
   const [stage, setStage] = useState<PaymentUiState>('ready')
   const [reference, setReference] = useState('')
   const [online, setOnline] = useState(() => typeof navigator === 'undefined' ? true : navigator.onLine)
+  const [leaving, setLeaving] = useState(false)
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
 
   useEffect(() => { try { setReference(sessionStorage.getItem(`avant_payment_${productId}`) || '') } catch { /* unavailable */ } }, [productId])
@@ -147,13 +148,17 @@ function CheckoutRoute() {
     } catch { setBusy(false); setStage('pending'); setError('Payment verification is temporarily unavailable. Please try again shortly.') }
   }
   function goBack() {
-    if (embedded) { window.parent.postMessage({ type: 'avant-checkout-close' }, window.location.origin); return }
-    if (window.history.length > 1) window.history.back()
-    else window.location.assign(new URL((returnTo || origin).replace(/^\//, ''), document.baseURI).href)
+    if (leaving) return
+    setLeaving(true)
+    window.setTimeout(() => {
+      if (embedded) { window.parent.postMessage({ type: 'avant-checkout-close' }, window.location.origin); return }
+      if (window.history.length > 1) window.history.back()
+      else window.location.assign(new URL((returnTo || origin).replace(/^\//, ''), document.baseURI).href)
+    }, 220)
   }
 
   const stageCopy = stage === 'sending' ? ['Sending M-PESA prompt', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Approve the M-PESA request with your PIN.'] : ['Verifying your payment', 'Payment received? Avant will unlock automatically as soon as M-PESA confirms it.']
-  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} bg-background text-foreground`}><div className={`mx-auto w-full ${embedded ? 'max-w-3xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-7 lg:px-8'}`}>
+  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} bg-background text-foreground transition-[opacity,filter,transform] duration-200 ease-out ${leaving ? 'pointer-events-none scale-[.992] opacity-0 blur-[3px]' : 'scale-100 opacity-100 blur-0'}`}><div className={`mx-auto w-full ${embedded ? 'max-w-3xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-7 lg:px-8'}`}>
     {!embedded && <header className="flex items-center justify-between border-b border-border pb-4"><Button type="button" variant="ghost" onClick={goBack} className="min-h-11 px-2 text-muted-foreground"><ArrowLeft/>Back</Button><span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-primary"><LockKeyhole className="size-4"/>Secure checkout</span></header>}
     <div className={`grid gap-5 ${embedded ? 'py-1' : 'py-5 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-10'}`}><section className="min-w-0">
       {!embedded && <div className="mb-5"><p className="eyebrow">Complete your access</p><h1 className="mt-2 text-3xl font-black sm:text-5xl">Unlock and start watching.</h1><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">Enter your M-PESA number, approve the prompt, and this title unlocks automatically.</p></div>}
