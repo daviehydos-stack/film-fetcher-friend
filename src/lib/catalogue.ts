@@ -17,8 +17,11 @@ function optimizedImage(value: unknown, width = 720) {
   if (!src) return undefined;
   try {
     const u = new URL(src);
-    if (u.hostname === "drive.google.com" && u.pathname === "/thumbnail") u.searchParams.set("sz", `w${width}`);
-    if (u.hostname === "i.vimeocdn.com") { u.searchParams.set("mw", String(width)); u.searchParams.set("q", "82"); }
+    if (u.hostname === "drive.google.com" && u.pathname === "/thumbnail") u.searchParams.set("sz", `w${Math.min(width, 1280)}`);
+    if (u.hostname === "i.vimeocdn.com") { u.searchParams.set("mw", String(Math.min(width, 1280))); u.searchParams.set("q", "76"); }
+    if (u.hostname === "res.cloudinary.com" && u.pathname.includes("/upload/") && !u.pathname.includes("/f_auto,")) {
+      u.pathname = u.pathname.replace("/upload/", `/upload/f_auto,q_auto:eco,c_fill,w_${Math.min(width, 1280)},dpr_auto/`);
+    }
     return u.toString();
   } catch { return src; }
 }
@@ -98,8 +101,8 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     genres: textList(raw["genres"]),
     synopsis: text(raw["synopsis"]) || "",
     shortDescription: text(raw["short_description"]) || text(raw["synopsis"]) || "",
-    artwork: optimizedImage(raw["poster_url"], 720) || "",
-    backdrop: optimizedImage(raw["backdrop_url"], 1440) || optimizedImage(raw["poster_url"], 1440) || "",
+    artwork: optimizedImage(raw["poster_url"], 560) || "",
+    backdrop: optimizedImage(raw["backdrop_url"], 1120) || optimizedImage(raw["poster_url"], 1120) || "",
     legacyPath: `/${slug}`,
     featured: Boolean(raw["featured"]),
     available: raw["published"] !== false && (!text(raw["scheduled_publish_at"]) || new Date(text(raw["scheduled_publish_at"]) ?? 0).getTime() <= Date.now()),
