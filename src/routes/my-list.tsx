@@ -109,7 +109,7 @@ function MyList() {
         </p>
 
         {!authReady ? (
-          <div className="mt-10 text-sm text-muted-foreground">Checking your account…</div>
+          <div className="mt-8 max-w-xl rounded-2xl border border-white/[.07] bg-white/[.035] p-6 sm:mt-10 sm:p-8" aria-busy="true"><div className="h-3 w-24 rounded-full bg-white/10" /><div className="mt-5 h-7 w-52 rounded bg-white/10" /><div className="mt-3 h-3 w-full max-w-md rounded bg-white/[.07]" /><div className="mt-2 h-3 w-3/4 rounded bg-white/[.07]" /></div>
         ) : !customer ? (
           <div className="mt-8 max-w-xl rounded-2xl border border-white/[.07] bg-white/[.035] p-6 shadow-[0_24px_70px_rgba(0,0,0,.25)] backdrop-blur sm:mt-10 sm:p-8">
             <BookmarkPlus className="size-8 text-white/70" />
