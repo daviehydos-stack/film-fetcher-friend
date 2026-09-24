@@ -19,6 +19,30 @@ import { AvantTransitionEngine } from "../components/streaming/AvantTransitionEn
 import { claimMedia, stopAllMedia } from "../lib/media-session";
 import { AvantAuthProvider } from "../lib/avant-auth";
 
+
+function PendingPage() {
+  return (
+    <div className="min-h-[100svh] bg-background text-foreground">
+      <div className="fixed inset-x-0 top-0 z-50 h-[64px] border-b border-white/[.06] bg-black/95 sm:h-[72px]">
+        <div className="mx-auto flex h-full max-w-[1800px] items-center px-5 sm:px-10 lg:px-14">
+          <img src={`${import.meta.env.BASE_URL}avant-movies-logo.png`} alt="" className="h-8 w-auto object-contain" />
+          <span className="ml-3 text-lg font-black text-white">Avant Cinema</span>
+        </div>
+      </div>
+      <main className="mx-auto max-w-[1800px] px-5 pb-20 pt-28 sm:px-10 sm:pt-36 lg:px-14">
+        <div className="max-w-3xl">
+          <div className="h-3 w-28 rounded-full bg-white/[.08]" />
+          <div className="mt-5 h-12 w-3/4 max-w-xl rounded-md bg-white/[.07]" />
+          <div className="mt-4 h-4 w-full max-w-lg rounded-full bg-white/[.05]" />
+        </div>
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {Array.from({ length: 4 }, (_, i) => <div key={i} className="aspect-video rounded-lg border border-white/[.04] bg-white/[.035]" />)}
+        </div>
+      </main>
+    </div>
+  );
+}
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-[100svh] items-center justify-center bg-background px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))]">
@@ -161,6 +185,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
+  pendingComponent: PendingPage,
+  pendingMs: 120,
+  pendingMinMs: 180,
 });
 
 function RootShell({ children }: { children: ReactNode }) {
