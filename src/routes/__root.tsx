@@ -45,10 +45,18 @@ function PendingPage() {
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-[100svh] items-center justify-center bg-background px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))]">
+    <div className="min-h-[100svh] bg-background text-foreground">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/95">
+        <div className="mx-auto flex h-[64px] max-w-[1800px] items-center px-4 sm:h-[72px] sm:px-8 lg:px-12">
+          <Link to="/" aria-label="Avant Cinema home" className="flex items-center gap-3">
+            <img src={`${import.meta.env.BASE_URL}avant-movies-logo.png`} alt="" className="h-9 w-9 object-contain sm:h-10 sm:w-10" />
+            <span className="whitespace-nowrap text-sm font-black tracking-tight text-white sm:text-base">Avant Cinema</span>
+          </Link>
+        </div>
+      </header>
+      <div className="flex min-h-[100svh] items-center justify-center px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-24">
       <div className="max-w-md text-center">
-        <img src={`${import.meta.env.BASE_URL}avant-movies-logo.png`} alt="Avant Cinema" className="mx-auto h-16 w-auto object-contain" />
-        <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground">Content unavailable</h1>
+        <h1 className="text-3xl font-black tracking-tight text-foreground">Content unavailable</h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           This link may be old, or the title may have moved. Browse the current Avant Cinema catalogue instead.
         </p>
@@ -60,6 +68,7 @@ function NotFoundComponent() {
             Browse Avant Cinema
           </Link>
         </div>
+      </div>
       </div>
     </div>
   );
