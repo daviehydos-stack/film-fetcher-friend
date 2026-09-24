@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Bell, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, ExternalLink, Film, Lock, Play, Plus, Share2, Volume2, VolumeX, X } from "lucide-react";
+import { Link, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, Bell, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, ExternalLink, Film, Lock, Play, Plus, Share2, Volume2, VolumeX, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
@@ -19,10 +19,12 @@ import { formatWatchTime, getProgress } from "@/lib/watch-progress";
 import { StreamingShell } from "./StreamingShell";
 
 export function TitleDetail({ item }: { item: CatalogueTitle }) {
+  const router = useRouter();
   const [relatedPreview,setRelatedPreview]=useState<CatalogueTitle|null>(null);
   const remembered = readReturnContext();
   const origin = remembered?.targetSlug===item.slug ? remembered : null;
   const checkoutSearch = { returnTo: `/title/${item.slug}`, origin: origin?.path || "/movies", originScroll: String(origin?.scrollY || 0) };
+  const goBack = () => { if (origin?.path && origin.path !== window.location.pathname) { void router.navigate({ to: origin.path as any }); return; } if (typeof window !== "undefined" && window.history.length > 1) { window.history.back(); return; } void router.navigate({ to: "/" }); };
   const [saved, setSaved] = useState(false);
   const [reminded, setReminded] = useState(false);
   const [now, setNow] = useState(() => Date.now());
@@ -100,6 +102,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     <StreamingShell>
       <main>
         <section ref={heroRef} onPointerDown={showHeroUi} onPointerMove={(e)=>{if(e.pointerType==="mouse")showHeroUi()}} className={`relative overflow-hidden bg-background transition-[min-height] duration-500 ease-out ${trailerOpen?"min-h-[56.25vw] max-h-[100svh] sm:min-h-[min(72vh,720px)] lg:mx-auto lg:max-w-[1280px] lg:min-h-[min(72vh,720px)]":"min-h-[68svh] sm:min-h-[76vh] lg:mx-auto lg:mt-0 lg:max-w-[1280px] lg:min-h-[82vh]"}`}>
+          <button type="button" onClick={goBack} className="absolute left-4 top-[max(1rem,env(safe-area-inset-top))] z-30 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-md transition hover:bg-white/20 hover:text-white sm:left-10" aria-label="Back to browsing"><ArrowLeft className="size-4"/><span>Back</span></button>
           <img src={item.backdrop} alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} backdrop`} fetchPriority="high" decoding="async" className={`absolute inset-0 size-full object-cover object-[62%_center] transition-opacity duration-700 sm:object-center ${(heroPreview || trailerOpen) && heroPreviewLoaded ? "opacity-0 scale-[1.015]" : "opacity-100 scale-100"}`} />
           {previewUrl && (heroPreview || trailerOpen) && heroInView ? <iframe ref={previewFrameRef} key={trailerOpen?"manual-trailer":"auto-preview"} src={trailerOpen ? cappedTrailerUrl(item.trailerEmbedUrl!, true) : previewUrl} title={`${item.title} ${trailerOpen?"trailer":"background trailer"}`} allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowFullScreen={trailerOpen} tabIndex={trailerOpen?0:-1} aria-hidden={trailerOpen?undefined:true} onLoad={(event) => { window.dispatchEvent(new CustomEvent("avant:player-started",{detail:{player:event.currentTarget}})); setHeroPreviewLoaded(true); }} className={`${trailerOpen?"pointer-events-auto":"pointer-events-none"} absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-500 ${heroPreviewLoaded ? "opacity-100" : "opacity-0"}`} /> : null}
           <div className={`hero-shade absolute inset-0 transition-opacity duration-500 ${trailerOpen||!heroUiVisible?"pointer-events-none opacity-0":"opacity-100"}`} /><div className={`absolute inset-0 bg-[radial-gradient(circle_at_76%_36%,transparent_0%,rgba(0,0,0,.06)_34%,rgba(0,0,0,.68)_100%)] transition-opacity duration-500 ${trailerOpen||!heroUiVisible?"pointer-events-none opacity-0":"opacity-100"}`} />
