@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36028440934
+Run ID: 36028483076
 
-Generated: 2026-09-24T16:36:06Z
+Generated: 2026-09-24T16:36:31Z
 
 ### Current primary errors
 ~~~text
@@ -5454,4 +5454,23 @@ build	Install dependencies	2026-09-23T18:34:16.5143346Z ##[error]Process complet
 ### Full failed-step log
 ~~~text
 run 36028440934 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-24T16:36:31Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-24T16:35:56Z","databaseId":36028483076,"displayTitle":"Enable PayPal checkout and entitlement capture flow","headSha":"ecaf5be8c837c2e1171c7414b999060e2f7e492d","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-24T16:36:28Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36028483076"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36028483076 is still in progress; logs will be available when it is complete
 ~~~
