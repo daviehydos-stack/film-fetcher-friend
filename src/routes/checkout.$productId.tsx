@@ -134,8 +134,19 @@ function CheckoutRoute() {
         attempts += 1
         try {
           const freshToken = await customerToken(false)
-          const response = await paymentStatus(freshToken, nextReference)
-          const state = normalizePaymentState(response.payment?.status || response.status, (response.entitlements?.length ?? 0) > 0)
+          let response = await paymentStatus(freshToken, nextReference)
+          let state = normalizePaymentState(response.payment?.status || response.status, (response.entitlements?.length ?? 0) > 0)
+          // A provider can mark M-PESA paid before the entitlement row is visible.
+          // Reconcile immediately instead of leaving a paid customer locked.
+          const providerPaid = /paid|success|successful|completed|complete/i.test(String(response.payment?.status || response.status || ''))
+          if (providerPaid && (response.entitlements?.length ?? 0) === 0) {
+            try {
+              await reconcilePayments(freshToken)
+              clearPlaybackCache()
+              response = await paymentStatus(freshToken, nextReference)
+              state = normalizePaymentState(response.payment?.status || response.status, (response.entitlements?.length ?? 0) > 0)
+            } catch { /* polling will retry safely */ }
+          }
           if (state === 'success') { await finish(nextReference); return }
           if (['failed', 'cancelled', 'timed_out'].includes(state)) { handleTerminal(state); return }
         } catch { /* retry safely */ }
@@ -221,8 +232,17 @@ function CheckoutRoute() {
     setBusy(true); setStage('confirming'); setError('')
     try {
       const token = await customerToken(false)
-      const response = await paymentStatus(token, referenceValue)
-      const state = normalizePaymentState(response.payment?.status || response.status, (response.entitlements?.length ?? 0) > 0)
+      let response = await paymentStatus(token, referenceValue)
+      let state = normalizePaymentState(response.payment?.status || response.status, (response.entitlements?.length ?? 0) > 0)
+      const providerPaid = /paid|success|successful|completed|complete/i.test(String(response.payment?.status || response.status || ''))
+      if (providerPaid && (response.entitlements?.length ?? 0) === 0) {
+        try {
+          await reconcilePayments(token)
+          clearPlaybackCache()
+          response = await paymentStatus(token, referenceValue)
+          state = normalizePaymentState(response.payment?.status || response.status, (response.entitlements?.length ?? 0) > 0)
+        } catch { /* keep the confirmed payment recoverable */ }
+      }
       if (state === 'success') { await finish(referenceValue); return }
       if (['failed', 'cancelled', 'timed_out'].includes(state)) { handleTerminal(state); return }
       setBusy(false); setStage('pending'); setError('Still awaiting provider confirmation. Do not pay again; check again shortly.')
