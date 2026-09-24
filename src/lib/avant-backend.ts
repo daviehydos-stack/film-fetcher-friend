@@ -33,6 +33,7 @@ export const resolveCatalogueKey=async(key:string)=>{if(missingCatalogueKeys.has
   }
 };
 export const publicCommerceSettings=()=>request<any>("catalogue-public?view=commerce").catch(()=>publicCatalogue().then((x:any)=>({products:x?.products||[]})));
+export const publicPaymentChannels=()=>request<any>("catalogue-public?view=payment_channels").catch(()=>publicCommerceSettings().then((x:any)=>({paypal:x?.paypal||x?.paymentChannels?.paypal||null,palpluss:x?.palpluss||x?.paymentChannels?.palpluss||null,paybill:x?.paybill||x?.paymentChannels?.paybill||null})));
 let publicPagesCache:any=null,publicPagesAt=0;export const publicPages=()=>{const now=Date.now();if(publicPagesCache&&now-publicPagesAt<60000)return Promise.resolve(publicPagesCache);return request<any>("public-pages?navigation=1").then(x=>{publicPagesCache=x;publicPagesAt=Date.now();return x})};
 export const publicPage=(slug:string)=>request<any>(`public-pages?slug=${encodeURIComponent(slug)}`);
 export type ConciergeResult={answer:string;slugs:string[];reasons?:Record<string,string>;suggestions:string[];mode:"ai-grounded"|"catalogue-fallback"|"grounded"};
