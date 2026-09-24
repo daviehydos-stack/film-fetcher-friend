@@ -61,7 +61,7 @@ export function TitleCard({
           : "group relative z-0 w-[90vw] max-w-[24rem] shrink-0 min-[420px]:w-[88vw] sm:w-[18rem] md:hover:z-30 lg:w-[21rem] lg:max-w-none"
       }
     >
-      <div className="relative overflow-hidden rounded-lg border border-white/[.055] bg-surface shadow-[0_10px_28px_rgba(0,0,0,.22)] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:origin-center md:group-hover:scale-[1.045] md:group-hover:border-white/[.12] md:group-hover:shadow-[0_24px_60px_rgba(0,0,0,.78)]">
+      <div className="relative overflow-hidden rounded-lg border border-white/[.055] bg-surface shadow-[0_10px_28px_rgba(0,0,0,.22)] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:origin-center md:group-hover:-translate-y-2 md:group-hover:scale-[1.085] md:group-hover:border-white/[.16] md:group-hover:shadow-[0_30px_72px_rgba(0,0,0,.82)]">
         <button
           ref={detailsButtonRef}
           type="button"
@@ -76,7 +76,7 @@ export function TitleCard({
             fetchPriority={layout === "rail" ? "high" : "auto"}
             decoding="async"
             onError={() => setImageIndex((current) => current + 1)}
-            className="size-full object-cover transition duration-500"
+            className="size-full object-cover transition-[transform,filter] duration-700 ease-[cubic-bezier(.16,1,.3,1)] md:group-hover:scale-[1.08] md:group-hover:brightness-[.72]"
           /> : <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,122,24,.24),transparent_32%),linear-gradient(135deg,#17191f_0%,#090a0d_62%,#030303_100%)] p-5">
             <div className="max-w-[85%] text-left">
               <span className="block text-[10px] font-black uppercase tracking-[.22em] text-orange-400">Avant Cinema</span>
@@ -89,7 +89,7 @@ export function TitleCard({
               {(travelMode && "Data Saver") || (item.featured && "Featured") || badgeLabel}
             </span>
           ) : null}
-          <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,.18)_58%,rgba(0,0,0,.88)_100%)] opacity-90 md:opacity-0 md:group-hover:opacity-100" />
+          <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,rgba(0,0,0,.16)_52%,rgba(0,0,0,.92)_100%)] opacity-90 transition-opacity duration-500 md:opacity-0 md:group-hover:opacity-100" />
           <span className="absolute inset-x-0 bottom-0 p-3 text-white md:hidden">
             <span className="block text-sm font-bold leading-tight">{item.title}</span>
             <span className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-white/70">
