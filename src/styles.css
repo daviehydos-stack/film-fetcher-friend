@@ -589,3 +589,25 @@ img{background-color:#090a0c}
 [data-title-card] img{transition:opacity 160ms ease,transform 220ms ease}
 iframe{background:#000}
 @media(prefers-reduced-motion:no-preference){.avant-route-surface{will-change:opacity}.avant-mobile-menu{will-change:transform,opacity}}
+
+
+/* Global route continuity — smooth forward/back handoff on every routed page.
+   Kept compositor-only so navigation feels cinematic without delaying clicks. */
+@media (prefers-reduced-motion:no-preference){
+  .avant-route-surface{
+    animation:avantGlobalRouteIn 240ms cubic-bezier(.22,1,.36,1) both!important;
+    transform-origin:50% 42%;
+    will-change:opacity,transform;
+  }
+  @keyframes avantGlobalRouteIn{
+    0%{opacity:0;transform:translate3d(0,8px,0) scale(.996)}
+    55%{opacity:.92}
+    100%{opacity:1;transform:translate3d(0,0,0) scale(1)}
+  }
+  @supports (view-transition-name:root){
+    ::view-transition-old(root){animation:avantNativeRouteOut 150ms ease-in both}
+    ::view-transition-new(root){animation:avantNativeRouteIn 240ms cubic-bezier(.22,1,.36,1) both}
+    @keyframes avantNativeRouteOut{to{opacity:.12}}
+    @keyframes avantNativeRouteIn{from{opacity:.12}to{opacity:1}}
+  }
+}
