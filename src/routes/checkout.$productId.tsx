@@ -226,10 +226,18 @@ function CheckoutRoute() {
     if (leaving) return
     setLeaving(true)
     window.setTimeout(() => {
-      if (embedded) { window.parent.postMessage({ type: 'avant-checkout-close' }, window.location.origin); return }
+      if (embedded) {
+        window.parent.postMessage({ type: 'avant-checkout-close' }, '*')
+        return
+      }
+      const target = (returnTo || origin || '').trim()
+      if (target && target.startsWith('/') && !target.startsWith('//')) {
+        window.location.assign(new URL(target.replace(/^\//, ''), document.baseURI).href)
+        return
+      }
       if (window.history.length > 1) window.history.back()
-      else window.location.assign(new URL((returnTo || origin).replace(/^\//, ''), document.baseURI).href)
-    }, 220)
+      else window.location.assign(new URL('', document.baseURI).href)
+    }, 260)
   }
 
   const stageCopy = activeMethod === 'paypal' ? (stage === 'sending' ? ['Preparing secure PayPal checkout', 'Creating your PayPal order securely…'] : ['Confirming your PayPal payment', 'Avant unlocks automatically after PayPal confirms.']) : stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
@@ -240,7 +248,7 @@ function CheckoutRoute() {
   const titleArtwork = purchaseTitle?.backdrop_url || purchaseTitle?.poster_url || purchaseTitle?.backdrop || purchaseTitle?.artwork || ''
   const displayTitle = purchaseTitle?.title || product?.name || 'Avant Cinema access'
 
-  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-200 ease-out ${leaving ? 'pointer-events-none scale-[.992] opacity-0 blur-[3px]' : 'scale-100 opacity-100 blur-0'}`}>
+  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${leaving ? 'pointer-events-none scale-[.985] opacity-0 blur-[5px]' : 'scale-100 opacity-100 blur-0'}`}>
     <div className={`relative mx-auto w-full ${embedded ? 'max-w-xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8'}`}>
       {!embedded && <header className="flex items-center justify-between pb-5">
         <Button type="button" variant="ghost" onClick={goBack} className="-ml-2 min-h-10 gap-2 px-2 text-white/60 hover:bg-white/5 hover:text-white"><ArrowLeft className="size-4"/>Back</Button>
