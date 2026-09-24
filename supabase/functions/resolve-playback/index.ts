@@ -158,7 +158,7 @@ Deno.serve(async (r) => {
         { status: 500, headers: H },
       );
 
-    const p = variant
+    let p = variant
       ? {
           content_id: resolvedId,
           season_id: legacy?.season_id || season?.id || null,
