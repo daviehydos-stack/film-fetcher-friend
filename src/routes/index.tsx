@@ -22,12 +22,12 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [myListIds, setMyListIds] = useState<string[]>([]);
   const [watchedIds, setWatchedIds] = useState<string[]>([]);
-  const [home, setHome] = useState<any>(undefined);
+  const [home, setHome] = useState<any>(null);
   useEffect(() => {
     let cancelled = false;
-    const load = () => publicCatalogue().then((value) => { if (!cancelled) setHome(value); }).catch(() => { if (!cancelled) setHome(null); });
-    void load();
-    return () => { cancelled = true; };
+    const load = () => publicCatalogue().then((value) => { if (!cancelled) setHome(value); }).catch(() => {});
+    const idle = (window as any).requestIdleCallback ? (window as any).requestIdleCallback(load, { timeout: 500 }) : window.setTimeout(load, 80);
+    return () => { cancelled = true; if ((window as any).cancelIdleCallback && typeof idle === "number") (window as any).cancelIdleCallback(idle); else window.clearTimeout(idle as number); };
   }, []);
   useEffect(() => { const sync = () => setMyListIds(readMyList()); sync(); window.addEventListener("avant-my-list", sync); return () => window.removeEventListener("avant-my-list", sync); }, []);
   useEffect(() => { const sync = () => setWatchedIds(readProgress().map((entry) => entry.contentId)); sync(); window.addEventListener("avant-progress", sync); return () => window.removeEventListener("avant-progress", sync); }, []);
