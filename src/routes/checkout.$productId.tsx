@@ -62,6 +62,10 @@ function CheckoutRoute() {
     let active = true
     const routeKey = String(productId || '').replace(/^title\//, '').replace(/^\/+|\/+$/g, '')
     const mapped = productForLegacyContent(routeKey) || routeKey
+    // Paint the known product immediately. Network data only enriches price/artwork.
+    setBackendProductId(mapped)
+    setProduct((current:any) => current || { id: mapped, name: routeKey.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()), currency: 'KES', price_minor: 0 })
+    setLoading(false)
     Promise.allSettled([resolveCatalogueKey(routeKey), publicCatalogue()]).then(([resolvedResult, catalogueResult]) => {
       if (!active) return
       const resolvedPayload = resolvedResult.status === 'fulfilled' ? resolvedResult.value : null
@@ -79,7 +83,6 @@ function CheckoutRoute() {
       const contentTitle = selected?.content_ids?.length ? titles.find((entry: any) => selected.content_ids.includes(entry.id)) : null
       const namedTitle = titles.find((entry: any) => selected?.name && String(selected.name).toLowerCase().includes(String(entry.title || '').toLowerCase()))
       setPurchaseTitle(directTitle || seasonTitle || contentTitle || namedTitle || null)
-      setLoading(false)
     })
     return () => { active = false }
   }, [productId])
