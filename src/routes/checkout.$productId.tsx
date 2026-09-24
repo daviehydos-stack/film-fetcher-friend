@@ -25,11 +25,12 @@ type Method = 'mpesa' | 'paypal'
 function CheckoutRoute() {
   const { productId } = Route.useParams()
   const router = useRouter()
-  const query = typeof window === 'undefined' ? new URLSearchParams() : new URLSearchParams(window.location.search)
-  const embedded = query.get('embedded') === '1'
-  const returnTo = query.get('returnTo') || ''
-  const origin = query.get('origin') || returnTo || '/movies'
-  const originScroll = Number(query.get('originScroll') || 0)
+  const [checkoutQuery] = useState(() => typeof window === 'undefined' ? { embedded: false, returnTo: '', origin: '/movies', originScroll: 0 } : (() => {
+    const query = new URLSearchParams(window.location.search)
+    const returnTo = query.get('returnTo') || ''
+    return { embedded: query.get('embedded') === '1', returnTo, origin: query.get('origin') || returnTo || '/movies', originScroll: Number(query.get('originScroll') || 0) }
+  })())
+  const { embedded, returnTo, origin, originScroll } = checkoutQuery
   const [email, setEmail] = useState('')
   const [mobile, setMobile] = useState('')
   const [mpesaCode, setMpesaCode] = useState('')
@@ -43,7 +44,7 @@ function CheckoutRoute() {
   const [loading, setLoading] = useState(true)
   const [stage, setStage] = useState<PaymentUiState>('ready')
   const [reference, setReference] = useState('')
-  const [online, setOnline] = useState(() => typeof navigator === 'undefined' ? true : navigator.onLine)
+  const [online, setOnline] = useState(true)
   const [leaving, setLeaving] = useState(false)
   const [method, setMethod] = useState<Method>('mpesa')
   const [methodChosen, setMethodChosen] = useState(false)
@@ -54,7 +55,7 @@ function CheckoutRoute() {
   const activeMethod: Method = paypalOn ? method : 'mpesa'
 
   useEffect(() => { try { setReference(sessionStorage.getItem(`avant_payment_${productId}`) || '') } catch { /* unavailable */ } }, [productId])
-  useEffect(() => { const sync=()=>setOnline(navigator.onLine); window.addEventListener('online',sync); window.addEventListener('offline',sync); return()=>{window.removeEventListener('online',sync);window.removeEventListener('offline',sync)} }, [])
+  useEffect(() => { const sync=()=>setOnline(navigator.onLine); sync(); window.addEventListener('online',sync); window.addEventListener('offline',sync); return()=>{window.removeEventListener('online',sync);window.removeEventListener('offline',sync)} }, [])
   useEffect(() => { let active=true; publicPaymentChannels().then((x:any)=>{if(active)setPaymentChannels(x)}).catch(()=>{}); return()=>{active=false} }, [])
   useEffect(() => {
     let active = true
