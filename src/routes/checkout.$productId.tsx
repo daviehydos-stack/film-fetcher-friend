@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { ArrowLeft, Check, CheckCircle2, CircleAlert, Clock3, LockKeyhole, Phone, RefreshCw, ShieldCheck, Smartphone } from 'lucide-react'
+import { ArrowLeft, Check, CheckCircle2, CircleAlert, Clapperboard, Clock3, LockKeyhole, Mail, Phone, RefreshCw, ShieldCheck, Smartphone, Zap } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { broadcastAccessChanged, paymentStatus, publicCatalogue, publicPaymentChannels, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
@@ -9,16 +9,18 @@ import { normalizePaymentState, paymentStateMessage, type PaymentUiState } from 
 
 export const Route = createFileRoute('/checkout/$productId')({
   head: () => ({ meta: [
-    { title: 'Secure M-PESA Checkout — Avant Movies' },
-    { name: 'description', content: 'Complete your Avant Movies access securely with M-PESA.' },
+    { title: 'Secure Checkout — Avant Movies' },
+    { name: 'description', content: 'Complete your Avant Movies access securely with PayPal or M-PESA.' },
     { property: 'og:title', content: 'Secure Checkout — Avant Movies' },
-    { property: 'og:description', content: 'Complete your Avant Movies access securely with M-PESA.' },
+    { property: 'og:description', content: 'Complete your Avant Movies access securely with PayPal or M-PESA.' },
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary' },
     { name: 'robots', content: 'noindex, nofollow' },
   ] }),
   component: CheckoutRoute,
 })
+
+type Method = 'mpesa' | 'paypal'
 
 function CheckoutRoute() {
   const { productId } = Route.useParams()
@@ -42,7 +44,10 @@ function CheckoutRoute() {
   const [reference, setReference] = useState('')
   const [online, setOnline] = useState(() => typeof navigator === 'undefined' ? true : navigator.onLine)
   const [leaving, setLeaving] = useState(false)
+  const [method, setMethod] = useState<Method>('mpesa')
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+  const paypalOn = paymentChannels?.paypal?.enabled === true
+  const activeMethod: Method = paypalOn ? method : 'mpesa'
 
   useEffect(() => { try { setReference(sessionStorage.getItem(`avant_payment_${productId}`) || '') } catch { /* unavailable */ } }, [productId])
   useEffect(() => { const sync=()=>setOnline(navigator.onLine); window.addEventListener('online',sync); window.addEventListener('offline',sync); return()=>{window.removeEventListener('online',sync);window.removeEventListener('offline',sync)} }, [])
@@ -65,8 +70,8 @@ function CheckoutRoute() {
   const amount = product ? `${product.currency || 'KES'} ${(payableMinor / 100).toLocaleString()}` : '—'
   const regularAmount = product?.promotional_price_minor != null ? `${product.currency || 'KES'} ${(product.price_minor / 100).toLocaleString()}` : ''
   const steps = useMemo(() => [
-    { label: 'Email & M-PESA', done: ['sending', 'phone', 'confirming', 'success'].includes(stage), active: stage === 'ready' },
-    { label: 'Phone prompt', done: ['confirming', 'success'].includes(stage), active: ['sending', 'phone'].includes(stage) },
+    { label: 'Your details', done: ['sending', 'phone', 'confirming', 'success'].includes(stage), active: stage === 'ready' },
+    { label: 'Approve payment', done: ['confirming', 'success'].includes(stage), active: ['sending', 'phone'].includes(stage) },
     { label: 'Start watching', done: stage === 'success', active: stage === 'confirming' },
   ], [stage])
 
@@ -157,18 +162,122 @@ function CheckoutRoute() {
     }, 220)
   }
 
-  const stageCopy = stage === 'sending' ? ['Sending M-PESA prompt', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Approve the M-PESA request with your PIN.'] : ['Verifying your payment', 'Payment received? Avant will unlock automatically as soon as M-PESA confirms it.']
-  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} bg-background text-foreground transition-[opacity,filter,transform] duration-200 ease-out ${leaving ? 'pointer-events-none scale-[.992] opacity-0 blur-[3px]' : 'scale-100 opacity-100 blur-0'}`}><div className={`mx-auto w-full ${embedded ? 'max-w-3xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-7 lg:px-8'}`}>
-    {!embedded && <header className="flex items-center justify-between border-b border-border pb-4"><Button type="button" variant="ghost" onClick={goBack} className="min-h-11 px-2 text-muted-foreground"><ArrowLeft/>Back</Button><span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-primary"><LockKeyhole className="size-4"/>Secure checkout</span></header>}
-    <div className={`grid gap-5 ${embedded ? 'py-1' : 'py-5 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-10'}`}><section className="min-w-0">
-      {!embedded && <div className="mb-5"><p className="eyebrow">Complete your access</p><h1 className="mt-2 text-3xl font-black sm:text-5xl">Unlock and start watching.</h1><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">Enter your M-PESA number, approve the prompt, and this title unlocks automatically.</p></div>}
-      {embedded && <CompactSummary product={product} loading={loading} amount={amount}/>}<ol className="mb-5 flex items-center gap-2 px-1" aria-label="Checkout progress">{steps.map((step, index) => <li key={step.label} className="flex min-w-0 flex-1 items-center gap-2"><span className={`grid size-7 shrink-0 place-items-center rounded-full border text-[11px] font-black transition ${step.done ? 'border-primary bg-primary text-primary-foreground' : step.active ? 'border-primary/70 bg-primary/15 text-primary' : 'border-border bg-secondary/50 text-muted-foreground'}`}>{step.done ? <Check className="size-3.5"/> : index + 1}</span><span className={`hidden truncate text-[10px] font-bold uppercase tracking-[.12em] sm:block ${step.active ? 'text-foreground' : 'text-muted-foreground'}`}>{step.label}</span>{index < steps.length - 1 && <span className={`ml-auto h-px min-w-2 flex-1 ${step.done ? 'bg-primary/70' : 'bg-border'}`}/>}</li>)}</ol>
-      {busy || ['phone', 'confirming'].includes(stage) ? <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#0b0d11] px-5 py-8 shadow-[0_24px_80px_rgba(0,0,0,.45)] sm:px-8 sm:py-10" role="status" aria-live="polite"><div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"/><div className="relative mx-auto flex max-w-md flex-col items-center text-center"><div className="relative grid size-12 place-items-center rounded-full border border-white/10 bg-white/[.045] text-primary"><span className="absolute inset-[-5px] rounded-full border border-primary/20 animate-pulse"/>{stage === 'phone' ? <Phone className="size-5"/> : <Clock3 className="size-5 animate-pulse"/>}</div><p className="mt-5 text-[10px] font-bold uppercase tracking-[.22em] text-primary/90">{stage === 'sending' ? 'M-PESA request' : stage === 'phone' ? 'Approve on your phone' : 'Payment detection'}</p><h2 className="mt-2 text-[1.35rem] font-semibold tracking-[-.025em] text-white sm:text-2xl">{stageCopy[0]}</h2><p className="mt-2 max-w-sm text-[13px] leading-5 text-white/45">{stageCopy[1]}</p>{stage === 'phone' && <div className="mt-5 w-full rounded-lg border border-white/8 bg-white/[.025] px-4 py-3 text-left"><p className="text-xs font-semibold text-white/75">Complete the prompt on your phone</p><p className="mt-1 text-[11px] leading-5 text-white/35">Enter your M-PESA PIN there. Avant will detect confirmation automatically.</p></div>}{reference && <p className="mt-5 max-w-full truncate font-mono text-[9px] uppercase tracking-[.08em] text-white/25">Ref {reference}</p>}<div className="mt-6 flex items-center gap-2 text-[11px] text-white/35"><span className="size-1.5 animate-pulse rounded-full bg-primary"/><span>{stage === 'confirming' ? 'Checking payment securely…' : 'Waiting for M-PESA…'}</span></div><p className="mt-3 text-[10px] text-white/25">Keep this screen open · do not pay twice</p></div></div> : <div className="space-y-3"><section className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-card to-background shadow-2xl"><div className="border-b border-border/70 px-5 py-4 sm:px-6"><p className="flex items-center gap-2 text-sm font-bold"><Smartphone className="size-4 text-primary"/>M-PESA on your phone</p><p className="mt-1 text-xs text-muted-foreground">Your M-PESA PIN stays on your phone.</p></div><div className="p-5 sm:p-6"><label htmlFor="avant-email" className="text-sm font-bold">Email address</label><div className="mb-4 mt-3 flex min-h-14 items-center rounded-xl border border-white/15 bg-black/30 px-4 transition focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20"><input id="avant-email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" inputMode="email" autoComplete="email" className="min-w-0 flex-1 bg-transparent text-base font-semibold outline-none placeholder:text-muted-foreground"/></div><p className="-mt-2 mb-4 text-xs text-muted-foreground">Your receipt and Avant access code will be sent to this email and saved to your Avant account.</p><label htmlFor="mpesa-number" className="text-sm font-bold">M-PESA mobile number</label><div className="mt-3 flex min-h-14 items-center rounded-xl border border-white/15 bg-black/30 px-4 transition focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20"><span className="mr-3 border-r border-border pr-3 text-sm text-muted-foreground">KE</span><input id="mpesa-number" value={mobile} onChange={(event) => setMobile(event.target.value)} placeholder="07XX XXX XXX or 01XX XXX XXX" inputMode="tel" autoComplete="tel" className="min-w-0 flex-1 bg-transparent text-base font-semibold outline-none placeholder:text-muted-foreground"/></div><Button onClick={() => void start()} disabled={!online || !validEmail || !normalizeKenyanMobile(mobile) || loading} size="lg" className="mt-4 min-h-14 w-full rounded-xl text-base font-black shadow-lg transition hover:-translate-y-0.5"><Smartphone/>Pay {amount} with M-PESA</Button>{paymentChannels?.paypal?.enabled===true&&<div className="mt-3"><div className="flex items-center gap-3"><span className="h-px flex-1 bg-border"/><span className="text-[10px] font-bold uppercase tracking-[.16em] text-muted-foreground">or</span><span className="h-px flex-1 bg-border"/></div><Button type="button" variant="outline" disabled className="mt-3 min-h-14 w-full rounded-xl text-base font-black">Pay {amount} with PayPal</Button><p className="mt-2 text-center text-[11px] text-muted-foreground">PayPal is connected in Admin. Checkout activates when the PayPal order endpoint is available.</p></div>}{paymentChannels?.paybill?.enabled===true&&paymentChannels?.paybill?.number&&<div className="mt-3 rounded-xl border border-border bg-secondary/30 p-4 text-sm"><p className="font-bold">Paybill {paymentChannels.paybill.number}</p>{paymentChannels.paybill.account&&<p className="mt-1 text-xs text-muted-foreground">Account: {paymentChannels.paybill.account}</p>}</div>}<Button type="button" variant="ghost" onClick={() => setRecoveryOpen((value) => !value)} disabled={!online} className="mt-2 min-h-11 w-full rounded-xl text-muted-foreground hover:text-foreground"><RefreshCw/>Already paid? Verify payment</Button></div></section></div>}
-      {recoveryOpen && !busy && <section className="mt-3 rounded-lg border border-border bg-card p-4"><p className="text-sm font-bold">Find a completed payment</p><p className="mt-1 text-xs text-muted-foreground">Use the phone number above or your M-PESA transaction code. This never creates a second charge.</p><input value={mpesaCode} onChange={(event) => setMpesaCode(event.target.value.toUpperCase())} placeholder="M-PESA transaction code" autoCapitalize="characters" className="mt-3 min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"/><Button type="button" onClick={() => void recoverPaid()} disabled={!mobile.trim() && !mpesaCode.trim()} className="mt-2 min-h-11 w-full">Verify payment</Button></section>}
-      {reference && !busy && <Button type="button" variant="outline" onClick={() => void checkPayment()} className="mt-3 min-h-11 w-full"><RefreshCw/>Check saved payment</Button>}{!online && <div className="mt-3 flex gap-3 rounded-lg border border-border bg-card p-4 text-sm" role="status"><CircleAlert className="mt-0.5 size-4 shrink-0"/><span>Checkout is paused while you’re offline. Reconnect to pay or verify an existing payment.</span></div>}{error && <div className="mt-3 flex gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm shadow-lg" role="alert"><CircleAlert className="mt-0.5 size-4 shrink-0 text-destructive"/><span>{error}</span></div>}<p className="mt-4 flex items-start gap-2 text-xs leading-5 text-muted-foreground"><ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary"/>Secure M-PESA checkout. After confirmation, Avant will create your access code and send it to your email.</p>
-    </section>{!embedded && <OrderSummary product={product} loading={loading} amount={amount} regularAmount={regularAmount}/>}</div>
-  </div></main>
+  const stageCopy = stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
+  const processing = busy || ['phone', 'confirming'].includes(stage)
+  const fieldWrap = 'flex min-h-14 items-center gap-3 rounded-xl border border-border bg-background/60 px-4 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15'
+  const fieldInput = 'min-w-0 flex-1 bg-transparent text-base font-medium outline-none placeholder:text-muted-foreground/60'
+
+  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-background text-foreground transition-[opacity,filter,transform] duration-200 ease-out ${leaving ? 'pointer-events-none scale-[.992] opacity-0 blur-[3px]' : 'scale-100 opacity-100 blur-0'}`}>
+    {!embedded && <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-primary/15 blur-[120px]"/>}
+    <div className={`relative mx-auto w-full ${embedded ? 'max-w-xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6' : 'max-w-5xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8'}`}>
+      {!embedded && <header className="flex items-center justify-between pb-6">
+        <Button type="button" variant="ghost" onClick={goBack} className="-ml-2 min-h-11 gap-2 px-2 text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4"/>Back</Button>
+        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground backdrop-blur"><LockKeyhole className="size-3.5 text-primary"/>Encrypted checkout</span>
+      </header>}
+
+      <div className={`grid gap-6 ${embedded ? '' : 'lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:gap-10'}`}>
+        <section className="order-2 min-w-0 lg:order-1">
+          {!embedded && <div className="mb-6">
+            <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Get your access pass</h1>
+            <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">Pay once, and your title unlocks right here. We also email you an access code so you can watch on any device.</p>
+          </div>}
+
+          <ol className="mb-5 grid grid-cols-3 gap-2" aria-label="Checkout progress">
+            {steps.map((step) => <li key={step.label} className="min-w-0">
+              <span className={`block h-1 rounded-full transition-colors duration-500 ${step.done ? 'bg-primary' : step.active ? 'bg-primary/50' : 'bg-border'}`}/>
+              <span className={`mt-2 flex items-center gap-1.5 truncate text-xs font-semibold ${step.active || step.done ? 'text-foreground' : 'text-muted-foreground'}`}>{step.done && <Check className="size-3 shrink-0 text-primary"/>}<span className="truncate">{step.label}</span></span>
+            </li>)}
+          </ol>
+
+          {processing ? <div className="rounded-2xl border border-border bg-card/70 px-6 py-12 text-center shadow-2xl backdrop-blur" role="status" aria-live="polite">
+            <div className="relative mx-auto grid size-16 place-items-center rounded-full bg-primary/10 text-primary">
+              <span className="absolute inset-0 rounded-full border-2 border-primary/30 motion-safe:animate-ping"/>
+              {stage === 'phone' ? <Phone className="size-6"/> : <Clock3 className="size-6 motion-safe:animate-pulse"/>}
+            </div>
+            <h2 className="mt-6 text-2xl font-bold tracking-tight">{stageCopy[0]}</h2>
+            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-muted-foreground">{stageCopy[1]}</p>
+            {stage === 'phone' && <div className="mx-auto mt-6 max-w-sm rounded-xl border border-border bg-background/60 px-4 py-3 text-left"><p className="text-sm font-semibold">Approve on your phone</p><p className="mt-1 text-xs leading-5 text-muted-foreground">Your PIN is entered on your phone only. We detect the confirmation for you.</p></div>}
+            {reference && <p className="mx-auto mt-6 max-w-full truncate font-mono text-[11px] text-muted-foreground/60">Ref {reference}</p>}
+            <p className="mt-6 inline-flex items-center gap-2 text-xs text-muted-foreground"><span className="size-1.5 rounded-full bg-primary motion-safe:animate-pulse"/>Keep this screen open and don’t pay twice</p>
+          </div> : <div className="overflow-hidden rounded-2xl border border-border bg-card/70 shadow-2xl backdrop-blur">
+            <div className="p-5 sm:p-7">
+              <label htmlFor="avant-email" className="text-sm font-semibold">Email for your access code</label>
+              <div className={`mt-2 ${fieldWrap}`}>
+                <Mail className="size-4 shrink-0 text-muted-foreground"/>
+                <input id="avant-email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" inputMode="email" autoComplete="email" className={fieldInput}/>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">Your receipt and code are sent here and saved to your Avant account.</p>
+
+              {paypalOn && <div role="tablist" aria-label="Payment method" className="mt-6 grid grid-cols-2 gap-1 rounded-xl bg-secondary/60 p-1">
+                {([['paypal', 'PayPal'], ['mpesa', 'M-PESA']] as [Method, string][]).map(([id, label]) => <button key={id} type="button" role="tab" aria-selected={activeMethod === id} onClick={() => { setMethod(id); setError('') }} className={`min-h-11 rounded-lg text-sm font-bold transition ${activeMethod === id ? 'bg-background text-foreground shadow' : 'text-muted-foreground hover:text-foreground'}`}>{label}</button>)}
+              </div>}
+
+              {activeMethod === 'mpesa' && <div className={paypalOn ? 'mt-5' : 'mt-6'}>
+                {!paypalOn && <p className="mb-3 flex items-center gap-2 text-sm font-semibold"><Smartphone className="size-4 text-primary"/>Pay with M-PESA</p>}
+                <label htmlFor="mpesa-number" className="text-sm font-semibold">M-PESA phone number</label>
+                <div className={`mt-2 ${fieldWrap}`}>
+                  <span className="border-r border-border pr-3 text-sm font-semibold text-muted-foreground">KE +254</span>
+                  <input id="mpesa-number" value={mobile} onChange={(event) => setMobile(event.target.value)} placeholder="07XX XXX XXX or 01XX XXX XXX" inputMode="tel" autoComplete="tel" className={fieldInput}/>
+                </div>
+                <Button onClick={() => void start()} disabled={!online || !validEmail || !normalizeKenyanMobile(mobile) || loading} size="lg" className="mt-4 min-h-14 w-full gap-2 rounded-xl text-base font-black shadow-lg shadow-primary/20 transition hover:-translate-y-0.5"><Smartphone className="size-5"/>Pay {amount} with M-PESA</Button>
+                <p className="mt-3 text-center text-xs text-muted-foreground">You’ll get a prompt on your phone. Your PIN never touches Avant.</p>
+              </div>}
+
+              {activeMethod === 'paypal' && <div className="mt-5">
+                <Button type="button" disabled className="min-h-14 w-full rounded-xl text-base font-black">Pay {amount} with PayPal</Button>
+                <p className="mt-3 text-center text-xs text-muted-foreground">PayPal is connected in Admin. Checkout activates when the PayPal order endpoint is available.</p>
+              </div>}
+
+              {paymentChannels?.paybill?.enabled === true && paymentChannels?.paybill?.number && <div className="mt-5 rounded-xl border border-dashed border-border bg-secondary/30 p-4 text-sm"><p className="font-bold">Prefer Paybill? Use {paymentChannels.paybill.number}</p>{paymentChannels.paybill.account && <p className="mt-1 text-xs text-muted-foreground">Account: {paymentChannels.paybill.account}</p>}</div>}
+            </div>
+
+            {activeMethod === 'mpesa' && <div className="border-t border-border bg-background/30 px-5 py-3 sm:px-7">
+              <Button type="button" variant="ghost" onClick={() => setRecoveryOpen((value) => !value)} disabled={!online} className="min-h-11 w-full gap-2 rounded-xl text-muted-foreground hover:text-foreground"><RefreshCw className="size-4"/>Already paid? Verify your payment</Button>
+            </div>}
+          </div>}
+
+          {recoveryOpen && !busy && <section className="mt-3 rounded-2xl border border-border bg-card/70 p-5 backdrop-blur">
+            <p className="text-sm font-bold">Find a completed payment</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">Use the phone number above or your M-PESA transaction code. This never creates a second charge.</p>
+            <input value={mpesaCode} onChange={(event) => setMpesaCode(event.target.value.toUpperCase())} placeholder="M-PESA transaction code" autoCapitalize="characters" className="mt-3 min-h-12 w-full rounded-xl border border-border bg-background/60 px-4 text-sm font-medium outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"/>
+            <Button type="button" onClick={() => void recoverPaid()} disabled={!mobile.trim() && !mpesaCode.trim()} className="mt-3 min-h-12 w-full rounded-xl font-bold">Verify payment</Button>
+          </section>}
+
+          {reference && !busy && <Button type="button" variant="outline" onClick={() => void checkPayment()} className="mt-3 min-h-12 w-full gap-2 rounded-xl"><RefreshCw className="size-4"/>Check saved payment</Button>}
+          {!online && <div className="mt-3 flex gap-3 rounded-xl border border-border bg-card p-4 text-sm" role="status"><CircleAlert className="mt-0.5 size-4 shrink-0"/><span>Checkout is paused while you’re offline. Reconnect to pay or verify a payment.</span></div>}
+          {error && <div className="mt-3 flex gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm" role="alert"><CircleAlert className="mt-0.5 size-4 shrink-0 text-destructive"/><span>{error}</span></div>}
+
+          <ul className="mt-6 grid gap-3 text-xs text-muted-foreground sm:grid-cols-3">
+            <li className="flex items-center gap-2"><ShieldCheck className="size-4 shrink-0 text-primary"/>Verified before unlocking</li>
+            <li className="flex items-center gap-2"><Zap className="size-4 shrink-0 text-primary"/>Instant access on confirmation</li>
+            <li className="flex items-center gap-2"><Mail className="size-4 shrink-0 text-primary"/>Access code sent by email</li>
+          </ul>
+        </section>
+
+        <AccessPass product={product} loading={loading} amount={amount} regularAmount={regularAmount} compact={embedded}/>
+      </div>
+    </div>
+  </main>
 }
 
-function CompactSummary({ product, loading, amount }: { product: any; loading: boolean; amount: string }) { return <div className="mb-5 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/15 via-card to-card shadow-xl"><div className="p-5 sm:p-6"><div className="flex items-end justify-between gap-5"><div className="min-w-0"><p className="text-[10px] font-black uppercase tracking-[.2em] text-primary">Unlock on Avant</p><h1 className="mt-2 truncate text-xl font-black sm:text-2xl">{loading ? 'Loading access…' : product?.name || 'Avant Movies access'}</h1><p className="mt-1 text-xs text-muted-foreground">{product?.duration_days ? `${product.duration_days} days of access` : 'Access duration confirmed before payment'}</p></div><div className="shrink-0 text-right"><p className="text-[10px] font-bold uppercase tracking-[.14em] text-muted-foreground">Total</p><strong className="mt-1 block text-2xl font-black sm:text-3xl">{amount}</strong></div></div></div></div> }
-function OrderSummary({ product, loading, amount, regularAmount }: { product: any; loading: boolean; amount: string; regularAmount: string }) { return <aside className="order-last h-fit overflow-hidden rounded-lg border border-border bg-card shadow-reel lg:sticky lg:top-24"><div className="h-1 bg-primary"/><div className="p-5"><p className="text-xs font-bold uppercase tracking-[.18em] text-muted-foreground">You are unlocking</p>{loading ? <div className="mt-5 h-28 animate-pulse rounded-md bg-secondary"/> : product ? <><h2 className="mt-4 text-xl font-bold">{product.name}</h2>{product.description && <p className="mt-2 text-sm leading-6 text-muted-foreground">{product.description}</p>}<dl className="mt-4 space-y-3 border-t border-border pt-4"><div className="flex justify-between gap-4"><dt className="text-sm text-muted-foreground">Access</dt><dd className="text-sm font-semibold">{product.duration_days ? `${product.duration_days} days` : 'As listed'}</dd></div><div className="flex items-end justify-between gap-4"><dt className="text-sm text-muted-foreground">Total</dt><dd className="text-right">{regularAmount && <span className="block text-xs text-muted-foreground line-through">{regularAmount}</span>}<strong className="text-2xl">{amount}</strong></dd></div></dl></> : <p className="mt-5 text-sm text-muted-foreground">The access option will be verified before payment.</p>}<div className="mt-5 space-y-3 border-t border-border pt-4 text-xs text-muted-foreground"><p className="flex gap-2"><CheckCircle2 className="size-4 shrink-0 text-primary"/>One M-PESA confirmation on your phone.</p><p className="flex gap-2"><ShieldCheck className="size-4 shrink-0 text-primary"/>Watch access activates only after verification.</p></div></div></aside> }
+function AccessPass({ product, loading, amount, regularAmount, compact }: { product: any; loading: boolean; amount: string; regularAmount: string; compact: boolean }) {
+  return <aside className={`relative order-1 h-fit overflow-hidden rounded-2xl border border-border bg-card shadow-2xl lg:order-2 ${compact ? '' : 'lg:sticky lg:top-8'}`}>
+    <div className="bg-gradient-to-br from-primary/25 via-primary/5 to-transparent p-5 sm:p-6">
+      <div className="flex items-center gap-2 text-sm font-semibold text-primary"><Clapperboard className="size-4"/>Avant Movies access pass</div>
+      {loading ? <div className="mt-5 h-16 animate-pulse rounded-lg bg-secondary"/> : <>
+        <h2 className={`mt-4 font-black leading-tight tracking-tight ${compact ? 'text-xl' : 'text-2xl'}`}>{product?.name || 'Avant Movies access'}</h2>
+        {!compact && product?.description && <p className="mt-2 line-clamp-4 text-sm leading-6 text-muted-foreground">{product.description}</p>}
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground"><CheckCircle2 className="size-3.5 text-primary"/>{product?.duration_days ? `${product.duration_days} days of access` : 'Access length confirmed before you pay'}</p>
+      </>}
+    </div>
+    <div className="relative">
+      <div aria-hidden className="absolute -left-3 -top-3 size-6 rounded-full border border-border bg-background"/>
+      <div aria-hidden className="absolute -right-3 -top-3 size-6 rounded-full border border-border bg-background"/>
+      <div className="mx-6 border-t-2 border-dashed border-border"/>
+    </div>
+    <div className="flex items-end justify-between gap-4 p-5 sm:p-6">
+      <div><p className="text-xs font-semibold text-muted-foreground">Total today</p>{regularAmount && <p className="mt-1 text-xs text-muted-foreground line-through">{regularAmount}</p>}</div>
+      <strong className="text-3xl font-black tracking-tight">{amount}</strong>
+    </div>
+  </aside>
+}
