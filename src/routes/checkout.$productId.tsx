@@ -337,7 +337,7 @@ function CheckoutRoute() {
 
 function CinematicPurchase({ product, displayTitle, loading, amount, artwork }: { product: any; displayTitle: string; loading: boolean; amount: string; artwork: string }) {
   return <aside className="relative aspect-[16/9] overflow-hidden bg-[#111] sm:min-h-[330px] lg:aspect-auto lg:min-h-full">
-    {artwork ? <img src={artwork} alt="" className="absolute inset-0 size-full object-cover" loading="eager" fetchPriority="high"/> : <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-[#161616] to-black"/>}
+    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-[#161616] to-black"/>{artwork ? <img src={artwork} alt="" className="absolute inset-0 size-full object-cover" loading="eager" fetchPriority="high" decoding="async"/> : null}
     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/5"/>
     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/35"/>
     <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 lg:p-10">
