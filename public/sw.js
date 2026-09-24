@@ -1,5 +1,5 @@
-const CACHE = "avant-shell-v8";
-const RUNTIME = "avant-runtime-v8";
+const CACHE = "avant-shell-v9";
+const RUNTIME = "avant-runtime-v9";
 const MEDIA = "avant-media-v1";
 
 const SHELL = [
@@ -96,10 +96,21 @@ async function put(cache, key, res) {
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE)
-      .then((cache) => cache.addAll(SHELL))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE).then(async (cache) => {
+      // A protected preview host may reject optional shell files (for example
+      // site.webmanifest). One failed asset must never abort SW installation.
+      await Promise.allSettled(
+        SHELL.map(async (url) => {
+          try {
+            const response = await fetch(url, { cache: "no-cache" });
+            if (response.ok) await cache.put(url, response);
+          } catch {
+            // Optional shell asset; continue installing.
+          }
+        }),
+      );
+      await self.skipWaiting();
+    })
   );
 });
 
