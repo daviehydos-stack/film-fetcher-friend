@@ -37,6 +37,7 @@ function CheckoutRoute() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [product, setProduct] = useState<any>(null)
+  const [purchaseTitle, setPurchaseTitle] = useState<any>(null)
   const [backendProductId, setBackendProductId] = useState('')
   const [paymentChannels, setPaymentChannels] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -59,10 +60,20 @@ function CheckoutRoute() {
     const mapped = productForLegacyContent(productId) || productId
     Promise.allSettled([resolveCatalogueKey(productId), publicCatalogue()]).then(([resolvedResult, catalogueResult]) => {
       if (!active) return
-      const resolved = resolvedResult.status === 'fulfilled' ? resolvedResult.value?.product : null
+      const resolvedPayload = resolvedResult.status === 'fulfilled' ? resolvedResult.value : null
+      const resolved = resolvedPayload?.product || null
       setBackendProductId(resolved?.id || '')
-      const list = catalogueResult.status === 'fulfilled' ? catalogueResult.value?.products || [] : []
-      setProduct(resolved || list.find((entry: any) => entry.id === mapped) || null)
+      const payload = catalogueResult.status === 'fulfilled' ? catalogueResult.value : null
+      const list = payload?.products || []
+      const selected = resolved || list.find((entry: any) => entry.id === mapped) || null
+      setProduct(selected)
+      const titles = payload?.titles || []
+      const directTitle = resolvedPayload?.title || null
+      const season = resolvedPayload?.season || resolvedPayload?.seasons?.find?.((entry: any) => selected?.season_ids?.includes?.(entry.id)) || resolvedPayload?.seasons?.[0]
+      const seasonTitle = season?.series_id ? titles.find((entry: any) => entry.id === season.series_id) : null
+      const contentTitle = selected?.content_ids?.length ? titles.find((entry: any) => selected.content_ids.includes(entry.id)) : null
+      const namedTitle = titles.find((entry: any) => selected?.name && String(selected.name).toLowerCase().includes(String(entry.title || '').toLowerCase()))
+      setPurchaseTitle(directTitle || seasonTitle || contentTitle || namedTitle || null)
       setLoading(false)
     })
     return () => { active = false }
@@ -219,10 +230,8 @@ function CheckoutRoute() {
   const fieldWrap = 'flex min-h-14 items-center gap-3 rounded-xl border border-border bg-background/60 px-4 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15'
   const fieldInput = 'min-w-0 flex-1 bg-transparent text-base font-medium outline-none placeholder:text-muted-foreground/60'
 
-  const titleArtwork = (() => {
-    const resolved = product?.title || product?.catalogue_title || product?.content
-    return resolved?.backdrop_url || resolved?.poster_url || product?.backdrop_url || product?.poster_url || ''
-  })()
+  const titleArtwork = purchaseTitle?.backdrop_url || purchaseTitle?.poster_url || purchaseTitle?.backdrop || purchaseTitle?.artwork || ''
+  const displayTitle = purchaseTitle?.title || product?.name || 'Avant Cinema access'
 
   return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-200 ease-out ${leaving ? 'pointer-events-none scale-[.992] opacity-0 blur-[3px]' : 'scale-100 opacity-100 blur-0'}`}>
     <div className={`relative mx-auto w-full ${embedded ? 'max-w-xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8'}`}>
@@ -232,13 +241,13 @@ function CheckoutRoute() {
       </header>}
 
       <div className={`overflow-hidden ${embedded ? '' : 'rounded-[1.75rem] border border-white/10 bg-[#0d0d0d] shadow-2xl shadow-black/60 lg:grid lg:min-h-[650px] lg:grid-cols-[.88fr_1.12fr]'}`}>
-        {!embedded && <CinematicPurchase product={product} loading={loading} amount={amount} artwork={titleArtwork}/>}
+        {!embedded && <CinematicPurchase product={product} displayTitle={displayTitle} loading={loading} amount={amount} artwork={titleArtwork}/>}
 
         <section className={`${embedded ? '' : 'flex min-w-0 flex-col justify-center px-5 py-7 sm:px-9 sm:py-10 lg:px-12'}`}>
           {!embedded && <div className="mb-8 border-b border-white/10 pb-6">
             <p className="text-[10px] font-bold uppercase tracking-[.26em] text-primary">Your screening</p>
             <div className="mt-3 flex items-end justify-between gap-5">
-              <div className="min-w-0"><h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl">{product?.name || 'Avant Cinema access'}</h1><p className="mt-1.5 text-sm text-white/45">{product?.duration_days ? `${product.duration_days} days of access` : 'Access confirmed before payment'}</p></div>
+              <div className="min-w-0"><h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl">{product?.name || displayTitle}</h1><p className="mt-1.5 text-sm text-white/45">{product?.duration_days ? `${product.duration_days} days of access` : 'Access confirmed before payment'}</p></div>
               <div className="shrink-0 text-right">{regularAmount && <p className="text-xs text-white/35 line-through">{regularAmount}</p>}<strong className="text-xl font-semibold text-white sm:text-2xl">{amount}</strong></div>
             </div>
           </div>}
@@ -319,14 +328,14 @@ function CheckoutRoute() {
   </main>
 }
 
-function CinematicPurchase({ product, loading, amount, artwork }: { product: any; loading: boolean; amount: string; artwork: string }) {
+function CinematicPurchase({ product, displayTitle, loading, amount, artwork }: { product: any; displayTitle: string; loading: boolean; amount: string; artwork: string }) {
   return <aside className="relative min-h-[260px] overflow-hidden bg-[#111] sm:min-h-[330px] lg:min-h-full">
     {artwork ? <img src={artwork} alt="" className="absolute inset-0 size-full object-cover" loading="eager" fetchPriority="high"/> : <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-[#161616] to-black"/>}
     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/5"/>
     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/35"/>
     <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 lg:p-10">
       <p className="text-[10px] font-bold uppercase tracking-[.25em] text-primary">You're unlocking</p>
-      {loading ? <div className="mt-3 h-9 w-2/3 animate-pulse rounded bg-white/10"/> : <h2 className="mt-2 max-w-md text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">{product?.name || 'Avant Cinema'}</h2>}
+      {loading ? <div className="mt-3 h-9 w-2/3 animate-pulse rounded bg-white/10"/> : <h2 className="mt-2 max-w-md text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">{displayTitle}</h2>}
       <div className="mt-4 flex items-center gap-3 text-xs text-white/55"><span>{product?.duration_days ? `${product.duration_days} days access` : 'Premium access'}</span><span className="size-1 rounded-full bg-primary"/><span>{amount}</span></div>
     </div>
   </aside>
