@@ -72,8 +72,8 @@ export function TitleCard({
             key={activeImage}
             src={optimizedArtwork(activeImage, layout === "grid" ? 720 : 640)}
             alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`}
-            loading={layout === "grid" ? "lazy" : "eager"}
-            fetchPriority={layout === "grid" ? "auto" : "high"}
+            loading="eager"
+            fetchPriority={layout === "rail" ? "high" : "auto"}
             decoding="async"
             onError={() => setImageIndex((current) => current + 1)}
             className="size-full object-cover transition duration-500"
