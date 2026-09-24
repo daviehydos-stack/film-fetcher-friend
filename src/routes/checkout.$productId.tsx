@@ -47,6 +47,7 @@ function CheckoutRoute() {
   const [method, setMethod] = useState<Method>('mpesa')
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
   const paypalOn = paymentChannels?.paypal?.enabled === true
+  const palplusOn = paymentChannels?.palpluss?.enabled !== false
   const activeMethod: Method = paypalOn ? method : 'mpesa'
 
   useEffect(() => { try { setReference(sessionStorage.getItem(`avant_payment_${productId}`) || '') } catch { /* unavailable */ } }, [productId])
@@ -208,7 +209,8 @@ function CheckoutRoute() {
               </div>
               <p className="mt-2 text-xs text-muted-foreground">Your receipt and code are sent here and saved to your Avant account.</p>
 
-              {paypalOn && <div role="tablist" aria-label="Payment method" className="mt-6 grid grid-cols-2 gap-1 rounded-xl bg-secondary/60 p-1">
+              <div className="mt-6 flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-secondary/30 px-4 py-3"><div><p className="text-sm font-bold">Payment methods</p><p className="mt-0.5 text-xs text-muted-foreground">Choose how you want to pay securely.</p></div>{palplusOn && <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary">Palplus · M-PESA</span>}</div>
+              {paypalOn && <div role="tablist" aria-label="Payment method" className="mt-3 grid grid-cols-2 gap-1 rounded-xl bg-secondary/60 p-1">
                 {([['paypal', 'PayPal'], ['mpesa', 'M-PESA']] as [Method, string][]).map(([id, label]) => <button key={id} type="button" role="tab" aria-selected={activeMethod === id} onClick={() => { setMethod(id); setError('') }} className={`min-h-11 rounded-lg text-sm font-bold transition ${activeMethod === id ? 'bg-background text-foreground shadow' : 'text-muted-foreground hover:text-foreground'}`}>{label}</button>)}
               </div>}
 
@@ -220,7 +222,7 @@ function CheckoutRoute() {
                   <input id="mpesa-number" value={mobile} onChange={(event) => setMobile(event.target.value)} placeholder="07XX XXX XXX or 01XX XXX XXX" inputMode="tel" autoComplete="tel" className={fieldInput}/>
                 </div>
                 <Button onClick={() => void start()} disabled={!online || !validEmail || !normalizeKenyanMobile(mobile) || loading} size="lg" className="mt-4 min-h-14 w-full gap-2 rounded-xl text-base font-black shadow-lg shadow-primary/20 transition hover:-translate-y-0.5"><Smartphone className="size-5"/>Pay {amount} with M-PESA</Button>
-                <p className="mt-3 text-center text-xs text-muted-foreground">You’ll get a prompt on your phone. Your PIN never touches Avant.</p>
+                <p className="mt-3 text-center text-xs text-muted-foreground">{palplusOn ? 'Secure M-PESA checkout powered by Palplus. ' : ''}You’ll get a prompt on your phone. Your PIN never touches Avant.</p>
               </div>}
 
               {activeMethod === 'paypal' && <div className="mt-5">
