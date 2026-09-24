@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages Preview
+name: Deploy GitHub Pages
 
 on:
   # Deploy only after CI for the same main-branch commit has completed successfully.
@@ -41,7 +41,7 @@ jobs:
         env:
           VITE_BUILD_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_PUBLIC_SITE_URL: https://avantmovies.vercel.app
+          VITE_PUBLIC_SITE_URL: https://daviehydos-stack.github.io/film-fetcher-friend/
         run: bun run build
       - name: Prepare Pages artifact
         shell: bash
