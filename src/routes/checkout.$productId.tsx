@@ -35,6 +35,7 @@ function CheckoutRoute() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [product, setProduct] = useState<any>(null)
+  const [backendProductId, setBackendProductId] = useState('')
   const [loading, setLoading] = useState(true)
   const [stage, setStage] = useState<PaymentUiState>('ready')
   const [reference, setReference] = useState('')
@@ -49,6 +50,7 @@ function CheckoutRoute() {
     Promise.allSettled([resolveCatalogueKey(productId), publicCatalogue()]).then(([resolvedResult, catalogueResult]) => {
       if (!active) return
       const resolved = resolvedResult.status === 'fulfilled' ? resolvedResult.value?.product : null
+      setBackendProductId(resolved?.id || '')
       const list = catalogueResult.status === 'fulfilled' ? catalogueResult.value?.products || [] : []
       setProduct(resolved || list.find((entry: any) => entry.id === mapped) || null)
       setLoading(false)
@@ -92,7 +94,7 @@ function CheckoutRoute() {
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
     try {
       const token = await customerToken(false)
-      const resolved = product?.id || productForLegacyContent(productId) || productId
+      const resolved = product?.id || backendProductId || productForLegacyContent(productId) || productId
       let key = ''
       try { key = sessionStorage.getItem(`avant_payment_key_${productId}`) || '' } catch { /* unavailable */ }
       if (!key) { key = crypto.randomUUID(); try { sessionStorage.setItem(`avant_payment_key_${productId}`, key) } catch { /* unavailable */ } }
