@@ -7,8 +7,8 @@ const numberValue = (value: unknown) => typeof value === "number" && Number.isFi
 
 export function optimizedArtwork(url?: string, width = 640) {
   if (!url) return url;
-  if (url.includes("res.cloudinary.com/")) return url.replace("/upload/", `/upload/f_auto,q_auto:eco,c_fill,w_${width},dpr_auto/`);
-  if (url.includes("i.vimeocdn.com/")) return url.replace(/d_\d+x\d+/, `d_${Math.max(640,width)}x${Math.round(Math.max(640,width)*9/16)}`);
+  if (url.includes("res.cloudinary.com/")) { if (url.includes("/f_auto,")) return url; return url.replace("/upload/", `/upload/f_auto,q_auto:eco,c_fill,w_${Math.min(width,1280)},dpr_auto/`); }
+  if (url.includes("i.vimeocdn.com/")) { try { const u=new URL(url); u.searchParams.set("mw",String(Math.min(Math.max(400,width),1280))); u.searchParams.set("q","76"); return u.toString(); } catch { return url; } }
   if (url.includes("drive.google.com/thumbnail")) return url.replace(/([?&])sz=w\d+/, `$1sz=w${Math.min(800,Math.max(400,width))}`);
   return url;
 }
