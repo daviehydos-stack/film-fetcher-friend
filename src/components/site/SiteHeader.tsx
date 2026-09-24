@@ -3,7 +3,7 @@ import { LogIn, LogOut, Menu, Search, Sparkles, UserRound, X } from "lucide-reac
 import { useEffect, useState } from "react";
 import { navLinks } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
-import { publicCatalogue, publicPages } from "@/lib/avant-backend";
+import { isAdminEmail, publicCatalogue, publicPages } from "@/lib/avant-backend";
 import { useAvantAuth } from "@/lib/avant-auth";
 
 export function SiteHeader() {
@@ -161,7 +161,7 @@ export function SiteHeader() {
               <Search className="size-5" />
             </Link>
           </>) : null}
-          {customer ? <Link
+          {customer && isAdminEmail(customer?.email) ? <Link
               to="/admin"
               className="inline-flex min-h-10 items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-2 text-xs font-black text-primary hover:bg-primary/20"
             >
@@ -262,7 +262,7 @@ export function SiteHeader() {
               Sign in with Google
             </button>
           )}
-          {customer ? <Link
+          {customer && isAdminEmail(customer?.email) ? <Link
               to="/admin"
               onClick={() => setOpen(false)}
               className="mt-2 flex min-h-12 items-center rounded-md border border-primary/20 bg-primary/10 px-3 font-black text-primary"
