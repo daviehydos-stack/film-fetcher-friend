@@ -11,26 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
-import { Route as ABetterLifeRouteImport } from './routes/a-better-life'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as BackToUsRouteImport } from './routes/back-to-us'
-import { Route as BetterDaysRouteImport } from './routes/better-days'
-import { Route as BetterlifeEpisodesRouteImport } from './routes/betterlife-episodes'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as MoviesRouteImport } from './routes/movies'
 import { Route as MyListRouteImport } from './routes/my-list'
-import { Route as NairobbyRouteImport } from './routes/nairobby'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as ThisIsLifeRouteImport } from './routes/this-is-life'
-import { Route as ThisIsLifeEpisodesRouteImport } from './routes/this-is-life-episodes'
 import { Route as TvShowsRouteImport } from './routes/tv-shows'
 import { Route as WatchFreeRouteImport } from './routes/watch-free'
-import { Route as WatchThemAllRouteImport } from './routes/watch-them-all'
-import { Route as WriteLikeAMasterRouteImport } from './routes/write-like-a-master'
 import { Route as AdminSectionRouteImport } from './routes/admin_.$section'
 import { Route as CheckoutProductIdRouteImport } from './routes/checkout.$productId'
 import { Route as GenreGenreRouteImport } from './routes/genre.$genre'
@@ -51,11 +42,6 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ABetterLifeRoute = ABetterLifeRouteImport.update({
-  id: '/a-better-life',
-  path: '/a-better-life',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -69,21 +55,6 @@ const AccountRoute = AccountRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BackToUsRoute = BackToUsRouteImport.update({
-  id: '/back-to-us',
-  path: '/back-to-us',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BetterDaysRoute = BetterDaysRouteImport.update({
-  id: '/better-days',
-  path: '/better-days',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BetterlifeEpisodesRoute = BetterlifeEpisodesRouteImport.update({
-  id: '/betterlife-episodes',
-  path: '/betterlife-episodes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -101,11 +72,6 @@ const MyListRoute = MyListRouteImport.update({
   path: '/my-list',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NairobbyRoute = NairobbyRouteImport.update({
-  id: '/nairobby',
-  path: '/nairobby',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -121,16 +87,6 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ThisIsLifeRoute = ThisIsLifeRouteImport.update({
-  id: '/this-is-life',
-  path: '/this-is-life',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ThisIsLifeEpisodesRoute = ThisIsLifeEpisodesRouteImport.update({
-  id: '/this-is-life-episodes',
-  path: '/this-is-life-episodes',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TvShowsRoute = TvShowsRouteImport.update({
   id: '/tv-shows',
   path: '/tv-shows',
@@ -139,16 +95,6 @@ const TvShowsRoute = TvShowsRouteImport.update({
 const WatchFreeRoute = WatchFreeRouteImport.update({
   id: '/watch-free',
   path: '/watch-free',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WatchThemAllRoute = WatchThemAllRouteImport.update({
-  id: '/watch-them-all',
-  path: '/watch-them-all',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WriteLikeAMasterRoute = WriteLikeAMasterRouteImport.update({
-  id: '/write-like-a-master',
-  path: '/write-like-a-master',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSectionRoute = AdminSectionRouteImport.update({
@@ -201,26 +147,17 @@ const EpisodeSlugEpisodeNumberRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
-  '/back-to-us': typeof BackToUsRoute
-  '/better-days': typeof BetterDaysRoute
-  '/betterlife-episodes': typeof BetterlifeEpisodesRoute
   '/contact': typeof ContactRoute
   '/movies': typeof MoviesRoute
   '/my-list': typeof MyListRoute
-  '/nairobby': typeof NairobbyRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
   '/terms': typeof TermsRoute
-  '/this-is-life': typeof ThisIsLifeRoute
-  '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-free': typeof WatchFreeRoute
-  '/watch-them-all': typeof WatchThemAllRoute
-  '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin/$section': typeof AdminSectionRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
   '/genre/$genre': typeof GenreGenreRoute
@@ -234,26 +171,17 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
-  '/back-to-us': typeof BackToUsRoute
-  '/better-days': typeof BetterDaysRoute
-  '/betterlife-episodes': typeof BetterlifeEpisodesRoute
   '/contact': typeof ContactRoute
   '/movies': typeof MoviesRoute
   '/my-list': typeof MyListRoute
-  '/nairobby': typeof NairobbyRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
   '/terms': typeof TermsRoute
-  '/this-is-life': typeof ThisIsLifeRoute
-  '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-free': typeof WatchFreeRoute
-  '/watch-them-all': typeof WatchThemAllRoute
-  '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin/$section': typeof AdminSectionRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
   '/genre/$genre': typeof GenreGenreRoute
@@ -268,26 +196,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/a-better-life': typeof ABetterLifeRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
-  '/back-to-us': typeof BackToUsRoute
-  '/better-days': typeof BetterDaysRoute
-  '/betterlife-episodes': typeof BetterlifeEpisodesRoute
   '/contact': typeof ContactRoute
   '/movies': typeof MoviesRoute
   '/my-list': typeof MyListRoute
-  '/nairobby': typeof NairobbyRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
   '/terms': typeof TermsRoute
-  '/this-is-life': typeof ThisIsLifeRoute
-  '/this-is-life-episodes': typeof ThisIsLifeEpisodesRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-free': typeof WatchFreeRoute
-  '/watch-them-all': typeof WatchThemAllRoute
-  '/write-like-a-master': typeof WriteLikeAMasterRoute
   '/admin_/$section': typeof AdminSectionRoute
   '/checkout/$productId': typeof CheckoutProductIdRoute
   '/genre/$genre': typeof GenreGenreRoute
@@ -303,26 +222,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
-    | '/a-better-life'
     | '/about'
     | '/account'
     | '/admin'
-    | '/back-to-us'
-    | '/better-days'
-    | '/betterlife-episodes'
     | '/contact'
     | '/movies'
     | '/my-list'
-    | '/nairobby'
     | '/privacy'
     | '/search'
     | '/terms'
-    | '/this-is-life'
-    | '/this-is-life-episodes'
     | '/tv-shows'
     | '/watch-free'
-    | '/watch-them-all'
-    | '/write-like-a-master'
     | '/admin/$section'
     | '/checkout/$productId'
     | '/genre/$genre'
@@ -336,26 +246,17 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
-    | '/a-better-life'
     | '/about'
     | '/account'
     | '/admin'
-    | '/back-to-us'
-    | '/better-days'
-    | '/betterlife-episodes'
     | '/contact'
     | '/movies'
     | '/my-list'
-    | '/nairobby'
     | '/privacy'
     | '/search'
     | '/terms'
-    | '/this-is-life'
-    | '/this-is-life-episodes'
     | '/tv-shows'
     | '/watch-free'
-    | '/watch-them-all'
-    | '/write-like-a-master'
     | '/admin/$section'
     | '/checkout/$productId'
     | '/genre/$genre'
@@ -369,26 +270,17 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
-    | '/a-better-life'
     | '/about'
     | '/account'
     | '/admin'
-    | '/back-to-us'
-    | '/better-days'
-    | '/betterlife-episodes'
     | '/contact'
     | '/movies'
     | '/my-list'
-    | '/nairobby'
     | '/privacy'
     | '/search'
     | '/terms'
-    | '/this-is-life'
-    | '/this-is-life-episodes'
     | '/tv-shows'
     | '/watch-free'
-    | '/watch-them-all'
-    | '/write-like-a-master'
     | '/admin_/$section'
     | '/checkout/$productId'
     | '/genre/$genre'
@@ -403,26 +295,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
-  ABetterLifeRoute: typeof ABetterLifeRoute
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRoute
-  BackToUsRoute: typeof BackToUsRoute
-  BetterDaysRoute: typeof BetterDaysRoute
-  BetterlifeEpisodesRoute: typeof BetterlifeEpisodesRoute
   ContactRoute: typeof ContactRoute
   MoviesRoute: typeof MoviesRoute
   MyListRoute: typeof MyListRoute
-  NairobbyRoute: typeof NairobbyRoute
   PrivacyRoute: typeof PrivacyRoute
   SearchRoute: typeof SearchRoute
   TermsRoute: typeof TermsRoute
-  ThisIsLifeRoute: typeof ThisIsLifeRoute
-  ThisIsLifeEpisodesRoute: typeof ThisIsLifeEpisodesRoute
   TvShowsRoute: typeof TvShowsRoute
   WatchFreeRoute: typeof WatchFreeRoute
-  WatchThemAllRoute: typeof WatchThemAllRoute
-  WriteLikeAMasterRoute: typeof WriteLikeAMasterRoute
   AdminSectionRoute: typeof AdminSectionRoute
   CheckoutProductIdRoute: typeof CheckoutProductIdRoute
   GenreGenreRoute: typeof GenreGenreRoute
@@ -450,13 +333,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/a-better-life': {
-      id: '/a-better-life'
-      path: '/a-better-life'
-      fullPath: '/a-better-life'
-      preLoaderRoute: typeof ABetterLifeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -476,27 +352,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/back-to-us': {
-      id: '/back-to-us'
-      path: '/back-to-us'
-      fullPath: '/back-to-us'
-      preLoaderRoute: typeof BackToUsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/better-days': {
-      id: '/better-days'
-      path: '/better-days'
-      fullPath: '/better-days'
-      preLoaderRoute: typeof BetterDaysRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/betterlife-episodes': {
-      id: '/betterlife-episodes'
-      path: '/betterlife-episodes'
-      fullPath: '/betterlife-episodes'
-      preLoaderRoute: typeof BetterlifeEpisodesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -520,13 +375,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyListRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/nairobby': {
-      id: '/nairobby'
-      path: '/nairobby'
-      fullPath: '/nairobby'
-      preLoaderRoute: typeof NairobbyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -548,20 +396,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/this-is-life': {
-      id: '/this-is-life'
-      path: '/this-is-life'
-      fullPath: '/this-is-life'
-      preLoaderRoute: typeof ThisIsLifeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/this-is-life-episodes': {
-      id: '/this-is-life-episodes'
-      path: '/this-is-life-episodes'
-      fullPath: '/this-is-life-episodes'
-      preLoaderRoute: typeof ThisIsLifeEpisodesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/tv-shows': {
       id: '/tv-shows'
       path: '/tv-shows'
@@ -574,20 +408,6 @@ declare module '@tanstack/react-router' {
       path: '/watch-free'
       fullPath: '/watch-free'
       preLoaderRoute: typeof WatchFreeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/watch-them-all': {
-      id: '/watch-them-all'
-      path: '/watch-them-all'
-      fullPath: '/watch-them-all'
-      preLoaderRoute: typeof WatchThemAllRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/write-like-a-master': {
-      id: '/write-like-a-master'
-      path: '/write-like-a-master'
-      fullPath: '/write-like-a-master'
-      preLoaderRoute: typeof WriteLikeAMasterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/$section': {
@@ -659,26 +479,17 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
-  ABetterLifeRoute: ABetterLifeRoute,
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
   AdminRoute: AdminRoute,
-  BackToUsRoute: BackToUsRoute,
-  BetterDaysRoute: BetterDaysRoute,
-  BetterlifeEpisodesRoute: BetterlifeEpisodesRoute,
   ContactRoute: ContactRoute,
   MoviesRoute: MoviesRoute,
   MyListRoute: MyListRoute,
-  NairobbyRoute: NairobbyRoute,
   PrivacyRoute: PrivacyRoute,
   SearchRoute: SearchRoute,
   TermsRoute: TermsRoute,
-  ThisIsLifeRoute: ThisIsLifeRoute,
-  ThisIsLifeEpisodesRoute: ThisIsLifeEpisodesRoute,
   TvShowsRoute: TvShowsRoute,
   WatchFreeRoute: WatchFreeRoute,
-  WatchThemAllRoute: WatchThemAllRoute,
-  WriteLikeAMasterRoute: WriteLikeAMasterRoute,
   AdminSectionRoute: AdminSectionRoute,
   CheckoutProductIdRoute: CheckoutProductIdRoute,
   GenreGenreRoute: GenreGenreRoute,
