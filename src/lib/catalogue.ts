@@ -131,8 +131,11 @@ export function isFreeEpisode(episode: Episode | undefined) {
 }
 
 export function freeContentId(item: CatalogueTitle) {
-  if (item.type === "movie" && isFreeTitle(item)) return item.slug;
-  const index = item.episodes?.findIndex(isFreeEpisode) ?? -1;
+  // Never infer public access from episode metadata alone. Only the two
+  // editorially approved Watch for Free titles may return a public watch ID.
+  if (!isFreeTitle(item)) return null;
+  if (item.type === "movie") return item.slug;
+  const index = item.episodes?.findIndex((episode) => Boolean(episode?.vimeoVideoId)) ?? -1;
   if (index < 0) return null;
   return item.episodes?.[index]?.legacyKey ?? `${item.slug}-${index + 1}`;
 }
