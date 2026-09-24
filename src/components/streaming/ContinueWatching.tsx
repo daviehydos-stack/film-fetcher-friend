@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Play, X } from "lucide-react";
+import { Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { CatalogueTitle, Episode } from "@/lib/site-data";
 import { useCatalogue } from "@/lib/catalogue";
 import {
-  clearProgress,
   formatWatchTime,
   readProgress,
   type WatchProgress,
@@ -114,18 +113,6 @@ export function ContinueWatching() {
                   </span>
                 ) : null}
               </div>
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  clearProgress(entry.contentId);
-                }}
-                aria-label={`Remove ${item.title} from Continue Watching`}
-                className="absolute right-2 top-2 z-10 grid size-9 place-items-center rounded-full bg-black/70 text-white opacity-100 backdrop-blur transition hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:opacity-0 md:group-hover:opacity-100"
-              >
-                <X className="size-4" />
-              </button>
               <p className="mt-2 text-sm font-bold">{item.title}</p>
               <p className="text-xs text-muted-foreground">
                 Episode {index + 1} ·{" "}
