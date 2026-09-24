@@ -2,6 +2,7 @@ import { Check, ChevronDown, Play, Plus } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { optimizedArtwork } from "@/lib/episodes";
+import { useNetworkQuality, getAdaptiveImageWidth } from "@/lib/network";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { customerToken } from "@/lib/google-auth";
@@ -35,6 +36,8 @@ export function TitleCard({
   const accessLabel = item.available ? "Watch now" : "Coming soon";
   const imageCandidates = useMemo(() => Array.from(new Set([item.artwork, item.backdrop].filter(Boolean) as string[])), [item.artwork, item.backdrop]);
   const [imageIndex, setImageIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const { tier } = useNetworkQuality();
   const activeImage = imageCandidates[imageIndex] || "";
 
   useEffect(() => {
@@ -68,15 +71,17 @@ export function TitleCard({
           onClick={() => setDetailsOpen(true)}
           className="relative block aspect-video w-full overflow-hidden text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
         >
+          {!imageLoaded && activeImage ? <div className="avant-skeleton absolute inset-0 z-0" aria-hidden="true" /> : null}
           {activeImage ? <img
             key={activeImage}
-            src={optimizedArtwork(activeImage, layout === "grid" ? 720 : 640)}
+            src={optimizedArtwork(activeImage, getAdaptiveImageWidth(layout === "grid" ? 720 : 640, tier))}
             alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`}
-            loading="eager"
-            fetchPriority={layout === "rail" ? "high" : "auto"}
+            loading="lazy"
+            fetchPriority="auto"
             decoding="async"
+            onLoad={() => setImageLoaded(true)}
             onError={() => setImageIndex((current) => current + 1)}
-            className="size-full object-cover transition-[transform,filter] duration-700 ease-[cubic-bezier(.16,1,.3,1)] md:group-hover:scale-[1.08] md:group-hover:brightness-[.72]"
+            className={`size-full object-cover transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:group-hover:scale-[1.08] md:group-hover:brightness-[.72] ${imageLoaded ? "opacity-100" : "opacity-0"}`} data-adaptive-artwork="true" data-layout={layout} /*   */
           /> : <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,122,24,.24),transparent_32%),linear-gradient(135deg,#17191f_0%,#090a0d_62%,#030303_100%)] p-5">
             <div className="max-w-[85%] text-left">
               <span className="block text-[10px] font-black uppercase tracking-[.22em] text-orange-400">Avant Cinema</span>
