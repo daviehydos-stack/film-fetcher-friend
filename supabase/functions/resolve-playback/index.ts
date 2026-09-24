@@ -61,7 +61,7 @@ Deno.serve(async (r) => {
       if (episode.status !== "published")
         return Response.json(
           { authorized: false, reason: "content_unavailable" },
-          { status: 404, headers: H },
+          { status: 200, headers: H },
         );
 
       const sr = await c
@@ -75,7 +75,7 @@ Deno.serve(async (r) => {
       if (!season || season.status !== "published")
         return Response.json(
           { authorized: false, reason: "content_unavailable" },
-          { status: 404, headers: H },
+          { status: 200, headers: H },
         );
 
       const tr = await c
@@ -107,15 +107,15 @@ Deno.serve(async (r) => {
         (title.visible_until && title.visible_until < now))
     )
       return Response.json(
-        { authorized: false, reason: "content_unavailable" },
-        { status: 404, headers: H },
-      );
+          { authorized: false, reason: "content_unavailable" },
+          { status: 200, headers: H },
+        );
 
     if (!episode && !title)
       return Response.json(
-        { authorized: false, reason: "content_unavailable" },
-        { status: 404, headers: H },
-      );
+          { authorized: false, reason: "content_unavailable" },
+          { status: 200, headers: H },
+        );
 
     let vq = c
       .from("video_variants")
@@ -193,9 +193,9 @@ Deno.serve(async (r) => {
 
     if (!p || !p.vimeo_video_id)
       return Response.json(
-        { authorized: false, reason: "content_unavailable" },
-        { status: 404, headers: H },
-      );
+          { authorized: false, reason: "content_unavailable" },
+          { status: 200, headers: H },
+        );
 
     const source = "vimeo";
 
