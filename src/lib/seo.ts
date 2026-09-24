@@ -67,16 +67,14 @@ export function titleSchema(item: CatalogueTitle) {
         episodeNumber: index + 1,
         ...(episode.duration ? { duration: isoDuration(episode.duration) } : {}),
         ...(absoluteUrl(`/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`) ? { url: absoluteUrl(`/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`) } : {}),
-        ...(episode.vimeoVideoId ? { video: videoObjectSchema({ name: `${item.title}: ${episode.title}`, description: episode.description || item.synopsis || item.shortDescription || `Watch ${episode.title} from ${item.title} on Avant Cinema.`, vimeoId: episode.vimeoVideoId, duration: episode.duration, pagePath: `/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`, episodeNumber: episode.episodeNumber || index + 1, seriesName: item.title, seriesPath: `/title/${item.slug}`, thumbnailUrl: episode.thumbnailUrl || item.backdrop || item.artwork }) } : {}),
+        ...(episode.vimeoVideoId ? { video: videoObjectSchema({ name: `${item.title}: ${episode.title}`, description: episode.description || item.synopsis || item.shortDescription || `Watch ${episode.title} from ${item.title} on Avant Cinema.`, vimeoId: episode.vimeoVideoId, duration: episode.duration, pagePath: `/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`, episodeNumber: episode.episodeNumber || index + 1, seriesName: item.title, seriesPath: `/title/${item.slug}`, thumbnailUrl: episode.poster || item.backdrop || item.artwork }) } : {}),
       })),
     } : {}),
   };
-  const previewId = item.previewYoutubeId;
   const previewVimeoId = item.previewVimeoId;
-  if (previewId || previewVimeoId) base.trailer = videoObjectSchema({
+  if (previewVimeoId) base.trailer = videoObjectSchema({
     name: `${item.title} trailer`,
     description: item.shortDescription || item.synopsis || `Watch the ${item.title} trailer on Avant Cinema.`,
-    youtubeId: previewId,
     vimeoId: previewVimeoId,
     duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
     pagePath: `/title/${item.slug}`,
