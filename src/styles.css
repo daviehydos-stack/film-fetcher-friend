@@ -611,3 +611,10 @@ iframe{background:#000}
     @keyframes avantNativeRouteIn{from{opacity:.12}to{opacity:1}}
   }
 }
+
+
+/* Adaptive artwork loading: zero-blank cinematic shimmer. */
+@keyframes avantShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.avant-skeleton{position:relative;overflow:hidden;background-color:rgba(255,255,255,.04)}
+.avant-skeleton::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.07) 50%,transparent 100%);animation:avantShimmer 1.8s infinite;will-change:transform}
+@media(prefers-reduced-motion:reduce){.avant-skeleton::after{animation:none}}
