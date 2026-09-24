@@ -3,7 +3,7 @@ import { ArrowLeft, Check, CircleAlert, Clock3, CreditCard, LockKeyhole, Mail, P
 import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { broadcastAccessChanged, capturePayPalOrder, createPayPalOrder, paymentStatus, publicCatalogue, publicPaymentChannels, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
-import { productForLegacyContent } from '@/lib/backend-catalogue-map'
+import { knownProduct, productForLegacyContent } from '@/lib/backend-catalogue-map'
 import { optimizedArtwork } from '@/lib/episodes'
 import { customerToken } from '@/lib/google-auth'
 import { normalizePaymentState, paymentStateMessage, type PaymentUiState } from '@/lib/payments/status'
@@ -62,9 +62,11 @@ function CheckoutRoute() {
     let active = true
     const routeKey = String(productId || '').replace(/^title\//, '').replace(/^\/+|\/+$/g, '')
     const mapped = productForLegacyContent(routeKey) || routeKey
-    // Paint the known product immediately. Network data only enriches price/artwork.
-    setBackendProductId(mapped)
-    setProduct((current:any) => current || { id: mapped, name: routeKey.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()), currency: 'KES', price_minor: 0 })
+    const known = knownProduct(routeKey)
+    // Paint known checkout metadata synchronously; live catalogue refreshes it.
+    setBackendProductId(known?.id || mapped)
+    setProduct((current:any) => current || (known ? { id: known.id, name: known.name, currency: known.currency, price_minor: known.priceMinor } : null))
+    if (known) setPurchaseTitle((current:any) => current || { slug: known.slug, title: known.titleName, poster_url: known.artwork, backdrop_url: known.artwork })
     setLoading(false)
     Promise.allSettled([resolveCatalogueKey(routeKey), publicCatalogue()]).then(([resolvedResult, catalogueResult]) => {
       if (!active) return
@@ -75,7 +77,7 @@ function CheckoutRoute() {
       const selected = resolved || list.find((entry: any) => entry.id === mapped) || list.find((entry: any) => entry.id === routeKey) || null
       const canonicalProductId = selected?.id || resolved?.id || mapped
       setBackendProductId(canonicalProductId)
-      setProduct(selected)
+      if (selected) setProduct(selected)
       const titles = payload?.titles || []
       const directTitle = resolvedPayload?.title || null
       const season = resolvedPayload?.season || resolvedPayload?.seasons?.find?.((entry: any) => selected?.season_ids?.includes?.(entry.id)) || resolvedPayload?.seasons?.[0]
