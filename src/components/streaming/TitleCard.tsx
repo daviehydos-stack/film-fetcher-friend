@@ -41,6 +41,10 @@ export function TitleCard({
   const activeImage = imageCandidates[imageIndex] || "";
 
   useEffect(() => {
+    setImageLoaded(false);
+  }, [activeImage]);
+
+  useEffect(() => {
     const sync = (e: any) => setTravelMode(e.detail.active);
     window.addEventListener("avant:travel-mode-changed" as any, sync);
     return () => window.removeEventListener("avant:travel-mode-changed" as any, sync);
@@ -80,8 +84,8 @@ export function TitleCard({
             fetchPriority="auto"
             decoding="async"
             onLoad={() => setImageLoaded(true)}
-            onError={() => setImageIndex((current) => current + 1)}
-            className={`size-full object-cover transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:group-hover:scale-[1.08] md:group-hover:brightness-[.72] ${imageLoaded ? "opacity-100" : "opacity-0"}`} data-adaptive-artwork="true" data-layout={layout} /*   */
+            onError={() => { setImageLoaded(false); setImageIndex((current) => current + 1); }}
+            className={`size-full object-cover transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:group-hover:scale-[1.08] md:group-hover:brightness-[.72] ${imageLoaded ? "opacity-100" : "opacity-0"}`} data-adaptive-artwork="true" data-layout={layout}
           /> : <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,122,24,.24),transparent_32%),linear-gradient(135deg,#17191f_0%,#090a0d_62%,#030303_100%)] p-5">
             <div className="max-w-[85%] text-left">
               <span className="block text-[10px] font-black uppercase tracking-[.22em] text-orange-400">Avant Cinema</span>
