@@ -35,7 +35,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [heroPreviewLoaded, setHeroPreviewLoaded] = useState(false);
   const [heroUiVisible, setHeroUiVisible] = useState(true);
   const heroUiTimer = useRef<number | null>(null);
-  const [heroMuted, setHeroMuted] = useState(true);
+  const [heroMuted, setHeroMuted] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
   const heroRef = useRef<HTMLElement | null>(null);
