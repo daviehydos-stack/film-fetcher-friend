@@ -63,10 +63,11 @@ function CheckoutRoute() {
       if (!active) return
       const resolvedPayload = resolvedResult.status === 'fulfilled' ? resolvedResult.value : null
       const resolved = resolvedPayload?.product || null
-      setBackendProductId(resolved?.id || '')
       const payload = catalogueResult.status === 'fulfilled' ? catalogueResult.value : null
       const list = payload?.products || []
-      const selected = resolved || list.find((entry: any) => entry.id === mapped) || null
+      const selected = resolved || list.find((entry: any) => entry.id === mapped) || list.find((entry: any) => entry.id === productId) || null
+      const canonicalProductId = selected?.id || resolved?.id || mapped
+      setBackendProductId(canonicalProductId)
       setProduct(selected)
       const titles = payload?.titles || []
       const directTitle = resolvedPayload?.title || null
@@ -110,7 +111,7 @@ function CheckoutRoute() {
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
     try {
       const token = await customerToken(false)
-      const resolved = product?.id || backendProductId || productForLegacyContent(productId) || productId
+      const resolved = backendProductId || product?.id || productForLegacyContent(productId) || productId
       let key = ''
       try { key = sessionStorage.getItem(`avant_payment_key_${productId}`) || '' } catch { /* unavailable */ }
       if (!key) { key = crypto.randomUUID(); try { sessionStorage.setItem(`avant_payment_key_${productId}`, key) } catch { /* unavailable */ } }
@@ -307,7 +308,7 @@ function CheckoutRoute() {
                   <span className="border-r border-white/10 pr-3 text-sm font-semibold text-white/45">+254</span>
                   <input id="mpesa-number" value={mobile} onChange={(event) => setMobile(event.target.value)} placeholder="07XX XXX XXX" inputMode="tel" autoComplete="tel" className="min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/25"/>
                 </div>
-                <Button onClick={() => void start()} disabled={!online || !validEmail || !normalizeKenyanMobile(mobile) || loading} size="lg" className="mt-6 min-h-12 w-full rounded-lg text-sm font-bold">Pay {amount}</Button>
+                <Button onClick={() => void start()} disabled={!online || !validEmail || !normalizeKenyanMobile(mobile) || loading || !product} size="lg" className="mt-6 min-h-12 w-full rounded-lg text-sm font-bold">{loading ? 'Loading price…' : product ? `Pay ${amount}` : 'Payment unavailable'}</Button>
                 <p className="mt-3 text-center text-xs text-white/30">We'll send an M-PESA prompt to your phone.</p>
               </div>}
 
