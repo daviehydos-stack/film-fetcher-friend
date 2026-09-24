@@ -156,3 +156,45 @@ export const catalogue: CatalogueTitle[] = [
 export function getTitles(): CatalogueTitle[] { return catalogue; }
 
 export const getTitle = (slug: string) => catalogue.find((item) => item.slug === slug);
+
+/* Avant verified Vimeo fallback catalogue */
+const AVANT_VIMEO_FALLBACKS: Record<string, Partial<CatalogueTitle> & { episodes?: Episode[] }> = {
+  "a-better-life": {
+    previewVimeoId: "1229459523", trailerEmbedUrl: "https://player.vimeo.com/video/1229459523",
+    episodes: [
+      { id:"abl-1", title:"Episode 1", season:1, episodeNumber:1, duration:"42:15", vimeoVideoId:"1188409403", locked:true, legacyKey:"a-better-life-1" },
+      { id:"abl-2", title:"Episode 2", season:1, episodeNumber:2, duration:"41:30", vimeoVideoId:"1188388219", locked:true, legacyKey:"a-better-life-2" },
+      { id:"abl-3", title:"Episode 3", season:1, episodeNumber:3, duration:"40:50", vimeoVideoId:"1188389406", locked:true, legacyKey:"a-better-life-3" },
+      { id:"abl-4", title:"Episode 4", season:1, episodeNumber:4, duration:"43:00", vimeoVideoId:"1188391929", locked:true, legacyKey:"a-better-life-4" },
+      { id:"abl-5", title:"Episode 5", season:1, episodeNumber:5, duration:"39:45", vimeoVideoId:"1188394139", locked:true, legacyKey:"a-better-life-5" },
+    ],
+  },
+  "back-to-us": { previewVimeoId:"1189285049", trailerEmbedUrl:"https://player.vimeo.com/video/1189285049", vimeoVideoId:"1189309434" },
+  "granted": { vimeoVideoId:"1229463145", accessRequired:false },
+  "jennifer-gatero-writing-masterclass": {
+    previewVimeoId:"1188443663", trailerEmbedUrl:"https://player.vimeo.com/video/1188443663", vimeoVideoId:"1188443663",
+    episodes: [
+      ["1188443663","Introduction & Finding Stories"],["1188441673","Character Arc & Voice"],["1188442991","Plot Structure & Conflict"],
+      ["1188444549","Lesson 4"],["1188478468","Lesson 5"],["1188479577","Lesson 6"],["1188480934","Lesson 7"],
+      ["1188485163","Lesson 8"],["1188486669","Lesson 9"],["1188487093","Lesson 10"],["1188482195","Lesson 11"]
+    ].map(([vimeoVideoId,title],i)=>({id:`jg-${i+1}`,title,episodeNumber:i+1,duration:"",vimeoVideoId,locked:true,legacyKey:`jennifer-gatero-writing-masterclass-${i+1}`})),
+  },
+  "nairobby": { previewVimeoId:"1229459741", trailerEmbedUrl:"https://player.vimeo.com/video/1229459741", vimeoVideoId:"1188436474" },
+  "relationship-goals": { vimeoVideoId:"1229463619", accessRequired:false },
+  "this-is-life": {
+    previewVimeoId:"1191559373", trailerEmbedUrl:"https://player.vimeo.com/video/1191559373",
+    episodes: [
+      { id:"til-1", title:"Episode 1", season:1, episodeNumber:1, duration:"38:20", vimeoVideoId:"1191559373", locked:true, legacyKey:"this-is-life-1" },
+      { id:"til-2", title:"Episode 2", season:1, episodeNumber:2, duration:"39:10", vimeoVideoId:"1191559372", locked:true, legacyKey:"this-is-life-2" },
+    ],
+  },
+};
+for (const title of catalogue) {
+  const fallback=AVANT_VIMEO_FALLBACKS[title.slug];
+  if (!fallback) continue;
+  const existingEpisodes=title.episodes||[];
+  const fallbackEpisodes=fallback.episodes||[];
+  Object.assign(title, fallback, {
+    episodes: fallbackEpisodes.length ? fallbackEpisodes.map((ep,i)=>({...(existingEpisodes[i]||{}),...ep})) : title.episodes,
+  });
+}
