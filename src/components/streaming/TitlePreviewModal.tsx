@@ -29,11 +29,11 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const requestClose=()=>{if(closing)return;pauseEmbeddedPlayer(frameRef.current);stopAllMedia();setClosing(true);window.setTimeout(onClose,220)};
  const toggleSaved=async()=>{const token=await customerToken(false);if(!token){try{await requireCustomerToken()}catch{return}}setSaved(toggleMyList(item.id).includes(item.id))};
  const start=0,end=60; const [fallbackCycle,setFallbackCycle]=useState(0); const resumeAtRef=useRef(0);
- const dedicatedPreview=item.trailerEmbedUrl||item.previewVimeoVideoId;
+ const dedicatedPreview=item.trailerEmbedUrl||item.previewVimeoId;
  const fallbackVimeo=freeFullTitle?(item.type==="movie"?item.vimeoVideoId:item.episodes?.[0]?.vimeoVideoId):undefined;
  const fallbackPreview=!dedicatedPreview&&fallbackVimeo;
  const normalizedDedicatedPreview=(()=>{if(!item.trailerEmbedUrl)return null;try{const u=new URL(item.trailerEmbedUrl);if(!u.hostname.includes("vimeo"))return null;u.searchParams.set("autoplay","1");u.searchParams.set("muted",muted?"1":"0");u.searchParams.delete("background");u.searchParams.set("controls","0");u.searchParams.set("playsinline","1");u.searchParams.set("autopause","0");u.searchParams.set("dnt","1");return u.toString()}catch{return null}})();
- const previewVimeo=item.previewVimeoVideoId;
+ const previewVimeo=item.previewVimeoId;
  // Preview/trailer playback should begin immediately when the modal opens.
  // Browsers reliably allow muted autoplay; users can unmute from the overlay controls.
  useEffect(()=>{if(!videoStarted||!frameRef.current)return;const frame=frameRef.current;frame.contentWindow?.postMessage({method:"play"},"*");frame.contentWindow?.postMessage(JSON.stringify({event:"command",func:"playVideo",args:[]}),"*")},[videoStarted,item.slug]);
