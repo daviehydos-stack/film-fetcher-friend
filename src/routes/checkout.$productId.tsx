@@ -245,27 +245,20 @@ function CheckoutRoute() {
   function goBack() {
     if (leaving) return
     setLeaving(true)
+    // Let the checkout visibly dissolve before changing route. Prefer the real
+    // browser history entry so Back returns to the exact title/list/scroll state.
     window.setTimeout(() => {
       if (embedded) {
         window.parent.postMessage({ type: 'avant-checkout-close' }, '*')
         return
       }
-      const target = (returnTo || origin || '').trim()
-      if (target && target.startsWith('/') && !target.startsWith('//')) {
-        // Stay inside TanStack Router: a hard location.assign reload breaks SPA history,
-        // especially on GitHub Pages/Lovable deep links.
-        void router.navigate({ to: target as any, replace: true })
-        return
-      }
       if (window.history.length > 1) {
-        // Browser/mobile back can land on a duplicate checkout entry created by
-        // preview hosts. Prefer the known catalogue origin instead of replaying it.
-        const fallback = origin && origin.startsWith('/') && !origin.startsWith('//') ? origin : '/'
-        void router.navigate({ to: fallback as any, replace: true })
+        window.history.back()
         return
       }
-      void router.navigate({ to: '/', replace: true })
-    }, 260)
+      const target = (returnTo || origin || '/').trim()
+      void router.navigate({ to: target.startsWith('/') && !target.startsWith('//') ? target as any : '/', replace: true })
+    }, 340)
   }
 
   const stageCopy = activeMethod === 'paypal' ? (stage === 'sending' ? ['Preparing secure PayPal checkout', 'Creating your PayPal order securely…'] : ['Confirming your PayPal payment', 'Avant unlocks automatically after PayPal confirms.']) : stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
@@ -276,7 +269,7 @@ function CheckoutRoute() {
   const titleArtwork = optimizedArtwork(purchaseTitle?.backdrop_url || purchaseTitle?.poster_url || purchaseTitle?.backdrop || purchaseTitle?.artwork || '', embedded ? 640 : 960) || ''
   const displayTitle = purchaseTitle?.title || product?.name || 'Avant Cinema access'
 
-  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${leaving ? 'pointer-events-none scale-[.985] opacity-0 blur-[5px]' : 'scale-100 opacity-100 blur-0'}`}>
+  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-[340ms] ease-[cubic-bezier(.16,1,.3,1)] will-change-[opacity,filter,transform] ${leaving ? 'pointer-events-none scale-[.975] opacity-0 blur-[8px]' : 'scale-100 opacity-100 blur-0'}`}>
     <div className={`relative mx-auto w-full ${embedded ? 'max-w-xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8'}`}>
       {!embedded && <header className="flex items-center justify-between pb-5">
         <Button type="button" variant="ghost" onClick={goBack} className="-ml-2 min-h-10 gap-2 px-2 text-white/60 hover:bg-white/5 hover:text-white"><ArrowLeft className="size-4"/>Back</Button>
