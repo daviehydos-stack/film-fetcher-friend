@@ -143,6 +143,62 @@ function CheckoutRoute() {
     } catch(e:any){setBusy(false);setStage('ready');setError(e?.body?.error||e?.message||'Unable to start PayPal checkout.')}
   }
 
+  async function startPayPal() {
+    if (!online) { setError('You are offline. Reconnect before starting a PayPal payment.'); return }
+    if (!validEmail) { setError('Enter a valid email address. Your Avant access code will be sent there.'); return }
+    if (loading) return
+    setBusy(true); setError(''); setStage('sending')
+    try {
+      const token = await customerToken(false)
+      const resolved = product?.id || backendProductId || productForLegacyContent(productId) || productId
+      let key = ''
+      try { key = sessionStorage.getItem(`avant_paypal_key_${productId}`) || '' } catch { /* unavailable */ }
+      if (!key) { key = crypto.randomUUID(); try { sessionStorage.setItem(`avant_paypal_key_${productId}`, key) } catch { /* unavailable */ } }
+      const created = await createPayPalOrder(token, { productId: resolved, email: email.trim().toLowerCase(), idempotencyKey: key })
+      if (!created?.reference || !created?.orderId) throw new Error('PayPal order was not created.')
+      setReference(created.reference)
+      const clientId = paymentChannels?.paypal?.clientId
+      if (!clientId) throw new Error('PayPal client configuration is unavailable.')
+      const w = window as any
+      if (!w.paypal) {
+        await new Promise<void>((resolve, reject) => {
+          const existing = document.querySelector<HTMLScriptElement>('script[data-avant-paypal="1"]')
+          if (existing) { existing.addEventListener('load', () => resolve(), { once: true }); existing.addEventListener('error', () => reject(new Error('Could not load PayPal')), { once: true }); return }
+          const script = document.createElement('script')
+          script.dataset.avantPaypal = '1'
+          script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(product?.currency || 'KES')}&intent=capture`
+          script.onload = () => resolve()
+          script.onerror = () => reject(new Error('Could not load PayPal'))
+          document.head.appendChild(script)
+        })
+      }
+      setBusy(false); setStage('ready')
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+      const host = document.getElementById('avant-paypal-buttons')
+      if (!host || !w.paypal?.Buttons) throw new Error('PayPal checkout unavailable.')
+      host.innerHTML = ''
+      await w.paypal.Buttons({
+        createOrder: () => created.orderId,
+        onApprove: async (data: any) => {
+          setBusy(true); setStage('confirming'); setError('')
+          try {
+            const freshToken = await customerToken(false)
+            const done = await capturePayPalOrder(freshToken, { orderId: data.orderID, reference: created.reference })
+            if (!done?.ok) throw new Error('PayPal capture failed.')
+            try { sessionStorage.removeItem(`avant_paypal_key_${productId}`) } catch { /* unavailable */ }
+            await finish(created.reference)
+          } catch (e: any) {
+            setBusy(false); setStage('ready'); setError(e?.body?.error || e?.message || 'PayPal payment could not be confirmed.')
+          }
+        },
+        onCancel: () => { setBusy(false); setStage('ready'); setError('PayPal checkout was cancelled. You were not charged.') },
+        onError: (e: any) => { setBusy(false); setStage('ready'); setError(e?.message || 'PayPal checkout failed.') },
+      }).render('#avant-paypal-buttons')
+    } catch (e: any) {
+      setBusy(false); setStage('ready'); setError(e?.body?.error || e?.body?.message || e?.message || 'Unable to start PayPal checkout.')
+    }
+  }
+
   async function checkPayment(referenceValue = reference) {
     if (!online) { setError('You are offline. Reconnect to verify this payment.'); return }
     if (!referenceValue) { setError('No payment reference is saved on this device.'); return }
@@ -177,7 +233,7 @@ function CheckoutRoute() {
     }, 220)
   }
 
-  const stageCopy = stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
+  const stageCopy = activeMethod === 'paypal' ? (stage === 'sending' ? ['Preparing secure PayPal checkout', 'Creating your PayPal order securely…'] : ['Confirming your PayPal payment', 'Avant unlocks automatically after PayPal confirms.']) : stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
   const processing = busy || ['phone', 'confirming'].includes(stage)
   const fieldWrap = 'flex min-h-14 items-center gap-3 rounded-xl border border-border bg-background/60 px-4 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15'
   const fieldInput = 'min-w-0 flex-1 bg-transparent text-base font-medium outline-none placeholder:text-muted-foreground/60'
@@ -240,8 +296,9 @@ function CheckoutRoute() {
               </div>}
 
               {activeMethod === 'paypal' && <div className="mt-5">
-                <Button type="button" disabled className="min-h-14 w-full rounded-xl text-base font-black">Pay {amount} with PayPal</Button>
-                <p className="mt-3 text-center text-xs text-muted-foreground">PayPal is connected in Admin. Checkout activates when the PayPal order endpoint is available.</p>
+                <Button type="button" onClick={() => void startPayPal()} disabled={!online || !validEmail || loading || busy} className="min-h-14 w-full rounded-xl text-base font-black">Continue with PayPal · {amount}</Button>
+                <div id="avant-paypal-buttons" className="mt-4 min-h-0 w-full"/>
+                <p className="mt-3 text-center text-xs text-muted-foreground">Your title unlocks only after PayPal confirms the payment.</p>
               </div>}
 
               {paymentChannels?.paybill?.enabled === true && paymentChannels?.paybill?.number && <div className="mt-5 rounded-xl border border-dashed border-border bg-secondary/30 p-4 text-sm"><p className="font-bold">Prefer Paybill? Use {paymentChannels.paybill.number}</p>{paymentChannels.paybill.account && <p className="mt-1 text-xs text-muted-foreground">Account: {paymentChannels.paybill.account}</p>}</div>}
