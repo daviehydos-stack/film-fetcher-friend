@@ -138,8 +138,8 @@ export function freeContentId(item: CatalogueTitle) {
   return item.episodes?.[index]?.legacyKey ?? `${item.slug}-${index + 1}`;
 }
 
-const CATALOGUE_CACHE_KEY = "avant_catalogue_cache_v1";
-const CATALOGUE_CACHE_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
+const CATALOGUE_CACHE_KEY = "avant_catalogue_cache_v2";
+const CATALOGUE_CACHE_MAX_AGE = 1000 * 60 * 60;
 
 function readCatalogueCache() {
   if (typeof window === "undefined") return null;
