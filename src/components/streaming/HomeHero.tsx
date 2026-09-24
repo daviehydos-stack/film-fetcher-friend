@@ -6,6 +6,7 @@ import type { CatalogueTitle } from "@/lib/site-data";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { productForTitleSlug } from "@/lib/backend-catalogue-map";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
+import { optimizedArtwork } from "@/lib/episodes";
 import { claimMedia, stopAllMedia } from "@/lib/media-session";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import {
@@ -133,7 +134,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
       className="relative min-h-[70svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
     >
       <img
-        src={item.backdrop}
+        src={optimizedArtwork(item.backdrop || item.artwork, 1280)}
         alt={`${item.title} featured artwork`}
         fetchPriority="high"
         loading="eager"
