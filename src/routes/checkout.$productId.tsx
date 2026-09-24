@@ -258,7 +258,10 @@ function CheckoutRoute() {
         return
       }
       if (window.history.length > 1) {
-        router.history.back()
+        // Browser/mobile back can land on a duplicate checkout entry created by
+        // preview hosts. Prefer the known catalogue origin instead of replaying it.
+        const fallback = origin && origin.startsWith('/') && !origin.startsWith('//') ? origin : '/'
+        void router.navigate({ to: fallback as any, replace: true })
         return
       }
       void router.navigate({ to: '/', replace: true })
