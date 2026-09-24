@@ -1,6 +1,6 @@
 const SUPABASE_URL="https://bnuyhrsezkepsaebwlmu.supabase.co";
 const SUPABASE_ANON_KEY=import.meta.env["VITE_SUPABASE_ANON_KEY"]||import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"]||"sb_publishable_B3mlx-n0maE2rSIusRZmKw_ITK6QUeo";
-export const ADMIN_EMAILS=["hydrocephcare@gmail.com"] as const;
+export const ADMIN_EMAILS=["hydrocephcare@gmail.com","jennifergatero@gmail.com"] as const;
 export const ADMIN_EMAIL=ADMIN_EMAILS[0];
 export function isAdminEmail(email?:string|null){return ADMIN_EMAILS.includes(String(email||"").trim().toLowerCase() as typeof ADMIN_EMAILS[number])}
 export type AdminSession={admin:boolean;role?:string;requireMfa?:boolean;email?:string;reason?:string};
