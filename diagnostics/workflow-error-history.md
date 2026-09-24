@@ -5421,3 +5421,22 @@ build	Install dependencies	2026-09-23T18:34:16.5118242Z error: lockfile had chan
 build	Install dependencies	2026-09-23T18:34:16.5118792Z note: try re-running without --frozen-lockfile and commit the updated lockfile
 build	Install dependencies	2026-09-23T18:34:16.5143346Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-24T16:36:06Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-24T16:35:35Z","databaseId":36028440934,"displayTitle":"Add secure PayPal checkout backend client","headSha":"710d191995dcc985eb4e08854b989581fd7b5a28","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-24T16:36:04Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36028440934"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36028440934 is still in progress; logs will be available when it is complete
+~~~
