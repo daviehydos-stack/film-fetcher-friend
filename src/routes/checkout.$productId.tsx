@@ -252,11 +252,16 @@ function CheckoutRoute() {
       }
       const target = (returnTo || origin || '').trim()
       if (target && target.startsWith('/') && !target.startsWith('//')) {
-        window.location.assign(new URL(target.replace(/^\//, ''), document.baseURI).href)
+        // Stay inside TanStack Router: a hard location.assign reload breaks SPA history,
+        // especially on GitHub Pages/Lovable deep links.
+        void router.navigate({ to: target as any, replace: true })
         return
       }
-      if (window.history.length > 1) window.history.back()
-      else window.location.assign(new URL('', document.baseURI).href)
+      if (window.history.length > 1) {
+        router.history.back()
+        return
+      }
+      void router.navigate({ to: '/', replace: true })
     }, 260)
   }
 
