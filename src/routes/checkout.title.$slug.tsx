@@ -1,6 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { productForLegacyContent } from "@/lib/backend-catalogue-map";
-import { resolveCatalogueKey } from "@/lib/avant-backend";
 
 /**
  * Legacy checkout compatibility route.
@@ -14,9 +13,10 @@ export const Route = createFileRoute("/checkout/title/$slug")({
     const slug = String(params.slug || "").replace(/^\/+|\/+$/g, "");
     if (!slug) throw redirect({ to: "/" });
 
-    const mapped = productForLegacyContent(slug) || slug;
-    const resolved = await resolveCatalogueKey(slug).catch(() => null);
-    const productId = resolved?.product?.id || mapped;
+    // Redirect immediately from the legacy URL. Do not block this guard on network data.
+    // Known catalogue slugs map locally to their canonical product id; unknown slugs
+    // are still handed to the canonical checkout route, which resolves them there.
+    const productId = productForLegacyContent(slug) || slug;
 
     const search = new URLSearchParams(location.searchStr || "");
     throw redirect({
