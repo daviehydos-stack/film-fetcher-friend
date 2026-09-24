@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Youtube, Instagram, Mail, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Mail, MessageCircle } from "lucide-react";
 import { navLinks, socials, WHATSAPP, WHATSAPP_TEL } from "@/lib/site-data";
 import { publicCatalogue, publicPages } from "@/lib/avant-backend";
 import { useEffect, useState } from "react";
@@ -49,7 +49,6 @@ export function SiteFooter() {
               </li>
             ))}
           </ul>
-          <a href={socials.youtube} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-11 items-center text-sm text-ink-foreground/75 hover:text-flame">Behind the Scenes</a>
         </div>
 
         <div>
@@ -68,15 +67,6 @@ export function SiteFooter() {
                 className="grid size-11 place-items-center rounded-full hover:bg-ink-foreground/5 hover:text-flame"
             >
               <Facebook className="size-5" />
-            </a>
-            <a
-              href={socials.youtube}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="YouTube"
-                className="grid size-11 place-items-center rounded-full hover:bg-ink-foreground/5 hover:text-flame"
-            >
-              <Youtube className="size-5" />
             </a>
             <a
               href={socials.instagram}
