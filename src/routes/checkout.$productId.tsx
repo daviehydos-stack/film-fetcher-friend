@@ -84,7 +84,7 @@ function CheckoutRoute() {
       const seasonTitle = season?.series_id ? titles.find((entry: any) => entry.id === season.series_id) : null
       const contentTitle = selected?.content_ids?.length ? titles.find((entry: any) => selected.content_ids.includes(entry.id)) : null
       const namedTitle = titles.find((entry: any) => selected?.name && String(selected.name).toLowerCase().includes(String(entry.title || '').toLowerCase()))
-      setPurchaseTitle(directTitle || seasonTitle || contentTitle || namedTitle || null)
+      setPurchaseTitle((current:any) => directTitle || seasonTitle || contentTitle || namedTitle || current)
     })
     return () => { active = false }
   }, [productId])
@@ -254,7 +254,7 @@ function CheckoutRoute() {
         window.parent.postMessage({ type: 'avant-checkout-close' }, '*')
         return
       }
-      const target = (returnTo || origin || '').trim()
+      const target = (origin || returnTo || '').trim()
       // Prefer the explicit origin passed by Avant links. Mobile/preview hosts can
       // insert duplicate checkout entries, making history.back() land on checkout again.
       if (target && target.startsWith('/') && !target.startsWith('//') && !target.startsWith('/checkout/')) {
@@ -266,7 +266,7 @@ function CheckoutRoute() {
         return
       }
       void router.navigate({ to: '/', replace: true })
-    }, 340)
+    }, 180)
   }
 
   const stageCopy = activeMethod === 'paypal' ? (stage === 'sending' ? ['Preparing secure PayPal checkout', 'Creating your PayPal order securely…'] : ['Confirming your PayPal payment', 'Avant unlocks automatically after PayPal confirms.']) : stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
