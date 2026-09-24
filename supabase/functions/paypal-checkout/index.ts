@@ -94,7 +94,7 @@ Deno.serve(async (r) => {
       const status = String(cap?.status || x?.status || "").toUpperCase();
       const value = Number(cap?.amount?.value || 0);
       const currency = String(cap?.amount?.currency_code || "").toUpperCase();
-      if (!rr.ok || status !== "COMPLETED" || Math.round(value * 100) !== Number(pay.amount_minor) || currency !== String(pay.currency).toUpperCase()) return Response.json({ error: "PayPal payment was not completed or amount did not match", status }, { status: 409, headers: H });
+      if (!rr.ok || status !== "COMPLETED" || Math.abs(Math.round(value * 100) - Number(pay.amount_minor)) > 1 || currency !== String(pay.currency).toUpperCase()) return Response.json({ error: "PayPal payment was not completed or amount did not match", status }, { status: 409, headers: H });
 
       const { error } = await c.rpc("settle_verified_payment", { p_payment_id: pay.id, p_provider_reference: String(cap?.id || orderId), p_provider_status: status, p_provider_event_id: "paypal:" + String(cap?.id || orderId), p_payload: x });
       if (error) throw error;
