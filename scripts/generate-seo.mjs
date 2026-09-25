@@ -30,6 +30,9 @@ const dateOnly = (value) => {
 };
 
 const entries = new Map();
+const genreEntries = new Set();
+const personEntries = new Set();
+const slugify = (value) => String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const videoEntries = new Map();
 const imageEntries = new Map();
 const addEntry = (path, lastmod) => {
@@ -51,6 +54,8 @@ try {
     for (const title of titles) {
       const path = `/title/${title.slug}`;
       addEntry(path, title.updated_at || title.scheduled_publish_at || title.published_at || title.created_at);
+      (title.genres || []).forEach((genre) => { const slug = slugify(genre); if (slug) genreEntries.add(slug); });
+      [...(title.cast_names || []), ...(title.director_names || []), ...(title.creator_names || [])].forEach((person) => { const slug = slugify(person); if (slug) personEntries.add(slug); });
       const images = [title.poster_url, title.backdrop_url].filter(Boolean);
       if (images.length) imageEntries.set(path, [...new Set(images)]);
       const player = title.trailer_vimeo_id
@@ -106,6 +111,8 @@ try {
       }),
     );
     episodeLists.flat().forEach(({ path, lastmod }) => addEntry(path, lastmod));
+    genreEntries.forEach((slug) => addEntry(`/genre/${slug}`));
+    personEntries.forEach((slug) => addEntry(`/person/${slug}`));
   }
 } catch (error) {
   console.warn(
