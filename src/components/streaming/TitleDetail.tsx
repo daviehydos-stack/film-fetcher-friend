@@ -24,7 +24,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const remembered = readReturnContext();
   const origin = remembered?.targetSlug===item.slug ? remembered : null;
   const normalizeAppPath = (value:string) => { if (typeof window==="undefined") return value || "/"; const base=String(import.meta.env.BASE_URL||"/").replace(/\/$/,""); let path=String(value||"/"); while(base&&base!=="/"&&path.startsWith(base+base)) path=path.slice(base.length); if(base&&base!=="/"&&path.startsWith(base)) path=path.slice(base.length)||"/"; return path.startsWith("/")?path:"/"+path; };
-  const checkoutSearch = { returnTo: `/title/${item.slug}`, origin: normalizeAppPath(origin?.path || "/movies"), originScroll: String(origin?.scrollY || 0) };
+  const checkoutSearch = { returnTo: `/title/${item.slug}`, origin: normalizeAppPath(origin?.path || `/title/${item.slug}`), originScroll: String(origin?.scrollY || 0) };
   const goBack = () => { if (origin?.path && origin.path !== window.location.pathname) { void router.navigate({ to: origin.path as any }).then(()=>window.setTimeout(()=>window.scrollTo({top:origin.scrollY||0,left:0,behavior:"auto"}),60)); return; } if (typeof window !== "undefined" && window.history.length > 1) { window.history.back(); return; } void router.navigate({ to: "/" }); };
   const [saved, setSaved] = useState(false);
   const [reminded, setReminded] = useState(false);
