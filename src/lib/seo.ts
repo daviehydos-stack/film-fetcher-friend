@@ -4,7 +4,7 @@ export const SEO_SITE_NAME = "Avant Cinema";
 export const SEO_BRAND = "Avant Cinema";
 export const SEO_DEFAULT_TITLE = "Avant Cinema | Watch Kenyan Movies & Series Online";
 export const SEO_DEFAULT_DESCRIPTION = "Stream Kenyan movies, independent films, original series, short films and masterclasses online on Avant Cinema. Discover stories made in Kenya for audiences everywhere.";
-export const SEO_ORIGIN = (import.meta.env["VITE_PUBLIC_SITE_URL"] || "https://avantcinematic.com").replace(/\/$/, "");
+export const SEO_ORIGIN = (import.meta.env["VITE_PUBLIC_SITE_URL"] || "https://www.avantcinematic.com").replace(/\/$/, "");
 
 export function absoluteUrl(path: string) {
   if (!SEO_ORIGIN) return undefined;
@@ -105,7 +105,7 @@ export function youtubeThumbnail(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
-export function videoObjectSchema(input: { name: string; description: string; youtubeId?: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string }) {
+export function videoObjectSchema(input: { name: string; description: string; youtubeId?: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string; contentUrl?: string; expires?: string }) {
   const pageUrl = absoluteUrl(input.pagePath);
   const uploadDate = input.uploadDate;
   const embedUrl = input.youtubeId ? `https://www.youtube-nocookie.com/embed/${input.youtubeId}` : input.vimeoId ? `https://player.vimeo.com/video/${input.vimeoId}` : undefined;
@@ -117,6 +117,8 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     thumbnailUrl: [input.thumbnailUrl || (input.youtubeId ? youtubeThumbnail(input.youtubeId) : undefined)].filter(Boolean),
     ...(uploadDate ? { uploadDate } : {}),
     ...(embedUrl ? { embedUrl } : {}),
+    ...(input.contentUrl ? { contentUrl: input.contentUrl } : {}),
+    ...(input.expires ? { expires: input.expires } : {}),
     ...(pageUrl ? { url: pageUrl, mainEntityOfPage: pageUrl, potentialAction: { "@type": "WatchAction", target: pageUrl } } : {}),
     ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
     ...(input.episodeNumber ? { episodeNumber: input.episodeNumber } : {}),
