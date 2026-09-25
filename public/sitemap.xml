@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.avantcinematic.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.avantcinematic.com/movies</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.avantcinematic.com/tv-shows</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.avantcinematic.com/watch-free</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.avantcinematic.com/title/back-to-us</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.avantcinematic.com/title/nairobby</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.avantcinematic.com/title/a-better-life</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.avantcinematic.com/title/this-is-life</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.avantcinematic.com/title/relationship-goals</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.avantcinematic.com/title/granted</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.avantcinematic.com/title/jennifer-gatero-writing-masterclass</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+</urlset>
