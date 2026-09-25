@@ -95,6 +95,7 @@ function CheckoutRoute() {
   function clearSavedPayment() { try { sessionStorage.removeItem(`avant_payment_${productId}`); sessionStorage.removeItem(`avant_payment_key_${productId}`) } catch { /* unavailable */ } }
   async function finish(referenceValue: string) {
     clearSavedPayment(); setStage('success'); setBusy(false)
+    clearPlaybackCache()
     broadcastAccessChanged({ reference: referenceValue, source: 'checkout' })
     if (embedded) window.parent.postMessage({ type: 'avant-payment-success', reference: referenceValue, returnTo }, window.location.origin)
     else await router.navigate({ to: '/payment/success', search: { reference: referenceValue, returnTo: returnTo || origin, origin, originScroll: String(originScroll) } })
