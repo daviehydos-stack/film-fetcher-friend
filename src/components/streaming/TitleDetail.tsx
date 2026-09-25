@@ -55,7 +55,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const ordered = orderedEpisodes(item);
   const seasons = [...new Set(ordered.map(({ season }) => season))];
   const [season, setSeason] = useState(seasons[0] ?? 1);
-  const seasonEpisodes = ordered.filter((entry) => entry.season === season);\n  const selectedSeasonPrimary = seasonEpisodes[0] ?? ordered[0];
+  const seasonEpisodes = ordered.filter((entry) => entry.season === season);
+  const selectedSeasonPrimary = seasonEpisodes[0] ?? ordered[0];
   const accessProductId = item.slug === "a-better-life" ? (season === 2 ? BACKEND_PRODUCT_IDS.aBetterLifeSeason2 : BACKEND_PRODUCT_IDS.aBetterLifeSeason1) : (productForTitleSlug(item.slug) || item.slug);
   const resumable = ordered.map((entry) => ({ ...entry, progress: getProgress(entry.contentId) })).filter((entry) => (entry.progress?.seconds ?? 0) > 5).sort((a, b) => (b.progress?.updatedAt ?? 0) - (a.progress?.updatedAt ?? 0))[0];
   const primary = resumable ?? ordered[0];
