@@ -6828,3 +6828,22 @@ Lint and production build	Production build	2026-09-25T13:50:33.0862629Z }^[[39m
 Lint and production build	Production build	2026-09-25T13:50:33.1702039Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-25T13:50:33.1717282Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-25T13:51:04Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-25T13:50:26Z","databaseId":36143529951,"displayTitle":"Route PayPal access codes through secure server issuer","headSha":"93438beb4910f150ef25f2e389a0c7a3cc5f75b5","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T13:51:03Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143529951"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143529951 is still in progress; logs will be available when it is complete
+~~~

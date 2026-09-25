@@ -4,19 +4,12 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36143352566
+Run ID: 36143529951
 
-Generated: 2026-09-25T13:50:45Z
+Generated: 2026-09-25T13:51:04Z
 
 ### Current primary errors
 ~~~text
-Lint and production build	Production build	2026-09-25T13:50:33.0844645Z ^[[31m✗^[[39m Build failed in 1.51s
-Lint and production build	Production build	2026-09-25T13:50:33.0848345Z ^[[31mBuild failed with 1 error:
-Lint and production build	Production build	2026-09-25T13:50:33.0853021Z  ^[[38;5;240m  │^[[0m                                                 ╰──────────────────────── No such file or directory (os error 2)
-Lint and production build	Production build	2026-09-25T13:50:33.0854179Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-25T13:50:33.0855185Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-25T13:50:33.1702039Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-25T13:50:33.1717282Z ##[error]Process completed with exit code 1.
 ~~~
 
 ## Previous + current error history
@@ -6849,4 +6842,23 @@ Lint and production build	Production build	2026-09-25T13:50:33.0862274Z   errors
 Lint and production build	Production build	2026-09-25T13:50:33.0862629Z }^[[39m
 Lint and production build	Production build	2026-09-25T13:50:33.1702039Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-25T13:50:33.1717282Z ##[error]Process completed with exit code 1.
+~~~
+
+---
+
+## Failure recorded 2026-09-25T13:51:04Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-25T13:50:26Z","databaseId":36143529951,"displayTitle":"Route PayPal access codes through secure server issuer","headSha":"93438beb4910f150ef25f2e389a0c7a3cc5f75b5","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T13:51:03Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143529951"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143529951 is still in progress; logs will be available when it is complete
 ~~~
