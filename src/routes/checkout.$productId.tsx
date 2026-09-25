@@ -357,10 +357,9 @@ function CheckoutRoute() {
               </div>
               <p className="mt-4 text-xs text-white/30">Choose a payment method to continue.</p>
             </div> : <div className={`mt-8 transition-all duration-200 ${switchingMethod ? 'translate-y-1 opacity-0' : 'translate-y-0 opacity-100'}`}>
-              {paypalOn && <button type="button" onClick={changePaymentMethod} className="mb-5 inline-flex items-center gap-2 text-xs font-semibold text-white/45 transition hover:text-white"><ArrowLeft className="size-3.5"/>Change payment method</button>}
-              <div className="mb-5 flex items-center gap-3">
-                <div className="grid size-10 place-items-center rounded-lg border border-primary/30 bg-primary/[.06] text-primary">{activeMethod === 'mpesa' ? <Smartphone className="size-5"/> : <CreditCard className="size-5"/>}</div>
-                <div><p className="text-base font-semibold text-white">{activeMethod === 'mpesa' ? 'M-PESA' : 'PayPal'}</p><p className="text-xs text-white/35">{activeMethod === 'mpesa' ? 'Secure mobile payment' : 'Pay securely with PayPal or card'}</p></div>
+              <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[.03] p-3.5">
+                {activeMethod === 'mpesa' ? <MPesaLogoBadge /> : <PayPalLogoBadge />}
+                {(paypalOn && palplusOn) ? <button type="button" onClick={changePaymentMethod} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/20"><ArrowLeft className="size-3"/>Change</button> : null}
               </div>
 
               {activeMethod === 'mpesa' && <div>
