@@ -310,7 +310,7 @@ function CheckoutRoute() {
         window.parent.postMessage({ type: 'avant-checkout-close' }, '*')
         return
       }
-      const target = (origin || returnTo || '').trim()
+      const target = (returnTo || origin || '').trim()
       // Prefer the explicit origin passed by Avant links. Mobile/preview hosts can
       // insert duplicate checkout entries, making history.back() land on checkout again.
       if (target && target.startsWith('/') && !target.startsWith('//') && !target.startsWith('/checkout/')) {
@@ -322,7 +322,7 @@ function CheckoutRoute() {
         return
       }
       void router.navigate({ to: '/', replace: true })
-    }, 180)
+    }, 340)
   }
 
   const stageCopy = activeMethod === 'paypal' ? (stage === 'sending' ? ['Preparing secure PayPal checkout', 'Creating your PayPal order securely…'] : ['Confirming your PayPal payment', 'Avant unlocks automatically after PayPal confirms.']) : stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
