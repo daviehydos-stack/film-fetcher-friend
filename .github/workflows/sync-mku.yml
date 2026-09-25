@@ -1,0 +1,36 @@
+name: Sync MKU Repository
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-mku-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Push main to MKU repository
+        env:
+          MKU_SYNC_TOKEN: ${{ secrets.MKU_SYNC_TOKEN }}
+        run: |
+          git remote add mku "https://x-access-token:${MKU_SYNC_TOKEN}@github.com/mkustuff/film-fetcher-friend.git"
+          git push mku main:main
