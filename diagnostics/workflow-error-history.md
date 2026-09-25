@@ -6280,3 +6280,22 @@ Lint and production build	Production build	2026-09-25T04:58:29.7295243Z }^[[39m
 Lint and production build	Production build	2026-09-25T04:58:29.8299784Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-25T04:58:29.8316631Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-25T05:00:05Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-25T04:59:40Z","databaseId":36096685689,"displayTitle":"Fix catalogue filter bar overlap","headSha":"1755cd73bd5532960c315abf66ce4bfed2fff0e7","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T05:00:03Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36096685689"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36096685689 is still in progress; logs will be available when it is complete
+~~~
