@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { readMyList, toggleMyList } from "@/lib/my-list";
 import { Button } from "@/components/ui/button";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
-import { publicCatalogue, resolvePlayback, cachedSubscriber, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
+import { publicCatalogue, resolvePlayback, cachedSubscriber, hasVerifiedPurchase, subscribeAccessChanged, type AccessState } from "@/lib/avant-backend";
 import { customerToken } from "@/lib/google-auth";
 import { heroTrailerUrl, pauseEmbeddedPlayer } from "@/lib/video-embeds";
 import { BACKEND_PRODUCT_IDS, productForTitleSlug } from "@/lib/backend-catalogue-map";
@@ -21,14 +21,14 @@ import { StreamingShell } from "./StreamingShell";
 export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const router = useRouter();
   const [relatedPreview,setRelatedPreview]=useState<CatalogueTitle|null>(null);
-  const remembered = readReturnContext();
-  const origin = remembered?.targetSlug===item.slug ? remembered : null;
+  const [origin,setOrigin]=useState<{path:string;scrollY:number}|null>(null);
+  useEffect(()=>{const remembered=readReturnContext();setOrigin(remembered?.targetSlug===item.slug?remembered:null)},[item.slug]);
   const normalizeAppPath = (value:string) => { if (typeof window==="undefined") return value || "/"; const base=String(import.meta.env.BASE_URL||"/").replace(/\/$/,""); let path=String(value||"/"); while(base&&base!=="/"&&path.startsWith(base+base)) path=path.slice(base.length); if(base&&base!=="/"&&path.startsWith(base)) path=path.slice(base.length)||"/"; return path.startsWith("/")?path:"/"+path; };
   const checkoutSearch = { returnTo: `/title/${item.slug}`, origin: normalizeAppPath(origin?.path || `/title/${item.slug}`), originScroll: String(origin?.scrollY || 0) };
   const goBack = () => { if (origin?.path && origin.path !== window.location.pathname) { void router.navigate({ to: origin.path as any }).then(()=>window.setTimeout(()=>window.scrollTo({top:origin.scrollY||0,left:0,behavior:"auto"}),60)); return; } if (typeof window !== "undefined" && window.history.length > 1) { window.history.back(); return; } void router.navigate({ to: "/" }); };
   const [saved, setSaved] = useState(false);
   const [reminded, setReminded] = useState(false);
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState(0);
   const [trailerOpen, setTrailerOpen] = useState(false);
   const [detailExpanded] = useState(true);
   const [heroPreview, setHeroPreview] = useState(false);
@@ -37,7 +37,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const heroUiTimer = useRef<number | null>(null);
   const [heroMuted, setHeroMuted] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
-  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [accessState,setAccessState]=useState<AccessState>(()=>cachedSubscriber()?"authorized":"loading"); const [accessVersion,setAccessVersion]=useState(0);
+  const [liveRelated, setLiveRelated] = useState<CatalogueTitle[]>([]); const [accessState,setAccessState]=useState<AccessState>("loading"); const [accessVersion,setAccessVersion]=useState(0);
   const heroRef = useRef<HTMLElement | null>(null);
   const [heroInView, setHeroInView] = useState(true);
   const episodesRef = useRef<HTMLElement | null>(null);
@@ -66,10 +66,10 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const upcoming=Boolean(premiereAt&&premiereAt.getTime()>Date.now());
   const premiereRemaining=premiereAt?Math.max(0,premiereAt.getTime()-now):0;
   const premiereParts={days:Math.floor(premiereRemaining/86400000),hours:Math.floor(premiereRemaining/3600000)%24,minutes:Math.floor(premiereRemaining/60000)%60,seconds:Math.floor(premiereRemaining/1000)%60};
-  useEffect(()=>{try{const ids=JSON.parse(localStorage.getItem("avant-premiere-reminders")??"[]") as string[];setReminded(ids.includes(item.id))}catch{setReminded(false)}},[item.id]);
+  useEffect(()=>{setNow(Date.now());try{const ids=JSON.parse(localStorage.getItem("avant-premiere-reminders")??"[]") as string[];setReminded(ids.includes(item.id))}catch{setReminded(false)}},[item.id]);
   useEffect(()=>{if(!upcoming)return;const timer=window.setInterval(()=>setNow(Date.now()),1000);return()=>window.clearInterval(timer)},[upcoming,item.releaseAt]);
   useEffect(() => { setSeason(seasons[0] ?? 1); }, [item.id]);
-  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); let live=true; if(freeFullTitle){setAccessState("authorized");return()=>{live=false}} setAccessState("loading"); customerToken(false).then(async token=>{if(!live)return;try{const target=item.type==="movie"?item.slug:(selectedSeasonPrimary?.contentId??`${item.slug}-1`);const a=await resolvePlayback(token,target);if(live)setAccessState(a?.authorized?"authorized":"locked")}catch(e:any){if(live)setAccessState(e?.status===403?"locked":"error")}}); return()=>{live=false}}, [item.id,item.slug,freeFullTitle,accessVersion,season,selectedSeasonPrimary?.contentId]);
+  useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); let live=true; if(freeFullTitle){setAccessState("authorized");return()=>{live=false}} const verifiedLocally=hasVerifiedPurchase(accessProductId)||(item.type==="movie"&&hasVerifiedPurchase(productForTitleSlug(item.slug))); if(verifiedLocally||cachedSubscriber()){setAccessState("authorized");return()=>{live=false}} setAccessState("loading"); customerToken(false).then(async token=>{if(!live)return;try{const target=item.type==="movie"?item.slug:(selectedSeasonPrimary?.contentId??`${item.slug}-1`);const a=await resolvePlayback(token,target);if(live)setAccessState(a?.authorized?"authorized":"locked")}catch(e:any){if(live)setAccessState(e?.status===403?"locked":"error")}}); return()=>{live=false}}, [item.id,item.slug,freeFullTitle,accessVersion,season,accessProductId,selectedSeasonPrimary?.contentId]);
   useEffect(() => {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
