@@ -4,18 +4,12 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36101788895
+Run ID: 36143145494
 
-Generated: 2026-09-25T06:13:49Z
+Generated: 2026-09-25T13:47:22Z
 
 ### Current primary errors
 ~~~text
-Lint and production build	Production build	2026-09-25T06:13:37.3148008Z ^[[31m✗^[[39m Build failed in 2.49s
-Lint and production build	Production build	2026-09-25T06:13:37.3152993Z ^[[31mBuild failed with 1 error:
-Lint and production build	Production build	2026-09-25T06:13:37.3154899Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-25T06:13:37.3156015Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-25T06:13:37.4196518Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-25T06:13:37.4214170Z ##[error]Process completed with exit code 1.
 ~~~
 
 ## Previous + current error history
@@ -6595,4 +6589,23 @@ Lint and production build	Production build	2026-09-25T06:13:37.3164006Z   errors
 Lint and production build	Production build	2026-09-25T06:13:37.3164278Z }^[[39m
 Lint and production build	Production build	2026-09-25T06:13:37.4196518Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-25T06:13:37.4214170Z ##[error]Process completed with exit code 1.
+~~~
+
+---
+
+## Failure recorded 2026-09-25T13:47:22Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-25T13:46:51Z","databaseId":36143145494,"displayTitle":"Move admin workspace to private route","headSha":"272c5eb2148cc00c12bb6f20ed81e1b42fdba5f1","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T13:47:20Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143145494"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143145494 is still in progress; logs will be available when it is complete
 ~~~
