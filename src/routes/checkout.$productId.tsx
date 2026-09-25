@@ -23,6 +23,13 @@ export const Route = createFileRoute('/checkout/$productId')({
 
 type Method = 'mpesa' | 'paypal'
 
+function MPesaLogoBadge() {
+  return <div className="flex items-center gap-3"><div className="flex h-8 w-12 items-center justify-center rounded bg-[#00A859] text-[10px] font-black tracking-wider text-white shadow-sm">M-PESA</div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">Safaricom M-PESA</p><p className="text-[11px] text-white/60">Instant STK Push to Phone</p></div></div>
+}
+function PayPalLogoBadge() {
+  return <div className="flex items-center gap-3"><div className="flex h-8 w-12 items-center justify-center rounded border border-white/20 bg-white text-xs font-black italic shadow-sm"><span className="text-[#003087]">Pay</span><span className="text-[#0079C1]">Pal</span></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">PayPal & Cards</p><p className="text-[11px] text-white/60">Credit / Debit Card / USD</p></div></div>
+}
+
 function CheckoutRoute() {
   const { productId } = Route.useParams()
   const router = useRouter()
@@ -344,13 +351,9 @@ function CheckoutRoute() {
 
             {!methodChosen ? <div className="mt-8 animate-in fade-in duration-300">
               <p className="text-[11px] font-bold uppercase tracking-[.16em] text-white/50">Pay with</p>
-              <div className="mt-3 flex flex-wrap gap-3">
-                {palplusOn && <button type="button" onClick={() => { setMethod('mpesa'); setMethodChosen(true); setError('') }} className="group flex h-[74px] w-[132px] flex-col items-center justify-center rounded-xl border border-white/15 bg-white/[.025] transition duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/[.04]">
-                  <Smartphone className="size-5 text-primary"/><span className="mt-1.5 text-sm font-bold text-white">M-PESA</span>
-                </button>}
-                {paypalOn && <button type="button" onClick={() => { setMethod('paypal'); setMethodChosen(true); setError('') }} className="group flex h-[74px] w-[132px] flex-col items-center justify-center rounded-xl border border-white/15 bg-white/[.025] transition duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/[.04]">
-                  <CreditCard className="size-5 text-primary"/><span className="mt-1.5 text-sm font-bold text-white">PayPal</span>
-                </button>}
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {palplusOn && <button type="button" onClick={() => { setMethod('mpesa'); setMethodChosen(true); setError('') }} className="flex min-h-[72px] items-center justify-between rounded-xl border border-emerald-500/45 bg-emerald-950/20 p-3.5 text-left transition duration-200 hover:border-emerald-400 hover:bg-emerald-950/35"><MPesaLogoBadge/><span className="size-4 rounded-full border border-emerald-400 bg-emerald-500 shadow-[inset_0_0_0_4px_rgba(0,0,0,.35)]"/></button>}
+                {paypalOn && <button type="button" onClick={() => { setMethod('paypal'); setMethodChosen(true); setError('') }} className="flex min-h-[72px] items-center justify-between rounded-xl border border-sky-500/45 bg-sky-950/20 p-3.5 text-left transition duration-200 hover:border-sky-400 hover:bg-sky-950/35"><PayPalLogoBadge/><span className="size-4 rounded-full border border-sky-400 bg-sky-500 shadow-[inset_0_0_0_4px_rgba(0,0,0,.35)]"/></button>}
               </div>
               <p className="mt-4 text-xs text-white/30">Choose a payment method to continue.</p>
             </div> : <div className={`mt-8 transition-all duration-200 ${switchingMethod ? 'translate-y-1 opacity-0' : 'translate-y-0 opacity-100'}`}>
