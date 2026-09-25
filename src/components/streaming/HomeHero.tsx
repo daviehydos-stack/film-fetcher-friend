@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { freeContentId, isFreeTitle } from "@/lib/catalogue";
-import { productForTitleSlug } from "@/lib/backend-catalogue-map";
+import { productForTitleSlug, productForLegacyContent } from "@/lib/backend-catalogue-map";
+import { hasVerifiedPurchase } from "@/lib/avant-backend";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
 import { optimizedArtwork } from "@/lib/episodes";
 import { claimMedia, stopAllMedia } from "@/lib/media-session";
@@ -55,6 +56,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         live = false;
       };
     }
+    try { const pid = productForLegacyContent(key) ?? productForTitleSlug(item.slug); if (pid && hasVerifiedPurchase(pid)) { setAccessState("authorized"); return () => { live = false; }; } } catch {}
     setAccessState("loading");
     customerToken(false).then(async (token) => {
       if (!live) return;
@@ -116,7 +118,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (travelMode || !isFast || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+    if (travelMode || (!isFast && !screen.matches) || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
     const startTrailer = () => setTrailerReady(true);

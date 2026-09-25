@@ -54,7 +54,7 @@ async function issueAndEmail(c: any, id: string, resend = false) {
   else {
     const { data: product } = await c.from("access_products").select("name").eq("id", pay.product_id).maybeSingle();
     const name = String(product?.name || "Avant Movies");
-    const site = Deno.env.get("SITE_URL") || "https://film-fetcher-friend.lovable.app";
+    const site = Deno.env.get("SITE_URL") || "https://www.avantcinematic.com";
     const idem = resend ? `access-code-${pay.id}-r${Math.floor(Date.now() / 60000)}` : `access-code-${pay.id}`;
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
