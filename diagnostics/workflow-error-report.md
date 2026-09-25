@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 36143352566
 
-Generated: 2026-09-25T13:49:31Z
+Generated: 2026-09-25T13:49:56Z
 
 ### Current primary errors
 ~~~text
@@ -6734,6 +6734,25 @@ Lint and production build	Production build	2026-09-25T13:48:52.4230631Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-25T13:48:48Z","databaseId":36143352566,"displayTitle":"Harden production security headers and sensitive routes","headSha":"30966d510b08e68d4efecdd5b92879f4a6fc4b7a","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":108098523254,"name":"Lint and production build","startedAt":"2026-09-25T13:49:28Z","status":"in_progress","steps":[{"completedAt":"2026-09-25T13:49:30Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-25T13:49:28Z","status":"completed"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Checkout","number":2,"startedAt":"2026-09-25T13:49:30Z","status":"in_progress"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Setup Bun","number":3,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Install dependencies","number":4,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Production build","number":5,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Checkout","number":10,"startedAt":"0001-01-01T00:00:00Z","status":"pending"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143352566/job/108098523254"}],"name":"Avant Movies CI","status":"in_progress","updatedAt":"2026-09-25T13:49:28Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143352566"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143352566 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-25T13:49:56Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-25T13:48:48Z","databaseId":36143352566,"displayTitle":"Harden production security headers and sensitive routes","headSha":"30966d510b08e68d4efecdd5b92879f4a6fc4b7a","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-25T13:49:55Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143352566"}
 
 ~~~
 
