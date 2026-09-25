@@ -47,9 +47,7 @@ try {
   const response = await fetch(`${supabaseUrl}/functions/v1/catalogue-public`);
   if (response.ok) {
     const body = await response.json();
-    const titles = (body?.titles || []).filter(
-      (title) => ["published", "scheduled"].includes(title?.status) && title?.slug,
-    );
+    const titles = (body?.titles || []).filter((title) => title?.status === "published" && title?.slug && (!title?.scheduled_publish_at || new Date(title.scheduled_publish_at).getTime() <= Date.now()));
 
     for (const title of titles) {
       const path = `/title/${title.slug}`;
@@ -82,11 +80,11 @@ try {
           if (!r.ok) return [];
           const d = await r.json();
           return (d?.episodes || [])
-            .filter((episode) => ["published", "scheduled"].includes(episode?.status))
+            .filter((episode) => episode?.status === "published" && (!episode.visible_from || new Date(episode.visible_from).getTime() <= Date.now()))
             .sort((a, b) => (a.episode_number || 0) - (b.episode_number || 0))
             .map((episode, index) => {
               const episodeKey = episode.legacy_key || episode.id || `${title.slug}-${index + 1}`;
-              const episodePath = `/watch/${episodeKey}`;
+              const episodePath = `/episode/${title.slug}/${Number(episode.episode_number) || index + 1}`;
               const episodeThumb = episode.thumbnail_url || title.backdrop_url || title.poster_url;
               const episodePlayer = episode.vimeo_video_id
                 ? `https://player.vimeo.com/video/${episode.vimeo_video_id}`
