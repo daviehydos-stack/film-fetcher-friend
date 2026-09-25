@@ -29,7 +29,7 @@ export function TitlePreviewModal({item,onClose}:{item:CatalogueTitle;onClose:()
  const openTitle=()=>{rememberReturnContext("catalogue",item.slug);requestClose()};
  const requestClose=()=>{if(closing)return;pauseEmbeddedPlayer(frameRef.current);stopAllMedia();setClosing(true);window.setTimeout(onClose,220)};
  const toggleSaved=async()=>{const token=await customerToken(false);if(!token){try{await requireCustomerToken()}catch{return}}setSaved(toggleMyList(item.id).includes(item.id))};
- const start=0,end=60; const [fallbackCycle,setFallbackCycle]=useState(0); const resumeAtRef=useRef(0);
+ const start=0,end=60; const [fallbackCycle,setFallbackCycle]=useState(0); const resumeAtRef=useRef(0); const previewBaseRef=useRef<number|null>(null);
  const dedicatedPreview=item.trailerEmbedUrl||item.previewVimeoId;
  const fallbackVimeo=item.type==="movie"?item.vimeoVideoId:item.episodes?.[0]?.vimeoVideoId;
  const fallbackPreview=!dedicatedPreview&&fallbackVimeo;
