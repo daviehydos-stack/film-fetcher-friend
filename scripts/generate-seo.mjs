@@ -148,6 +148,7 @@ const robots = [
   `Allow: ${prefixed("/")}`,
   "",
   `Sitemap: ${productionOrigin}/sitemap.xml`,
+  `Sitemap: ${productionOrigin}/pages-sitemap.xml`,
   `Sitemap: ${productionOrigin}/video-sitemap.xml`,
   `Sitemap: ${productionOrigin}/image-sitemap.xml`,
   "",
@@ -188,8 +189,12 @@ const videoUrls = [...videoEntries.entries()].map(([path, video]) => {
 writeFileSync("public/video-sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n${videoUrls}\n</urlset>\n`);
 
 writeFileSync(
-  "public/sitemap.xml",
+  "public/pages-sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
 );
+writeFileSync(
+  "public/sitemap.xml",
+  `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${escapeXml(productionOrigin)}/pages-sitemap.xml</loc></sitemap>\n  <sitemap><loc>${escapeXml(productionOrigin)}/video-sitemap.xml</loc></sitemap>\n  <sitemap><loc>${escapeXml(productionOrigin)}/image-sitemap.xml</loc></sitemap>\n</sitemapindex>\n`,
+);
 
-console.log(`SEO: generated robots.txt, sitemap.xml, video-sitemap.xml and image-sitemap.xml for ${productionOrigin} (${entries.size} URLs, ${videoEntries.size} videos, ${imageEntries.size} image pages).`);
+console.log(`SEO: generated robots.txt, sitemap index, pages-sitemap.xml, video-sitemap.xml and image-sitemap.xml for ${productionOrigin} (${entries.size} URLs, ${videoEntries.size} videos, ${imageEntries.size} image pages).`);
