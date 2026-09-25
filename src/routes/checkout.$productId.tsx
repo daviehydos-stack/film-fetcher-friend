@@ -28,8 +28,16 @@ function CheckoutRoute() {
   const router = useRouter()
   const [checkoutQuery] = useState(() => typeof window === 'undefined' ? { embedded: false, returnTo: '', origin: '/movies', originScroll: 0 } : (() => {
     const query = new URLSearchParams(window.location.search)
-    const returnTo = query.get('returnTo') || ''
-    return { embedded: query.get('embedded') === '1', returnTo, origin: query.get('origin') || returnTo || '/movies', originScroll: Number(query.get('originScroll') || 0) }
+    const base = String(import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+    const normalizePath = (value: string) => {
+      let path = String(value || '')
+      while (base && base !== '/' && path.startsWith(base + base)) path = path.slice(base.length)
+      if (base && base !== '/' && path.startsWith(base)) path = path.slice(base.length) || '/'
+      return path && path.startsWith('/') ? path : path ? '/' + path : ''
+    }
+    const returnTo = normalizePath(query.get('returnTo') || '')
+    const rawOrigin = query.get('origin') || returnTo || '/movies'
+    return { embedded: query.get('embedded') === '1', returnTo, origin: normalizePath(rawOrigin) || '/movies', originScroll: Number(query.get('originScroll') || 0) }
   })())
   const { embedded, returnTo, origin, originScroll } = checkoutQuery
   const [email, setEmail] = useState('')
