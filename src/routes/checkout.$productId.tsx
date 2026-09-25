@@ -23,11 +23,30 @@ export const Route = createFileRoute('/checkout/$productId')({
 
 type Method = 'mpesa' | 'paypal'
 
+function MPesaMark() {
+  return (
+    <svg viewBox="0 0 120 40" className="h-full w-full" role="img" aria-label="M-PESA">
+      <rect width="120" height="40" rx="6" fill="#4CAF50" />
+      <text x="60" y="21" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="17" fontWeight="800" fill="#ffffff" letterSpacing="0.5">M-PESA</text>
+      <text x="60" y="33" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="8" fontWeight="600" fill="#e8f5e9" letterSpacing="2">SAFARICOM</text>
+    </svg>
+  )
+}
+function PayPalMark() {
+  return (
+    <svg viewBox="0 0 120 40" className="h-full w-full" role="img" aria-label="PayPal">
+      <rect width="120" height="40" rx="6" fill="#ffffff" />
+      <path d="M30.5 9h10.2c4.6 0 7.6 2.8 7.6 7 0 5.4-4 8.4-8.9 8.4h-3.2l-1.2 6.6h-5.6L30.5 9zm6 10.4h2.2c2.2 0 3.6-1.3 3.6-3.4 0-1.9-1.3-3-3.2-3h-2.9l-.8 6.4z" fill="#003087" />
+      <path d="M47.5 12h10.2c4.6 0 7.6 2.8 7.6 7 0 5.4-4 8.4-8.9 8.4h-3.2l-1.2 6.6h-5.6L47.5 12zm6 10.4h2.2c2.2 0 3.6-1.3 3.6-3.4 0-1.9-1.3-3-3.2-3h-2.9l-.8 6.4z" fill="#0079C1" opacity="0.85" />
+      <text x="92" y="26" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="15" fontWeight="800" fontStyle="italic"><tspan fill="#003087">Pay</tspan><tspan fill="#0079C1">Pal</tspan></text>
+    </svg>
+  )
+}
 function MPesaLogoBadge() {
-  return <div className="flex items-center gap-3"><div className="flex h-10 w-[76px] shrink-0 items-center justify-center rounded-md bg-white px-2 py-1"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/M-PESA%20LOGO-01.svg" alt="M-PESA" className="h-full w-full object-contain" loading="eager" decoding="async" /></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">Safaricom M-PESA</p><p className="text-[11px] text-white/60">Instant STK Push to Phone</p></div></div>
+  return <div className="flex items-center gap-3"><div className="flex h-10 w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-md"><MPesaMark /></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">Safaricom M-PESA</p><p className="text-[11px] text-white/60">Instant STK Push to Phone</p></div></div>
 }
 function PayPalLogoBadge() {
-  return <div className="flex items-center gap-3"><div className="flex h-10 w-[76px] shrink-0 items-center justify-center rounded-md bg-white px-2 py-1"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/PayPal%20logo.svg" alt="PayPal" className="h-full w-full object-contain" loading="eager" decoding="async" /></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">PayPal & Cards</p><p className="text-[11px] text-white/60">Credit / Debit Card / USD</p></div></div>
+  return <div className="flex items-center gap-3"><div className="flex h-10 w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-md"><PayPalMark /></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">PayPal & Cards</p><p className="text-[11px] text-white/60">Credit / Debit Card / USD</p></div></div>
 }
 
 function CheckoutRoute() {
