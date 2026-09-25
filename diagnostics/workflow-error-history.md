@@ -6483,3 +6483,22 @@ Lint and production build	Production build	2026-09-25T06:09:50.0760943Z }^[[39m
 Lint and production build	Production build	2026-09-25T06:09:50.1778256Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-25T06:09:50.1794958Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-25T06:12:23Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-25T06:11:52Z","databaseId":36101788895,"displayTitle":"Fix router instance in deep-link recovery","headSha":"ddf548888f5e2055dd75a2ce520ca5b33bbb074c","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T06:12:22Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36101788895"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36101788895 is still in progress; logs will be available when it is complete
+~~~
