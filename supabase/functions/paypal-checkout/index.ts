@@ -60,9 +60,9 @@ async function issueAndEmail(c: any, id: string, resend = false) {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": idem },
       body: JSON.stringify({
-        from, to: [email], subject: "Your Avant Cinema access code",
-        text: `Your payment for ${name} is confirmed.\n\nAccess code: ${accessCode}\nReference: ${pay.reference}\n\nWatch now: ${site}/account`,
-        html: `<div style="font-family:Arial,sans-serif;background:#ffffff;padding:24px;color:#111"><h2 style="margin:0 0 8px">Access unlocked</h2><p>Your payment for <b>${esc(name)}</b> is confirmed.</p><p style="font-size:12px;color:#666;margin:18px 0 4px">ACCESS CODE</p><p style="font-family:monospace;font-size:24px;font-weight:bold;letter-spacing:3px;background:#f3f3f3;padding:12px 16px;border-radius:8px;display:inline-block">${accessCode}</p><p style="font-size:12px;color:#666">Reference: ${esc(String(pay.reference))}</p><p><a href="${site}/account" style="background:#111;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">Watch now</a></p></div>`,
+        from, to: [email], subject: `Your Avant Cinema Access Code — ${name}`,
+        text: `Your payment for ${name} is confirmed.\n\nAccess code: ${accessCode}\nReference: ${pay.reference}\n\nWatch now: ${site}/account?code=${accessCode}`,
+        html: `<div style="font-family:Arial,sans-serif;background:#ffffff;padding:24px;color:#111"><h2 style="margin:0 0 8px">Access unlocked</h2><p>Your payment for <b>${esc(name)}</b> is confirmed.</p><p style="font-size:12px;color:#666;margin:18px 0 4px">ACCESS CODE</p><p style="font-family:monospace;font-size:24px;font-weight:bold;letter-spacing:3px;background:#f3f3f3;padding:12px 16px;border-radius:8px;display:inline-block">${accessCode}</p><p style="font-size:12px;color:#666">Reference: ${esc(String(pay.reference))}</p><p><a href="${site}/account?code=${accessCode}" style="background:#111;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">Start Watching Now</a></p></div>`,
       }),
     });
     const out = await res.text();
