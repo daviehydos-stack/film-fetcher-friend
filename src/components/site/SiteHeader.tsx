@@ -162,7 +162,7 @@ export function SiteHeader() {
             </Link>
           </>) : null}
           {customer && isAdminEmail(customer?.email) ? <Link
-              to="/admin"
+              to="/studio-vault-7k9"
               className="inline-flex min-h-10 items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-2 text-xs font-black text-primary hover:bg-primary/20"
             >
               Admin
@@ -263,7 +263,7 @@ export function SiteHeader() {
             </button>
           )}
           {customer && isAdminEmail(customer?.email) ? <Link
-              to="/admin"
+              to="/studio-vault-7k9"
               onClick={() => setOpen(false)}
               className="mt-2 flex min-h-12 items-center rounded-md border border-primary/20 bg-primary/10 px-3 font-black text-primary"
             >
