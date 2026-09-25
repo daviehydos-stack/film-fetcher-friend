@@ -225,9 +225,11 @@ function RootComponent() {
     let safePath = deepLink.startsWith("/") ? deepLink : "/" + deepLink;
     while (base && base !== "/" && safePath.startsWith(base + base)) safePath = safePath.slice(base.length);
     if (base && base !== "/" && safePath.startsWith(base)) safePath = safePath.slice(base.length) || "/";
-    window.history.replaceState({}, "", base + safePath);
-    window.dispatchEvent(new PopStateEvent("popstate"));
-  }, []);
+    const clean = new URL(window.location.href);
+    clean.searchParams.delete("__spa");
+    window.history.replaceState({}, "", clean.pathname + clean.search + clean.hash);
+    void router.navigate({ to: safePath as any, replace: true });
+  }, [router]);
   useEffect(() => {
     if (typeof window === "undefined") return;
     const key = "avant_scroll:" + location.pathname + window.location.search;
