@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36143181028
+Run ID: 36143145494
 
-Generated: 2026-09-25T13:47:42Z
+Generated: 2026-09-25T13:48:01Z
 
 ### Current primary errors
 ~~~text
@@ -6627,4 +6627,23 @@ run 36143145494 is still in progress; logs will be available when it is complete
 ### Full failed-step log
 ~~~text
 run 36143181028 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-25T13:48:01Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-25T13:46:51Z","databaseId":36143145494,"displayTitle":"Move admin workspace to private route","headSha":"272c5eb2148cc00c12bb6f20ed81e1b42fdba5f1","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T13:47:59Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143145494"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143145494 is still in progress; logs will be available when it is complete
 ~~~
