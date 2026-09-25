@@ -1,8 +1,8 @@
 const SUPABASE_URL="https://bnuyhrsezkepsaebwlmu.supabase.co";
 const SUPABASE_ANON_KEY=import.meta.env["VITE_SUPABASE_ANON_KEY"]||import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"]||"sb_publishable_B3mlx-n0maE2rSIusRZmKw_ITK6QUeo";
-export const ADMIN_EMAILS=["hydrocephcare@gmail.com"] as const;
-export const ADMIN_EMAIL=ADMIN_EMAILS[0];
-export function isAdminEmail(email?:string|null){return ADMIN_EMAILS.includes(String(email||"").trim().toLowerCase() as typeof ADMIN_EMAILS[number])}
+export const ADMIN_EMAIL="";
+/** Client-side admin hints are not authorization. The backend admin-session endpoint is the source of truth. */
+export function isAdminEmail(_email?:string|null){return true}
 export type AdminSession={admin:boolean;role?:string;requireMfa?:boolean;email?:string;reason?:string};
 export function getAdminToken(){return typeof window==="undefined"?null:window.sessionStorage.getItem("avant_admin_token")}
 export function setAdminToken(token:string|null){if(typeof window==="undefined")return;token?window.sessionStorage.setItem("avant_admin_token",token):window.sessionStorage.removeItem("avant_admin_token")}
@@ -94,7 +94,7 @@ export const adminAssistant=(token:string,payload:Record<string,unknown>)=>reque
 // verified payment usable on the buyer's device while the server-side
 // entitlement propagates (guest checkout, slow reconciliation, refreshes).
 const PURCHASE_KEY="avant_verified_purchases_v1";
-export type VerifiedPurchase={productId:string;reference:string;accessCode?:string;at:number};
+export type VerifiedPurchase={productId:string;reference:string;at:number};
 export function readVerifiedPurchases():VerifiedPurchase[]{if(typeof window==="undefined")return[];try{const raw=localStorage.getItem(PURCHASE_KEY);const list=raw?JSON.parse(raw):[];return Array.isArray(list)?list.filter((x:any)=>x&&typeof x.productId==="string"):[]}catch{return[]}}
-export function recordVerifiedPurchase(entry:{productId?:string|null;reference?:string|null;accessCode?:string|null}){if(typeof window==="undefined")return;const productId=String(entry.productId||"").trim();if(!productId)return;const list=readVerifiedPurchases().filter(x=>x.productId!==productId);list.push({productId,reference:String(entry.reference||""),...(entry.accessCode?{accessCode:String(entry.accessCode)}:{}),at:Date.now()});try{localStorage.setItem(PURCHASE_KEY,JSON.stringify(list.slice(-50)))}catch{}}
+export function recordVerifiedPurchase(entry:{productId?:string|null;reference?:string|null;accessCode?:string|null}){if(typeof window==="undefined")return;const productId=String(entry.productId||"").trim();if(!productId)return;const list=readVerifiedPurchases().filter(x=>x.productId!==productId);list.push({productId,reference:String(entry.reference||""),at:Date.now()});try{localStorage.setItem(PURCHASE_KEY,JSON.stringify(list.slice(-50)))}catch{}}
 export function hasVerifiedPurchase(productId?:string|null){const id=String(productId||"").trim();if(!id)return false;return readVerifiedPurchases().some(x=>x.productId===id)}
