@@ -6,9 +6,8 @@ const isGitHubPages = process.env["GITHUB_PAGES"] === "true";
 
 export default defineConfig({
   vite: {
-    // GitHub project Pages is served below /film-fetcher-friend/.
-    // Production server deployments continue to use the normal root base.
-    base: isGitHubPages ? "/film-fetcher-friend/" : "/",
+    // Custom-domain GitHub Pages is served from the root.
+    base: "/",
     build: {
       cssCodeSplit: true,
       sourcemap: false,
