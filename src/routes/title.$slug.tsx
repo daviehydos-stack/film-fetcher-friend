@@ -11,8 +11,8 @@ export const Route = createFileRoute("/title/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const path = `/title/${loaderData.slug}`;
-    const title = (loaderData as any).seoTitle || `${loaderData.title} — Kenyan ${loaderData.type === "movie" ? "Film" : "TV Series"} | Avant Movies`;
-    const fallbackDescription = `Watch ${loaderData.title} on Avant Movies — an independent Kenyan ${loaderData.type === "movie" ? "film" : "series"}${loaderData.genres?.length ? ` in ${loaderData.genres.slice(0, 2).join(" and ")}` : ""}. Explore the story, cast, trailer and streaming details.`;
+    const title = (loaderData as any).seoTitle || `${loaderData.title} | Watch Kenyan ${loaderData.type === "movie" ? "Movie" : "Series"} Online | Avant Cinema`;
+    const fallbackDescription = `Watch ${loaderData.title} online on Avant Cinema, a Kenyan ${loaderData.type === "movie" ? "movie" : "series"}${loaderData.genres?.length ? ` in ${loaderData.genres.slice(0, 2).join(" and ")}` : ""}. Explore the story, cast, trailer, episodes and streaming details.`;
     const rawDescription = (loaderData as any).metaDescription || loaderData.shortDescription || loaderData.synopsis || fallbackDescription;
     const cleanDescription = String(rawDescription).replace(/\s+/g, " ").trim();
     const description = cleanDescription.length >= 70 ? cleanDescription.slice(0, 157).replace(/\s+\S*$/, "") + (cleanDescription.length > 157 ? "…" : "") : `${cleanDescription.replace(/[. ]+$/, "")}. ${fallbackDescription}`.slice(0, 160);
@@ -31,12 +31,12 @@ export const Route = createFileRoute("/title/$slug")({
             description,
             primaryImageOfPage: loaderData.backdrop || loaderData.artwork ? { "@type": "ImageObject", url: loaderData.backdrop || loaderData.artwork } : undefined,
             mainEntity: { "@id": `${absoluteUrl(path)}#title` },
-            isPartOf: { "@type": "WebSite", name: "Avant Movies", url: absoluteUrl("/") },
+            isPartOf: { "@type": "WebSite", name: "Avant Cinema", url: absoluteUrl("/") },
           },
           {
             "@type": "BreadcrumbList",
             itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Avant Movies", item: absoluteUrl("/") },
+              { "@type": "ListItem", position: 1, name: "Avant Cinema", item: absoluteUrl("/") },
               { "@type": "ListItem", position: 2, name: loaderData.type === "movie" ? "Movies" : "TV Shows", item: absoluteUrl(loaderData.type === "movie" ? "/movies" : "/tv-shows") },
               { "@type": "ListItem", position: 3, name: loaderData.title, item: absoluteUrl(path) },
             ],
