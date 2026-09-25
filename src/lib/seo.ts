@@ -117,11 +117,11 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     thumbnailUrl: [input.thumbnailUrl || (input.youtubeId ? youtubeThumbnail(input.youtubeId) : undefined)].filter(Boolean),
     ...(uploadDate ? { uploadDate } : {}),
     ...(embedUrl ? { embedUrl } : {}),
-    ...(pageUrl ? { url: pageUrl, mainEntityOfPage: pageUrl } : {}),
+    ...(pageUrl ? { url: pageUrl, mainEntityOfPage: pageUrl, potentialAction: { "@type": "WatchAction", target: pageUrl } } : {}),
     ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
     ...(input.episodeNumber ? { episodeNumber: input.episodeNumber } : {}),
     ...(input.seriesName ? { partOfSeries: { "@type": "TVSeries", name: input.seriesName, ...(input.seriesPath && absoluteUrl(input.seriesPath) ? { url: absoluteUrl(input.seriesPath) } : {}) } } : {}),
-    publisher: { "@type": "Organization", name: SEO_SITE_NAME },
+    publisher: { "@type": "Organization", name: SEO_SITE_NAME, ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}) },
   };
 }
 
