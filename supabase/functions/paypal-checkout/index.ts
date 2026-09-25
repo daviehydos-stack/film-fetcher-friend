@@ -53,14 +53,14 @@ async function issueAndEmail(c: any, id: string, resend = false) {
   else if (!apiKey || !from) emailError = "resend_not_configured";
   else {
     const { data: product } = await c.from("access_products").select("name").eq("id", pay.product_id).maybeSingle();
-    const name = String(product?.name || "Avant Movies");
+    const name = String(product?.name || "Avant Cinema");
     const site = Deno.env.get("SITE_URL") || "https://www.avantcinematic.com";
     const idem = resend ? `access-code-${pay.id}-r${Math.floor(Date.now() / 60000)}` : `access-code-${pay.id}`;
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": idem },
       body: JSON.stringify({
-        from, to: [email], subject: "Your Avant Movies access code",
+        from, to: [email], subject: "Your Avant Cinema access code",
         text: `Your payment for ${name} is confirmed.\n\nAccess code: ${accessCode}\nReference: ${pay.reference}\n\nWatch now: ${site}/account`,
         html: `<div style="font-family:Arial,sans-serif;background:#ffffff;padding:24px;color:#111"><h2 style="margin:0 0 8px">Access unlocked</h2><p>Your payment for <b>${esc(name)}</b> is confirmed.</p><p style="font-size:12px;color:#666;margin:18px 0 4px">ACCESS CODE</p><p style="font-family:monospace;font-size:24px;font-weight:bold;letter-spacing:3px;background:#f3f3f3;padding:12px 16px;border-radius:8px;display:inline-block">${accessCode}</p><p style="font-size:12px;color:#666">Reference: ${esc(String(pay.reference))}</p><p><a href="${site}/account" style="background:#111;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">Watch now</a></p></div>`,
       }),
@@ -122,7 +122,7 @@ Deno.serve(async (r) => {
         throw error;
       }
 
-      const rr = await fetch(`${pp.base}/v2/checkout/orders`, { method: "POST", headers: { Authorization: "Bearer " + pp.token, "Content-Type": "application/json", "PayPal-Request-Id": idem }, body: JSON.stringify({ intent: "CAPTURE", purchase_units: [{ reference_id: reference, custom_id: pay.id, description: String(p.name || "Avant Movies access").slice(0, 127), amount: { currency_code: paypalCurrency, value: (paypalMinor / 100).toFixed(2) } }] }) });
+      const rr = await fetch(`${pp.base}/v2/checkout/orders`, { method: "POST", headers: { Authorization: "Bearer " + pp.token, "Content-Type": "application/json", "PayPal-Request-Id": idem }, body: JSON.stringify({ intent: "CAPTURE", purchase_units: [{ reference_id: reference, custom_id: pay.id, description: String(p.name || "Avant Cinema access").slice(0, 127), amount: { currency_code: paypalCurrency, value: (paypalMinor / 100).toFixed(2) } }] }) });
       const x = await rr.json().catch(() => ({}));
       if (!rr.ok || !x.id) {
         await c.from("payments").update({ status: "failed", failure_reason: "PayPal order creation failed" }).eq("id", pay.id);
