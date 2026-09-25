@@ -216,6 +216,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
+  const router = useRouter();
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -225,7 +226,7 @@ function RootComponent() {
     let safePath = deepLink.startsWith("/") ? deepLink : "/" + deepLink;
     while (base && base !== "/" && safePath.startsWith(base + base)) safePath = safePath.slice(base.length);
     if (base && base !== "/" && safePath.startsWith(base)) safePath = safePath.slice(base.length) || "/";
-    window.history.replaceState({}, "", base + safePath);
+    router.history.replace(safePath);
   }, []);
   useEffect(() => {
     if (typeof window === "undefined") return;
