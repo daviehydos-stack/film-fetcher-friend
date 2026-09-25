@@ -226,7 +226,6 @@ function RootComponent() {
     while (base && base !== "/" && safePath.startsWith(base + base)) safePath = safePath.slice(base.length);
     if (base && base !== "/" && safePath.startsWith(base)) safePath = safePath.slice(base.length) || "/";
     window.history.replaceState({}, "", base + safePath);
-    window.dispatchEvent(new PopStateEvent("popstate"));
   }, []);
   useEffect(() => {
     if (typeof window === "undefined") return;
