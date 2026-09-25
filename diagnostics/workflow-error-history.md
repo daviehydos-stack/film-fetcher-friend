@@ -6356,3 +6356,22 @@ run 36101512478 is still in progress; logs will be available when it is complete
 ~~~text
 run 36101491893 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-25T06:09:22Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-25T06:08:01Z","databaseId":36101512478,"displayTitle":"Redirect series watch routes to first playable episode","headSha":"806022cf366d9fc07aef563d8f07bb03958f4069","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T06:09:21Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36101512478"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36101512478 is still in progress; logs will be available when it is complete
+~~~
