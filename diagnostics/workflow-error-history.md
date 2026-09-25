@@ -6202,3 +6202,22 @@ Lint and production build	Production build	2026-09-24T18:56:18.6869858Z }^[[39m
 Lint and production build	Production build	2026-09-24T18:56:18.6870203Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-24T18:56:18.6884425Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-25T04:58:18Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-25T04:56:43Z","databaseId":36096497791,"displayTitle":"Fix A Better Life season access and episode counts","headSha":"70c4fabd36f3c2d28c184d5441c8c9828b31a1d0","jobs":[{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","databaseId":107950039085,"name":"Lint and production build","startedAt":"2026-09-25T04:58:15Z","status":"in_progress","steps":[{"completedAt":"2026-09-25T04:58:16Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-25T04:58:16Z","status":"completed"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Checkout","number":2,"startedAt":"2026-09-25T04:58:16Z","status":"in_progress"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Setup Bun","number":3,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Install dependencies","number":4,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Production build","number":5,"startedAt":"0001-01-01T00:00:00Z","status":"pending"},{"completedAt":"0001-01-01T00:00:00Z","conclusion":"","name":"Post Checkout","number":10,"startedAt":"0001-01-01T00:00:00Z","status":"pending"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36096497791/job/107950039085"}],"name":"Avant Movies CI","status":"in_progress","updatedAt":"2026-09-25T04:58:16Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36096497791"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36096497791 is still in progress; logs will be available when it is complete
+~~~
