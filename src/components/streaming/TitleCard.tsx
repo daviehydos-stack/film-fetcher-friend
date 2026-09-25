@@ -29,6 +29,18 @@ export function TitleCard({
   const [saved, setSaved] = useState(() => readMyList().includes(item.id));
   const [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
   const cardRef = useRef<HTMLElement | null>(null);
+  const hoverTimerRef = useRef<number | null>(null);
+  const [showHoverVideo, setShowHoverVideo] = useState(false);
+  const hoverVimeoId = item.previewVimeoId || item.vimeoVideoId || item.episodes?.[0]?.vimeoVideoId;
+  const startHoverPreview = () => {
+    if (!hoverVimeoId || travelMode || hoverTimerRef.current) return;
+    hoverTimerRef.current = window.setTimeout(() => { setShowHoverVideo(true); hoverTimerRef.current = null; }, 1800);
+  };
+  const stopHoverPreview = () => {
+    if (hoverTimerRef.current) window.clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = null;
+    setShowHoverVideo(false);
+  };
   const detailsButtonRef = useRef<HTMLButtonElement | null>(null);
   const firstEpisode = item.episodes?.[0];
   const freeFullTitle = isFreeTitle(item);
@@ -42,7 +54,9 @@ export function TitleCard({
 
   useEffect(() => {
     setImageLoaded(false);
-  }, [activeImage]);
+    stopHoverPreview();
+  }, [activeImage, item.id]);
+  useEffect(() => () => { if (hoverTimerRef.current) window.clearTimeout(hoverTimerRef.current); }, []);
 
   useEffect(() => {
     const sync = (e: any) => setTravelMode(e.detail.active);
@@ -62,6 +76,11 @@ export function TitleCard({
   return (
     <article
       ref={cardRef}
+      onMouseEnter={startHoverPreview}
+      onMouseLeave={stopHoverPreview}
+      onTouchStart={startHoverPreview}
+      onTouchEnd={stopHoverPreview}
+      onTouchMove={stopHoverPreview}
       className={
         layout === "grid"
           ? "group relative z-0 w-full min-w-0 md:hover:z-30"
@@ -93,6 +112,7 @@ export function TitleCard({
               <span className="mt-3 block text-[10px] font-semibold uppercase tracking-[.16em] text-white/45">{item.type === "series" ? "Original Series" : "Original Film"}</span>
             </div>
           </div>}
+          {showHoverVideo && hoverVimeoId ? <div className="pointer-events-none absolute inset-0 z-[5] bg-black animate-in fade-in duration-500"><iframe src={`https://player.vimeo.com/video/${hoverVimeoId}?autoplay=1&muted=1&controls=0&loop=1&autopause=0&playsinline=1&dnt=1`} title={`${item.title} preview`} className="absolute left-1/2 top-1/2 h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay; encrypted-media; picture-in-picture" tabIndex={-1}/><span className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/15"/></div> : null}
           {badgeLabel || item.featured || travelMode ? (
             <span className={`absolute left-2.5 top-2.5 rounded-sm px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-reel ${travelMode ? "bg-blue-600" : (item.featured ? "bg-amber-500" : "bg-primary")}`}>
               {(travelMode && "Data Saver") || (item.featured && "Featured") || badgeLabel}
