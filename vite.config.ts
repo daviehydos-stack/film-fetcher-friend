@@ -40,6 +40,7 @@ export default defineConfig({
             autoSubfolderIndex: true,
             filter: ({ path }: { path: string }) =>
               !path.startsWith("/admin") &&
+              !path.startsWith("/studio-vault-7k9") &&
               !path.startsWith("/checkout/") &&
               !path.startsWith("/payment/") &&
               !path.startsWith("/watch/") &&
