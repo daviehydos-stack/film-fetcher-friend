@@ -230,8 +230,13 @@ function RootComponent() {
   }, []);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // New route = new page: always begin at the top. Browser back/forward may restore naturally.
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    const key = "avant_scroll:" + location.pathname + window.location.search;
+    const restore = sessionStorage.getItem(key);
+    const onScroll = () => sessionStorage.setItem(key, String(Math.round(window.scrollY || 0)));
+    if (restore !== null) window.requestAnimationFrame(() => window.scrollTo({ top: Number(restore) || 0, left: 0, behavior: "auto" }));
+    else window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { onScroll(); window.removeEventListener("scroll", onScroll); };
   }, [location.pathname]);
   useEffect(() => { let dead=false; let timer:number|undefined; const sync=async()=>{const token=await customerToken(false);if(dead)return;if(!token){rememberSubscriber(false);return}try{const a=await accountAccess(token);if(!dead)rememberSubscriber(Boolean(a.subscriber))}catch{}};timer=window.setTimeout(()=>void sync(),1800);const off=subscribeAccessChanged(()=>void sync());return()=>{dead=true;if(timer)window.clearTimeout(timer);off()}; }, []);
   useEffect(() => {
