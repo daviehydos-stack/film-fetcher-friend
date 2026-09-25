@@ -1,9 +1,9 @@
 name: Deploy GitHub Pages
 
 on:
-  # Rebuild the GitHub Pages site whenever main changes.
   push:
-    branches: ["main"]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -12,8 +12,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: avant-main-pipeline
-  cancel-in-progress: false
+  group: github-pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -22,28 +22,26 @@ jobs:
     env:
       GITHUB_PAGES: "true"
     steps:
-      - name: Checkout validated commit
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.sha }}
+      - name: Checkout main
+        uses: actions/checkout@v4
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - name: Install dependencies
-        run: bun install
-      - name: Stamp preview build
-        run: printf '{"sha":"%s"}\n' "$(git rev-parse HEAD)" > public/version.json
-      - name: Build static TanStack preview
+        run: bun install --frozen-lockfile
+      - name: Stamp deployed version
+        run: printf '{"sha":"%s"}\n' "$GITHUB_SHA" > public/version.json
+      - name: Build GitHub Pages site
         env:
           VITE_BUILD_SHA: ${{ github.sha }}
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_PUBLIC_SITE_URL: https://daviehydos-stack.github.io/film-fetcher-friend/
         run: bun run build
-      - name: Prepare Pages artifact
+      - name: Prepare SPA fallback
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           test -f .output/public/index.html
           cat > .output/public/404.html <<'EOF'
           <!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><script>(function(){var base="/film-fetcher-friend";var p=location.pathname.startsWith(base)?location.pathname.slice(base.length):location.pathname;location.replace(base+"/?__spa="+encodeURIComponent(p+location.search+location.hash))})();</script></head><body></body></html>
@@ -63,6 +61,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy
+      - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
