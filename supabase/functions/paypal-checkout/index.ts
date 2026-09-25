@@ -26,12 +26,63 @@ async function paypalToken(cfg: any) {
   return { base, token: x.access_token };
 }
 
+const esc = (v: string) => v.replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]!));
+async function accessCodeFor(paymentId: string) {
+  const secret = Deno.env.get("ACCESS_CODE_SECRET") || Deno.env.get("SUPABASE_URL") || "avant";
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode("access:" + paymentId)));
+  const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let s = "";
+  for (let i = 0; i < 12; i++) s += A[sig[i] % A.length];
+  return `AVT-${s.slice(0, 4)}-${s.slice(4, 8)}-${s.slice(8, 12)}`;
+}
+// Issues the access code for a verified payment (PayPal or M-PESA) and emails it via Resend.
+// Idempotent; email failure never blocks unlock.
+async function issueAndEmail(c: any, id: string, resend = false) {
+  if (!id) return { status: 400, body: { error: "Missing payment" } };
+  const isUuid = /^[0-9a-f-]{36}$/i.test(id);
+  const q = c.from("payments").select("id,reference,status,account_email,product_id");
+  const { data: pay } = await (isUuid ? q.or(`id.eq.${id},reference.eq.${id}`) : q.eq("reference", id)).maybeSingle();
+  if (!pay) return { status: 404, body: { error: "Payment not found" } };
+  if (pay.status !== "successful") return { status: 409, body: { error: "Payment not verified yet", status: pay.status } };
+  const accessCode = await accessCodeFor(pay.id);
+  const email = String(pay.account_email || "").trim().toLowerCase();
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  const from = Deno.env.get("RESEND_FROM") || Deno.env.get("RESEND_FROM_EMAIL");
+  let emailed = false, emailError = "";
+  if (!email) emailError = "no_email_on_payment";
+  else if (!apiKey || !from) emailError = "resend_not_configured";
+  else {
+    const { data: product } = await c.from("access_products").select("name").eq("id", pay.product_id).maybeSingle();
+    const name = String(product?.name || "Avant Movies");
+    const site = Deno.env.get("SITE_URL") || "https://film-fetcher-friend.lovable.app";
+    const idem = resend ? `access-code-${pay.id}-r${Math.floor(Date.now() / 60000)}` : `access-code-${pay.id}`;
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": idem },
+      body: JSON.stringify({
+        from, to: [email], subject: "Your Avant Movies access code",
+        text: `Your payment for ${name} is confirmed.\n\nAccess code: ${accessCode}\nReference: ${pay.reference}\n\nWatch now: ${site}/account`,
+        html: `<div style="font-family:Arial,sans-serif;background:#ffffff;padding:24px;color:#111"><h2 style="margin:0 0 8px">Access unlocked</h2><p>Your payment for <b>${esc(name)}</b> is confirmed.</p><p style="font-size:12px;color:#666;margin:18px 0 4px">ACCESS CODE</p><p style="font-family:monospace;font-size:24px;font-weight:bold;letter-spacing:3px;background:#f3f3f3;padding:12px 16px;border-radius:8px;display:inline-block">${accessCode}</p><p style="font-size:12px;color:#666">Reference: ${esc(String(pay.reference))}</p><p><a href="${site}/account" style="background:#111;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">Watch now</a></p></div>`,
+      }),
+    });
+    const out = await res.text();
+    console.log("access-code resend", pay.id, res.status, out);
+    emailed = res.ok; if (!res.ok) emailError = `resend_${res.status}: ${out.slice(0, 300)}`;
+  }
+  if (emailError) console.error("access-code email", pay.id, emailError);
+  return { status: 200, body: { accessCode, reference: pay.reference, emailed, emailError, email: email ? email.replace(/^(.).*(@.*)$/, "$1***$2") : "" } };
+}
+
 Deno.serve(async (r) => {
   if (r.method === "OPTIONS") return new Response(null, { status: 204, headers: H });
   if (r.method !== "POST") return Response.json({ error: "method_not_allowed" }, { status: 405, headers: H });
   try {
     const body = await r.json();
     const action = String(body.action || "create");
+    if (action === "issue_code") {
+      const out = await issueAndEmail(db(), String(body.paymentId || body.reference || "").trim(), body.resend === true);
+      return Response.json(out.body, { status: out.status, headers: H });
+    }
     let u: any = null;
     try { u = await customerUser(r); } catch { u = null; }
     if (!u && action === "create") {
@@ -98,6 +149,7 @@ Deno.serve(async (r) => {
 
       const { error } = await c.rpc("settle_verified_payment", { p_payment_id: pay.id, p_provider_reference: String(cap?.id || orderId), p_provider_status: status, p_provider_event_id: "paypal:" + String(cap?.id || orderId), p_payload: x });
       if (error) throw error;
+      await issueAndEmail(c, pay.id).catch((e) => console.error("access-code email failed", e));
       return Response.json({ ok: true, reference, status: "successful" }, { headers: H });
     }
 
