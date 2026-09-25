@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36143352566
+Run ID: 36143461848
 
-Generated: 2026-09-25T13:49:56Z
+Generated: 2026-09-25T13:50:27Z
 
 ### Current primary errors
 ~~~text
@@ -6763,4 +6763,23 @@ run 36143352566 is still in progress; logs will be available when it is complete
 ### Full failed-step log
 ~~~text
 run 36143352566 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-25T13:50:27Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-25T13:49:49Z","databaseId":36143461848,"displayTitle":"Remove predictable client-side payment access code fallback","headSha":"66671ee2c2235b308c99748f936d62842ba41964","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T13:50:25Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143461848"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143461848 is still in progress; logs will be available when it is complete
 ~~~
