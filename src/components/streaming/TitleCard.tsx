@@ -33,6 +33,7 @@ export function TitleCard({
   const [showHoverVideo, setShowHoverVideo] = useState(false);
   const hoverVimeoId = item.previewVimeoId || item.vimeoVideoId || item.episodes?.[0]?.vimeoVideoId;
   const startHoverPreview = () => {
+    if (typeof window !== "undefined" && window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
     if (!hoverVimeoId || travelMode || hoverTimerRef.current) return;
     hoverTimerRef.current = window.setTimeout(() => { setShowHoverVideo(true); hoverTimerRef.current = null; }, 1800);
   };
@@ -78,9 +79,6 @@ export function TitleCard({
       ref={cardRef}
       onMouseEnter={startHoverPreview}
       onMouseLeave={stopHoverPreview}
-      onTouchStart={startHoverPreview}
-      onTouchEnd={stopHoverPreview}
-      onTouchMove={stopHoverPreview}
       className={
         layout === "grid"
           ? "group relative z-0 w-full min-w-0 md:hover:z-30"
