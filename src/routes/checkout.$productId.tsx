@@ -310,18 +310,17 @@ function CheckoutRoute() {
         window.parent.postMessage({ type: 'avant-checkout-close' }, '*')
         return
       }
-      const target = (returnTo || origin || '').trim()
-      // Prefer the explicit origin passed by Avant links. Mobile/preview hosts can
-      // insert duplicate checkout entries, making history.back() land on checkout again.
+      if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
+        window.history.back()
+        return
+      }
+      const target = (returnTo || '').trim()
       if (target && target.startsWith('/') && !target.startsWith('//') && !target.startsWith('/checkout/')) {
         void router.navigate({ to: target as any, replace: true })
         return
       }
-      if (window.history.length > 1) {
-        window.history.back()
-        return
-      }
-      void router.navigate({ to: '/', replace: true })
+      const fallback = (origin || '/').trim()
+      void router.navigate({ to: (fallback.startsWith('/') && !fallback.startsWith('//') && !fallback.startsWith('/checkout/') ? fallback : '/') as any, replace: true })
     }, 340)
   }
 
