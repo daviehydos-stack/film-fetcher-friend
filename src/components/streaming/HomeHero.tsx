@@ -116,7 +116,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (travelMode || !isFast || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+    if (travelMode || (!isFast && !screen.matches) || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
     const startTrailer = () => setTrailerReady(true);
