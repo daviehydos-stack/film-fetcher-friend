@@ -4,9 +4,9 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36101491893
+Run ID: 36101512478
 
-Generated: 2026-09-25T06:08:23Z
+Generated: 2026-09-25T06:08:42Z
 
 ### Current primary errors
 ~~~text
@@ -6332,4 +6332,23 @@ run 36096685689 is still in progress; logs will be available when it is complete
 ### Full failed-step log
 ~~~text
 run 36101491893 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-25T06:08:42Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-25T06:08:01Z","databaseId":36101512478,"displayTitle":"Redirect series watch routes to first playable episode","headSha":"806022cf366d9fc07aef563d8f07bb03958f4069","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-25T06:08:40Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36101512478"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36101512478 is still in progress; logs will be available when it is complete
 ~~~
