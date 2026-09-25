@@ -67,7 +67,7 @@ export function titleSchema(item: CatalogueTitle) {
         episodeNumber: index + 1,
         ...(episode.duration ? { duration: isoDuration(episode.duration) } : {}),
         ...(absoluteUrl(`/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`) ? { url: absoluteUrl(`/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`) } : {}),
-        ...(episode.vimeoVideoId ? { video: videoObjectSchema({ name: `${item.title}: ${episode.title}`, description: episode.description || item.synopsis || item.shortDescription || `Watch ${episode.title} from ${item.title} on Avant Cinema.`, vimeoId: episode.vimeoVideoId, duration: episode.duration, pagePath: `/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`, episodeNumber: episode.episodeNumber || index + 1, seriesName: item.title, seriesPath: `/title/${item.slug}`, thumbnailUrl: episode.poster || item.backdrop || item.artwork }) } : {}),
+        ...(episode.vimeoVideoId ? { video: videoObjectSchema({ name: `${item.title}: ${episode.title}`, description: episode.description || item.synopsis || item.shortDescription || `Watch ${episode.title} from ${item.title} on Avant Cinema.`, vimeoId: episode.vimeoVideoId, duration: episode.duration, pagePath: `/watch/${episode.legacyKey || episode.id || `${item.slug}-${index + 1}`}`, episodeNumber: episode.episodeNumber || index + 1, seriesName: item.title, seriesPath: `/title/${item.slug}`, thumbnailUrl: episode.poster || item.backdrop || item.artwork, creators: [...(item.directors || []), ...(item.creators || [])] }) } : {}),
       })),
     } : {}),
   };
@@ -80,6 +80,7 @@ export function titleSchema(item: CatalogueTitle) {
     pagePath: `/title/${item.slug}`,
     alreadyIsoDuration: true,
     thumbnailUrl: item.backdrop || item.artwork,
+    creators: [...(item.directors || []), ...(item.creators || [])],
   });
   return base;
 }
@@ -105,7 +106,7 @@ export function youtubeThumbnail(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
-export function videoObjectSchema(input: { name: string; description: string; youtubeId?: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string; contentUrl?: string; expires?: string }) {
+export function videoObjectSchema(input: { name: string; description: string; youtubeId?: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string; contentUrl?: string; expires?: string; creators?: string[] }) {
   const pageUrl = absoluteUrl(input.pagePath);
   const uploadDate = input.uploadDate;
   const embedUrl = input.youtubeId ? `https://www.youtube-nocookie.com/embed/${input.youtubeId}` : input.vimeoId ? `https://player.vimeo.com/video/${input.vimeoId}` : undefined;
@@ -123,6 +124,7 @@ export function videoObjectSchema(input: { name: string; description: string; yo
     ...((input.alreadyIsoDuration ? input.duration : isoDuration(input.duration)) ? { duration: input.alreadyIsoDuration ? input.duration : isoDuration(input.duration) } : {}),
     ...(input.episodeNumber ? { episodeNumber: input.episodeNumber } : {}),
     ...(input.seriesName ? { partOfSeries: { "@type": "TVSeries", name: input.seriesName, ...(input.seriesPath && absoluteUrl(input.seriesPath) ? { url: absoluteUrl(input.seriesPath) } : {}) } } : {}),
+    ...(input.creators?.length ? { creator: input.creators.map((name) => ({ "@type": "Person", name })), author: input.creators.map((name) => ({ "@type": "Person", name })) } : {}),
     publisher: { "@type": "Organization", name: SEO_SITE_NAME, ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}) },
   };
 }
