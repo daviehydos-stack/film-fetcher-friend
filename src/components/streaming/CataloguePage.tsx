@@ -69,7 +69,7 @@ export function CataloguePage({
           </div>
         </header>
 
-        <section className="relative z-30 mt-5 border-y border-border/60 bg-background sm:sticky sm:top-[72px] sm:mt-9 sm:bg-background/90 sm:backdrop-blur-xl">
+        <section className="relative z-20 mt-5 border-y border-border/60 bg-background sm:mt-9">
           <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-2 px-5 py-2.5 sm:flex sm:flex-wrap sm:items-center sm:px-10 sm:py-3 lg:px-14">
             <label className="relative col-span-2 min-w-0 sm:flex-[1_1_15rem] lg:max-w-sm">
               <span className="sr-only">Search {label}</span>
