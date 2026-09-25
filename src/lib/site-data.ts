@@ -177,7 +177,7 @@ const AVANT_VIMEO_FALLBACKS: Record<string, Partial<CatalogueTitle> & { episodes
       ["1188443663","Introduction & Finding Stories"],["1188441673","Character Arc & Voice"],["1188442991","Plot Structure & Conflict"],
       ["1188444549","Lesson 4"],["1188478468","Lesson 5"],["1188479577","Lesson 6"],["1188480934","Lesson 7"],
       ["1188485163","Lesson 8"],["1188486669","Lesson 9"],["1188487093","Lesson 10"],["1188482195","Lesson 11"]
-    ].map(([vimeoVideoId,title],i)=>({id:`jg-${i+1}`,title,episodeNumber:i+1,duration:"",vimeoVideoId,locked:true,legacyKey:`jennifer-gatero-writing-masterclass-${i+1}`})),
+    ].map(([vimeoVideoId,title],i)=>({id:`jg-${i+1}`,title:String(title||`Lesson ${i+1}`),episodeNumber:i+1,duration:"",vimeoVideoId:String(vimeoVideoId||""),locked:true as const,legacyKey:`jennifer-gatero-writing-masterclass-${i+1}`})),
   },
   "nairobby": { previewVimeoId:"1229459741", trailerEmbedUrl:"https://player.vimeo.com/video/1229459741", vimeoVideoId:"1188436474" },
   "relationship-goals": { vimeoVideoId:"1229463619", accessRequired:false },
