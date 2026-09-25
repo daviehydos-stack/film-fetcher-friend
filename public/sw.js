@@ -1,5 +1,5 @@
-const CACHE = "avant-shell-v9";
-const RUNTIME = "avant-runtime-v9";
+const CACHE = "avant-shell-v10";
+const RUNTIME = "avant-runtime-v10";
 const MEDIA = "avant-media-v1";
 
 const SHELL = [
@@ -365,30 +365,13 @@ self.addEventListener("fetch", (event) => {
   --------------------------------------------------- */
 
   if (/\.(?:js|css)$/i.test(path)) {
+    // Hashed application chunks must never be served cache-first. Mixing a
+    // previous deployment's runtime with a newer route chunk can crash the
+    // router before the page renders. Always request the deployed asset.
     event.respondWith(
-      caches.match(request).then((cached) => {
-        const fresh = fetch(request)
-          .then((response) => {
-            if (response.ok) {
-              const copy = response.clone();
-
-              caches
-                .open(RUNTIME)
-                .then((cache) =>
-                  put(
-                    cache,
-                    request,
-                    copy
-                  )
-                )
-                .catch(() => {});
-            }
-
-            return response;
-          })
-          .catch(() => cached);
-
-        return cached || fresh;
+      fetch(request, { cache: "no-store" }).catch(async () => {
+        const cached = await caches.match(request);
+        return cached || new Response("", { status: 504 });
       })
     );
 
