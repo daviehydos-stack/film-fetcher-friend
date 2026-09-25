@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 36101788895
 
-Generated: 2026-09-25T06:12:23Z
+Generated: 2026-09-25T06:13:05Z
 
 ### Current primary errors
 ~~~text
@@ -6506,6 +6506,25 @@ Lint and production build	Production build	2026-09-25T06:09:50.1794958Z ##[error
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-25T06:11:52Z","databaseId":36101788895,"displayTitle":"Fix router instance in deep-link recovery","headSha":"ddf548888f5e2055dd75a2ce520ca5b33bbb074c","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T06:12:22Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36101788895"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36101788895 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-25T06:13:05Z
+
+### Run metadata
+~~~json
+{"attempt":3,"conclusion":"","createdAt":"2026-09-25T06:11:52Z","databaseId":36101788895,"displayTitle":"Fix router instance in deep-link recovery","headSha":"ddf548888f5e2055dd75a2ce520ca5b33bbb074c","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-25T06:13:01Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36101788895"}
 
 ~~~
 
