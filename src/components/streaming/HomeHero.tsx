@@ -85,14 +85,14 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         if (!entry) return;
         const visible = entry.isIntersecting && entry.intersectionRatio >= 0.22;
         setHeroInView(visible);
-        if (!visible || !isFast || travelMode) pauseEmbeddedPlayer(trailerFrameRef.current);
+        if (!visible || travelMode) pauseEmbeddedPlayer(trailerFrameRef.current);
         else if (trailerVisible) playEmbeddedPlayer(trailerFrameRef.current);
       },
       { threshold: [0, 0.22, 0.5] },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [item.id, isFast, travelMode, trailerVisible]);
+  }, [item.id, travelMode, trailerVisible]);
 
   async function toggleSaved() {
     const token = await customerToken(false);
