@@ -221,8 +221,11 @@ function RootComponent() {
     const params = new URLSearchParams(window.location.search);
     const deepLink = params.get("__spa");
     if (!deepLink) return;
-    const safePath = deepLink.startsWith("/") ? deepLink : "/" + deepLink;
-    window.history.replaceState({}, "", import.meta.env.BASE_URL.replace(/\/$/, "") + safePath);
+    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+    let safePath = deepLink.startsWith("/") ? deepLink : "/" + deepLink;
+    while (base && base !== "/" && safePath.startsWith(base + base)) safePath = safePath.slice(base.length);
+    if (base && base !== "/" && safePath.startsWith(base)) safePath = safePath.slice(base.length) || "/";
+    window.history.replaceState({}, "", base + safePath);
     window.dispatchEvent(new PopStateEvent("popstate"));
   }, []);
   useEffect(() => {
