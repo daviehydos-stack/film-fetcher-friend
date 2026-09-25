@@ -24,10 +24,10 @@ export const Route = createFileRoute('/checkout/$productId')({
 type Method = 'mpesa' | 'paypal'
 
 function MPesaLogoBadge() {
-  return <div className="flex items-center gap-3"><div className="flex h-8 w-12 items-center justify-center rounded bg-[#00A859] text-[10px] font-black tracking-wider text-white shadow-sm">M-PESA</div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">Safaricom M-PESA</p><p className="text-[11px] text-white/60">Instant STK Push to Phone</p></div></div>
+  return <div className="flex items-center gap-3"><div className="flex h-10 w-[76px] shrink-0 items-center justify-center rounded-md bg-white px-2 py-1"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/M-PESA%20LOGO-01.svg" alt="M-PESA" className="h-full w-full object-contain" loading="eager" decoding="async" /></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">Safaricom M-PESA</p><p className="text-[11px] text-white/60">Instant STK Push to Phone</p></div></div>
 }
 function PayPalLogoBadge() {
-  return <div className="flex items-center gap-3"><div className="flex h-8 w-12 items-center justify-center rounded border border-white/20 bg-white text-xs font-black italic shadow-sm"><span className="text-[#003087]">Pay</span><span className="text-[#0079C1]">Pal</span></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">PayPal & Cards</p><p className="text-[11px] text-white/60">Credit / Debit Card / USD</p></div></div>
+  return <div className="flex items-center gap-3"><div className="flex h-10 w-[76px] shrink-0 items-center justify-center rounded-md bg-white px-2 py-1"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/PayPal%20logo.svg" alt="PayPal" className="h-full w-full object-contain" loading="eager" decoding="async" /></div><div className="text-left"><p className="text-sm font-bold leading-tight text-white">PayPal & Cards</p><p className="text-[11px] text-white/60">Credit / Debit Card / USD</p></div></div>
 }
 
 function CheckoutRoute() {
