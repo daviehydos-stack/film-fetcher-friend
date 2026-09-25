@@ -6594,3 +6594,22 @@ Lint and production build	Production build	2026-09-25T06:13:37.4214170Z ##[error
 ~~~text
 run 36143145494 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-25T13:47:42Z
+
+### Run metadata
+~~~json
+{"attempt":1,"conclusion":"","createdAt":"2026-09-25T13:47:11Z","databaseId":36143181028,"displayTitle":"Exclude private admin workspace from prerender crawling","headSha":"d1691119ece1c9523699f4df27880dbcf63b7402","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-25T13:47:40Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143181028"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143181028 is still in progress; logs will be available when it is complete
+~~~
