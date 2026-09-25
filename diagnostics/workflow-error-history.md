@@ -6847,3 +6847,22 @@ Lint and production build	Production build	2026-09-25T13:50:33.1717282Z ##[error
 ~~~text
 run 36143529951 is still in progress; logs will be available when it is complete
 ~~~
+
+---
+
+## Failure recorded 2026-09-25T13:51:30Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"failure","createdAt":"2026-09-25T13:50:26Z","databaseId":36143529951,"displayTitle":"Route PayPal access codes through secure server issuer","headSha":"93438beb4910f150ef25f2e389a0c7a3cc5f75b5","jobs":[{"completedAt":"2026-09-25T13:51:21Z","conclusion":"failure","databaseId":108099120235,"name":"Lint and production build","startedAt":"2026-09-25T13:51:06Z","status":"completed","steps":[{"completedAt":"2026-09-25T13:51:07Z","conclusion":"success","name":"Set up job","number":1,"startedAt":"2026-09-25T13:51:07Z","status":"completed"},{"completedAt":"2026-09-25T13:51:08Z","conclusion":"success","name":"Checkout","number":2,"startedAt":"2026-09-25T13:51:07Z","status":"completed"},{"completedAt":"2026-09-25T13:51:09Z","conclusion":"success","name":"Setup Bun","number":3,"startedAt":"2026-09-25T13:51:08Z","status":"completed"},{"completedAt":"2026-09-25T13:51:11Z","conclusion":"success","name":"Install dependencies","number":4,"startedAt":"2026-09-25T13:51:09Z","status":"completed"},{"completedAt":"2026-09-25T13:51:20Z","conclusion":"failure","name":"Production build","number":5,"startedAt":"2026-09-25T13:51:11Z","status":"completed"},{"completedAt":"2026-09-25T13:51:20Z","conclusion":"skipped","name":"Post Setup Bun","number":9,"startedAt":"2026-09-25T13:51:20Z","status":"completed"},{"completedAt":"2026-09-25T13:51:20Z","conclusion":"success","name":"Post Checkout","number":10,"startedAt":"2026-09-25T13:51:20Z","status":"completed"},{"completedAt":"2026-09-25T13:51:20Z","conclusion":"success","name":"Complete job","number":11,"startedAt":"2026-09-25T13:51:20Z","status":"completed"}],"url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143529951/job/108099120235"}],"name":"Avant Movies CI","status":"completed","updatedAt":"2026-09-25T13:51:22Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36143529951"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36143529951 is still in progress; logs will be available when it is complete
+~~~
