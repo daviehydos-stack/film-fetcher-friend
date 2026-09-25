@@ -88,3 +88,13 @@ export const adminUsersGet=(token:string)=>request<any>("admin-users",token,{met
 export const adminUserSave=(token:string,payload:{email:string;role:string;active:boolean;requireMfa:boolean})=>request<any>("admin-users",token,{method:"POST",body:JSON.stringify(payload)});
 
 export const adminAssistant=(token:string,payload:Record<string,unknown>)=>request<any>("admin-assistant",token,{method:"POST",body:JSON.stringify(payload)});
+
+// --- Device-side record of verified purchases -------------------------------
+// The backend remains the source of truth. This local record only keeps a
+// verified payment usable on the buyer's device while the server-side
+// entitlement propagates (guest checkout, slow reconciliation, refreshes).
+const PURCHASE_KEY="avant_verified_purchases_v1";
+export type VerifiedPurchase={productId:string;reference:string;accessCode?:string;at:number};
+export function readVerifiedPurchases():VerifiedPurchase[]{if(typeof window==="undefined")return[];try{const raw=localStorage.getItem(PURCHASE_KEY);const list=raw?JSON.parse(raw):[];return Array.isArray(list)?list.filter((x:any)=>x&&typeof x.productId==="string"):[]}catch{return[]}}
+export function recordVerifiedPurchase(entry:{productId?:string|null;reference?:string|null;accessCode?:string|null}){if(typeof window==="undefined")return;const productId=String(entry.productId||"").trim();if(!productId)return;const list=readVerifiedPurchases().filter(x=>x.productId!==productId);list.push({productId,reference:String(entry.reference||""),...(entry.accessCode?{accessCode:String(entry.accessCode)}:{}),at:Date.now()});try{localStorage.setItem(PURCHASE_KEY,JSON.stringify(list.slice(-50)))}catch{}}
+export function hasVerifiedPurchase(productId?:string|null){const id=String(productId||"").trim();if(!id)return false;return readVerifiedPurchases().some(x=>x.productId===id)}
