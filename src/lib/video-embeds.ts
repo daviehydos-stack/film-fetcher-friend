@@ -2,7 +2,7 @@ export type EmbedOptions = { autoplay?: boolean; muted?: boolean; controls?: boo
 import { claimMedia, releaseMedia } from "./media-session";
 
 export function heroTrailerUrl(embedUrl:string,muted=true,controls=false){
- try{const url=new URL(embedUrl);if(!url.hostname.includes("vimeo"))return "";url.searchParams.set("autoplay","1");url.searchParams.set("muted",muted?"1":"0");url.searchParams.set("background",controls?"0":"1");url.searchParams.set("autopause","1");url.searchParams.set("playsinline","1");return url.toString()}catch{return ""}
+ try{const url=new URL(embedUrl);if(!url.hostname.includes("vimeo"))return "";url.searchParams.set("autoplay","1");url.searchParams.set("muted",muted?"1":"0");url.searchParams.set("background",controls?"0":"1");url.searchParams.set("autopause","1");url.searchParams.set("playsinline","1");url.searchParams.set("api","1");return url.toString()}catch{return ""}
 }
 
 export function pauseEmbeddedPlayer(frame:HTMLIFrameElement|null){releaseMedia(frame)}
