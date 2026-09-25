@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 
 const configuredOrigin = (process.env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
-const productionOrigin = configuredOrigin || "https://avantcinematic.com";
+const productionOrigin = configuredOrigin || "https://www.avantcinematic.com";
 const siteUrl = new URL(productionOrigin);
 const basePath = siteUrl.pathname.replace(/\/$/, "");
 const supabaseUrl = "https://bnuyhrsezkepsaebwlmu.supabase.co";
@@ -17,6 +17,8 @@ const staticPaths = [
   "/betterlife-episodes",
   "/this-is-life-episodes",
   "/watch-free",
+  "/privacy",
+  "/terms",
 ];
 
 mkdirSync("public", { recursive: true });
@@ -43,12 +45,12 @@ try {
   if (response.ok) {
     const body = await response.json();
     const titles = (body?.titles || []).filter(
-      (title) => title?.status === "published" && title?.slug,
+      (title) => ["published", "scheduled"].includes(title?.status) && title?.slug,
     );
 
     for (const title of titles) {
       const path = `/title/${title.slug}`;
-      addEntry(path, title.updated_at || title.published_at || title.created_at);
+      addEntry(path, title.updated_at || title.scheduled_publish_at || title.published_at || title.created_at);
       const images = [title.poster_url, title.backdrop_url].filter(Boolean);
       if (images.length) imageEntries.set(path, [...new Set(images)]);
       const player = title.trailer_vimeo_id
@@ -58,11 +60,11 @@ try {
           : undefined;
       const thumb = title.backdrop_url || title.poster_url;
       if (player && thumb) videoEntries.set(path, {
-        title: `${title.title} — Official Trailer | Avant Movies`,
-        description: title.short_description || title.synopsis || `Watch the official trailer for ${title.title} on Avant Movies.`,
+        title: `${title.title} — Official Trailer | Avant Cinema`,
+        description: title.short_description || title.synopsis || `Watch the official trailer for ${title.title} on Avant Cinema.`,
         thumbnail: thumb,
         player,
-        publicationDate: title.published_at || title.created_at,
+        publicationDate: title.scheduled_publish_at || title.published_at || title.created_at,
       });
     }
 
@@ -75,7 +77,7 @@ try {
           if (!r.ok) return [];
           const d = await r.json();
           return (d?.episodes || [])
-            .filter((episode) => episode?.status === "published")
+            .filter((episode) => ["published", "scheduled"].includes(episode?.status))
             .sort((a, b) => (a.episode_number || 0) - (b.episode_number || 0))
             .map((episode, index) => {
               const episodeKey = episode.legacy_key || episode.id || `${title.slug}-${index + 1}`;
@@ -86,8 +88,8 @@ try {
                 : undefined;
               if (episodeThumb) imageEntries.set(episodePath, [episodeThumb]);
               if (episodePlayer && episodeThumb) videoEntries.set(episodePath, {
-                title: `${episode.title} — ${title.title} | Avant Movies`,
-                description: episode.description || `Watch ${episode.title} from ${title.title} on Avant Movies.`,
+                title: `${episode.title} — ${title.title} | Avant Cinema`,
+                description: episode.description || `Watch ${episode.title} from ${title.title} on Avant Cinema.`,
                 thumbnail: episodeThumb,
                 player: episodePlayer,
                 publicationDate: episode.visible_from || episode.created_at || title.published_at || title.created_at,
