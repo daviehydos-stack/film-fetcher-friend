@@ -78,6 +78,7 @@ export function titleSchema(item: CatalogueTitle) {
     vimeoId: previewVimeoId,
     duration: item.previewDuration ? secondsToIso(item.previewDuration) : undefined,
     pagePath: `/title/${item.slug}`,
+    uploadDate: item.releaseAt,
     alreadyIsoDuration: true,
     thumbnailUrl: item.backdrop || item.artwork,
     creators: [...(item.directors || []), ...(item.creators || [])],
@@ -102,20 +103,16 @@ function isoDuration(value?: string) {
   return `PT${hours ? `${hours}H` : ""}${minutes ? `${minutes}M` : ""}${seconds ? `${seconds}S` : ""}`;
 }
 
-export function youtubeThumbnail(id: string) {
-  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-}
-
-export function videoObjectSchema(input: { name: string; description: string; youtubeId?: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string; contentUrl?: string; expires?: string; creators?: string[] }) {
+export function videoObjectSchema(input: { name: string; description: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string; contentUrl?: string; expires?: string; creators?: string[] }) {
   const pageUrl = absoluteUrl(input.pagePath);
   const uploadDate = input.uploadDate;
-  const embedUrl = input.youtubeId ? `https://www.youtube-nocookie.com/embed/${input.youtubeId}` : input.vimeoId ? `https://player.vimeo.com/video/${input.vimeoId}` : undefined;
+  const embedUrl = input.vimeoId ? `https://player.vimeo.com/video/${input.vimeoId}` : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name: input.name,
     description: input.description,
-    thumbnailUrl: [input.thumbnailUrl || (input.youtubeId ? youtubeThumbnail(input.youtubeId) : undefined)].filter(Boolean),
+    thumbnailUrl: [input.thumbnailUrl].filter(Boolean),
     ...(uploadDate ? { uploadDate } : {}),
     ...(embedUrl ? { embedUrl } : {}),
     ...(input.contentUrl ? { contentUrl: input.contentUrl } : {}),
@@ -129,14 +126,3 @@ export function videoObjectSchema(input: { name: string; description: string; yo
   };
 }
 
-export function episodeCollectionSchema(seriesName: string, description: string, pagePath: string, episodes: Array<{ title: string; youtubeId?: string; duration?: string }>) {
-  return episodes.flatMap((episode, index) => episode.youtubeId ? [videoObjectSchema({
-    name: episode.title,
-    description,
-    youtubeId: episode.youtubeId,
-    duration: episode.duration,
-    pagePath,
-    episodeNumber: index + 1,
-    seriesName,
-  })] : []);
-}
