@@ -7,7 +7,7 @@ import { StreamingShell } from "@/components/streaming/StreamingShell";
 import { catalogue, type CatalogueTitle } from "@/lib/site-data";
 import { publicCatalogue } from "@/lib/avant-backend";
 import { readMyList } from "@/lib/my-list";
-import { publicPageLinks, publicPageMeta } from "@/lib/seo";
+import { absoluteUrl, publicPageLinks, publicPageMeta } from "@/lib/seo";
 import { isFreeTitle, mapPublicTitle } from "@/lib/catalogue";
 import { readProgress } from "@/lib/watch-progress";
 
@@ -15,6 +15,27 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: publicPageMeta("/", "Avant Cinema | Watch Kenyan Movies & Series Online", "Stream Kenyan movies, independent films and original series online on Avant Cinema. Watch Back to Us, Nairobby, A Better Life, This Is Life and more Kenyan stories.", "https://static.wixstatic.com/media/57086b_f94334c3e6d24692a3c297230928ed11~mv2.jpg/v1/fill/w_1920,h_1080,q_90,enc_auto/file.jpeg"),
     links: publicPageLinks("/"),
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Kenyan movies on Avant Cinema",
+        itemListElement: catalogue.filter((item) => item.type === "movie").map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: absoluteUrl(`/title/${item.slug}`),
+          item: {
+            "@type": "Movie",
+            name: item.title,
+            url: absoluteUrl(`/title/${item.slug}`),
+            image: [item.artwork, item.backdrop].filter(Boolean),
+            description: item.shortDescription || item.synopsis,
+            ...(item.year ? { dateCreated: item.year } : {}),
+          },
+        })),
+      }),
+    }],
   }),
   component: Index,
 });
