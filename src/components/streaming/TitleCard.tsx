@@ -26,8 +26,9 @@ export function TitleCard({
 }) {
   const {user:authUser,remembered,signIn}=useAvantAuth();
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [saved, setSaved] = useState(() => readMyList().includes(item.id));
-  const [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
+  const [saved, setSaved] = useState(false);
+  const [travelMode, setTravelMode] = useState(false);
+  useEffect(() => { setSaved(readMyList().includes(item.id)); setTravelMode(localStorage.getItem("avant-travel-mode") === "true"); }, [item.id]);
   const cardRef = useRef<HTMLElement | null>(null);
   const hoverTimerRef = useRef<number | null>(null);
   const [showHoverVideo, setShowHoverVideo] = useState(false);

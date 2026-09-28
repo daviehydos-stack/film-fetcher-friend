@@ -38,7 +38,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   const [accessVersion, setAccessVersion] = useState(0);
   const [heroInView, setHeroInView] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [travelMode, setTravelMode] = useState(() => typeof window !== "undefined" ? localStorage.getItem("avant-travel-mode") === "true" : false);
+  const [travelMode, setTravelMode] = useState(false);
+  useEffect(() => { setTravelMode(localStorage.getItem("avant-travel-mode") === "true"); }, []);
   const heroRef = useRef<HTMLElement | null>(null);
   const trailerFrameRef = useRef<HTMLIFrameElement | null>(null);
   const firstEpisode = item.episodes?.[0];
