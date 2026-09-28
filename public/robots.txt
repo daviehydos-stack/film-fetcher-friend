@@ -1,11 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /checkout/
-Disallow: /payment/
-Disallow: /account
-Disallow: /my-list
-Disallow: /search
 
 Sitemap: https://www.avantcinematic.com/sitemap.xml
-Host: https://www.avantcinematic.com
+Sitemap: https://www.avantcinematic.com/pages-sitemap.xml
+Sitemap: https://www.avantcinematic.com/video-sitemap.xml
+Sitemap: https://www.avantcinematic.com/image-sitemap.xml

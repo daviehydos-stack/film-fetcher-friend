@@ -19,6 +19,8 @@ import { Route as MoviesRouteImport } from './routes/movies'
 import { Route as MyListRouteImport } from './routes/my-list'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as StudioVault7k9RouteImport } from './routes/studio-vault-7k9'
+import { Route as SystemStatus7k9RouteImport } from './routes/system-status-7k9'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TvShowsRouteImport } from './routes/tv-shows'
 import { Route as WatchFreeRouteImport } from './routes/watch-free'
@@ -80,6 +82,16 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioVault7k9Route = StudioVault7k9RouteImport.update({
+  id: '/studio-vault-7k9',
+  path: '/studio-vault-7k9',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SystemStatus7k9Route = SystemStatus7k9RouteImport.update({
+  id: '/system-status-7k9',
+  path: '/system-status-7k9',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -155,6 +167,8 @@ export interface FileRoutesByFullPath {
   '/my-list': typeof MyListRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
+  '/studio-vault-7k9': typeof StudioVault7k9Route
+  '/system-status-7k9': typeof SystemStatus7k9Route
   '/terms': typeof TermsRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-free': typeof WatchFreeRoute
@@ -179,6 +193,8 @@ export interface FileRoutesByTo {
   '/my-list': typeof MyListRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
+  '/studio-vault-7k9': typeof StudioVault7k9Route
+  '/system-status-7k9': typeof SystemStatus7k9Route
   '/terms': typeof TermsRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-free': typeof WatchFreeRoute
@@ -204,6 +220,8 @@ export interface FileRoutesById {
   '/my-list': typeof MyListRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
+  '/studio-vault-7k9': typeof StudioVault7k9Route
+  '/system-status-7k9': typeof SystemStatus7k9Route
   '/terms': typeof TermsRoute
   '/tv-shows': typeof TvShowsRoute
   '/watch-free': typeof WatchFreeRoute
@@ -230,6 +248,8 @@ export interface FileRouteTypes {
     | '/my-list'
     | '/privacy'
     | '/search'
+    | '/studio-vault-7k9'
+    | '/system-status-7k9'
     | '/terms'
     | '/tv-shows'
     | '/watch-free'
@@ -254,6 +274,8 @@ export interface FileRouteTypes {
     | '/my-list'
     | '/privacy'
     | '/search'
+    | '/studio-vault-7k9'
+    | '/system-status-7k9'
     | '/terms'
     | '/tv-shows'
     | '/watch-free'
@@ -278,6 +300,8 @@ export interface FileRouteTypes {
     | '/my-list'
     | '/privacy'
     | '/search'
+    | '/studio-vault-7k9'
+    | '/system-status-7k9'
     | '/terms'
     | '/tv-shows'
     | '/watch-free'
@@ -303,6 +327,8 @@ export interface RootRouteChildren {
   MyListRoute: typeof MyListRoute
   PrivacyRoute: typeof PrivacyRoute
   SearchRoute: typeof SearchRoute
+  StudioVault7k9Route: typeof StudioVault7k9Route
+  SystemStatus7k9Route: typeof SystemStatus7k9Route
   TermsRoute: typeof TermsRoute
   TvShowsRoute: typeof TvShowsRoute
   WatchFreeRoute: typeof WatchFreeRoute
@@ -387,6 +413,20 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio-vault-7k9': {
+      id: '/studio-vault-7k9'
+      path: '/studio-vault-7k9'
+      fullPath: '/studio-vault-7k9'
+      preLoaderRoute: typeof StudioVault7k9RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system-status-7k9': {
+      id: '/system-status-7k9'
+      path: '/system-status-7k9'
+      fullPath: '/system-status-7k9'
+      preLoaderRoute: typeof SystemStatus7k9RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -487,6 +527,8 @@ const rootRouteChildren: RootRouteChildren = {
   MyListRoute: MyListRoute,
   PrivacyRoute: PrivacyRoute,
   SearchRoute: SearchRoute,
+  StudioVault7k9Route: StudioVault7k9Route,
+  SystemStatus7k9Route: SystemStatus7k9Route,
   TermsRoute: TermsRoute,
   TvShowsRoute: TvShowsRoute,
   WatchFreeRoute: WatchFreeRoute,
