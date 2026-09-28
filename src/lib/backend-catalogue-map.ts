@@ -2,6 +2,7 @@ export const BACKEND_PRODUCT_IDS={thisIsLife:"64b27e3a-d60a-4589-ac24-6fd3a7ed31
 const TITLE_PRODUCTS:Record<string,string>={"this-is-life":BACKEND_PRODUCT_IDS.thisIsLife,"back-to-us":BACKEND_PRODUCT_IDS.backToUs,"nairobby":BACKEND_PRODUCT_IDS.nairobby,"jennifer-gatero-writing-masterclass":BACKEND_PRODUCT_IDS.masterclass};
 export function productForLegacyContent(contentId:string){const key=String(contentId||"").toLowerCase().replace(/^title\//,"").replace(/^\/+|\/+$/g,"");if(key.startsWith("a-better-life-season-2")||key.includes("season-2")||key.includes("-s2")||key.includes("s2e")||key.startsWith("abl-s2"))return BACKEND_PRODUCT_IDS.aBetterLifeSeason2;if(key.startsWith("a-better-life")||key.startsWith("abl-"))return BACKEND_PRODUCT_IDS.aBetterLifeSeason1;for(const [slug,id] of Object.entries(TITLE_PRODUCTS))if(key===slug||key.startsWith(slug+"-"))return id;return ""}
 export function productForTitleSlug(slug:string){const key=String(slug||"").toLowerCase();if(key==="a-better-life")return BACKEND_PRODUCT_IDS.aBetterLifeSeason1;return TITLE_PRODUCTS[key]||""}
+export function accessKeysForTitleSlug(slug:string,productId?:string|null){const clean=String(slug||"").toLowerCase().replace(/^title\//,"").replace(/^\/+|\/+$/g,"");const keys=new Set<string>();if(productId)keys.add(String(productId));if(clean)keys.add(clean);const mapped=productForTitleSlug(clean);if(mapped)keys.add(mapped);if(clean==="a-better-life"){keys.add(BACKEND_PRODUCT_IDS.aBetterLifeSeason1);keys.add(BACKEND_PRODUCT_IDS.aBetterLifeSeason2)}return [...keys]}
 
 
 export type KnownProduct = {
