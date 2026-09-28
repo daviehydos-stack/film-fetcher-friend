@@ -66,7 +66,7 @@ export type Episode = {
   duration: string;
 
   vimeoVideoId?: string;
-  poster?: string;
+  poster?: string | undefined;
   locked?: boolean;
   description?: string;
   legacyKey?: string;
