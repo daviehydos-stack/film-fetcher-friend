@@ -207,7 +207,8 @@ export function useCatalogue() {
   const [items, setItems] = useState<CatalogueTitle[]>(initialItems);
   const [loading, setLoading] = useState(false);
   const [usingFallback, setUsingFallback] = useState(!cached?.items?.length);
-  const [offline, setOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
+  const [offline, setOffline] = useState(false);
+  useEffect(() => { setOffline(!navigator.onLine); }, []);
 
   useEffect(() => {
     let active = true;
