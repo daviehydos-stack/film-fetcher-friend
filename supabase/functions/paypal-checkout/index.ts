@@ -72,7 +72,7 @@ Deno.serve(async (r) => {
         throw error;
       }
 
-      const rr = await fetch(`${pp.base}/v2/checkout/orders`, { method: "POST", headers: { Authorization: "Bearer " + pp.token, "Content-Type": "application/json", "PayPal-Request-Id": idem }, body: JSON.stringify({ intent: "CAPTURE", purchase_units: [{ reference_id: reference, custom_id: pay.id, description: String(p.name || "Avant Cinema access").slice(0, 127), amount: { currency_code: paypalCurrency, value: (paypalMinor / 100).toFixed(2) } }] }) });
+      const rr = await fetch(`${pp.base}/v2/checkout/orders`, { method: "POST", headers: { Authorization: "Bearer " + pp.token, "Content-Type": "application/json", "PayPal-Request-Id": idem }, body: JSON.stringify({ intent: "CAPTURE", payer: { email_address: email, address: { country_code: "KE" } }, purchase_units: [{ reference_id: reference, custom_id: pay.id, description: String(p.name || "Avant Cinema access").slice(0, 127), amount: { currency_code: paypalCurrency, value: (paypalMinor / 100).toFixed(2) } }], payment_source: undefined }) });
       const x = await rr.json().catch(() => ({}));
       if (!rr.ok || !x.id) {
         await c.from("payments").update({ status: "failed", failure_reason: "PayPal order creation failed" }).eq("id", pay.id);
