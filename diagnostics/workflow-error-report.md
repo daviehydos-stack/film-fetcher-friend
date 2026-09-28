@@ -4,19 +4,12 @@ This repository file keeps previous and current workflow failures together.
 
 ## Current failure
 
-Run ID: 36143898336
+Run ID: 36381993929
 
-Generated: 2026-09-25T13:55:20Z
+Generated: 2026-09-28T05:28:00Z
 
 ### Current primary errors
 ~~~text
-Lint and production build	Production build	2026-09-25T13:55:07.8038217Z ^[[31m✗^[[39m Build failed in 2.68s
-Lint and production build	Production build	2026-09-25T13:55:07.8043557Z ^[[31mBuild failed with 1 error:
-Lint and production build	Production build	2026-09-25T13:55:07.8051371Z  ^[[38;5;240m  │^[[0m                                                 ╰──────────────────────── No such file or directory (os error 2)
-Lint and production build	Production build	2026-09-25T13:55:07.8053173Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:48:18)
-Lint and production build	Production build	2026-09-25T13:55:07.8054749Z     at unwrapBindingResult (file:///home/runner/work/film-fetcher-friend/film-fetcher-friend/node_modules/rolldown/dist/shared/error-BgfXq0Tb.mjs:18:128)
-Lint and production build	Production build	2026-09-25T13:55:07.9066211Z error: script "build" exited with code 1
-Lint and production build	Production build	2026-09-25T13:55:07.9084184Z ##[error]Process completed with exit code 1.
 ~~~
 
 ## Previous + current error history
@@ -7086,4 +7079,23 @@ Lint and production build	Production build	2026-09-25T13:55:07.8063870Z   errors
 Lint and production build	Production build	2026-09-25T13:55:07.8064344Z }^[[39m
 Lint and production build	Production build	2026-09-25T13:55:07.9066211Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-25T13:55:07.9084184Z ##[error]Process completed with exit code 1.
+~~~
+
+---
+
+## Failure recorded 2026-09-28T05:28:00Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-28T05:27:31Z","databaseId":36381993929,"displayTitle":"Add capped one-minute hero previews and unlock CTA","headSha":"490210dfdc82435dea2d59890956abc3b05f858e","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-28T05:27:59Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36381993929"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36381993929 is still in progress; logs will be available when it is complete
 ~~~

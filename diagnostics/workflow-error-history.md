@@ -7065,3 +7065,22 @@ Lint and production build	Production build	2026-09-25T13:55:07.8064344Z }^[[39m
 Lint and production build	Production build	2026-09-25T13:55:07.9066211Z error: script "build" exited with code 1
 Lint and production build	Production build	2026-09-25T13:55:07.9084184Z ##[error]Process completed with exit code 1.
 ~~~
+
+---
+
+## Failure recorded 2026-09-28T05:28:00Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-28T05:27:31Z","databaseId":36381993929,"displayTitle":"Add capped one-minute hero previews and unlock CTA","headSha":"490210dfdc82435dea2d59890956abc3b05f858e","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-28T05:27:59Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36381993929"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36381993929 is still in progress; logs will be available when it is complete
+~~~
