@@ -77,19 +77,51 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
   const contentType = raw["content_type"];
   if (!slug || !title || (contentType !== "movie" && contentType !== "series")) return null;
 
+  const fallbackTitle = catalogue.find((item) => item.slug === slug);
   const legacyKey = text(raw["legacy_key"]);
-  const vimeoVideoId = text(raw["vimeo_video_id"]);
+  const vimeoVideoId = text(raw["vimeo_video_id"]) || fallbackTitle?.vimeoVideoId;
   const previewVimeoVideoId = text(raw["preview_vimeo_video_id"]) || text(raw["previewVimeoVideoId"]) || text(raw["trailer_vimeo_video_id"]);
   const trailerEmbedUrl = text(raw["trailer_embed_url"]) || text(raw["trailerEmbedUrl"]);
   const previewStart = numberValue(raw["preview_start_seconds"]);
   const previewDuration = numberValue(raw["preview_duration_seconds"]);
-  const liveEpisodes = Array.isArray(raw["episodes"])
+  const rawLiveEpisodes = Array.isArray(raw["episodes"])
     ? raw["episodes"].map(mapPublicEpisode).filter((episode): episode is Episode => Boolean(episode))
     : undefined;
-  const accessRequired = typeof raw["access_required"] === "boolean" ? raw["access_required"] : true;
+  const fallbackEpisodes = fallbackTitle?.episodes ?? [];
+  const liveEpisodes = rawLiveEpisodes?.length
+    ? rawLiveEpisodes.map((episode, index) => {
+        const fallbackEpisode =
+          fallbackEpisodes.find((candidate) =>
+            (candidate.season ?? 1) === (episode.season ?? 1) &&
+            (candidate.episodeNumber ?? index + 1) === (episode.episodeNumber ?? index + 1),
+          ) ?? fallbackEpisodes[index];
+        return {
+          ...(fallbackEpisode ?? {}),
+          ...episode,
+          poster:
+            episode.poster ||
+            fallbackEpisode?.poster ||
+            fallbackTitle?.backdrop ||
+            fallbackTitle?.artwork ||
+            undefined,
+        } satisfies Episode;
+      })
+    : fallbackEpisodes.length
+      ? fallbackEpisodes.map((episode) => ({
+          ...episode,
+          poster: episode.poster || fallbackTitle?.backdrop || fallbackTitle?.artwork || undefined,
+        }))
+      : undefined;
+  const accessRequired = typeof raw["access_required"] === "boolean" ? raw["access_required"] : (fallbackTitle?.accessRequired ?? true);
+  const fallbackArtwork = optimizedImage(raw["poster_url"], 560) || fallbackTitle?.artwork || "";
+  const fallbackBackdrop =
+    optimizedImage(raw["backdrop_url"], 1120) ||
+    optimizedImage(raw["poster_url"], 1120) ||
+    fallbackTitle?.backdrop ||
+    fallbackArtwork;
   const movieEpisode: Episode[] | undefined =
     contentType === "movie" && vimeoVideoId
-      ? [{ title, duration: "", vimeoVideoId, locked: accessRequired, legacyKey: slug }]
+      ? [{ title, duration: "", vimeoVideoId, poster: fallbackBackdrop || fallbackArtwork || undefined, locked: accessRequired, legacyKey: slug }]
       : undefined;
 
   return {
@@ -98,11 +130,11 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     title,
     type: contentType,
     ...(raw["year"] ? { year: String(raw["year"]) } : {}),
-    genres: textList(raw["genres"]),
-    synopsis: text(raw["synopsis"]) || "",
-    shortDescription: text(raw["short_description"]) || text(raw["synopsis"]) || "",
-    artwork: optimizedImage(raw["poster_url"], 560) || "",
-    backdrop: optimizedImage(raw["backdrop_url"], 1120) || optimizedImage(raw["poster_url"], 1120) || "",
+    genres: textList(raw["genres"]).length ? textList(raw["genres"]) : (fallbackTitle?.genres ?? []),
+    synopsis: text(raw["synopsis"]) || fallbackTitle?.synopsis || "",
+    shortDescription: text(raw["short_description"]) || text(raw["synopsis"]) || fallbackTitle?.shortDescription || "",
+    artwork: fallbackArtwork,
+    backdrop: fallbackBackdrop,
     legacyPath: `/${slug}`,
     featured: Boolean(raw["featured"]),
     available: raw["published"] !== false && (!text(raw["scheduled_publish_at"]) || new Date(text(raw["scheduled_publish_at"]) ?? 0).getTime() <= Date.now()),
@@ -121,7 +153,7 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     ...(previewDuration !== undefined ? { previewDuration } : {}),
     ...(text(raw["quality_label"]) ? { quality: text(raw["quality_label"]) } : {}),
     ...(text(raw["maturity_rating"]) ? { maturityRating: text(raw["maturity_rating"]) } : {}),
-    ...(liveEpisodes?.length ? { episodes: liveEpisodes } : movieEpisode ? { episodes: movieEpisode } : {}),
+    ...(liveEpisodes?.length ? { episodes: liveEpisodes } : movieEpisode ? { episodes: movieEpisode } : fallbackTitle?.episodes?.length ? { episodes: fallbackTitle.episodes } : {}),
   } as CatalogueTitle;
 }
 
