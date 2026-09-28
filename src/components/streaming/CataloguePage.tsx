@@ -27,7 +27,7 @@ export function CataloguePage({
     [sort, setSort] = useState<SortMode>("curated");
   const { items, loading, usingFallback, offline } = useCatalogue();
   const pool = useMemo(
-    () => items.filter((item) => mode === "free" ? isFreeTitle(item) : item.type === (mode === "movies" ? "movie" : "series")),
+    () => items.filter((item) => mode === "free" ? isFreeTitle(item) : mode === "movies" ? item.type === "movie" && !isFreeTitle(item) && !item.genres.includes("Writing Masterclass") : item.type === "series" && !item.genres.includes("Writing Masterclass")),
     [items, mode],
   );
   const genres = useMemo(() => ["All", ...new Set(pool.flatMap((i) => i.genres))], [pool]);
