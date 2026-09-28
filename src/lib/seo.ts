@@ -103,7 +103,7 @@ function isoDuration(value?: string) {
   return `PT${hours ? `${hours}H` : ""}${minutes ? `${minutes}M` : ""}${seconds ? `${seconds}S` : ""}`;
 }
 
-export function videoObjectSchema(input: { name: string; description: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string; thumbnailUrl?: string; contentUrl?: string; expires?: string; creators?: string[] }) {
+export function videoObjectSchema(input: { name: string; description: string; vimeoId?: string; duration?: string | undefined; pagePath: string; episodeNumber?: number; seriesName?: string; seriesPath?: string; alreadyIsoDuration?: boolean; uploadDate?: string | undefined; thumbnailUrl?: string | undefined; contentUrl?: string; expires?: string; creators?: string[] }) {
   const pageUrl = absoluteUrl(input.pagePath);
   const uploadDate = input.uploadDate;
   const embedUrl = input.vimeoId ? `https://player.vimeo.com/video/${input.vimeoId}` : undefined;
