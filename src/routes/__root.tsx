@@ -145,6 +145,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://i.vimeocdn.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://f.vimeocdn.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://cdn.jsdelivr.net", crossOrigin: "anonymous" },
+      { rel: "modulepreload", href: "https://cdn.jsdelivr.net/npm/@vimeo/player@2.30.1/+esm", crossOrigin: "anonymous" },
       { rel: "dns-prefetch", href: "//i.vimeocdn.com" },
       { rel: "dns-prefetch", href: "//f.vimeocdn.com" },
       { rel: "preconnect", href: "https://bnuyhrsezkepsaebwlmu.supabase.co" },
@@ -203,6 +204,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <style dangerouslySetInnerHTML={{ __html: "html,body{background:#07090D;color:#E8EAF0;margin:0}img{max-width:100%;height:auto}" }} />
         <HeadContent />
       </head>
       <body>

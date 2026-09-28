@@ -74,7 +74,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
     if (!previewUrl || !heroInView || trailerOpen || item.heroAutoplay === false || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setTimeout(() => setHeroPreview(true), 1800);
+    const timer = window.setTimeout(() => setHeroPreview(true), 200);
     return () => window.clearTimeout(timer);
   }, [item.id, previewUrl, item.heroAutoplay, heroInView, trailerOpen]);
   useEffect(()=>{if(!heroPreview||trailerOpen||!heroPreviewLoaded){setHeroUiVisible(true);if(heroUiTimer.current)window.clearTimeout(heroUiTimer.current);return}showHeroUi();return()=>{if(heroUiTimer.current)window.clearTimeout(heroUiTimer.current)}},[heroPreview,trailerOpen,heroPreviewLoaded,item.id]);

@@ -36,7 +36,7 @@ export function TitleCard({
   const startHoverPreview = () => {
     if (typeof window !== "undefined" && window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
     if (!hoverVimeoId || travelMode || hoverTimerRef.current) return;
-    hoverTimerRef.current = window.setTimeout(() => { setHoverVideoReady(false); setShowHoverVideo(true); hoverTimerRef.current = null; }, 1800);
+    hoverTimerRef.current = window.setTimeout(() => { setHoverVideoReady(false); setShowHoverVideo(true); hoverTimerRef.current = null; }, 280);
   };
   const stopHoverPreview = () => {
     if (hoverTimerRef.current) window.clearTimeout(hoverTimerRef.current);
