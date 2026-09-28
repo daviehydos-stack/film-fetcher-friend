@@ -44,6 +44,8 @@ function Index() {
   const [myListIds, setMyListIds] = useState<string[]>([]);
   const [watchedIds, setWatchedIds] = useState<string[]>([]);
   const [home, setHome] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
   useEffect(() => {
     let cancelled = false;
     const load = () => publicCatalogue().then((value) => { if (!cancelled) setHome(value); }).catch(() => {});
@@ -70,7 +72,7 @@ function Index() {
   return (
     <StreamingShell>
       <main id="main-content" className="overflow-hidden">
-        {featured ? <HomeHero item={featured} /> : <div className="min-h-[70svh] bg-[#090a0c]" aria-hidden="true" />}
+        {mounted && featured ? <HomeHero item={featured} /> : <div className="min-h-[70svh] bg-[#090a0c]" aria-hidden="true" />}
 
         <div className="relative z-20 pb-10 pt-3 sm:pt-5 lg:pt-6">
           <ContinueWatching />
