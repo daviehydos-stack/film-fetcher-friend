@@ -15,8 +15,11 @@ export const getRouter = () => {
     basepath: pagesBase,
     scrollRestoration: true,
     defaultPreload: "intent",
-    defaultPreloadDelay: 120,
+    defaultPreloadDelay: 40,
     defaultPreloadStaleTime: 5 * 60_000,
+    defaultPendingMs: 1000,
+    defaultPendingMinMs: 0,
+    defaultViewTransition: false,
   });
 
   return router;
