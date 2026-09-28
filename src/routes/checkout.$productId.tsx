@@ -2,7 +2,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { ArrowLeft, Check, CircleAlert, Clock3, CreditCard, LockKeyhole, Mail, Phone, RefreshCw, ShieldCheck, Smartphone, Zap } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { broadcastAccessChanged, capturePayPalOrder, clearPlaybackCache, createPayPalOrder, paymentStatus, publicCatalogue, publicPaymentChannels, reconcilePayments, recoverPayment, resolveCatalogueKey, startPalplussPayment } from '@/lib/avant-backend'
+import { broadcastAccessChanged, capturePayPalOrder, clearPlaybackCache, createPayPalOrder, paymentStatus, publicCatalogue, publicPaymentChannels, reconcilePayments, recoverPayment, resolveCatalogueKey, startPalplussPayment, loginWithAccessCode } from '@/lib/avant-backend'
 import { knownProduct, productForLegacyContent } from '@/lib/backend-catalogue-map'
 import { optimizedArtwork } from '@/lib/episodes'
 import { customerToken } from '@/lib/google-auth'
@@ -70,6 +70,9 @@ function CheckoutRoute() {
   const [mobile, setMobile] = useState('')
   const [mpesaCode, setMpesaCode] = useState('')
   const [recoveryOpen, setRecoveryOpen] = useState(false)
+  const [accessCodeOpen, setAccessCodeOpen] = useState(false)
+  const [accessCode, setAccessCode] = useState('')
+  const [accessCodeBusy, setAccessCodeBusy] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [product, setProduct] = useState<any>(null)
@@ -300,6 +303,33 @@ function CheckoutRoute() {
     const host=document.getElementById('avant-paypal-buttons'); if(host)host.innerHTML=''
     window.setTimeout(() => { setMethodChosen(false); setSwitchingMethod(false) }, 170)
   }
+  async function redeemAccessCode() {
+    const code = accessCode.trim().toUpperCase()
+    if (!code) { setError('Enter your Avant access code.'); return }
+    const expectedProductId = backendProductId || productId
+    setAccessCodeBusy(true); setError('')
+    try {
+      let deviceId = ''
+      try {
+        deviceId = localStorage.getItem('avant_device_id') || ''
+        if (!deviceId) { deviceId = crypto.randomUUID(); localStorage.setItem('avant_device_id', deviceId) }
+      } catch { deviceId = crypto.randomUUID() }
+      const result = await loginWithAccessCode(code, deviceId, navigator.userAgent, expectedProductId)
+      clearPlaybackCache()
+      broadcastAccessChanged({ source: 'checkout-access-code', productId: expectedProductId })
+      const paymentReference = result?.payment?.reference || result?.reference || ''
+      if (embedded) {
+        window.parent.postMessage({ type: 'avant-payment-success', reference: paymentReference, source: 'access-code' }, window.location.origin)
+        window.setTimeout(() => window.parent.postMessage({ type: 'avant-checkout-close' }, '*'), 180)
+      } else {
+        const target = (returnTo || origin || '/').trim()
+        void router.navigate({ to: (target.startsWith('/') && !target.startsWith('//') && !target.startsWith('/checkout/') ? target : '/') as any, replace: true })
+      }
+    } catch (e:any) {
+      setError(e?.message || 'That access code could not be verified.')
+    } finally { setAccessCodeBusy(false) }
+  }
+
   function goBack() {
     if (leaving) return
     setLeaving(true)
@@ -398,6 +428,16 @@ function CheckoutRoute() {
               </div>}
             </div>}
           </>}
+
+          {!processing && <section className="mt-6 border-t border-white/10 pt-5">
+            <button type="button" onClick={() => { setAccessCodeOpen((value) => !value); setError('') }} className="w-full text-center text-xs font-semibold text-white/55 transition hover:text-white">Already have an access code?</button>
+            {accessCodeOpen && <div className="mt-4">
+              <label htmlFor="avant-access-code" className="text-[11px] font-bold uppercase tracking-[.16em] text-white/50">Access code</label>
+              <input id="avant-access-code" value={accessCode} onChange={(event) => setAccessCode(event.target.value.toUpperCase())} onKeyDown={(event) => { if (event.key === 'Enter') void redeemAccessCode() }} placeholder="Enter your Avant code" autoCapitalize="characters" autoComplete="one-time-code" className="mt-2 min-h-12 w-full border-b border-white/20 bg-transparent px-1 font-mono text-sm uppercase tracking-[.12em] text-white outline-none placeholder:font-sans placeholder:normal-case placeholder:tracking-normal placeholder:text-white/25 focus:border-primary"/>
+              <Button type="button" onClick={() => void redeemAccessCode()} disabled={!online || !accessCode.trim() || accessCodeBusy || loading} className="mt-3 min-h-12 w-full rounded-lg text-sm font-bold">{accessCodeBusy ? 'Verifying code…' : 'Unlock title'}</Button>
+              <p className="mt-2 text-center text-[11px] text-white/30">Codes only unlock the title or season they were issued for.</p>
+            </div>}
+          </section>}
 
           {activeMethod === 'mpesa' && methodChosen && !processing && <button type="button" onClick={() => setRecoveryOpen((value) => !value)} disabled={!online} className="mt-6 text-center text-xs font-semibold text-white/35 transition hover:text-white">Already paid? Verify payment</button>}
 
