@@ -1,6 +1,6 @@
-const CACHE = "avant-shell-v10";
-const RUNTIME = "avant-runtime-v10";
-const MEDIA = "avant-media-v1";
+const CACHE = "avant-shell-v11";
+const RUNTIME = "avant-runtime-v11";
+const MEDIA = "avant-media-v2";
 
 const SHELL = [
   "./",
@@ -208,6 +208,11 @@ self.addEventListener("fetch", (event) => {
     );
 
   if (!sameOrigin && !mediaHost) return;
+
+  // Let the browser load Vimeo/Cloudinary media directly. Intercepting CDN
+  // images with fetch() turns normal <img> requests into connect-src requests,
+  // which can be blocked by CSP and creates noisy 504s in Admin.
+  if (!sameOrigin && mediaHost) return;
 
   const path = sameOrigin
     ? scopedPath(url)
