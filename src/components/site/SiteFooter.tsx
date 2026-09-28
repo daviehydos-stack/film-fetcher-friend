@@ -53,10 +53,10 @@ export function SiteFooter() {
 
         <div>
           <p className="eyebrow">Contact</p>
-          <a href="mailto:business@avantcinema.com" className="mt-4 flex min-h-11 items-center gap-2 text-sm font-semibold text-ink-foreground/85 hover:text-flame"><Mail className="size-4"/>business@avantcinema.com</a>
+          <a href="mailto:customercare@avantcinematic.com" className="mt-4 flex min-h-11 items-center gap-2 text-sm font-semibold text-ink-foreground/85 hover:text-flame"><Mail className="size-4"/>customercare@avantcinematic.com</a>
           <a href={WHATSAPP_TEL} className="flex min-h-11 items-center gap-2 text-sm font-semibold text-ink-foreground/85 hover:text-flame"><MessageCircle className="size-4"/>WhatsApp {WHATSAPP}</a>
           <p className="mt-2 text-sm text-ink-foreground/70">
-            Issues with payment? Talk to us directly.
+            Payment or access issue? Email customer care. For partnerships and business enquiries, use business@avantcinematic.com.
           </p>
           <div className="mt-6 flex gap-2">
             <a
