@@ -97,6 +97,7 @@ export function TitleCard({
           {!imageLoaded && activeImage ? <div className="avant-skeleton absolute inset-0 z-0" aria-hidden="true" /> : null}
           {activeImage ? <img
             key={activeImage}
+            ref={(el) => { if (el && el.complete && el.naturalWidth > 0 && !imageLoaded) setImageLoaded(true); }}
             src={optimizedArtwork(activeImage, getAdaptiveImageWidth(layout === "grid" ? 720 : 640, tier))}
             alt={`${item.title} ${item.type === "movie" ? "movie" : "series"} artwork`}
             loading="lazy"

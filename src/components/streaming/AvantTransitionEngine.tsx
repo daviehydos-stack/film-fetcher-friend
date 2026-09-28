@@ -90,9 +90,11 @@ export function AvantTransitionEngine() {
   if (pageDissolve) {
     return (
       <div
-        className="pointer-events-none fixed inset-0 z-[2147483645] bg-black/20 backdrop-blur-[1px] animate-in fade-in duration-100 ease-out"
+        className="pointer-events-none fixed inset-0 z-[2147483645] bg-black animate-[avantDissolveOut_240ms_ease-out_forwards]"
         aria-hidden="true"
-      />
+      >
+        <style>{`@keyframes avantDissolveOut{0%{opacity:.35}100%{opacity:0}}@media(prefers-reduced-motion:reduce){[class*="animate-[avantDissolve"]{animation:none!important;opacity:0}}`}</style>
+      </div>
     );
   }
 
