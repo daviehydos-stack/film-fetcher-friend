@@ -216,6 +216,15 @@ for (const title of catalogue) {
   const existingEpisodes=title.episodes||[];
   const fallbackEpisodes=fallback.episodes||[];
   Object.assign(title, fallback, {
-    episodes: fallbackEpisodes.length ? fallbackEpisodes.map((ep,i)=>({...(existingEpisodes[i]||{}),...ep})) : title.episodes,
+    episodes: fallbackEpisodes.length
+      ? fallbackEpisodes.map((ep,i)=>({
+          ...(existingEpisodes[i]||{}),
+          ...ep,
+          poster: ep.poster || existingEpisodes[i]?.poster || title.backdrop || title.artwork,
+        }))
+      : title.episodes?.map((ep)=>({
+          ...ep,
+          poster: ep.poster || title.backdrop || title.artwork,
+        })),
   });
 }
