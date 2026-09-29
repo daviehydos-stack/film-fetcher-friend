@@ -113,6 +113,10 @@ export function videoObjectSchema(input: { name: string; description: string; vi
     name: input.name,
     description: input.description,
     thumbnailUrl: [input.thumbnailUrl].filter(Boolean),
+    isFamilyFriendly: true,
+    inLanguage: ["en", "sw"],
+    regionsAllowed: ["KE", "UG", "TZ", "RW", "NG", "ZA", "GB", "US"],
+    keywords: "Kenyan movies, Kenyan series, African cinema, Swahili drama, watch online, Avant Cinema",
     ...(uploadDate ? { uploadDate } : {}),
     ...(embedUrl ? { embedUrl } : {}),
     ...(input.contentUrl ? { contentUrl: input.contentUrl } : {}),
@@ -124,5 +128,6 @@ export function videoObjectSchema(input: { name: string; description: string; vi
     ...(input.creators?.length ? { creator: input.creators.map((name) => ({ "@type": "Person", name })), author: input.creators.map((name) => ({ "@type": "Person", name })) } : {}),
     publisher: { "@type": "Organization", name: SEO_SITE_NAME, ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}) },
   };
+
 }
 
