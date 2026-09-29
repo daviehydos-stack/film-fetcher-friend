@@ -1,8 +1,11 @@
 const SUPABASE_URL="https://bnuyhrsezkepsaebwlmu.supabase.co";
 const SUPABASE_ANON_KEY=import.meta.env["VITE_SUPABASE_ANON_KEY"]||import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"]||"sb_publishable_B3mlx-n0maE2rSIusRZmKw_ITK6QUeo";
-export const ADMIN_EMAIL="";
+export const ADMIN_EMAILS=["jennifergatero@gmail.com","hydrocephcare@gmail.com"] as const;
+export const ADMIN_OWNER_EMAIL="jennifergatero@gmail.com";
+export const ADMIN_EMAIL=ADMIN_OWNER_EMAIL;
 /** Client-side admin hints are not authorization. The backend admin-session endpoint is the source of truth. */
-export function isAdminEmail(_email?:string|null){return true}
+export function isAdminEmail(email?:string|null){if(!email)return false;const clean=String(email).trim().toLowerCase();return ADMIN_EMAILS.some(a=>a.toLowerCase()===clean)}
+export function isOwnerEmail(email?:string|null){return String(email||"").trim().toLowerCase()===ADMIN_OWNER_EMAIL}
 export type AdminSession={admin:boolean;role?:string;requireMfa?:boolean;email?:string;reason?:string};
 export function getAdminToken(){return typeof window==="undefined"?null:window.sessionStorage.getItem("avant_admin_token")}
 export function setAdminToken(token:string|null){if(typeof window==="undefined")return;token?window.sessionStorage.setItem("avant_admin_token",token):window.sessionStorage.removeItem("avant_admin_token")}
