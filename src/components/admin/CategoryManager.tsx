@@ -11,7 +11,7 @@ export const CATEGORY_LIST = [
 
 export function categoryOfTitle(t: any) {
   if ((t?.genres || []).includes("Writing Masterclass")) return "masterclass";
-  if (t?.access_required === false) return "free";
+  if (t?.access_required === false || (t?.genres || []).includes("Free to Watch")) return "free";
   return t?.content_type === "series" ? "series" : "movie";
 }
 
