@@ -90,13 +90,15 @@ export function AvantTransitionEngine() {
   if (pageDissolve) {
     return (
       <div
-        className="pointer-events-none fixed inset-0 z-[2147483645] bg-black animate-[avantDissolveOut_240ms_ease-out_forwards]"
+        className="pointer-events-none fixed inset-0 z-[2147483645] bg-black will-change-[opacity] animate-[avantDissolveOut_160ms_linear_forwards]"
+        style={{ transform: "translate3d(0,0,0)", contain: "strict" }}
         aria-hidden="true"
       >
-        <style>{`@keyframes avantDissolveOut{0%{opacity:.35}100%{opacity:0}}@media(prefers-reduced-motion:reduce){[class*="animate-[avantDissolve"]{animation:none!important;opacity:0}}`}</style>
+        <style>{`@keyframes avantDissolveOut{0%{opacity:.28}100%{opacity:0}}@media(prefers-reduced-motion:reduce){[class*="animate-[avantDissolve"]{animation:none!important;opacity:0}}`}</style>
       </div>
     );
   }
+
 
   return null;
 }
