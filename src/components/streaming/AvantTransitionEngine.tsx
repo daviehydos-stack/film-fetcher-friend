@@ -57,7 +57,7 @@ export function AvantTransitionEngine() {
 
     setWatchTransition(false);
     setPageDissolve(true);
-    const timer = window.setTimeout(() => setPageDissolve(false), 240);
+    const timer = window.setTimeout(() => setPageDissolve(false), 170);
     return () => window.clearTimeout(timer);
   }, [location.pathname]);
 
