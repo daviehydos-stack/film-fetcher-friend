@@ -6,7 +6,7 @@ This repository file keeps previous and current workflow failures together.
 
 Run ID: 36525182363
 
-Generated: 2026-09-29T05:14:18Z
+Generated: 2026-09-29T05:15:06Z
 
 ### Current primary errors
 ~~~text
@@ -7107,6 +7107,25 @@ run 36381993929 is still in progress; logs will be available when it is complete
 ### Run metadata
 ~~~json
 {"attempt":2,"conclusion":"","createdAt":"2026-09-29T05:13:46Z","databaseId":36525182363,"displayTitle":"Integrate Lovable Categories admin with Vimeo trailer controls","headSha":"fa56134bc8f5fec5cd0bfab809433dc9f1717ae8","jobs":[],"name":"Avant Movies CI","status":"pending","updatedAt":"2026-09-29T05:14:17Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36525182363"}
+
+~~~
+
+### Primary errors
+~~~text
+~~~
+
+### Full failed-step log
+~~~text
+run 36525182363 is still in progress; logs will be available when it is complete
+~~~
+
+---
+
+## Failure recorded 2026-09-29T05:15:06Z
+
+### Run metadata
+~~~json
+{"attempt":2,"conclusion":"","createdAt":"2026-09-29T05:13:46Z","databaseId":36525182363,"displayTitle":"Integrate Lovable Categories admin with Vimeo trailer controls","headSha":"fa56134bc8f5fec5cd0bfab809433dc9f1717ae8","jobs":[],"name":"Avant Movies CI","status":"queued","updatedAt":"2026-09-29T05:15:04Z","url":"https://github.com/daviehydos-stack/film-fetcher-friend/actions/runs/36525182363"}
 
 ~~~
 
