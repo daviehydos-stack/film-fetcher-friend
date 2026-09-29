@@ -186,6 +186,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             ...(absoluteUrl("/") ? { url: absoluteUrl("/") } : {}),
             publisher: { "@id": absoluteUrl("/#organization") },
             inLanguage: "en",
+            ...(absoluteUrl("/search")
+              ? {
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: `${absoluteUrl("/search")}?q={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
+                }
+              : {}),
           },
         ],
       }),
@@ -196,8 +208,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
   pendingComponent: PendingPage,
-  pendingMs: 120,
-  pendingMinMs: 180,
+  pendingMs: 700,
+  pendingMinMs: 0,
+
 });
 
 function RootShell({ children }: { children: ReactNode }) {
