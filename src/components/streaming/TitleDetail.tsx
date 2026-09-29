@@ -32,6 +32,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const [trailerOpen, setTrailerOpen] = useState(false);
   const [detailExpanded] = useState(true);
   const [heroPreview, setHeroPreview] = useState(false);
+  useEffect(()=>{if(!heroPreview||accessState==="authorized")return;const t=window.setTimeout(()=>setHeroPreview(false),60_000);return()=>window.clearTimeout(t)},[heroPreview]);
   const [heroPreviewLoaded, setHeroPreviewLoaded] = useState(false);
   const [heroUiVisible, setHeroUiVisible] = useState(true);
   const heroUiTimer = useRef<number | null>(null);
