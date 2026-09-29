@@ -62,7 +62,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const restartPreview=()=>{postPreviewMessage("setCurrentTime",previewStart);window.setTimeout(()=>postPreviewMessage("play"),80)};
   const showHeroUi=()=>{setHeroUiVisible(true);if(heroUiTimer.current)window.clearTimeout(heroUiTimer.current);if(heroPreview&&!trailerOpen)heroUiTimer.current=window.setTimeout(()=>setHeroUiVisible(false),8000)};
   const ordered = orderedEpisodes(item);
-  const seasons = [...new Set(ordered.map(({ season }) => season))];
+  const seasons = [...new Set(ordered.map(({ season }) => season))].sort((x, y) => Number(x) - Number(y));
   const [season, setSeason] = useState(seasons[0] ?? 1);
   const seasonEpisodes = ordered.filter((entry) => entry.season === season);
   const selectedSeasonPrimary = seasonEpisodes[0] ?? ordered[0];
