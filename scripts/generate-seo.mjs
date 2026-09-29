@@ -43,6 +43,20 @@ const addEntry = (path, lastmod) => {
 };
 staticPaths.forEach((path) => addEntry(path));
 
+// Safety net: these canonical titles stay in the sitemap even if the live
+// catalogue API is unreachable during a build.
+const fallbackTitleSlugs = [
+  "a-better-life",
+  "this-is-life",
+  "back-to-us",
+  "granted",
+  "nairobby",
+  "relationship-goals",
+  "jennifer-gatero-writing-masterclass",
+];
+fallbackTitleSlugs.forEach((slug) => addEntry(`/title/${slug}`));
+
+
 try {
   const response = await fetch(`${supabaseUrl}/functions/v1/catalogue-public`);
   if (response.ok) {
