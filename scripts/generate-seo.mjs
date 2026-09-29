@@ -178,12 +178,16 @@ const imageUrls = [...imageEntries.entries()].map(([path, images]) => {
 }).join("\n");
 writeFileSync("public/image-sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${imageUrls}\n</urlset>\n`);
 
+const videoTags = ["Kenyan movies", "Kenyan series", "African cinema", "Swahili drama", "Avant Cinema"];
 const videoUrls = [...videoEntries.entries()].map(([path, video]) => {
   const loc = escapeXml(`${productionOrigin}${path}`);
   const published = video.publicationDate && !Number.isNaN(new Date(video.publicationDate).getTime()) ? `<video:publication_date>${escapeXml(new Date(video.publicationDate).toISOString())}</video:publication_date>` : "";
   const duration = video.duration ? `<video:duration>${Math.min(28800, Math.max(1, Math.round(video.duration)))}</video:duration>` : "";
-  return `  <url><loc>${loc}</loc><video:video><video:thumbnail_loc>${escapeXml(video.thumbnail)}</video:thumbnail_loc><video:title>${escapeXml(video.title)}</video:title><video:description>${escapeXml(video.description.slice(0, 2048))}</video:description><video:player_loc>${escapeXml(video.player)}</video:player_loc>${duration}${published}</video:video></url>`;
+  const tags = videoTags.map((tag) => `<video:tag>${escapeXml(tag)}</video:tag>`).join("");
+  const extras = `<video:family_friendly>yes</video:family_friendly><video:requires_subscription>no</video:requires_subscription><video:live>no</video:live><video:uploader info="${escapeXml(productionOrigin)}/">Avant Cinema</video:uploader>${tags}`;
+  return `  <url><loc>${loc}</loc><video:video><video:thumbnail_loc>${escapeXml(video.thumbnail)}</video:thumbnail_loc><video:title>${escapeXml(video.title)}</video:title><video:description>${escapeXml(video.description.slice(0, 2048))}</video:description><video:player_loc>${escapeXml(video.player)}</video:player_loc>${duration}${published}${extras}</video:video></url>`;
 }).join("\n");
+
 writeFileSync("public/video-sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n${videoUrls}\n</urlset>\n`);
 
 writeFileSync(
