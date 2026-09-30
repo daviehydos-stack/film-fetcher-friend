@@ -12,6 +12,9 @@ const SEASON_ARTWORK: Record<string, Record<number, string>> = {
   "a-better-life": { 2: "/a-better-life-season-2.jpg" },
 };
 
+/** Dedicated trailer per season (Vimeo id). Seasons without one use their own first episode as the preview, so seasons never share a trailer. */
+const SEASON_TRAILER: Record<string, Record<number, string>> = {};
+
 export function expandSeasonProducts(items: CatalogueTitle[]): CatalogueTitle[] {
   const out: CatalogueTitle[] = [];
   for (const item of items) {
@@ -24,8 +27,12 @@ export function expandSeasonProducts(items: CatalogueTitle[]): CatalogueTitle[] 
     }
     for (const season of seasons) {
       const art = SEASON_ARTWORK[item.slug]?.[season];
+      const seasonEpisodes = episodes.filter((e) => (e.season ?? 1) === season);
+      const { trailerEmbedUrl: _sharedTrailer, previewVimeoId: _sharedPreview, ...base } = item;
+      const ownPreview = season === seasons[0] ? undefined : SEASON_TRAILER[item.slug]?.[season] ?? seasonEpisodes.find((e) => e.vimeoVideoId)?.vimeoVideoId;
       out.push({
-        ...item,
+        ...(season === seasons[0] ? item : base),
+        ...(ownPreview ? { previewVimeoId: ownPreview, trailerEmbedUrl: "https://player.vimeo.com/video/" + ownPreview } : {}),
         ...(art ? { artwork: art, backdrop: art } : {}),
         id: `${item.id}::s${season}`,
         title: `${item.title} — Season ${season}`,
