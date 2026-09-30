@@ -7,6 +7,7 @@ import { freeContentId, isFreeTitle } from "@/lib/catalogue";
 import { productForTitleSlug, productForLegacyContent } from "@/lib/backend-catalogue-map";
 import { hasVerifiedPurchase } from "@/lib/avant-backend";
 import { heroTrailerUrl, pauseEmbeddedPlayer, playEmbeddedPlayer } from "@/lib/video-embeds";
+import { useClipLoop } from "@/lib/clip-loop";
 import { optimizedArtwork } from "@/lib/episodes";
 import { claimMedia, stopAllMedia } from "@/lib/media-session";
 import { readMyList, toggleMyList } from "@/lib/my-list";
@@ -42,6 +43,8 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   useEffect(() => { setTravelMode(localStorage.getItem("avant-travel-mode") === "true"); }, []);
   const heroRef = useRef<HTMLElement | null>(null);
   const trailerFrameRef = useRef<HTMLIFrameElement | null>(null);
+  // Hero preview loops after its first minute, automatically and muted.
+  useClipLoop(trailerFrameRef, Boolean(item.trailerEmbedUrl && trailerReady && !trailerFailed && heroInView && !travelMode && !reducedMotion), 60, item.id);
   const firstEpisode = item.episodes?.[0];
   const freeFullTitle = isFreeTitle(item);
   const playableContentId = freeContentId(item);
@@ -122,10 +125,9 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     if (travelMode || (!isFast && !screen.matches) || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
+    // Start the preview on the very next tick so the player boots while the poster is showing.
     const startTrailer = () => setTrailerReady(true);
-    const idle = (window as any).requestIdleCallback
-      ? (window as any).requestIdleCallback(startTrailer, { timeout: 250 })
-      : window.setTimeout(startTrailer, 120);
+    const idle = window.setTimeout(startTrailer, 0);
     return () => {
       if ((window as any).cancelIdleCallback && typeof idle === "number") (window as any).cancelIdleCallback(idle);
       else window.clearTimeout(idle as number);
