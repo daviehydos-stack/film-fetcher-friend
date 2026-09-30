@@ -7,6 +7,11 @@ import type { CatalogueTitle } from "./site-data";
  * Each card carries ONLY its own season's episodes, so nothing is mixed or duplicated.
  * Single-season series, movies and masterclasses are returned unchanged.
  */
+/** Dedicated artwork per season product (season number -> image in /public). Seasons without an entry keep the series artwork. */
+const SEASON_ARTWORK: Record<string, Record<number, string>> = {
+  "a-better-life": { 2: "/a-better-life-season-2.jpg" },
+};
+
 export function expandSeasonProducts(items: CatalogueTitle[]): CatalogueTitle[] {
   const out: CatalogueTitle[] = [];
   for (const item of items) {
@@ -18,8 +23,10 @@ export function expandSeasonProducts(items: CatalogueTitle[]): CatalogueTitle[] 
       continue;
     }
     for (const season of seasons) {
+      const art = SEASON_ARTWORK[item.slug]?.[season];
       out.push({
         ...item,
+        ...(art ? { artwork: art, backdrop: art } : {}),
         id: `${item.id}::s${season}`,
         title: `${item.title} — Season ${season}`,
         episodes: episodes.filter((e) => (e.season ?? 1) === season),
