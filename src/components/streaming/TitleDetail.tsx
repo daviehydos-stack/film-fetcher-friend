@@ -18,6 +18,7 @@ import { episodeLabel, orderedEpisodes } from "@/lib/episodes";
 import { formatWatchTime, getProgress } from "@/lib/watch-progress";
 import { StreamingShell } from "./StreamingShell";
 import { ShareSection } from "./ShareSection";
+import { absoluteUrl } from "@/lib/seo";
 
 export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const router = useRouter();
@@ -126,7 +127,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   const shareTitle = async () => { const url = window.location.href; try { if (navigator.share) await navigator.share({ title: item.title, text: item.shortDescription, url }); else { await navigator.clipboard.writeText(url); window.alert("Title link copied."); } } catch (error: any) { if (error?.name !== "AbortError") window.alert("Unable to share this title."); } };
   const shareEpisode = async (episodeNumber: number, title: string) => {
     const path = `/episode/${item.slug}/${episodeNumber}`;
-    const url = new URL(path.replace(/^\//, ""), document.baseURI).href;
+    const url = (absoluteUrl(path)??path);
     try {
       if (navigator.share) await navigator.share({ title: `${title} — ${item.title}`, text: `Watch ${title} from ${item.title} on Avant Cinema.`, url });
       else { await navigator.clipboard.writeText(url); window.alert("Episode link copied."); }

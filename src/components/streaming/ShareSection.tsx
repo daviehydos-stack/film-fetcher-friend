@@ -1,16 +1,14 @@
-import { Component, useMemo, useState, type ReactNode } from "react";
+import { Component, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Check, Link2, Mail, MessageCircle, MessageSquare, Send, Share2 } from "lucide-react";
 import { optimizedImage } from "@/lib/catalogue";
+import { absoluteUrl } from "@/lib/seo";
 import type { CatalogueTitle } from "@/lib/site-data";
 
 type Mode = "title" | "season" | "episode";
 
 const SITE = "Avant Cinema";
 
-function fullUrl(path: string) {
-  if (typeof document === "undefined") return path;
-  try { return new URL(path.replace(/^\//, ""), document.baseURI).href; } catch { return path; }
-}
+const fullUrl = (path: string) => absoluteUrl(path) ?? path;
 
 async function copyText(text: string) {
   try {
@@ -41,7 +39,7 @@ function Tile({ label, className, children, href, onClick }: { label: string; cl
       <span className="mt-2 text-[11px] font-semibold text-white/65 transition group-hover:text-white sm:text-xs">{label}</span>
     </>
   );
-  const base = "group flex w-[72px] shrink-0 flex-col items-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-xl sm:w-20";
+  const base = "group flex w-full min-w-0 flex-col items-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-xl sm:w-20";
   return href ? (
     <a href={href} target="_blank" rel="noopener noreferrer" className={base} aria-label={`Share on ${label}`}>{body}</a>
   ) : (
@@ -107,7 +105,8 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
   const url = fullUrl(target.path);
   const text = target.message;
   const enc = encodeURIComponent;
-  const canNativeShare = typeof navigator !== "undefined" && typeof (navigator as any).share === "function";
+  const [canNativeShare, setCanNativeShare] = useState(false);
+  useEffect(() => { setCanNativeShare(typeof navigator !== "undefined" && typeof (navigator as any).share === "function"); }, []);
 
   const copy = async () => {
     if (await copyText(url)) {
@@ -136,8 +135,8 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
       </div>
 
       <div className="grid gap-5 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[.06] to-white/[.02] p-4 sm:p-5 lg:grid-cols-[minmax(0,340px)_1fr]">
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl">
-          <div className="relative aspect-video bg-[#0b0b0d]">
+        <div className="self-start overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl">
+          <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-[#0b0b0d]">
             {target.image ? <img src={optimizedImage(target.image, 720)} alt="" loading="lazy" decoding="async" className="absolute inset-0 size-full object-cover" /> : null}
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
             <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em] text-white/80 backdrop-blur">{SITE}</span>
@@ -177,7 +176,7 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
             </div>
           ) : null}
 
-          <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:gap-x-4 sm:gap-y-4 sm:overflow-visible">
+          <div className="grid grid-cols-4 gap-x-2 gap-y-5 sm:flex sm:flex-wrap sm:gap-x-4 sm:gap-y-4">
             <Tile label="WhatsApp" className="bg-[#25D366]" href={`https://wa.me/?text=${enc(`${text}\n${url}`)}`}><MessageCircle className="size-6 sm:size-7" /></Tile>
             <Tile label="Telegram" className="bg-[#229ED9]" href={`https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`}><Send className="size-5 sm:size-6" /></Tile>
             <Tile label="Facebook" className="bg-[#1877F2]" href={`https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`}><span className="text-2xl font-black leading-none sm:text-3xl" aria-hidden="true">f</span></Tile>
