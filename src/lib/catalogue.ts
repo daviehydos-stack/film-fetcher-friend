@@ -13,7 +13,7 @@ function textList(value: unknown) {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
-function optimizedImage(value: unknown, width = 720) {
+export function optimizedImage(value: unknown, width = 720) {
   const src = typeof value === "string" ? value : "";
   if (!src) return undefined;
   try {

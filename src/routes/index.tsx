@@ -61,10 +61,10 @@ function Index() {
   const withoutHero=(items:CatalogueTitle[])=>items.filter(item=>item.id!==featured?.id);
   const configuredAvailable=adminRails.flatMap((rail:any)=>rail.items).filter((item:CatalogueTitle,index:number,all:CatalogueTitle[])=>all.findIndex(other=>other.id===item.id)===index);
   const availableNow=withoutHero(configuredAvailable.length?configuredAvailable:available).slice(0,4);
-  const moviePreview=withoutHero(movies).slice(0,4);
+  const moviePreview=movies.slice(0,4);
   const seriesPreview=series.slice(0,4);
   const masterclassPreview=masterclasses.slice(0,4);
-  const freePreview=withoutHero(freeTitles).slice(0,4);
+  const freePreview=freeTitles.slice(0,4);
   const lastWatched = liveCatalogue.find((title) => watchedIds.some((id) => id === title.slug || id.startsWith(`${title.slug}-`)));
   const moreForYou = lastWatched
     ? withoutHero(liveCatalogue).filter((title) => title.id !== lastWatched.id && title.genres.some((genre) => lastWatched.genres.includes(genre))).slice(0,4)
