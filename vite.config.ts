@@ -8,6 +8,8 @@ export default defineConfig({
   vite: {
     // Custom-domain GitHub Pages is served from the root.
     base: "/",
+    // Cloudflare tunnel host for the development preview only.
+    server: { allowedHosts: ["preview.avantcinematic.com"] },
     build: {
       cssCodeSplit: true,
       sourcemap: false,

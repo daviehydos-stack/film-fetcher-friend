@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 export type NetworkTier = "ultra" | "good" | "moderate" | "slow";
 export interface NetworkStatus { tier: NetworkTier; saveData: boolean; effectiveType: string; downlink: number; isFast: boolean; online: boolean; }
 
+const DEFAULT_STATUS: NetworkStatus = { tier: "good", saveData: false, effectiveType: "4g", downlink: 10, isFast: true, online: true };
+
 function evaluateConnection(): NetworkStatus {
-  if (typeof navigator === "undefined") return { tier: "good", saveData: false, effectiveType: "4g", downlink: 10, isFast: true, online: true };
+  if (typeof navigator === "undefined") return DEFAULT_STATUS;
   const conn=(navigator as any).connection||(navigator as any).mozConnection||(navigator as any).webkitConnection;
   if(!conn)return { tier:"good",saveData:false,effectiveType:"4g",downlink:10,isFast:true,online:navigator.onLine };
   const saveData=Boolean(conn.saveData),effectiveType=String(conn.effectiveType||"4g").toLowerCase(),downlink=typeof conn.downlink==="number"?conn.downlink:10;
@@ -14,8 +16,9 @@ function evaluateConnection(): NetworkStatus {
   return{tier:"good",saveData,effectiveType,downlink,isFast:true,online:navigator.onLine};
 }
 export function useNetworkQuality():NetworkStatus{
-  const[status,setStatus]=useState<NetworkStatus>(evaluateConnection);
-  useEffect(()=>{if(typeof navigator==="undefined")return;const conn=(navigator as any).connection||(navigator as any).mozConnection||(navigator as any).webkitConnection;const update=()=>setStatus(evaluateConnection());const restored=()=>{update();window.dispatchEvent(new CustomEvent("avant:network-restored"))};window.addEventListener("online",restored);window.addEventListener("offline",update);conn?.addEventListener?.("change",update);return()=>{window.removeEventListener("online",restored);window.removeEventListener("offline",update);conn?.removeEventListener?.("change",update)}},[]);
+  // Start from the same value the server renders so hydration matches, then read the real connection after mount.
+  const[status,setStatus]=useState<NetworkStatus>(DEFAULT_STATUS);
+  useEffect(()=>{if(typeof navigator==="undefined")return;const conn=(navigator as any).connection||(navigator as any).mozConnection||(navigator as any).webkitConnection;const update=()=>setStatus(evaluateConnection());update();const restored=()=>{update();window.dispatchEvent(new CustomEvent("avant:network-restored"))};window.addEventListener("online",restored);window.addEventListener("offline",update);conn?.addEventListener?.("change",update);return()=>{window.removeEventListener("online",restored);window.removeEventListener("offline",update);conn?.removeEventListener?.("change",update)}},[]);
   return status;
 }
 export function getAdaptiveImageWidth(desiredWidth:number,tier:NetworkTier):number{
