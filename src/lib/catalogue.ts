@@ -42,9 +42,10 @@ export function mapPublicEpisode(value: unknown): Episode | null {
   const previewStart = numberValue(raw["preview_start_seconds"]);
   const previewDuration = numberValue(raw["preview_duration_seconds"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]) || text(raw["vimeoVideoId"]);
-  const poster = optimizedImage(raw["thumbnail_url"], 640);
-  const description = text(raw["description"]);
   const episodeLegacyKey = text(raw["legacy_key"]);
+  const s2Art = /^a-better-life-s2e(\d+)$/.exec(episodeLegacyKey ?? "");
+  const poster = s2Art ? `/a-better-life-s2/ep${s2Art[1]!.padStart(2, "0")}.jpg` : optimizedImage(raw["thumbnail_url"], 640);
+  const description = text(raw["description"]);
   const episodeId = text(raw["id"]);
   const introStart = numberValue(raw["intro_start_seconds"]);
   const introEnd = numberValue(raw["intro_end_seconds"]);
