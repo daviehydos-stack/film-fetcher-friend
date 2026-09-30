@@ -630,3 +630,22 @@ iframe{background:#000}
 @media (prefers-reduced-motion:reduce){
   .avant-route-surface{animation:none!important;transition:none!important}
 }
+
+/* Cinematic page transitions: forward pages rise and settle in; Back slides in from the left. Compositor-only, ~380ms. */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes avantPageForward{
+    0%{opacity:0;transform:translate3d(0,18px,0) scale(.975);filter:blur(6px)}
+    60%{opacity:1;filter:blur(0)}
+    100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+  }
+  @keyframes avantPageBack{
+    0%{opacity:0;transform:translate3d(-28px,0,0) scale(.985);filter:blur(4px)}
+    60%{opacity:1;filter:blur(0)}
+    100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+  }
+  html .avant-route-surface{animation:avantPageForward 380ms cubic-bezier(.22,1,.36,1) backwards!important;transform-origin:50% 35%;will-change:opacity,transform}
+  html[data-avant-nav="back"] .avant-route-surface{animation:avantPageBack 360ms cubic-bezier(.22,1,.36,1) backwards!important}
+}
+@media (prefers-reduced-motion:reduce){
+  html .avant-route-surface,html[data-avant-nav="back"] .avant-route-surface{animation:none!important}
+}

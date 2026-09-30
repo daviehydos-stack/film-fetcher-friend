@@ -284,6 +284,19 @@ function RootComponent() {
     sync(); window.addEventListener("online", sync); window.addEventListener("offline", sync);
     return () => { window.removeEventListener("online", sync); window.removeEventListener("offline", sync); };
   }, []);
+  // Direction-aware page transitions: browser Back/Forward slides in from the left, normal navigation rises in.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const root = document.documentElement;
+    const onPop = () => { root.dataset["avantNav"] = "back"; };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const t = window.setTimeout(() => { document.documentElement.dataset["avantNav"] = "forward"; }, 700);
+    return () => window.clearTimeout(t);
+  }, [location.pathname]);
   // Do not auto-reload the SPA when a newer deployment is detected.
   // On GitHub Pages a deep-link reload is handled by 404.html via ?__spa=.
   // Reloading here created an endless direct-URL <-> ?__spa redirect loop.
