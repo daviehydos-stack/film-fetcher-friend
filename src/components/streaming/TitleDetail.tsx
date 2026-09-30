@@ -86,7 +86,7 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   useEffect(() => {
     setHeroPreview(false);
     setHeroPreviewLoaded(false);
-    if (!previewUrl || !heroInView || trailerOpen || item.heroAutoplay === false || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!previewUrl || !heroInView || trailerOpen || item.heroAutoplay === false || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.matchMedia("(max-width: 639px)").matches) return;
     const timer = window.setTimeout(() => setHeroPreview(true), 200);
     return () => window.clearTimeout(timer);
   }, [item.id, previewUrl, item.heroAutoplay, heroInView, trailerOpen]);

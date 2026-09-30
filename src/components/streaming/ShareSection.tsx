@@ -32,14 +32,14 @@ async function copyText(text: string) {
   }
 }
 
-function Tile({ label, className, children, href, onClick }: { label: string; className: string; children: React.ReactNode; href?: string; onClick?: () => void }) {
+function Tile({ label, shownLabel, className, children, href, onClick, mobileHidden, extra = "" }: { label: string; shownLabel?: ReactNode; className: string; children: ReactNode; href?: string; onClick?: () => void; mobileHidden?: boolean; extra?: string }) {
   const body = (
     <>
-      <span className={`grid size-12 place-items-center rounded-full text-white shadow-lg ring-1 ring-white/10 transition duration-200 group-hover:-translate-y-0.5 group-hover:scale-105 group-active:scale-95 sm:size-14 ${className}`}>{children}</span>
-      <span className="mt-2 text-[11px] font-semibold text-white/65 transition group-hover:text-white sm:text-xs">{label}</span>
+      <span className={`grid size-14 place-items-center rounded-full text-white shadow-lg ring-1 ring-white/10 transition duration-200 group-hover:-translate-y-0.5 group-hover:scale-105 group-active:scale-95 ${className}`}>{children}</span>
+      <span className="mt-2 text-xs font-semibold text-white/70 transition group-hover:text-white">{shownLabel ?? label}</span>
     </>
   );
-  const base = "group flex w-full min-w-0 flex-col items-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-xl sm:w-20";
+  const base = `group ${mobileHidden ? "hidden sm:flex" : "flex"} w-full min-w-0 flex-col items-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-xl sm:w-20 ${extra}`;
   return href ? (
     <a href={href} target="_blank" rel="noopener noreferrer" className={base} aria-label={`Share on ${label}`}>{body}</a>
   ) : (
@@ -103,8 +103,13 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
   }, [episodeIndex, episodes, isSeries, item, mode, season, seasons]);
 
   const url = fullUrl(target.path);
-  const text = target.message;
   const enc = encodeURIComponent;
+  // One clear, friendly message everywhere: what it is, a one-line pitch, and where to watch.
+  const pitchSource = item.shortDescription || item.synopsis || "";
+  const pitch = pitchSource.length > 120 ? `${pitchSource.slice(0, 117).replace(/\s+\S*$/, "")}…` : pitchSource;
+  const text = `${target.heading}${pitch ? `\n${pitch}` : ""}\n\nWatch it on ${SITE}:`;
+  const waText = `*${target.heading}*${pitch ? `\n${pitch}` : ""}\n\nWatch it on ${SITE}:\n${url}`;
+  const emailBody = `Hi,\n\nI thought you would enjoy this — ${target.heading}.${pitch ? `\n\n${pitch}` : ""}\n\nWatch it on ${SITE}:\n${url}\n`;
   const [canNativeShare, setCanNativeShare] = useState(false);
   useEffect(() => { setCanNativeShare(typeof navigator !== "undefined" && typeof (navigator as any).share === "function"); }, []);
 
@@ -135,16 +140,16 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
       </div>
 
       <div className="grid gap-5 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[.06] to-white/[.02] p-4 sm:p-5 lg:grid-cols-[minmax(0,340px)_1fr]">
-        <div className="self-start overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl">
-          <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-[#0b0b0d]">
+        <div className="flex items-stretch self-start overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl sm:block">
+          <div className="relative aspect-[16/9] w-[42%] shrink-0 overflow-hidden bg-[#0b0b0d] sm:w-full">
             {target.image ? <img src={optimizedImage(target.image, 720)} alt="" loading="lazy" decoding="async" className="absolute inset-0 size-full object-cover" /> : null}
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-            <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em] text-white/80 backdrop-blur">{SITE}</span>
+            <span className="absolute left-3 top-3 hidden rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em] text-white/80 backdrop-blur sm:block">{SITE}</span>
           </div>
-          <div className="space-y-1 p-3.5">
+          <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1 p-3 sm:p-3.5">
             <p className="line-clamp-2 text-sm font-extrabold leading-snug text-white">{target.heading}</p>
             <p className="line-clamp-1 text-xs text-white/50">{target.sub}</p>
-            <p className="pt-1 text-[11px] font-medium tracking-wide text-white/35">{url.replace(/^https?:\/\//, "").split("/")[0]}</p>
+            <p className="pt-0.5 text-[11px] font-medium tracking-wide text-white/35">{url.replace(/^https?:\/\//, "").split("/")[0]}</p>
           </div>
         </div>
 
@@ -176,15 +181,18 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
             </div>
           ) : null}
 
-          <div className="grid grid-cols-4 gap-x-2 gap-y-5 sm:flex sm:flex-wrap sm:gap-x-4 sm:gap-y-4">
-            <Tile label="WhatsApp" className="bg-[#25D366]" href={`https://wa.me/?text=${enc(`${text}\n${url}`)}`}><MessageCircle className="size-6 sm:size-7" /></Tile>
-            <Tile label="Telegram" className="bg-[#229ED9]" href={`https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`}><Send className="size-5 sm:size-6" /></Tile>
-            <Tile label="Facebook" className="bg-[#1877F2]" href={`https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`}><span className="text-2xl font-black leading-none sm:text-3xl" aria-hidden="true">f</span></Tile>
-            <Tile label="X" className="bg-black" href={`https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`}><span className="text-lg font-black leading-none sm:text-xl" aria-hidden="true">𝕏</span></Tile>
-            <Tile label="Email" className="bg-[#EA4335]" href={`mailto:?subject=${enc(`${target.heading} on ${SITE}`)}&body=${enc(`${text}\n\n${url}`)}`}><Mail className="size-5 sm:size-6" /></Tile>
-            <Tile label="Message" className="bg-[#34C759]" href={`sms:?&body=${enc(`${text} ${url}`)}`}><MessageSquare className="size-5 sm:size-6" /></Tile>
-            <Tile label={copied ? "Copied!" : "Copy link"} className={copied ? "bg-emerald-500" : "bg-white/15"} onClick={() => void copy()}>{copied ? <Check className="size-5 sm:size-6" /> : <Link2 className="size-5 sm:size-6" />}</Tile>
-            {canNativeShare ? <Tile label="More" className="bg-white/15" onClick={() => void nativeShare()}><Share2 className="size-5 sm:size-6" /></Tile> : null}
+          {/* Phones: just Share (the device share sheet), WhatsApp and Copy link. Larger screens get the full set. */}
+          <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-x-4 sm:gap-y-4">
+            {canNativeShare ? (
+              <Tile label="Share" shownLabel={<><span className="sm:hidden">Share</span><span className="hidden sm:inline">More</span></>} className="bg-white !text-black" extra="order-first sm:order-last" onClick={() => void nativeShare()}><Share2 className="size-6" /></Tile>
+            ) : null}
+            <Tile label="WhatsApp" className="bg-[#25D366]" href={`https://wa.me/?text=${enc(waText)}`}><MessageCircle className="size-7" /></Tile>
+            <Tile label="Telegram" mobileHidden className="bg-[#229ED9]" href={`https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`}><Send className="size-6" /></Tile>
+            <Tile label="Facebook" mobileHidden className="bg-[#1877F2]" href={`https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(`${target.heading} — watch it on ${SITE}`)}`}><span className="text-3xl font-black leading-none" aria-hidden="true">f</span></Tile>
+            <Tile label="X" mobileHidden className="bg-black" href={`https://twitter.com/intent/tweet?text=${enc(`${target.heading} — watch it on ${SITE}`)}&url=${enc(url)}`}><span className="text-xl font-black leading-none" aria-hidden="true">𝕏</span></Tile>
+            <Tile label="Email" mobileHidden={canNativeShare} className="bg-[#EA4335]" href={`mailto:?subject=${enc(`${target.heading} | ${SITE}`)}&body=${enc(emailBody)}`}><Mail className="size-6" /></Tile>
+            <Tile label="Message" mobileHidden className="bg-[#34C759]" href={`sms:?&body=${enc(`${target.heading} — watch it on ${SITE}: ${url}`)}`}><MessageSquare className="size-6" /></Tile>
+            <Tile label={copied ? "Copied!" : "Copy link"} className={copied ? "bg-emerald-500" : "bg-white/15"} onClick={() => void copy()}>{copied ? <Check className="size-6" /> : <Link2 className="size-6" />}</Tile>
           </div>
 
           <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 p-1.5 pl-3.5">
