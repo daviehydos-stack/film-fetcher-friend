@@ -11,7 +11,7 @@ export const Route = createFileRoute("/title/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const path = `/title/${loaderData.slug}`;
-    const title = (loaderData as any).seoTitle || `${loaderData.title} | Watch Kenyan ${loaderData.type === "movie" ? "Movie" : "Series"} Online | Avant Cinema`;
+    const title = (loaderData as any).seoTitle || `${loaderData.title} — Watch Kenyan ${loaderData.type === "movie" ? "Movie" : "Series"} Online | Avant Cinema`;
     const fallbackDescription = `Watch ${loaderData.title} online on Avant Cinema, a Kenyan ${loaderData.type === "movie" ? "movie" : "series"}${loaderData.genres?.length ? ` in ${loaderData.genres.slice(0, 2).join(" and ")}` : ""}. Explore the story, cast, trailer, episodes and streaming details.`;
     const rawDescription = (loaderData as any).metaDescription || loaderData.shortDescription || loaderData.synopsis || fallbackDescription;
     const cleanDescription = String(rawDescription).replace(/\s+/g, " ").trim();

@@ -14,8 +14,6 @@ const staticPaths = [
   "/tv-shows",
   "/about",
   "/contact",
-  "/betterlife-episodes",
-  "/this-is-life-episodes",
   "/watch-free",
   "/privacy",
   "/terms",
@@ -61,7 +59,15 @@ try {
   const response = await fetch(`${supabaseUrl}/functions/v1/catalogue-public`);
   if (response.ok) {
     const body = await response.json();
-    const titles = (body?.titles || []).filter((title) => title?.status === "published" && title?.slug && (!title?.scheduled_publish_at || new Date(title.scheduled_publish_at).getTime() <= Date.now()));
+    const norm = (x) => String(x || "").toLowerCase().replace(/\btrailer\b|\bthe\b|\ba\b/g, " ").replace(/[^a-z0-9]/g, "");
+    const isTrailerTitle = (t) => /trailer/i.test(`${t?.title} ${t?.slug}`);
+    const rawTitles = body?.titles || [];
+    const trailerFor = new Map();
+    for (const t of rawTitles.filter(isTrailerTitle)) {
+      const parent = rawTitles.find((x) => x !== t && !isTrailerTitle(x) && norm(x.title) === norm(t.title));
+      if (parent && t.vimeo_video_id) trailerFor.set(parent.slug, String(t.vimeo_video_id));
+    }
+    const titles = rawTitles.filter((title) => !isTrailerTitle(title)).filter((title) => title?.status === "published" && title?.slug && (!title?.scheduled_publish_at || new Date(title.scheduled_publish_at).getTime() <= Date.now()));
 
     for (const title of titles) {
       const path = `/title/${title.slug}`;
@@ -70,17 +76,19 @@ try {
       [...(title.cast_names || []), ...(title.director_names || []), ...(title.creator_names || [])].forEach((person) => { const slug = slugify(person); if (slug) personEntries.add(slug); });
       const images = [title.poster_url, title.backdrop_url].filter(Boolean);
       if (images.length) imageEntries.set(path, [...new Set(images)]);
-      const player = title.trailer_vimeo_id
-        ? `https://player.vimeo.com/video/${title.trailer_vimeo_id}`
-        : title.vimeo_video_id
-          ? `https://player.vimeo.com/video/${title.vimeo_video_id}`
-          : undefined;
+      const isFree = (title.genres || []).some((g) => /free to watch/i.test(g)) || ["granted", "relationship-goals"].includes(title.slug);
+      // The public catalogue API does not expose every trailer, so known ones are listed here as a safety net.
+      const knownTrailers = { "back-to-us": "1189285049", "a-better-life": "1229459523" };
+      const trailerId = title.trailer_vimeo_id || trailerFor.get(title.slug) || knownTrailers[title.slug];
+      const videoId = trailerId || (isFree ? title.vimeo_video_id : undefined);
+      const player = videoId ? `https://player.vimeo.com/video/${videoId}` : undefined;
       const thumb = title.backdrop_url || title.poster_url;
       if (player && thumb) videoEntries.set(path, {
-        title: `${title.title} — Official Trailer | Avant Cinema`,
-        description: title.short_description || title.synopsis || `Watch the official trailer for ${title.title} on Avant Cinema.`,
+        title: trailerId ? `${title.title} — Official Trailer | Avant Cinema` : `${title.title} — Watch Free | Avant Cinema`,
+        description: title.short_description || title.synopsis || `Watch ${title.title} on Avant Cinema.`,
         thumbnail: thumb,
         player,
+        paid: false,
         publicationDate: title.scheduled_publish_at || title.published_at || title.created_at,
       });
     }
@@ -93,12 +101,14 @@ try {
           );
           if (!r.ok) return [];
           const d = await r.json();
+          const seasonNo = (episode) => (d?.seasons || []).find((season) => season.id === episode.season_id)?.season_number || 1;
+          const isFreeSeries = (title.genres || []).some((g) => /free to watch/i.test(g));
           return (d?.episodes || [])
             .filter((episode) => episode?.status === "published" && (!episode.visible_from || new Date(episode.visible_from).getTime() <= Date.now()))
-            .sort((a, b) => (a.episode_number || 0) - (b.episode_number || 0))
+            .sort((a, b) => seasonNo(a) - seasonNo(b) || (a.episode_number || 0) - (b.episode_number || 0))
             .map((episode, index) => {
               const episodeKey = episode.legacy_key || episode.id || `${title.slug}-${index + 1}`;
-              const episodePath = `/episode/${title.slug}/${Number(episode.episode_number) || index + 1}`;
+              const episodePath = `/episode/${title.slug}/${index + 1}`;
               const episodeThumb = episode.thumbnail_url || title.backdrop_url || title.poster_url;
               const episodePlayer = episode.vimeo_video_id
                 ? `https://player.vimeo.com/video/${episode.vimeo_video_id}`
@@ -111,6 +121,7 @@ try {
                 player: episodePlayer,
                 publicationDate: episode.visible_from || episode.created_at || title.published_at || title.created_at,
                 duration: Number(episode.duration_seconds) > 0 ? Number(episode.duration_seconds) : undefined,
+                paid: !isFreeSeries,
               });
               return {
                 path: episodePath,
@@ -198,7 +209,7 @@ const videoUrls = [...videoEntries.entries()].map(([path, video]) => {
   const published = video.publicationDate && !Number.isNaN(new Date(video.publicationDate).getTime()) ? `<video:publication_date>${escapeXml(new Date(video.publicationDate).toISOString())}</video:publication_date>` : "";
   const duration = video.duration ? `<video:duration>${Math.min(28800, Math.max(1, Math.round(video.duration)))}</video:duration>` : "";
   const tags = videoTags.map((tag) => `<video:tag>${escapeXml(tag)}</video:tag>`).join("");
-  const extras = `<video:family_friendly>yes</video:family_friendly><video:requires_subscription>no</video:requires_subscription><video:live>no</video:live><video:uploader info="${escapeXml(productionOrigin)}/">Avant Cinema</video:uploader>${tags}`;
+  const extras = `<video:family_friendly>yes</video:family_friendly><video:requires_subscription>${video.paid ? "yes" : "no"}</video:requires_subscription><video:live>no</video:live><video:uploader info="${escapeXml(productionOrigin)}/">Avant Cinema</video:uploader>${tags}`;
   return `  <url><loc>${loc}</loc><video:video><video:thumbnail_loc>${escapeXml(video.thumbnail)}</video:thumbnail_loc><video:title>${escapeXml(video.title)}</video:title><video:description>${escapeXml(video.description.slice(0, 2048))}</video:description><video:player_loc>${escapeXml(video.player)}</video:player_loc>${duration}${published}${extras}</video:video></url>`;
 }).join("\n");
 

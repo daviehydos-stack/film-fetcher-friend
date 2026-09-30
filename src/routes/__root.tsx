@@ -46,6 +46,8 @@ function PendingPage() {
 function NotFoundComponent() {
   return (
     <div className="min-h-[100svh] bg-background text-foreground">
+      <title>Page not found — Avant Cinema</title>
+      <meta name="robots" content="noindex, follow" />
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/95">
         <div className="mx-auto flex h-[64px] max-w-[1800px] items-center px-4 sm:h-[72px] sm:px-8 lg:px-12">
           <Link to="/" aria-label="Avant Cinema home" className="flex items-center gap-3">
