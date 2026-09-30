@@ -150,7 +150,7 @@ function CheckoutRoute() {
     if (embedded) window.parent.postMessage({ type: 'avant-payment-success', reference: referenceValue, returnTo }, window.location.origin)
     else await router.navigate({ to: '/payment/success', search: { reference: referenceValue, returnTo: returnTo || origin, origin, originScroll: String(originScroll) } })
   }
-  function handleTerminal(state: PaymentUiState) { setBusy(false); setStage(state); setError(paymentStateMessage(state)) }
+  function handleTerminal(state: PaymentUiState) { try { sessionStorage.removeItem(`avant_payment_key_${productId}`); sessionStorage.removeItem(`avant_payment_${productId}`) } catch { /* unavailable */ } setBusy(false); setStage(state); setError(paymentStateMessage(state)) }
   function normalizeKenyanMobile(value: string) {
     const digits = value.replace(/\D/g, '')
     let local = digits
@@ -216,6 +216,7 @@ function CheckoutRoute() {
         setError('M-PESA may still be processing. Do not pay again—use Check saved payment.')
         return
       }
+      if (!timeout) { try { sessionStorage.removeItem(`avant_payment_key_${productId}`) } catch { /* unavailable */ } }
       setStage('ready'); setBusy(false)
       setError(authError?'Your Avant session expired. Sign in again, then retry the payment.':timeout?'M-PESA is taking longer than expected. Check your phone first; if a prompt arrived, do not pay again.':(raw||'We could not send the M-PESA request. Please try again.'))
     }
