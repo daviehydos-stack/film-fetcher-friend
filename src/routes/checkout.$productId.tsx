@@ -23,6 +23,19 @@ export const Route = createFileRoute('/checkout/$productId')({
 
 type Method = 'mpesa' | 'paypal'
 
+function checkoutErrorMessage(error: unknown, fallback: string) {
+  const value = error as any
+  const candidates = [value?.body?.error, value?.body?.message, value?.body?.detail, value?.message]
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim()) return candidate.trim()
+    if (candidate && typeof candidate === 'object') {
+      const nested = candidate.message || candidate.error || candidate.detail
+      if (typeof nested === 'string' && nested.trim()) return nested.trim()
+    }
+  }
+  return fallback
+}
+
 function MPesaMark() {
   return (
     <svg viewBox="0 0 120 40" className="h-full w-full" role="img" aria-label="M-PESA">
@@ -193,7 +206,7 @@ function CheckoutRoute() {
       }
       void poll()
     } catch (e: any) {
-      const raw=String(e?.body?.error||e?.body?.message||e?.message||'').trim()
+      const raw=checkoutErrorMessage(e, '')
       const authError=/invalid or expired customer session|customer session|401/i.test(raw)
       const timeout=/took too long|abort|timeout/i.test(raw)
       let saved=''
@@ -260,7 +273,7 @@ function CheckoutRoute() {
         onError: (e: any) => { setBusy(false); setStage('ready'); setError(e?.message || 'PayPal checkout failed.') },
       }).render('#avant-paypal-buttons')
     } catch (e: any) {
-      setBusy(false); setStage('ready'); setError(e?.body?.error || e?.body?.message || e?.message || 'Unable to start PayPal checkout.')
+      setBusy(false); setStage('ready'); setError(checkoutErrorMessage(e, 'Unable to start PayPal checkout.'))
     }
   }
 
@@ -326,7 +339,7 @@ function CheckoutRoute() {
         void router.navigate({ to: (target.startsWith('/') && !target.startsWith('//') && !target.startsWith('/checkout/') ? target : '/') as any, replace: true })
       }
     } catch (e:any) {
-      setError(e?.message || 'That access code could not be verified.')
+      setError(checkoutErrorMessage(e, 'That access code could not be verified.'))
     } finally { setAccessCodeBusy(false) }
   }
 
