@@ -33,7 +33,7 @@ export const resolveCatalogueKey=async(key:string)=>{if(missingCatalogueKeys.has
         }
       }
     }
-    if(e?.status===404||e?.status===500||localKnown){missingCatalogueKeys.add(key);return null}throw e
+    /* Only a definitive answer from the server marks a title as missing. A timeout or dropped connection must never be cached as "not found". */if(e?.status===404||(e?.status&&localKnown)){missingCatalogueKeys.add(key);return null}throw e
   }
 };
 export const publicCommerceSettings=()=>request<any>("catalogue-public?view=commerce").catch(()=>publicCatalogue().then((x:any)=>({products:x?.products||[]})));
