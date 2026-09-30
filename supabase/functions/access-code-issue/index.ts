@@ -1,5 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import{createClient}from"npm:@supabase/supabase-js@2";import{createHash}from"node:crypto";import{customerUser}from"./customer-auth.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { createHash } from "node:crypto";
+import { customerUser } from "./customer-auth.ts";
 const H={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, apikey, content-type, x-avant-guest","Content-Type":"application/json","Cache-Control":"no-store"};
 function secret(){const k=JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS")||"{}");return k.default||Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||""}
 function db(){return createClient(Deno.env.get("SUPABASE_URL")!,secret(),{auth:{persistSession:false}})}
