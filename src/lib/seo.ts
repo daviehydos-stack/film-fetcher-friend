@@ -16,9 +16,23 @@ export function publicPageLinks(path: string) {
   return canonical ? [{ rel: "canonical", href: canonical }] : [];
 }
 
+/** WhatsApp, Facebook and X show a crisp 1200x630 JPEG; Cloudinary artwork is cropped and compressed for link previews. */
+function socialPreviewImage(src: string): { url: string; sized: boolean } {
+  try {
+    const u = new URL(src);
+    if (u.hostname === "res.cloudinary.com" && u.pathname.includes("/upload/") && !/\/(c_fill|w_\d+),/.test(u.pathname)) {
+      u.pathname = u.pathname.replace("/upload/", "/upload/c_fill,g_auto,w_1200,h_630,q_auto:good,f_jpg/");
+      return { url: u.toString(), sized: true };
+    }
+  } catch { /* keep the original URL */ }
+  return { url: src, sized: false };
+}
+
 export function publicPageMeta(path: string, title: string, description: string, image?: string, type = "website") {
   const url = absoluteUrl(path);
-  const socialImage = image ? (image.startsWith("http://") || image.startsWith("https://") ? image : absoluteUrl(image)) : undefined;
+  const rawSocialImage = image ? (image.startsWith("http://") || image.startsWith("https://") ? image : absoluteUrl(image)) : undefined;
+  const preview = rawSocialImage ? socialPreviewImage(rawSocialImage) : undefined;
+  const socialImage = preview?.url;
   return [
     { title },
     { name: "description", content: description },
@@ -28,7 +42,7 @@ export function publicPageMeta(path: string, title: string, description: string,
     { property: "og:type", content: type },
     { property: "og:site_name", content: SEO_SITE_NAME },
     ...(url ? [{ property: "og:url", content: url }] : []),
-    ...(socialImage ? [{ property: "og:image", content: socialImage }, { property: "og:image:alt", content: `${title} artwork` }] : []),
+    ...(socialImage ? [{ property: "og:image", content: socialImage }, ...(preview?.sized ? [{ property: "og:image:type", content: "image/jpeg" }, { property: "og:image:width", content: "1200" }, { property: "og:image:height", content: "630" }] : []), { property: "og:image:alt", content: `${title} artwork` }] : []),
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
