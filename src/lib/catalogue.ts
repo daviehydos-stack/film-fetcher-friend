@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { publicCatalogue } from "./avant-backend";
+import { normalizePublicCatalogue } from "./trailers";
 import { catalogue, type CatalogueTitle, type Episode } from "./site-data";
 
 type PublicTitle = Record<string, unknown>;
@@ -157,7 +158,9 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
   } as CatalogueTitle;
 }
 
-export function mergePublicCatalogue(payload: unknown) {
+export function mergePublicCatalogue(rawPayload: unknown) {
+  // Trailers are attached to their parent title and never listed as products (also cleans older cached payloads).
+  const payload = normalizePublicCatalogue(rawPayload);
   const titles = payload && typeof payload === "object" && Array.isArray((payload as { titles?: unknown[] }).titles)
     ? (payload as { titles: PublicTitle[] }).titles.map(mapPublicTitle).filter((item): item is CatalogueTitle => Boolean(item))
     : [];

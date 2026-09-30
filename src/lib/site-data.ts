@@ -162,7 +162,8 @@ const AVANT_VIMEO_FALLBACKS: Record<string, Partial<CatalogueTitle> & { episodes
   "a-better-life": {
     previewVimeoId: "1229459523", trailerEmbedUrl: "https://player.vimeo.com/video/1229459523",
     episodes: [
-      { id:"abl-1", title:"Episode 1", season:1, episodeNumber:1, duration:"42:15", vimeoVideoId:"1188409403", locked:true, legacyKey:"a-better-life-1" },
+      // Season 1 Episode 1 is intentionally absent: its Vimeo video is awaiting client confirmation.
+      // (1188409403 is Season 2 Episode 14 and must never be used here.)
       { id:"abl-2", title:"Episode 2", season:1, episodeNumber:2, duration:"41:30", vimeoVideoId:"1188388219", locked:true, legacyKey:"a-better-life-2" },
       { id:"abl-3", title:"Episode 3", season:1, episodeNumber:3, duration:"40:50", vimeoVideoId:"1188389406", locked:true, legacyKey:"a-better-life-3" },
       { id:"abl-4", title:"Episode 4", season:1, episodeNumber:4, duration:"43:00", vimeoVideoId:"1188391929", locked:true, legacyKey:"a-better-life-4" },

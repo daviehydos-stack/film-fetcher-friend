@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import type { CatalogueTitle } from "@/lib/site-data";
 import { isFreeTitle, useCatalogue } from "@/lib/catalogue";
 import { catalogueGenres } from "@/lib/discovery";
+import { expandSeasonProducts } from "@/lib/seasons";
 import { rememberReturnContext } from "@/lib/navigation-memory";
 import { StreamingShell } from "./StreamingShell";
 import { DiscoveryGrid } from "./DiscoveryGrid";
@@ -26,10 +27,11 @@ export function CataloguePage({
     [genre, setGenre] = useState("All"),
     [sort, setSort] = useState<SortMode>("curated");
   const { items, loading, usingFallback, offline } = useCatalogue();
-  const pool = useMemo(
-    () => items.filter((item) => mode === "free" ? isFreeTitle(item) : mode === "movies" ? item.type === "movie" && !isFreeTitle(item) && !item.genres.includes("Writing Masterclass") : item.type === "series" && !item.genres.includes("Writing Masterclass")),
-    [items, mode],
-  );
+  const pool = useMemo(() => {
+    const base = items.filter((item) => mode === "free" ? isFreeTitle(item) : mode === "movies" ? item.type === "movie" && !isFreeTitle(item) && !item.genres.includes("Writing Masterclass") : item.type === "series" && !item.genres.includes("Writing Masterclass"));
+    // Multi-season series are listed per season (e.g. A Better Life — Season 1 and Season 2).
+    return mode === "series" ? expandSeasonProducts(base) : base;
+  }, [items, mode]);
   const genres = useMemo(() => ["All", ...new Set(pool.flatMap((i) => i.genres))], [pool]);
   const visible = useMemo(() => {
     const filtered = pool.filter(

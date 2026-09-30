@@ -78,6 +78,8 @@ export function TitleDetail({ item }: { item: CatalogueTitle }) {
   useEffect(()=>{setNow(Date.now());try{const ids=JSON.parse(localStorage.getItem("avant-premiere-reminders")??"[]") as string[];setReminded(ids.includes(item.id))}catch{setReminded(false)}},[item.id]);
   useEffect(()=>{if(!upcoming)return;const timer=window.setInterval(()=>setNow(Date.now()),1000);return()=>window.clearInterval(timer)},[upcoming,item.releaseAt]);
   useEffect(() => { setSeason((s) => (seasons.includes(s) ? s : seasons[0] ?? 1)); }, [item.id]);
+  // Deep link to a season product, e.g. /title/a-better-life?season=2
+  useEffect(() => { const q = Number(new URLSearchParams(window.location.search).get("season")); if (q && seasons.includes(q)) setSeason(q); }, [item.id]);
   useEffect(()=>subscribeAccessChanged(()=>setAccessVersion(v=>v+1)),[]); useEffect(() => { setSaved(readMyList().includes(item.id)); let live=true; if(freeFullTitle){setAccessState("authorized");return()=>{live=false}} const verifiedLocally=hasVerifiedPurchase(...accessKeysForTitleSlug(item.slug,accessProductId)); if(verifiedLocally||cachedSubscriber()){setAccessState("authorized");return()=>{live=false}} setAccessState("loading"); customerToken(false).then(async token=>{if(!live)return;try{const target=item.type==="movie"?item.slug:(selectedSeasonPrimary?.contentId??`${item.slug}-1`);const a=await resolvePlayback(token,target);if(live)setAccessState(a?.authorized?"authorized":"locked")}catch(e:any){if(live)setAccessState(e?.status===403?"locked":"error")}}); return()=>{live=false}}, [item.id,item.slug,freeFullTitle,accessVersion,season,accessProductId,selectedSeasonPrimary?.contentId]);
   useEffect(() => {
     setHeroPreview(false);
