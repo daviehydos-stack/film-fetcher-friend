@@ -81,8 +81,6 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
   const fallbackTitle = catalogue.find((item) => item.slug === slug);
   const legacyKey = text(raw["legacy_key"]);
   const vimeoVideoId = text(raw["vimeo_video_id"]) || fallbackTitle?.vimeoVideoId;
-  const previewVimeoVideoId = text(raw["preview_vimeo_video_id"]) || text(raw["previewVimeoVideoId"]) || text(raw["trailer_vimeo_video_id"]);
-  const trailerEmbedUrl = text(raw["trailer_embed_url"]) || text(raw["trailerEmbedUrl"]);
   const previewStart = numberValue(raw["preview_start_seconds"]);
   const previewDuration = numberValue(raw["preview_duration_seconds"]);
   const rawLiveEpisodes = Array.isArray(raw["episodes"])
@@ -114,6 +112,12 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
         }))
       : undefined;
   const accessRequired = typeof raw["access_required"] === "boolean" ? raw["access_required"] : (fallbackTitle?.accessRequired ?? true);
+  // Dedicated trailer: attached trailer record, the trailer field, or the verified bundled trailer.
+  // It must never be the protected full video or one of its episodes, so a trailer can't unlock or expose paid content.
+  const protectedVideoIds = new Set([vimeoVideoId, ...(liveEpisodes ?? []).map((episode) => episode.vimeoVideoId)].filter(Boolean) as string[]);
+  const trailerCandidate = text(raw["preview_vimeo_video_id"]) || text(raw["previewVimeoVideoId"]) || text(raw["trailer_vimeo_video_id"]) || text(raw["trailer_vimeo_id"]) || fallbackTitle?.previewVimeoId;
+  const previewVimeoId = text(raw["preview_mode"]) !== "none" && trailerCandidate && !protectedVideoIds.has(trailerCandidate) ? trailerCandidate : undefined;
+  const trailerEmbedUrl = text(raw["trailer_embed_url"]) || text(raw["trailerEmbedUrl"]) || (previewVimeoId ? `https://player.vimeo.com/video/${previewVimeoId}` : undefined);
   const fallbackArtwork = optimizedImage(raw["poster_url"], 560) || fallbackTitle?.artwork || "";
   const fallbackBackdrop =
     optimizedImage(raw["backdrop_url"], 1120) ||
@@ -148,9 +152,10 @@ export function mapPublicTitle(raw: PublicTitle): CatalogueTitle | null {
     ...(text(raw["scheduled_publish_at"]) ? { releaseAt: text(raw["scheduled_publish_at"]) } : {}),
     ...(raw["story_world"] && typeof raw["story_world"] === "object" ? { storyWorld: raw["story_world"] as CatalogueTitle["storyWorld"] } : {}),
     ...(vimeoVideoId ? { vimeoVideoId } : {}),
-    ...(previewVimeoVideoId ? { previewVimeoVideoId } : {}),
+    ...(previewVimeoId ? { previewVimeoId } : {}),
     ...(trailerEmbedUrl ? { trailerEmbedUrl } : {}),
-    ...(previewStart !== undefined ? { previewStart } : {}),
+    // A dedicated trailer always starts at 0; the stored start applies only to previews cut from the source video.
+    ...(previewStart !== undefined && !previewVimeoId ? { previewStart } : {}),
     ...(previewDuration !== undefined ? { previewDuration } : {}),
     ...(text(raw["quality_label"]) ? { quality: text(raw["quality_label"]) } : {}),
     ...(text(raw["maturity_rating"]) ? { maturityRating: text(raw["maturity_rating"]) } : {}),
