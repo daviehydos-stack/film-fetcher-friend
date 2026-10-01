@@ -127,9 +127,9 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
     }
   };
 
-  const modes: Array<{ id: Mode; label: string }> = [{ id: "title", label: item.type === "movie" ? "Movie" : "Whole series" }];
-  if (isSeries && seasons.length > 1) modes.push({ id: "season", label: "A season" });
-  if (isSeries) modes.push({ id: "episode", label: "An episode" });
+  const modes: Array<{ id: Mode; label: string }> = [{ id: "title", label: item.type === "movie" ? "Movie" : "Series" }];
+  if (isSeries && seasons.length > 1) modes.push({ id: "season", label: "Season" });
+  if (isSeries) modes.push({ id: "episode", label: "Episode" });
 
   return (
     <section aria-labelledby="share-heading" className="mx-auto max-w-[1180px] bg-[#181818] px-4 pb-10 pt-8 sm:px-8 lg:px-16">
@@ -156,9 +156,9 @@ function ShareSectionInner({ item }: { item: CatalogueTitle }) {
         <div className="min-w-0 space-y-5">
           {modes.length > 1 ? (
             <div className="space-y-3">
-              <div role="tablist" aria-label="What to share" className="inline-flex rounded-full border border-white/10 bg-black/30 p-1">
+              <div role="tablist" aria-label="What to share" className="inline-flex rounded-full border border-white/10 bg-black/30 p-1 max-sm:w-full max-sm:[&>button]:flex-1">
                 {modes.map((m) => (
-                  <button key={m.id} type="button" role="tab" aria-selected={mode === m.id} onClick={() => setMode(m.id)} className={`rounded-full px-4 py-1.5 text-xs font-bold transition sm:text-sm ${mode === m.id ? "bg-white text-black shadow" : "text-white/60 hover:text-white"}`}>{m.label}</button>
+                  <button key={m.id} type="button" role="tab" aria-selected={mode === m.id} onClick={() => setMode(m.id)} className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-bold transition sm:text-sm ${mode === m.id ? "bg-white text-black shadow" : "text-white/60 hover:text-white"}`}>{m.label}</button>
                 ))}
               </div>
               {mode === "season" ? (
