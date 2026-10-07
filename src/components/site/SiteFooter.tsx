@@ -17,6 +17,8 @@ export function SiteFooter() {
   }, []);
   const links = [
     ...navLinks,
+    { to: "/about", label: "About" },
+    { to: "/contact", label: "Contact" },
     ...cmsNav
       .filter((p: any) => !navLinks.some((n) => n.to === "/" + p.slug))
       .map((p: any) => ({ to: "/" + p.slug, label: p.navigation_label || p.title })),
@@ -38,7 +40,7 @@ export function SiteFooter() {
         <div>
           <p className="eyebrow">Discover</p>
           <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-            {links.slice(0, 8).map((l) => (
+            {links.slice(0, 10).map((l) => (
               <li key={l.to}>
                 <Link
                   to={l.to}
