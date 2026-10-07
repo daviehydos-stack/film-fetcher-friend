@@ -179,10 +179,11 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
       <div className="relative z-10 mx-auto flex min-h-[72svh] max-w-[1800px] items-end px-5 pb-[max(3rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20">
         <div className="max-w-[42rem]">
+          <h1 className="sr-only">Avant Cinema — Watch Kenyan Movies & Series Online</h1>
           <div className="mb-3 inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-primary backdrop-blur">Featured on Avant</div>
-          <h1 className="max-w-xl text-[clamp(2.65rem,11vw,4.8rem)] font-black uppercase leading-[.9] text-foreground sm:text-7xl lg:text-[5rem]">
+          <p className="max-w-xl text-[clamp(2.65rem,11vw,4.8rem)] font-black uppercase leading-[.9] text-foreground sm:text-7xl lg:text-[5rem]">
             {item.title}
-          </h1>
+          </p>
           <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-bold text-foreground/85 sm:mt-5 sm:text-sm">
             <span>{item.type === "movie" ? "Film" : "Series"}</span>
             <span className="text-foreground/30">•</span>
