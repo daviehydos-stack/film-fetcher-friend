@@ -135,6 +135,19 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
     };
   }, [item.id, item.trailerEmbedUrl, item.heroAutoplay, travelMode, isFast]);
 
+  useEffect(() => {
+    const onMsg = (event: MessageEvent) => {
+      if (typeof event.origin === "string" && !event.origin.includes("vimeo.com")) return;
+      if (event.source !== trailerFrameRef.current?.contentWindow) return;
+      try {
+        const d = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+        if (d?.event === "play" || d?.event === "playing" || (d?.event === "timeupdate" && Number(d?.data?.seconds) > 0.15)) setTrailerVisible(true);
+      } catch {}
+    };
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
+
   return (
     <section
       ref={heroRef}
@@ -146,7 +159,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         fetchPriority="high"
         loading="eager"
         decoding="async"
-        className={`absolute inset-0 size-full object-cover object-[center_top] sm:object-center transition-opacity duration-500 ${trailerVisible ? "opacity-0" : "opacity-100"}`}
+        className={`absolute inset-0 size-full object-cover object-[center_top] sm:object-center transition-opacity duration-700 ${trailerVisible ? "opacity-0" : "opacity-100"}`}
       />
 
       {item.heroAutoplay !== false &&
@@ -168,10 +181,13 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
             );
             claimMedia(event.currentTarget);
             setTrailerLoaded(true);
-            window.setTimeout(() => setTrailerVisible(true), 60);
+            const frame = event.currentTarget;
+            ["play", "playing", "timeupdate"].forEach((value) => frame.contentWindow?.postMessage(JSON.stringify({ method: "addEventListener", value }), "*"));
+            window.setTimeout(() => setTrailerVisible(true), 6000);
           }}
           onError={() => setTrailerFailed(true)}
-          className={`pointer-events-none absolute left-1/2 top-0 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 border-0 transition-opacity duration-500 sm:top-1/2 sm:-translate-y-1/2 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
+          style={{ maxWidth: "none", width: "max(100%, 177.78svh)", height: "max(100%, 56.25vw)", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
+          className={`pointer-events-none absolute border-0 transition-opacity duration-700 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
         />
       ) : null}
 
@@ -202,7 +218,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
               </Button>
             ) : (
               <Button asChild size="lg" className="h-11 w-full px-4 text-sm font-bold sm:h-12 sm:w-auto sm:px-6 sm:text-base">
-                <Link to="/checkout/$productId" params={{ productId: productForTitleSlug(item.slug) || item.slug }} search={{ returnTo: `/title/${item.slug}`, origin: "/", originScroll: "0" }}><Play className="fill-current" />Get Access</Link>
+                <Link to="/checkout/$productId" params={{ productId: productForTitleSlug(item.slug) || item.slug }} search={{ returnTo: "/", origin: "/", originScroll: "0" }}><Play className="fill-current" />Get Access</Link>
               </Button>
             )}
             <Button
