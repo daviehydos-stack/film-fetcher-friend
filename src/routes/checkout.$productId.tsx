@@ -365,7 +365,7 @@ function CheckoutRoute() {
       }
       const fallback = (origin || '/').trim()
       void router.navigate({ to: (fallback.startsWith('/') && !fallback.startsWith('//') && !fallback.startsWith('/checkout/') ? fallback : '/') as any, replace: true })
-    }, 340)
+    }, 0)
   }
 
   const stageCopy = activeMethod === 'paypal' ? (stage === 'sending' ? ['Preparing secure PayPal checkout', 'Creating your PayPal order securely…'] : ['Confirming your PayPal payment', 'Avant unlocks automatically after PayPal confirms.']) : stage === 'sending' ? ['Sending your M-PESA request', 'Connecting securely to your phone…'] : stage === 'phone' ? ['Check your phone', 'Enter your M-PESA PIN to approve the payment.'] : ['Confirming your payment', 'Avant unlocks automatically the moment M-PESA confirms.']
