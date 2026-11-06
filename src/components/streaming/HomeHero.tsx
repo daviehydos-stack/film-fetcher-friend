@@ -122,7 +122,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    if (travelMode || (!isFast && !screen.matches) || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
+    if (travelMode || media.matches || !item.trailerEmbedUrl || item.heroAutoplay === false)
       return () => screen.removeEventListener?.("change", syncScreen);
     // Start the hero preview almost immediately; the poster remains as the instant visual fallback.
     // Start the preview on the very next tick so the player boots while the poster is showing.
@@ -138,7 +138,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[84svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
+      className="relative min-h-[72svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
     >
       <img
         src={optimizedArtwork(item.backdrop || item.artwork, getAdaptiveImageWidth(1280, tier))}
@@ -146,7 +146,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
         fetchPriority="high"
         loading="eager"
         decoding="async"
-        className={`absolute inset-0 size-full object-cover object-[62%_center] sm:object-center transition-opacity duration-500 ${trailerVisible ? "opacity-0" : "opacity-100"}`}
+        className={`absolute inset-0 size-full object-cover object-[center_top] sm:object-center transition-opacity duration-500 ${trailerVisible ? "opacity-0" : "opacity-100"}`}
       />
 
       {item.heroAutoplay !== false &&
@@ -168,16 +168,16 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
             );
             claimMedia(event.currentTarget);
             setTrailerLoaded(true);
-            window.setTimeout(() => setTrailerVisible(true), 120);
+            window.setTimeout(() => setTrailerVisible(true), 60);
           }}
           onError={() => setTrailerFailed(true)}
-          className={`pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 transition-opacity duration-700 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
+          className={`pointer-events-none absolute left-1/2 top-0 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 border-0 transition-opacity duration-500 sm:top-1/2 sm:-translate-y-1/2 ${trailerVisible ? "opacity-100" : "opacity-0"}`}
         />
       ) : null}
 
       <div className="absolute inset-0 hero-shade" />
 
-      <div className="relative z-10 mx-auto flex min-h-[84svh] max-w-[1800px] items-end px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(5.5rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20">
+      <div className="relative z-10 mx-auto flex min-h-[72svh] max-w-[1800px] items-end px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(5.5rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20">
         <div className="max-w-[42rem]">
           <h1 className="sr-only">Avant Cinema — Watch Kenyan Movies & Series Online</h1>
           <div className="mb-3 inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-primary backdrop-blur">Featured on Avant</div>
