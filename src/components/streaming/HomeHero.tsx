@@ -138,7 +138,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[70svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
+      className="relative min-h-[84svh] overflow-hidden bg-background sm:min-h-[78svh] lg:mx-0 lg:mt-0 lg:min-h-[84vh] lg:rounded-none"
     >
       <img
         src={optimizedArtwork(item.backdrop || item.artwork, getAdaptiveImageWidth(1280, tier))}
@@ -177,7 +177,7 @@ export function HomeHero({ item }: { item: CatalogueTitle }) {
 
       <div className="absolute inset-0 hero-shade" />
 
-      <div className="relative z-10 mx-auto flex min-h-[72svh] max-w-[1800px] items-end px-5 pb-[max(3rem,env(safe-area-inset-bottom))] pt-[max(7rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20">
+      <div className="relative z-10 mx-auto flex min-h-[84svh] max-w-[1800px] items-end px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(5.5rem,env(safe-area-inset-top))] sm:min-h-[78svh] sm:px-10 sm:pb-20 lg:min-h-[84vh] lg:px-14 lg:pb-20 xl:px-20">
         <div className="max-w-[42rem]">
           <h1 className="sr-only">Avant Cinema — Watch Kenyan Movies & Series Online</h1>
           <div className="mb-3 inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-primary backdrop-blur">Featured on Avant</div>
