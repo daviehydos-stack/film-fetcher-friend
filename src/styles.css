@@ -643,8 +643,8 @@ iframe{background:#000}
     60%{opacity:1;filter:blur(0)}
     100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
   }
-  html .avant-route-surface{animation:avantPageForward 380ms cubic-bezier(.22,1,.36,1) backwards!important;transform-origin:50% 35%;will-change:opacity,transform}
-  html[data-avant-nav="back"] .avant-route-surface{animation:avantPageBack 360ms cubic-bezier(.22,1,.36,1) backwards!important}
+  @keyframes avantPageDissolveIn{from{opacity:.88}to{opacity:1}}
+  html .avant-route-surface,html[data-avant-nav="back"] .avant-route-surface{animation:avantPageDissolveIn 140ms ease-out both!important;transform:none;will-change:opacity}
 }
 @media (prefers-reduced-motion:reduce){
   html .avant-route-surface,html[data-avant-nav="back"] .avant-route-surface{animation:none!important}
