@@ -57,6 +57,7 @@ export function AvantTransitionEngine() {
 
     setWatchTransition(false);
     setPageDissolve(false);
+    return undefined;
   }, [location.pathname]);
 
   if (watchTransition) {
