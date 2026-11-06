@@ -354,7 +354,7 @@ function CheckoutRoute() {
         window.parent.postMessage({ type: 'avant-checkout-close' }, '*')
         return
       }
-      if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
+      if (window.history.length > 1 && (window.history.state as any)?.__TSR_index > 0) {
         window.history.back()
         return
       }
@@ -376,7 +376,7 @@ function CheckoutRoute() {
   const titleArtwork = optimizedArtwork(purchaseTitle?.backdrop_url || purchaseTitle?.poster_url || purchaseTitle?.backdrop || purchaseTitle?.artwork || '', embedded ? 640 : 960) || ''
   const displayTitle = purchaseTitle?.title || product?.name || 'Avant Cinema access'
 
-  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-[opacity,filter,transform] duration-[340ms] ease-[cubic-bezier(.16,1,.3,1)] will-change-[opacity,filter,transform] ${leaving ? 'pointer-events-none scale-[.975] opacity-0 blur-[8px]' : 'scale-100 opacity-100 blur-0'}`}>
+  return <main className={`${embedded ? 'min-h-full' : 'min-h-[100svh]'} relative overflow-hidden bg-[#080808] text-foreground transition-opacity duration-150 ease-out ${leaving ? 'pointer-events-none opacity-0' : 'opacity-100'}`}>
     <div className={`relative mx-auto w-full ${embedded ? 'max-w-xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3' : 'max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8'}`}>
       {!embedded && <header className="flex items-center justify-between pb-5">
         <Button type="button" variant="ghost" onClick={goBack} className="-ml-2 min-h-10 gap-2 px-2 text-white/60 hover:bg-white/5 hover:text-white"><ArrowLeft className="size-4"/>Back</Button>
