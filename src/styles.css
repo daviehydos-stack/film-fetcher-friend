@@ -162,7 +162,7 @@
 
 @media (max-width: 639px) {
   .hero-shade {
-    background: linear-gradient(90deg, oklch(0.08 0.006 255 / 0.78) 0%, oklch(0.08 0.006 255 / 0.28) 78%, transparent 100%), linear-gradient(0deg, var(--background) 0%, oklch(0.08 0.006 255 / 0.58) 24%, transparent 64%), linear-gradient(180deg, oklch(0.06 0.006 255 / 0.35), transparent 30%);
+    background: linear-gradient(0deg, var(--background) 0%, oklch(0.08 0.006 255 / 0.85) 28%, oklch(0.08 0.006 255 / 0.25) 55%, transparent 75%);
   }
 }
 
